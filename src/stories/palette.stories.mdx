@@ -1,0 +1,42 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/addon-docs'
+
+<Meta title="Specification/Palette" />
+
+# Default Palette
+
+<ColorPalette>
+  <ColorItem
+    title="Base Colors"
+    subtitle="Used globally as backgrounds"
+    colors={{ 'MilkWhite(light)': '#FFFFFF', 'BalticSea(dark)': '#22223b' }}
+  />
+  <ColorItem
+    title="Buttons"
+    subtitle="Button colors per type per mode"
+    colors={{
+      'DarkCerulean(primary, light)': '#023e8a',
+      'NiceBlue(secondary, light)': '#0077b6',
+      'CloudBurst(primary, dark)': '#1d3557',
+      'Wedgewood(secondary, dark)': '#457b9d',
+    }}
+  />
+  <ColorItem
+    title="Semantic Colors"
+    subtitle="Colors that apply to buttons, notifications, etc. regardless of the theme"
+    colors={{
+      'PacificBlue(info)': '#0096c7',
+      'TurtleGreen(success)': '#66bf3c',
+      'MangoTango(warning)': '#ff6700',
+      'PeachyPink(danger)': '#ff9494',
+    }}
+  />
+
+  <ColorItem
+    title="Fonts"
+    subtitle="Font colors per mode"
+    colors={{
+      'HeavyMetal(light)': '#272727',
+      'MilkWhite(dark)': '#fff',
+    }}
+  />
+</ColorPalette>

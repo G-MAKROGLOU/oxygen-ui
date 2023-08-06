@@ -1,0 +1,71 @@
+import { Meta } from '@storybook/addon-docs'
+
+<Meta title="Specification/Theming" />
+
+# Theming
+
+### Oxygen-UI is fully customizable to its' very end. We provide a layer of default stylistic decisions and leave it to you to decide if this is enough for your project or not.
+
+#### By exposing a set of <code>SCSS</code> variables we allow you to fully customize the whole library according to your needs. That is:
+
+- Theme colors
+- Base Colors (primary, secondary)
+- Semantic Colors (info, success, warning, danger)
+- Border, Border radius
+- Shadows
+- Font family
+- Font colors
+- And more...
+
+#### We believe that theming shouldn't be hard so the only thing you need to do is to tweak those <code>SCSS</code> variables in your own stylesheet and nothing more. (no theming providers, theme switches etc.)
+
+#### We also provide a <code>ThemeProvider</code> along with the corresponding hook <code>useTheme()</code> and a <code>ThemeSwitcher</code> component.
+
+### List of exposed <code>SCSS</code> variables:
+
+#### GLOBAL VARS
+
+- <code>$white_color: #fff;</code>
+- <code>$info_color: #0096c7;</code>
+- <code>$warning_color: #ff6700;</code>
+- <code>$success_color: #66bf3c;</code>
+- <code>$danger_color: #ff9494;</code>
+- <code>$input_radius: 5px;</code>
+- <code>$element_radius: 5px;</code>
+- <code>$input_padding: 10px;</code>
+
+#### LIGHT VARS
+
+- <code>$shadow_light: 0px 4px 15px 0px rgba(39, 39, 39, .5);</code>
+- <code>$body_light: $white_color;</code>
+- <code>$font_color_light: #272727;</code>
+- <code>$primary_color: #023e8a;</code>
+- <code>$secondary_color: #0077b6;</code>
+
+#### DARK VARS
+
+- <code>$shadow_dark: 0px 4px 15px 0px rgba(34, 34, 59, .5);</code>
+- <code>$body_dark: #22223b;</code>
+- <code>$font_color_dark: $white_color;</code>
+- <code>$primary_dark_color: #1d3557;</code>
+- <code>$secondary_dark_color : #457b9d;</code>
+
+#### For example, say you want to change the primary color of your buttons for both light mode and dark mode. You would do the following:
+
+##### In your own stylesheet (i.e overrides.scss) you would write:
+
+```
+$primary_color: yellow;
+$primary_dark_color: green;
+//other scss you want to change...
+
+@import "./styles.scss"
+```
+
+##### Where <code>styles.scss</code> is the Oxygen-UI stylesheet that you need to import in order to gain access to the variables. Then, you would import your <code>overrides.scss</code> after <code>styles.scss</code> in your <code>index.js/ts</code> file and voila! Minimum effort theming.
+
+##### Apart from <code>SCSS</code> theming, we also provide you with a <code>useTheme()</code> hook that gives you global access to the current active theme and a function to toggle themes manually.
+
+##### This can be useful in cases where you want to switch themes without the <code>ThemeSwitcher</code> component or you want to perform some stylistic changes depending the active theme.
+
+##### In order to use the <code>useTheme()</code> hook you have to wrap your application inside the <code>ThemeProvider</code> that we also provide. As for the theme switch, you can use the provided <code>ThemeSwitcher</code> component or create your own with the use of <code>useTheme()</code>. A note here, is that the default <code>ThemeSwitcher</code> can be tweaked and that it works with the <code>localStorage</code> to save the theme upon reloads. If you wish to implement your own <code>ThemeSwitcher</code> then you should also work with the <code>localStorage</code> in order for the <code>ThemeProvider</code> to work properly.

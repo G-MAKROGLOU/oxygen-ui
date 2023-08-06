@@ -1,0 +1,720 @@
+// GLOBAL VARS
+$white_color: #fff !default;
+$info_color: #0096c7 !default;
+$warning_color: #ff6700 !default;
+$success_color: #66bf3c !default;
+$danger_color: #ff9494 !default;
+$input_radius: 5px !default;
+$element_radius: 5px !default;
+$input_padding: 10px;
+$menu_item_padding: 5px;
+$element_padding: 5px;
+$margin_5: 5px;
+$default_transition: all .3s;
+
+// LIGHT VARS
+$shadow_light: 0px 4px 15px 0px rgba(39, 39, 39, .2) !default;
+$body_light: $white_color !default;
+$font_color_light: #272727 !default;
+$primary_color: #023e8a !default;
+$secondary_color: #0077b6 !default;
+
+// DARK VARS
+$shadow_dark: 0px 4px 15px 0px rgba(34, 34, 59, .5) !default;
+$body_dark: #22223b !default;
+$font_color_dark: $white_color !default;
+$primary_dark_color: #1d3557 !default;
+$secondary_dark_color : #457b9d !default;
+
+// GRAY SCALES
+$secondary_element_gray: #f8fcff;
+$disabled_button: #ebebeb;
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+    background-color: transparent;
+    width: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: $primary_color;
+    border-radius: 50px;
+}
+
+// GLOBAL STYLES
+body, body.dark {
+    font-family: 'Nunito', sans-serif;
+}
+
+body {
+    background-color: $body_light;
+    transition: $default_transition;
+}
+
+body.dark {
+    background-color: $body_dark;
+    transition: $default_transition;
+}
+
+// FORM STYLES
+.oxyui__form__vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.oxyui__form__horizontal {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+//BUTTON STYLES
+.oxyui__button, .oxyui__iconButton {
+    padding: $input_padding;
+    border-radius: $input_radius;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: $default_transition;
+    &:disabled {
+      background-color: $disabled_button;  
+      cursor: not-allowed;
+    }
+}
+.oxyui__button_icon_right_true {
+    flex-direction: row-reverse;
+}
+
+.oxyui__button__light__primary, .oxyui__fab__light__primary, 
+.oxyui__menubutton__light__primary, .oxyui__iconButton__light__primary {
+    background-color: $primary_color;
+    color: $white_color;
+    &:hover:not(:disabled) {
+        background-color: lighten($color: $primary_color, $amount: 20%);
+    }
+    &:active:not(:disabled) {
+        background-color: darken($color: $primary_color, $amount: 5%);
+    }
+}
+.oxyui__button__dark__primary, .oxyui__fab__dark__primary, 
+.oxyui__menubutton__dark__primary, .oxyui__iconButton__dark__primary {
+    background-color: $primary_dark_color;
+    color: $white_color;
+    &:hover:not(:disabled) {
+        background-color: lighten($color: $primary_dark_color, $amount: 20%);
+    }
+    &:active:not(:disabled) {
+        background-color: darken($color: $primary_dark_color, $amount: 5%);
+    }
+}
+.oxyui__button__light__secondary, .oxyui__fab__light__secondary,
+.oxyui__menubutton__light__secondary, .oxyui__iconButton__light__secondary {
+    background-color: $secondary_color;
+    color: $white_color;
+    &:hover:not(:disabled) {
+        background-color: lighten($color: $secondary_color, $amount: 20%);
+    }
+    &:active:not(:disabled) {
+        background-color: darken($color: $secondary_color, $amount: 5%);
+    }
+}
+.oxyui__button__dark__secondary, .oxyui__fab__dark__secondary,
+.oxyui__menubutton__dark__secondary, .oxyui__iconButton__dark__secondary {
+    background-color: $secondary_dark_color;
+    color: $white_color;
+    &:hover:not(:disabled) {
+        background-color: lighten($color: $secondary_dark_color, $amount: 20%);
+    }
+    &:active:not(:disabled) {
+        background-color: darken($color: $secondary_dark_color, $amount: 5%);
+    }
+}
+.oxyui__button__light__outlined, .oxyui__iconButton__light__outlined {
+    border: 2px solid $primary_color;
+    background-color: transparent;
+    color: $primary_color;
+    &:hover:not(:disabled) {
+        border-color: lighten($color: $primary_color, $amount: 20%);
+        color: lighten($color: $primary_color, $amount: 20%);
+    }
+    &:active:not(:disabled) {
+        border-color: darken($color: $primary_color, $amount: 5%);
+        color: darken($color: $primary_color, $amount: 5%);
+    }
+}
+.oxyui__button__dark__outlined, .oxyui__iconButton__dark__outlined {
+    border: 2px solid $primary_dark_color;
+    background-color: transparent;
+    color: $primary_dark_color;
+    &:hover:not(:disabled) {
+        border-color: lighten($color: $primary_dark_color, $amount: 20%);
+        color: lighten($color: $primary_dark_color, $amount: 20%);
+    }
+    &:active:not(:disabled) {
+        border-color: darken($color: $primary_dark_color, $amount: 5%);
+        color: darken($color: $primary_dark_color, $amount: 5%);
+    }
+}
+.oxyui__button__light__link, .oxyui__iconButton__light__link {
+    background-color: transparent;
+    color: $primary_color;
+    text-decoration: underline;
+    &:hover:not(:disabled) {
+        color: lighten($color: $primary_color, $amount: 20%);
+    }
+    &:active:not(:disabled) {
+        color: darken($color: $primary_color, $amount: 5%);
+    }
+}
+.oxyui__button__dark__link, .oxyui__iconButton__dark__link {
+    background-color: transparent;
+    color: $primary_dark_color;
+    text-decoration: underline;
+    &:hover:not(:disabled) {
+        color: lighten($color: $primary_dark_color, $amount: 20%);
+    }
+    &:active:not(:disabled) {
+       color: darken($color: $primary_dark_color, $amount: 5%);
+    }
+}
+.oxyui__button__light__info, .oxyui__button__dark__info, 
+.oxyui__fab__light__info, .oxyui__fab__dark__info,
+.oxyui__menubutton__light__info, .oxyui__menubutton__dark__info,
+.oxyui__iconButton__light__info, .oxyui__iconButton__dark__info
+{
+    background-color: $info_color;
+    color: $white_color;
+    &:hover:not(:disabled) {
+        background-color: lighten($color: $info_color, $amount: 20%);
+    }
+    &:active:not(:disabled) {
+        background-color: darken($color: $info_color, $amount: 5%);
+    }
+}
+.oxyui__button__light__success, .oxyui__button__dark__success, 
+.oxyui__fab__light__success, .oxyui__fab__dark__success,
+.oxyui__menubutton__light__success, .oxyui__menubutton__dark__success,
+.oxyui__iconButton__light__success, .oxyui__iconButton__dark__success
+{
+    background-color: $success_color;
+    color: $white_color;
+    &:hover:not(:disabled) {
+        background-color: lighten($color: $success_color, $amount: 20%);
+    }
+    &:active:not(:disabled) {
+        background-color: darken($color: $success_color, $amount: 5%);
+    }
+}
+.oxyui__button__light__warning, .oxyui__button__dark__warning, 
+.oxyui__fab__light__warning, .oxyui__fab__dark__warning,
+.oxyui__menubutton__light__warning, .oxyui__menubutton__dark__warning,
+.oxyui__iconButton__light__warning, .oxyui__iconButton__dark__warning
+{
+    background-color: $warning_color;
+    color: $white_color;
+    &:hover:not(:disabled) {
+        background-color: lighten($color: $warning_color, $amount: 20%);
+    }
+    &:active:not(:disabled) {
+        background-color: darken($color: $warning_color, $amount: 5%);
+    }
+}
+.oxyui__button__light__danger, .oxyui__button__dark__danger, 
+.oxyui__fab__light__danger, .oxyui__fab__dark__danger,
+.oxyui__menubutton__light__danger, .oxyui__menubutton__dark__danger,
+.oxyui__iconButton__light__danger, .oxyui__iconButton__dark__danger
+{
+    background-color: $danger_color;
+    color: $white_color;
+    &:hover:not(:disabled) {
+        background-color: lighten($color: $danger_color, $amount: 5%);
+    }
+    &:active:not(:disabled) {
+        background-color: darken($color: $danger_color, $amount: 5%);
+    }
+}
+.oxyui__default__button__spinner {
+    width: 15px;
+    height: 15px;
+    border-top: 1px solid $white_color;
+    border-left: 1px solid $white_color;
+    border-right: 1px solid $white_color;
+    border-bottom: 1px solid transparent;
+    border-radius: 50%;
+}
+.oxyui__button__spinner {
+    width: max-content;
+    height: max-content;
+    padding: 0px;
+    margin: 0px;
+    animation: buttonSpin 1s linear infinite;
+    transform-origin: center;
+}
+@keyframes buttonSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.oxyui__button_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.oxyui__button__custom_spinner {
+    width: max-content;
+    height: max-content;
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+// BUTTONGROUP STYLES
+.oxyui__buttongroup {
+    border: 0;
+    padding: $input_padding;
+    cursor: pointer;
+    transition: $default_transition;
+    min-width: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.oxyui__buttongroup__inactive {
+    background-color: $secondary_element_gray;
+    color: $font_color_light;
+    &:hover {
+        color: $font_color_dark;
+    }
+}
+.oxyui__buttongroup__start {
+    border-top-left-radius: $input_radius;
+    border-bottom-left-radius: $input_radius;
+}
+.oxyui__buttongroup__end {
+    border-top-right-radius: $input_radius;
+    border-bottom-right-radius: $input_radius;
+}
+
+.oxyui__buttongroup__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.oxyui__buttongroup__content {
+    margin-left: 5px;
+}
+
+
+// FAB STYLES
+.oxyui__fab {
+    border: 0;
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: $default_transition;
+    &:disabled {
+        cursor: not-allowed;
+    }
+    &:focus {
+        outline: none;
+    }
+}
+
+.oxyui__rollout__fab__wrapper {
+    position: absolute;
+    width: max-content;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.oxyui__single_fab {
+    position: absolute;
+}
+
+.oxyui__fab__bottomRight {
+    bottom: 30px;
+    right: 50px;
+}
+
+.oxyui__fab__bottomLeft {
+    bottom: 30px;
+    left: 50px;
+}
+
+.oxyui__fab__topRight {
+    top: 30px;
+    right: 50px;
+    flex-direction: column-reverse;
+}
+
+.oxyui__fab__topLeft {
+    top: 30px;
+    left: 50px;
+    flex-direction: column-reverse;
+}
+
+
+// MENUBUTTON STYLES
+.oxyui__menubutton__wrapper {
+    position: relative;;
+}
+.oxyui__menubutton {
+    display: flex;
+    align-items: center;
+}
+.oxyui__menubutton__main, .oxyui__menubutton__secondary {
+    display: flex;
+    align-items: center;
+    border: 0;
+    padding: $input_padding;
+    cursor: pointer;
+    color: #fff;
+    transition: $default_transition;
+}
+
+.oxyui__menubutton__main {
+    border-top-left-radius: $input_radius;
+    border-bottom-left-radius: $input_radius;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.oxyui__menubutton__secondary {
+    border-top-right-radius: $input_radius;
+    border-bottom-right-radius: $input_radius;
+}
+
+.oxyui__menubutton__items__wrapper {
+    position: absolute;
+    background-color: $secondary_element_gray;
+    top: 45px;
+    right: 0px;
+    width: max-content;
+    border-radius: $input_radius;
+    box-shadow: $shadow_light;
+    &::before {
+        content: '';
+        position: absolute;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid $secondary_element_gray;
+        top: -20px;
+        right: 10px;
+    }
+}
+
+.oxyui__menubutton__item {
+    padding: $menu_item_padding;
+    cursor: pointer;
+    font-size: 14px;
+    transition: $default_transition;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    &:hover {
+        background-color: darken($secondary_element_gray, 20%);
+    }
+}
+
+.oxyui__menubutton__item__first {
+    border-top-right-radius: $input_radius;
+    border-top-left-radius: $input_radius;
+}
+
+.oxyui__menubutton__item__last {
+    border-bottom-right-radius: $input_radius;
+    border-bottom-left-radius: $input_radius;
+}
+
+.oxyui__menubutton__item__divider {
+    border-bottom: 1px solid $body_dark;
+    margin: $margin_5;
+}
+
+
+// ACCORDION STYLES
+.oxyui__accordion__panel__collapse {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: $input_padding;
+    color: $white_color;
+    border-top-right-radius: $input_radius;
+    border-top-left-radius: $input_radius;
+}
+
+.oxyui__accordion__panel__collapse__light {
+    background-color: $primary_color
+}
+
+.oxyui__accordion__panel__collapse__dark {
+    background-color: $primary_dark_color
+}
+
+.oxyui__accordion__panel__header {
+    padding-left: $input_padding;
+    width: 90%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.oxyui__accordion__panel__header__icon {
+    display: flex;
+    align-items: center;
+    transition: $default_transition;
+}
+
+.oxyui__accordion__panel__content {
+    border-left: 1px solid $disabled_button;
+    border-right: 1px solid $disabled_button;
+    transition: $default_transition;
+    border-bottom-right-radius: $input_radius;
+    border-bottom-left-radius: $input_radius;
+    border-bottom: 1px solid $disabled_button;
+    max-height: 0px; 
+    overflow: auto;
+    margin-bottom: 1px;
+}
+
+
+// AVATAR STYLES
+.oxyui__avatar__wrapper {
+    position: relative;
+    >.oxyui__avatar__badge {
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        width: 15px;
+        height: 15px;
+        border-radius: 50px;
+        transition: $default_transition;
+    }
+    >.oxyui__avatar {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        justify-content: center;
+        letter-spacing: 2px;
+        transition: $default_transition;
+    
+        >.oxyui__avatar__image {
+            transition: $default_transition;
+            width: 100%;
+            height: 100%;
+        }
+        // shapes
+        &.oxyui__avatar__circle {
+            border-radius: 50px;
+            >.oxyui__avatar__image {
+                border-radius: 50px;
+            }
+        }
+        &.oxyui__avatar__rounded {
+            border-radius: $element_radius;
+            +.oxyui__avatar__badge {
+                right: -5px;
+                bottom: -5px;
+            }
+            >.oxyui__avatar__image {
+                border-radius: $element_radius;
+            }
+        }
+        &.oxyui__avatar__square {
+            border-radius: 0px;
+            +.oxyui__avatar__badge {
+                right: -5px;
+                bottom: -5px;
+            }
+            >.oxyui__avatar__image {
+                border-radius: 0px;
+            }
+        }
+        // sizes
+        &.oxyui__avatar__sm {
+            width: 30px;
+            height: 30px;
+            font-size: 12px;
+            +.oxyui__avatar__badge {
+                width: 10px;
+                height: 10px;
+            }
+            &:not(:has(.oxyui__avatar__circle)) {
+                +.oxyui__avatar__badge {
+                    bottom: -2px;
+                    right: -4px;
+                }
+            }
+            &.oxyui__avatar__circle {
+                +.oxyui__avatar__badge {
+                    bottom: 0px;
+                    right: -2px;
+                }
+            }
+        }
+        &.oxyui__avatar__md {
+            width: 40px;
+            height: 40px;
+            font-size: 14px;
+            +.oxyui__avatar__badge {
+                width: 12px;
+                height: 12px;
+            }
+            &:not(:has(.oxyui__avatar__circle)) {
+                +.oxyui__avatar__badge {
+                    bottom: -2px;
+                    right: -4px;
+                }
+            }
+            &.oxyui__avatar__circle {
+                +.oxyui__avatar__badge {
+                    bottom: 0px;
+                    right: -2px;
+                }
+            }
+        }
+        &.oxyui__avatar__lg {
+            width: 50px;
+            height: 50px;
+            font-size: 18px;
+        }
+        &.oxyui__avatar__xl {
+            width: 60px;
+            height: 60px;
+            font-size: 22px;
+            &:has(.oxyui__avatar__circle)+.oxyui__avatar__badge {
+                bottom: 2px;
+                right: 2px;
+            }
+        }
+    }
+}
+
+// BADGE STYLES
+.oxyui__badge__wrapper {
+    position: relative;
+
+    >.oxyui__badge {
+        padding: $element_padding;
+        font-size: 9px;
+        transition: $default_transition;
+        font-weight: bolder;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        >.oxyui__badge__content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            > * {
+                display: flex;
+            }
+        }
+        //shapes
+        &.oxyui__badge__circle {
+            border-radius: 50px;
+        }
+        &.oxyui__badge__rounded {
+            border-radius: $element_radius;
+        }
+        &.oxyui__badge__square {
+            border-radius: none;
+        }
+        &.oxyui__badge__oval {
+            padding: $input_padding 
+        }
+        // positions
+        &.oxyui__badge__topRight {
+            top: -10px;
+            right: -10px;
+        }
+        &.oxyui__badge__topLeft {
+            top: -10px;
+            left: -10px;
+        }
+        &.oxyui__badge__bottomRight {
+            bottom: -5px;
+            right: -10px;
+        }
+        &.oxyui__badge__bottomLeft {
+            bottom: -5px;
+            left: -10px;
+        }
+        // variants
+        &.oxyui__badge__outlined {
+            background-color: transparent;
+            border-width: 1px;
+            border-style: solid;
+        }
+    }
+}
+
+
+// BREADCRUMBS STYLES
+.oxyui__breadcrumbs__wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    >.oxyui__breadcrumb__with__separator {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: $info_color;
+        >.oxyui__breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            transition: all .3s;
+            padding: $element_padding;
+            &.oxyui__breadcrumb__link {
+                cursor: pointer;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+            &.oxyui__breadcrumb__active {
+                background-color: $primary_color;
+                border-radius: $element_radius;
+                color: #fff;
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+            >.oxyui__breadcrumb__icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        >.oxyui__breadcrumbs__separator {
+            display: flex;
+            align-items: center;
+        }
+    }
+    
+}
