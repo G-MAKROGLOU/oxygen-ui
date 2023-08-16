@@ -27,6 +27,15 @@ $primary_dark_color: #1d3557 !default;
 $secondary_dark_color : #457b9d !default;
 
 // GRAY SCALES
+$gray_100: #f8f9fa;
+$gray_200: #e9ecef;
+$gray_300: #dee2e6;
+$gray_400: #ced4da;
+$gray_500: #adb5bd;
+$gray_600: #6c757d;
+$gray_700: #495057;
+$gray_800: #343a40;
+$gray_900: #212529;
 $secondary_element_gray: #f8fcff;
 $disabled_button: #ebebeb;
 
@@ -717,4 +726,324 @@ body.dark {
         }
     }
     
+}
+
+
+// CALENDAR STYLES
+.oxyui__calendar {
+    border-radius: $element_radius;
+    padding: $element_padding;
+
+    &.oxyui__calendar__light {
+        box-shadow: $shadow_light;
+    }
+
+    &.oxyui__calendar__dark {
+        box-shadow: $shadow_dark;
+    }
+
+    >.oxyui__calendar__toolbar {
+        padding: $element_padding;
+        border-bottom: 1px solid $gray_200;
+        width: 100%;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        >.oxyui__calendar__toolbar__month__year {
+            display: flex;
+            gap: 10px;
+
+            >.oxyui__calendar__toolbar__month__wrapper {
+                >.oxyui__calendar__toolbar__month {
+                    transition: $default_transition;
+                    border-radius: $element_radius;
+                    cursor: pointer;
+                    padding: $element_padding;
+                    border: 1px solid transparent;
+                    &:hover {
+                        border-color: $gray_300;
+                    }   
+                }
+                >.oxyui__calendar__toolbar__month__picker {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    width: 180px;
+                    position: absolute;
+                    padding: $element_padding;
+                    border-radius: $element_radius;
+                    box-shadow: $shadow_light;
+                    transition: $default_transition;
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        border-top: 10px solid transparent;
+                        border-right: 10px solid transparent;
+                        border-left: 10px solid transparent;
+                        top: -20px;
+                    }
+                    &.oxyui__calendar__toolbar__month__picker__light {
+                        background: $secondary_element_gray;
+                        color: $primary_color;
+                        &::before {
+                            border-bottom: 10px solid $secondary_element_gray;
+                        }
+                    }
+                    &.oxyui__calendar__toolbar__month__picker__dark {
+                        border-bottom: 10px solid $primary_dark_color;
+                        background: $primary_dark_color;
+                        color: $font_color_dark;
+                        &::before {
+                            border-bottom: 10px solid $primary_dark_color;
+                        }
+                    }
+                    &.oxyui__calendar__toolbar__month__picker__hidden {
+                        opacity: 0;
+                        pointer-events: none;
+                    }
+                    >.oxyui__calendar__toolbar__month__picker__item {
+                        padding: $element_padding;
+                        cursor: pointer;
+                        border: 1px solid transparent;
+                        transition: $default_transition;
+                        border-radius: $element_radius;
+                        width: 50px;
+                        text-align: center;
+                        &:hover {
+                            border-color: $gray_300;
+                        }
+                        &.oxyui__calendar__toolbar__month__picker__item__active {
+                            background-color: $primary_color;
+                            color: $white_color;
+                        }
+                    }
+                }
+            }
+            >.oxyui__calendar__toolbar__year__wrapper {
+                >.oxyui__calendar__toolbar__year {
+                    transition: $default_transition;
+                    border-radius: $element_radius;
+                    cursor: pointer;
+                    padding: $element_padding;
+                    border: 1px solid transparent;
+                    &:hover {
+                        border-color: $gray_300;
+                    }
+                }
+                >.oxyui__calendar__toolbar__year__picker {
+                    display: flex;
+                    gap: 10px;
+                    width: 255px;
+                    position: absolute;
+                    border-radius: $element_radius;
+                    box-shadow: $shadow_light;
+                    transition: $default_transition;  
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        border-top: 10px solid transparent;
+                        border-right: 10px solid transparent;
+                        border-left: 10px solid transparent;
+                        top: -20px;
+                    }
+                    &.oxyui__calendar__toolbar__year__picker__light {
+                        background: $secondary_element_gray;
+                        color: $primary_color;
+                        &::before {
+                            border-bottom: 10px solid $secondary_element_gray;
+                        }
+                    }
+                    &.oxyui__calendar__toolbar__year__picker__dark {
+                        border-bottom: 10px solid $primary_dark_color;
+                        background: $primary_dark_color;
+                        color: $font_color_dark;
+                        &::before {
+                            border-bottom: 10px solid $primary_dark_color;
+                        }
+                    }
+                    &.oxyui__calendar__toolbar__year__picker__hidden {
+                        opacity: 0;
+                        pointer-events: none;
+                    }    
+                    >.oxyui__calendar__toolbar__year__picker__items {
+                        height: 180px;
+                        width: 240px;
+                        padding: $element_padding;
+                        >.oxyui__calendar__toolbar__year__picker__decade {
+                            position: absolute;
+                            width: 180px;
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 10px;
+                            transition: $default_transition;
+                            &.oxyui__calendar__toolbar__year__picker__decade__hidden {
+                                opacity: 0;
+                                pointer-events: none;
+                                &.oxyui__calendar__toolbar__year__picker__decade__hidden__next {
+                                    transform: translateX(-50px);
+                                }
+                                &.oxyui__calendar__toolbar__year__picker__decade__hidden__prev {
+                                    transform: translateX(50px);
+                                }
+                            }
+
+                            >.oxyui__calendar__toolbar__year__picker__item {
+                                padding: $element_padding;
+                                cursor: pointer;
+                                border: 1px solid transparent;
+                                transition: $default_transition;
+                                border-radius: $element_radius;
+                                width: 50px;
+                                text-align: center;
+                                &:hover {
+                                    border-color: $gray_300;
+                                }
+                                &.oxyui__calendar__toolbar__year__picker__item__active {
+                                    background-color: $primary_color;
+                                    color: $white_color;
+                                }
+                            }
+                        }
+                    }
+                    >.oxyui__calendar__toolbar__year__picker__prev, .oxyui__calendar__toolbar__year__picker__next {
+                        display: flex;
+                        align-items: center;
+                        cursor: pointer;
+                        justify-content: center;
+                        width: 40px;
+                        transition: $default_transition;
+                        &:hover {
+                            background-color: $gray_200;
+                        }
+                    }
+                    >.oxyui__calendar__toolbar__year__picker__prev {
+                        border-top-left-radius: $element_radius;
+                        border-bottom-left-radius: $element_radius;
+                    }
+                    >.oxyui__calendar__toolbar__year__picker__next {
+                        border-top-right-radius: $element_radius;
+                        border-bottom-right-radius: $element_radius;
+                    }          
+                }
+            }
+            >.oxyui__calendar__toolbar__week__picker {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+        }
+    }
+
+    >.oxyui__calendar__weekly {
+        display: flex;
+        height: calc(100% - 50px);
+        >.oxyui__calendar__weekly__hours {
+            padding: 30px $element_padding $element_padding $element_padding;
+            border-right: 1px solid $gray_200;
+            overflow: auto;
+            height: 100%;
+            width: 60px;
+            >.oxyui__calendar__weekly__hour {
+                height: calc(100% / 24);
+                display: flex;
+                align-items: center;
+                font-size: 10px;
+            }
+        }
+        >.oxyui__calendar__weekly__days {
+            padding: $element_padding;
+            display: flex;
+            width: calc(100% - 60px);
+            height: 100%;
+            >.oxyui__calendar__weekly__day { 
+                width: calc(100% / 7);
+                height: 100%;
+                text-align: center;
+                font-size: 13px;
+                >.oxyui__calendar__weekly__day__header {
+                    border-bottom: 1px solid $gray_200;
+                }
+                &:not(&:last-child) {
+                    border-right: 1px solid $gray_200;
+                }
+                >.oxyui__calendar__weekly__day__events {
+                    height: calc(100% - 20px);
+                    >.oxyui__calendar__weekly__day__event {
+                        height: calc(100% / 24);
+                        border-bottom: 1px solid $gray_200;
+                        >.oxyui__calendar__weekly__day__event__bubble {
+                            border-radius: $element_radius;
+                            font-size: 10px;
+                            cursor: pointer;
+                            z-index: 2;
+                            position: relative;
+                            box-shadow: $shadow_light;
+                            display: flex;
+                            gap: 10px;
+                            padding: 0px $element_padding;
+                            justify-content: space-between;
+                            >.oxyui__calendar__weekly__day__event__bubble__name {
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    >.oxyui__calendar__monthly {
+        width: 100%;
+        height: calc(100% - 60px);
+        >.oxyui__calendar__monthly__days {
+            display: flex;
+            align-items: center;
+            padding: $element_padding;
+            width: 100%;
+            //background: blue;
+            height: 100%;
+            >.oxyui__calendar__monthly__day {
+                width: calc(100% / 7);
+                height: 100%;
+                &:not(:last-child) {
+                    border-right: 1px solid $gray_200;
+                }
+                >.oxyui__calendar__monthly__day__header {
+                    width: 100%;
+                    text-align: center;
+                    border-bottom: 1px solid $gray_200;
+                }
+                >.oxyui__calendar__monthly__day__events {
+                    height: 100%;
+                    >.oxyui__calendar__monthly__day__event {
+                        height: calc(100% / 5);
+                        border-bottom: 1px solid $gray_200;
+                        overflow-y: scroll;
+                        >.oxyui__calendar__monthly__day__event__day {
+                            padding: $element_padding;
+                        }
+                        >.oxyui__calendar__monthly__day__event__bubble {
+                            font-size: 10px;
+                            width: max-content;
+                            padding: 2px;
+                            border-radius: $element_radius;
+                            cursor: pointer;
+
+                            >.oxyui__calendar__monthly__day__event__bubble__details {
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                >.oxyui__calendar__monthly__day__event__bubble__details__icon {
+                                    display: flex;
+                                    align-items: center;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

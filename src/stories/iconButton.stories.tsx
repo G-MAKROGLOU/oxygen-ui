@@ -4,7 +4,7 @@ import ThemeProvider from '../context/themeContext';
 import { AiOutlineDelete, AiOutlineLoading3Quarters} from 'react-icons/ai'
 
 export default {
-  title: 'Components/UserInput/Buttons/IconButton',
+  title: 'Components/User Input/Buttons/IconButton',
   component: IconButton,
   tags: ['autodocs'],
   argTypes: {

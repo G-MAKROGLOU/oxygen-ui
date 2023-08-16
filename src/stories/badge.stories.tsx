@@ -5,7 +5,7 @@ import {MdNotifications} from 'react-icons/md'
 
 
 export default {
-  title: 'Components/DataDisplay/Badge',
+  title: 'Components/Data Display/Badge',
   component: Badge,
   tags: ['autodocs'],
   argTypes: {

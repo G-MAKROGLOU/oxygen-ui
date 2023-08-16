@@ -3,7 +3,7 @@ import {Accordion} from '../components/accordion';
 import ThemeProvider from '../context/themeContext';
 
 export default {
-  title: 'Components/DataDisplay/Accordion',
+  title: 'Components/Data Display/Accordion',
   component: Accordion,
   tags: ['autodocs'],
   argTypes: {

@@ -4,7 +4,7 @@ import ThemeProvider from '../context/themeContext';
 import { MdGridView, MdList, MdTableChart } from 'react-icons/md'
 
 export default {
-  title: 'Components/UserInput/Buttons/ButtonGroup',
+  title: 'Components/User Input/Buttons/ButtonGroup',
   component: ButtonGroup,
   argTypes: {
     defaultKey: {

@@ -3,7 +3,7 @@ import { Avatar } from '../components/avatar';
 import ThemeProvider from '../context/themeContext';
 
 export default {
-  title: 'Components/DataDisplay/Avatar',
+  title: 'Components/Data Display/Avatar',
   component: Avatar,
   tags: ['autodocs'],
   argTypes: {

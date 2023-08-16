@@ -6,7 +6,7 @@ import { AiFillCaretDown } from 'react-icons/ai'
 
 
 export default {
-  title: 'Components/UserInput/Buttons/MenuButton',
+  title: 'Components/User Input/Buttons/MenuButton',
   component: MenuButton,
   argTypes: {
     mainButtonContent: {

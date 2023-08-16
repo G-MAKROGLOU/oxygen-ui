@@ -1,15 +1,7 @@
-import { initialize, mswDecorator } from 'msw-storybook-addon';
 import '../src/styles/styles.scss'
 import '../src/styles/responsive.scss'
-
 import '../src/styles/overrides.scss'
 
-
-// Initialize MSW
-initialize();
-
-// Provide the MSW addon decorator globally
-export const decorators = [mswDecorator]
 
 export const parameters = {
   layout: 'centered',
@@ -21,3 +13,8 @@ export const parameters = {
     },
   },
 }
+
+if (typeof global.process === 'undefined') {
+    const { worker } = require("../src/mocks/server");
+    worker.start();
+  }

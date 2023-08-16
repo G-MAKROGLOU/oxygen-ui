@@ -2,9 +2,10 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import {Button} from '../components/buttons';
 import ThemeProvider from '../context/themeContext';
 import { AiOutlineSave, AiOutlineLoading3Quarters} from 'react-icons/ai'
+import { rest } from 'msw'
 
 export default {
-  title: 'Components/UserInput/Buttons/Button',
+  title: 'Components/User Input/Buttons/Button',
   component: Button,
   tags: ['autodocs'],
   argTypes: {
@@ -77,7 +78,11 @@ BasicButton.args = {
     buttonType: 'button',
     loading: false,
     disabled: false,
-    onClick: () => console.log("Clicked the button"),
+    onClick: () => {
+        fetch('/api/v1/login')
+        .then(res => res.json())
+        .then(console.log)
+    },
     iconRight: false,
     icon: <AiOutlineSave fontSize={16}/>,
     loadingIcon: <AiOutlineLoading3Quarters fontSize={16}/>,

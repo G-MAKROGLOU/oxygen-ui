@@ -5,7 +5,7 @@ import { MdAdd, MdChatBubble } from 'react-icons/md'
 import { FaViber, FaWhatsapp, FaFacebookMessenger, FaTelegram } from 'react-icons/fa'
 
 export default {
-  title: 'Components/UserInput/Buttons/FAB',
+  title: 'Components/User Input/Buttons/FAB',
   component: FAB,
   argTypes: {
     position: {
