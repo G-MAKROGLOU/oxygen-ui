@@ -1364,3 +1364,68 @@ body.dark {
     
 }
 
+
+
+// COLORPICKER STYLES
+
+.oxyui__inputs__colorpicker {
+    
+    >.oxyui__inputs__colorpicker__value {
+
+        &.oxyui__inputs__colorpicker__value__circle {
+
+        }
+        &.oxyui__inputs__colorpicker__value__rounded {
+            
+        }
+        &.oxyui__inputs__colorpicker__value__square {
+            
+        }
+    }
+
+    >.oxyui__inputs__colorpicker__popup {
+
+        //&.oxyui__inputs__colorpicker__popup__light {
+
+        //}
+        //&.oxyui__inputs__colorpicker__popup__dark {
+            
+        //}
+        //&.oxyui__inputs__colorpicker__popup__visible {
+            
+        //}
+        //&.oxyui__inputs__colorpicker__popup__invisible {
+            
+        //}
+
+        >.oxyui__inputs__colorpicker__swatch__wrapper {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            
+            >.oxyui__inputs__colorpicker__swatch {
+                cursor: pointer;
+                transition: $default_transition;
+                &:hover {
+                    transform: scale(1.1);
+                }
+                &.oxyui__inputs__colorpicker__swatch__light {
+                    box-shadow: $shadow_light;
+                }
+                &.oxyui__inputs__colorpicker__swatch__dark {
+                    box-shadow: $shadow_dark;
+                }
+                
+                &.oxyui__inputs__colorpicker__swatch__circle {
+                    border-radius: 50px;
+                }
+                &.oxyui__inputs__colorpicker__swatch__rounded {
+                    border-radius: $element_radius;
+                }
+                &.oxyui__inputs__colorpicker__swatch__square {
+                    border-radius: 0;
+                }    
+            }
+        }
+    }
+}
