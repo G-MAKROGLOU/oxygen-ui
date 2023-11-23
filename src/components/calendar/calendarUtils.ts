@@ -1,161 +1,172 @@
-import { CSSProperties } from "react";
+import { CSSProperties } from 'react';
+import { CalendarDay, CalendarDefaults, CalendarEvent } from '../../types/calendar';
 
 export const numberToMonth: { [key: number]: string } = {
-    0: 'Jan.',
-    1: 'Feb.',
-    2: 'Mar.',
-    3: 'Apr.',
-    4: 'May.',
-    5: 'Jun.',
-    6: 'Jul.',
-    7: 'Aug.',
-    8: 'Sep.',
-    9: 'Oct.',
-    10: 'Nov.',
-    11: 'Dec.'
-}
+	0: 'Jan.',
+	1: 'Feb.',
+	2: 'Mar.',
+	3: 'Apr.',
+	4: 'May.',
+	5: 'Jun.',
+	6: 'Jul.',
+	7: 'Aug.',
+	8: 'Sep.',
+	9: 'Oct.',
+	10: 'Nov.',
+	11: 'Dec.',
+};
 
-export const getHundredYears = () => {
-    const hundredYears: number[][] = []
-    
-    let startingYear = 1990;
-    for (let i = 0;  i < 10; i++) {
-        let tenYears = [];
-        for (let j = 0; j < 10; j++) {
-            tenYears.push(startingYear + j)
-        }
-        startingYear += 10;
-        hundredYears.push(tenYears)
-    }
-    return hundredYears;
-}
+export const getHundredYears = (): number[][] => {
+	const hundredYears: number[][] = [];
+
+	let startingYear = 1990;
+	for (let i = 0; i < 10; i++) {
+		let tenYears = [];
+		for (let j = 0; j < 10; j++) {
+			tenYears.push(startingYear + j);
+		}
+		startingYear += 10;
+		hundredYears.push(tenYears);
+	}
+	return hundredYears;
+};
 
 export const numberToDay: { [key: number]: string } = {
-    0: 'Sun',
-    1: 'Mon',
-    2: 'Tue',
-    3: 'Wed',
-    4: 'Thu',
-    5: 'Fri',
-    6: 'Sat'
-}
+	0: 'Sun',
+	1: 'Mon',
+	2: 'Tue',
+	3: 'Wed',
+	4: 'Thu',
+	5: 'Fri',
+	6: 'Sat',
+};
 
 export const getSuperScript = (dayOfMonth: number): string => {
-    const forSt = [1, 21, 31]
-    const forNd = [2, 22]
-    const forRd = [3, 23]
-    
-    if (forSt.includes(dayOfMonth)){
-        return 'st'
-    }
+	const forSt = [1, 21, 31];
+	const forNd = [2, 22];
+	const forRd = [3, 23];
 
-    if (forNd.includes(dayOfMonth)){
-        return 'nd'
-    }
+	if (forSt.includes(dayOfMonth)) {
+		return 'st';
+	}
 
-    if (forRd.includes(dayOfMonth)){
-        return 'rd'
-    }
-    return 'th'
-}
+	if (forNd.includes(dayOfMonth)) {
+		return 'nd';
+	}
 
-export const isWithinDay = (event: any, day: any) => {
-    return event.dayOfMonth === day.dayOfMonth;
-}
+	if (forRd.includes(dayOfMonth)) {
+		return 'rd';
+	}
+	return 'th';
+};
 
-export const isWithinHours = (event: any, currIndex: number) => {
-    const fromDate = new Date(event.from)
-    const toDate = new Date(event.to)
-    const indexToDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), currIndex, fromDate.getMinutes())
-    return fromDate.getHours() === currIndex && indexToDate.getTime() >= fromDate.getTime() && indexToDate.getTime() < toDate.getTime(); 
-}
+export const isWithinDay = (event: CalendarEvent, day: CalendarDay): boolean => {
+	return event.dayOfMonth === day.dayOfMonth;
+};
 
-export const getEventStyle = (event: any): CSSProperties => {
-    let height: string = '100%';
-    let top: string = '0px';
-    const fromDate = new Date(event.from);
-    const toDate = new Date(event.to);
-    const hourDiff = (toDate.getTime() - fromDate.getTime()) / 36e5;
+export const isWithinHours = (event: CalendarEvent, currIndex: number): boolean => {
+	const fromDate = new Date(event.from);
+	const toDate = new Date(event.to);
+	const indexToDate = new Date(
+		fromDate.getFullYear(),
+		fromDate.getMonth(),
+		fromDate.getDate(),
+		currIndex,
+		fromDate.getMinutes(),
+	);
+	return (
+		fromDate.getHours() === currIndex &&
+		indexToDate.getTime() >= fromDate.getTime() &&
+		indexToDate.getTime() < toDate.getTime()
+	);
+};
 
-    if (fromDate.getMinutes() !== 0) {
-        top = `calc(100% / ${60 / fromDate.getMinutes()})`
-    }
+export const getEventStyle = (event: CalendarEvent): CSSProperties => {
+	let height: string = '100%';
+	let top: string = '0px';
+	const fromDate = new Date(event.from);
+	const toDate = new Date(event.to);
+	const hourDiff = (toDate.getTime() - fromDate.getTime()) / 36e5;
 
-    if (hourDiff > 1) {
-        let hourPrc = 0;
-        const floored = Math.floor(hourDiff)
-        hourPrc = floored * 100;
-        const minuteDiff = (hourDiff - floored) * 100;
-        hourPrc += minuteDiff;
-        height = `${hourPrc}%`
-    }
+	if (fromDate.getMinutes() !== 0) {
+		top = `calc(100% / ${60 / fromDate.getMinutes()})`;
+	}
 
-    return {
-        height,
-        top,
-        backgroundColor: event.bg,
-        color: event.color
-    }
-}
+	if (hourDiff > 1) {
+		let hourPrc = 0;
+		const floored = Math.floor(hourDiff);
+		hourPrc = floored * 100;
+		const minuteDiff = (hourDiff - floored) * 100;
+		hourPrc += minuteDiff;
+		height = `${hourPrc}%`;
+	}
 
-export const getCurrentWeek = () => {
-    const today = new Date();
-    const weeks = [];
-    for (let i = 1;  i <= 31; i+=7) {
-        const week = [];
-        for (let j = i; j < i+7; j++) {
-            if (j <= 31){
-                const date = new Date(today.getFullYear(), today.getMonth(), j);
-                week.push(date.getDate())
-            }
-        }
-        weeks.push(week)
-    }
-    return weeks.findIndex(week => week.find(d => d === today.getDate()))
-}
+	return {
+		height,
+		top,
+		backgroundColor: event.bg,
+		color: event.color,
+	};
+};
 
-export const getWeekOfMonth = ({year, month, week}: any) => {
-    const weekDays = [];
-    for (let i = 1; i <= 31; i++) {
-        if (i >= week * 7 && i <= week+1 * 7) {
-            const date = new Date(year, month, i)
-            weekDays.push({
-                dayOfMonth: date.getDate(),
-                dayOfWeek: date.getDay()
-            })
-        }
-    }
+export const getCurrentWeek = (): number => {
+	const today = new Date();
+	const weeks = [];
+	for (let i = 1; i <= 31; i += 7) {
+		const week = [];
+		for (let j = i; j < i + 7; j++) {
+			if (j <= 31) {
+				const date = new Date(today.getFullYear(), today.getMonth(), j);
+				week.push(date.getDate());
+			}
+		}
+		weeks.push(week);
+	}
+	return weeks.findIndex((week) => week.find((d) => d === today.getDate()));
+};
 
-    return weekDays;
-}
+export const getWeekOfMonth = ({ year, month, week }: CalendarDefaults): CalendarDay[] => {
+	const weekDays: CalendarDay[] = [];
+	for (let i = 1; i <= 31; i++) {
+		if (i >= week * 7 && i <= week + 1 * 7) {
+			const date = new Date(year, month, i);
+			weekDays.push({
+				dayOfMonth: date.getDate(),
+				dayOfWeek: date.getDay(),
+			});
+		}
+	}
 
-export const getLastDayOfMonth = ({ year, month }: any) => {
-    return new Date(year, month+1, 0).getDate();
-}
+	return weekDays;
+};
 
-export const getWeeksOfMonth = (year: number, month: number) => {
-    const weeks = [];        
-    for (let i = 1;  i <= 31; i+=7) {
-        const week = [];
-        for (let j = i; j < i+7; j++) {
-            if (j <= 31){
-                const date = new Date(year, month, j);
-                if (date.getMonth() === month){
-                    week.push({
-                        dayOfWeek: date.getDay(),
-                        dayOfMonth: date.getDate()
-                    })
-                }
-            }
-        }
-        if (week.length){
-            weeks.push(week)
-        }
-    }
-    return weeks
-}
+export const getLastDayOfMonth = ({ year, month }: CalendarDefaults): number => {
+	return new Date(year, month + 1, 0).getDate();
+};
 
-export const getEventTime = (eventTimeSource: any) => {
-    const time = eventTimeSource.split('T')[1]
-    return time.substring(0, time.length - 3)
-}
+export const getWeeksOfMonth = (year: number, month: number): CalendarDay[][] => {
+	const weeks = [];
+	for (let i = 1; i <= 31; i += 7) {
+		const week = [];
+		for (let j = i; j < i + 7; j++) {
+			if (j <= 31) {
+				const date = new Date(year, month, j);
+				if (date.getMonth() === month) {
+					week.push({
+						dayOfWeek: date.getDay(),
+						dayOfMonth: date.getDate(),
+					});
+				}
+			}
+		}
+		if (week.length) {
+			weeks.push(week);
+		}
+	}
+	return weeks;
+};
+
+export const getEventTime = (eventTimeSource: string): string => {
+	const time = eventTimeSource.split('T')[1];
+	return time.substring(0, time.length - 3);
+};

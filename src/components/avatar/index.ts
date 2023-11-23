@@ -1,5 +1,3 @@
-import Avatar from "./avatar";
+import Avatar from './avatar';
 
-export {
-    Avatar
-}
+export { Avatar };

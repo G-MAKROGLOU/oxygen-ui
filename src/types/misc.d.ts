@@ -1,25 +1,31 @@
 export type StringWildCardType = {
-    [key: string]: string
-}
-
+	[key: string]: string;
+};
 
 export type NumberWildCardType = {
-    [key: string]: number
-}
-
+	[key: string]: number;
+};
 
 export type DynamicWildCardType = {
-    [key: string]: any
-}
+	[key: string]: any;
+};
 
-export type AllButtonTypes = 'primary' | 'secondary' | 'outlined' | 'link' | 'info' | 'success' | 'warning' | 'danger';
+export type AllButtonTypes =
+	| 'primary'
+	| 'secondary'
+	| 'outlined'
+	| 'link'
+	| 'info'
+	| 'success'
+	| 'warning'
+	| 'danger';
 
-export type BasicButtonTypes = Exclude<AllButtonTypes, 'outlined' | 'link'>
+export type BasicButtonTypes = Exclude<AllButtonTypes, 'outlined' | 'link'>;
 
 export type RefMap = {
-    key: string | number;
-    ref: HTMLElement | null;
-}
+	key: string | number;
+	ref: HTMLElement | null;
+};
 
 export type Sizes = 'sm' | 'md' | 'lg' | 'xl';
 
