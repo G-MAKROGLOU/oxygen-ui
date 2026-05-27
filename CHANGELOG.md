@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.0.0...v1.1.0) (2026-05-27)
+
+
+### Features
+
+* Phase A — Tree fix, Framer Motion animations, PRODUCT.md ([910e21f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/910e21f464733f27fe9890520f43d38eff7a8a08))
+
 # 1.0.0 (2026-05-27)
 
 
