@@ -96,6 +96,15 @@ export type { ThemeSwitchProps } from './components/core/Switch'
 export { default as TopBar } from './components/core/TopBar'
 export type { TopBarProps } from './components/core/TopBar'
 
+export { default as Sidebar } from './components/core/Sidebar'
+export type { SidebarProps, SidebarItem, SidebarSection } from './components/core/Sidebar'
+
+export { default as AppShell } from './components/core/AppShell'
+export type { AppShellProps } from './components/core/AppShell'
+
+export { SkeletonBox, SkeletonText, SkeletonCircle, SkeletonCard } from './components/core/Skeleton'
+export type { SkeletonBoxProps, SkeletonTextProps, SkeletonCircleProps, SkeletonCardProps } from './components/core/Skeleton'
+
 // ─── Input components ─────────────────────────────────────────────────────────
 export { default as Button } from './components/inputs/Button'
 export type { ButtonProps } from './components/inputs/Button'

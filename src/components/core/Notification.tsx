@@ -5,6 +5,10 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 /** ─────────────────── types ─────────────────── */
 export type NotificationType = 'info' | 'success' | 'warning' | 'danger'
 
+export type NotificationPosition =
+    | 'top-right'    | 'top-left'    | 'top-center'
+    | 'bottom-right' | 'bottom-left' | 'bottom-center'
+
 export interface NotificationPayload {
     title: React.ReactNode
     description?: React.ReactNode
@@ -18,13 +22,13 @@ interface NotificationEntry extends NotificationPayload {
 }
 
 interface NotificationContextValue {
-    open: (payload: NotificationPayload) => void
+    open:  (payload: NotificationPayload) => void
     close: (id: number) => void
 }
 
 /** ─────────────────── context ─────────────────── */
 const NotificationContext = createContext<NotificationContextValue>({
-    open: () => undefined,
+    open:  () => undefined,
     close: () => undefined,
 })
 
@@ -36,37 +40,57 @@ const TYPE_BG: Record<NotificationType, string> = {
     danger:  'bg-status-error',
 }
 
+// Viewport positioning classes per position
+const VIEWPORT_CLASSES: Record<NotificationPosition, string> = {
+    'top-right':     'fixed top-14 right-0     flex flex-col       items-end',
+    'top-left':      'fixed top-14 left-0      flex flex-col       items-start',
+    'top-center':    'fixed top-14 left-1/2    flex flex-col       items-center -translate-x-1/2',
+    'bottom-right':  'fixed bottom-4 right-0   flex flex-col-reverse items-end',
+    'bottom-left':   'fixed bottom-4 left-0    flex flex-col-reverse items-start',
+    'bottom-center': 'fixed bottom-4 left-1/2  flex flex-col-reverse items-center -translate-x-1/2',
+}
+
+// Initial animation state per position
+function getInitialMotion(pos: NotificationPosition, reduced: boolean | null) {
+    if (reduced) return { opacity: 0, x: 0, y: 0, scale: 1 }
+    const right  = pos.endsWith('right')
+    const left   = pos.endsWith('left')
+    const center = pos.endsWith('center')
+    const bottom = pos.startsWith('bottom')
+    return {
+        opacity: 0,
+        x: right ? 40 : left ? -40 : 0,
+        y: center ? (bottom ? 12 : -12) : 0,
+        scale: center ? 0.96 : 1,
+    }
+}
+
 function TypeIcon({ type }: { type: NotificationType }) {
     if (type === 'success') {
         return (
-            <svg width="20" height="20" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-                <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M14 0.25C6.40625 0.25 0.25 6.40625 0.25 14C0.25 21.5937 6.40625 27.75 14 27.75C21.5937 27.75 27.75 21.5937 27.75 14C27.75 6.40625 21.5937 0.25 14 0.25ZM19.96 11.675C20.0697 11.5496 20.1533 11.4034 20.2057 11.2452C20.2582 11.087 20.2784 10.9199 20.2653 10.7537C20.2522 10.5876 20.206 10.4257 20.1295 10.2777C20.0529 10.1296 19.9475 9.99838 19.8194 9.89168C19.6914 9.78497 19.5433 9.70495 19.3839 9.65633C19.2244 9.6077 19.0569 9.59145 18.8911 9.60853C18.7253 9.62562 18.5646 9.67568 18.4184 9.75579C18.2723 9.8359 18.1436 9.94443 18.04 10.075L12.665 16.5237L9.88375 13.7412C9.648 13.5136 9.33224 13.3876 9.0045 13.3904C8.67675 13.3933 8.36324 13.5247 8.13148 13.7565C7.89972 13.9882 7.76825 14.3018 7.76541 14.6295C7.76256 14.9572 7.88855 15.273 8.11625 15.5087L11.8662 19.2587C11.9891 19.3815 12.1361 19.4773 12.298 19.5401C12.4599 19.6028 12.6331 19.6312 12.8066 19.6233C12.98 19.6154 13.15 19.5715 13.3055 19.4943C13.4611 19.4171 13.5988 19.3084 13.71 19.175L19.96 11.675Z"
-                    fill="#fff"
-                />
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12" />
             </svg>
         )
     }
     if (type === 'info') {
         return (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="w-5 h-5" aria-hidden="true">
-                <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
             </svg>
         )
     }
     if (type === 'warning') {
         return (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="w-5 h-5" aria-hidden="true">
-                <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
             </svg>
         )
     }
-    // danger
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="w-5 h-5" aria-hidden="true">
-            <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 01-.988-1.129c1.454-1.272 3.776-1.272 5.23 0 1.513 1.324 1.513 3.518 0 4.842a3.75 3.75 0 01-.837.552c-.676.328-1.028.774-1.028 1.152v.75a.75.75 0 01-1.5 0v-.75c0-1.279 1.06-2.107 1.875-2.502.182-.088.351-.199.503-.331.83-.727.83-1.857 0-2.584zM12 18a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
     )
 }
@@ -74,26 +98,33 @@ function TypeIcon({ type }: { type: NotificationType }) {
 /** ─────────────────── animated toast item ─────────────────── */
 function NotificationItem({
     n,
+    pos,
     onClose,
     reduced,
 }: {
     n: NotificationEntry
+    pos: NotificationPosition
     onClose: (id: number) => void
     reduced: boolean | null
 }) {
+    const initial = getInitialMotion(pos, reduced)
+    const center  = pos.endsWith('center')
+
     return (
         <motion.div
             layout
-            initial={{ opacity: 0, x: reduced ? 0 : 56, scale: reduced ? 0.97 : 1 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{   opacity: 0, x: reduced ? 0 : 40, scale: reduced ? 0.97 : 1 }}
+            initial={initial}
+            animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+            exit={{ ...initial, opacity: 0 }}
             transition={
                 reduced
                     ? { duration: 0 }
                     : {
-                          opacity: { duration: 0.15 },
-                          x: { type: 'tween', duration: 0.22, ease: [0.16, 1, 0.3, 1] },
-                          layout: { duration: 0.2 },
+                          opacity: { duration: 0.14 },
+                          x:       { type: 'tween', duration: 0.22, ease: [0.16, 1, 0.3, 1] },
+                          y:       { type: 'tween', duration: 0.22, ease: [0.16, 1, 0.3, 1] },
+                          scale:   { type: 'tween', duration: 0.22, ease: [0.16, 1, 0.3, 1] },
+                          layout:  { duration: 0.18 },
                       }
             }
         >
@@ -102,35 +133,41 @@ function NotificationItem({
                 duration={n.duration}
                 onOpenChange={(o) => { if (!o) onClose(n.id) }}
                 className={[
-                    'rounded-xl shadow-md p-3 w-[300px] text-white',
-                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
+                    'w-[300px] rounded-md shadow-lg overflow-hidden',
+                    center ? 'mx-auto' : '',
+                    'focus:outline-none',
                     TYPE_BG[n.type ?? 'info'],
                 ].join(' ')}
             >
-                <div className="flex items-center gap-2.5">
-                    <span className="flex-shrink-0">
+                {/* Colored side accent strip — thin, meaningful */}
+                <div className="flex items-start gap-3 p-3 pr-2.5">
+                    <span className="mt-0.5 flex-shrink-0 text-white/90">
                         <TypeIcon type={n.type ?? 'info'} />
                     </span>
-                    <Toast.Title className="font-semibold text-sm leading-snug flex-1">
-                        {n.title}
-                    </Toast.Title>
+
+                    <div className="flex-1 min-w-0">
+                        <Toast.Title className="text-sm font-semibold text-white leading-snug">
+                            {n.title}
+                        </Toast.Title>
+                        {n.description && (
+                            <Toast.Description className="mt-0.5 text-xs text-white/75 leading-relaxed">
+                                {n.description}
+                            </Toast.Description>
+                        )}
+                    </div>
+
                     <Toast.Action asChild altText="Close">
                         <button
-                            aria-label="Close notification"
+                            aria-label="Close"
                             onClick={() => onClose(n.id)}
-                            className="flex-shrink-0 rounded-md p-1 hover:bg-white/20 transition-colors duration-150 focus:outline-none focus-visible:ring-1 focus-visible:ring-white/60"
+                            className="flex-shrink-0 mt-0.5 rounded p-1 text-white/60 hover:text-white hover:bg-white/15 transition-colors duration-100 focus:outline-none focus-visible:ring-1 focus-visible:ring-white/50"
                         >
-                            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                                <path d="M15 5L5 15M5 5l10 10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                                <path d="M9 3L3 9M3 3l6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                             </svg>
                         </button>
                     </Toast.Action>
                 </div>
-                {n.description && (
-                    <Toast.Description className="mt-1.5 text-xs text-white/80 leading-relaxed pl-7">
-                        {n.description}
-                    </Toast.Description>
-                )}
             </Toast.Root>
         </motion.div>
     )
@@ -139,24 +176,22 @@ function NotificationItem({
 /** ─────────────────── provider ─────────────────── */
 
 /**
- * Wrap your application (or a subtree) in `NotificationProvider` to enable
- * toast notifications. Then call `useNotification()` anywhere inside to
- * trigger them.
+ * Wrap your app in `NotificationProvider`, then call `useNotification()` anywhere inside.
  *
- * Toasts slide in from the right and exit to the right.
- * `prefers-reduced-motion` is respected via `useReducedMotion()`.
+ * @param position  One of 6 viewport positions (default: `top-right`)
  *
  * @example
- * // main.tsx / _app.tsx
- * <NotificationProvider>
+ * <NotificationProvider position="bottom-right">
  *   <App />
  * </NotificationProvider>
- *
- * // Inside a component
- * const notify = useNotification()
- * notify.success({ title: 'Saved!', description: 'Your changes were saved.' })
  */
-export function NotificationProvider({ children }: { children: React.ReactNode }) {
+export function NotificationProvider({
+    children,
+    position = 'top-right',
+}: {
+    children: React.ReactNode
+    position?: NotificationPosition
+}) {
     const [notifications, setNotifications] = useState<NotificationEntry[]>([])
     const reduced = useReducedMotion()
 
@@ -173,12 +208,18 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
     return (
         <NotificationContext.Provider value={{ open, close }}>
-            <Toast.Provider swipeDirection="right">
+            <Toast.Provider swipeDirection={
+                position.endsWith('right') ? 'right' :
+                position.endsWith('left')  ? 'left'  : 'up'
+            }>
                 {children}
 
                 <Toast.Viewport
                     asChild
-                    className="fixed top-[56px] right-0 z-[500000] flex flex-col gap-2 w-[350px] p-4 outline-none"
+                    className={[
+                        VIEWPORT_CLASSES[position],
+                        'z-[500000] gap-2 w-[332px] p-4 outline-none',
+                    ].join(' ')}
                 >
                     <ul>
                         <AnimatePresence initial={false}>
@@ -186,6 +227,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
                                 <NotificationItem
                                     key={n.id}
                                     n={n}
+                                    pos={position}
                                     onClose={close}
                                     reduced={reduced}
                                 />
@@ -199,18 +241,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 }
 
 /** ─────────────────── hook ─────────────────── */
-
-/**
- * Imperative notification API. Must be called inside `NotificationProvider`.
- *
- * @example
- * const notify = useNotification()
- * notify.success({ title: 'Done', description: 'Record saved.', duration: 3000 })
- * notify.danger({ title: 'Error', description: err.message })
- */
 export function useNotification() {
     const { open } = useContext(NotificationContext)
-
     return {
         info:    (props: Omit<NotificationPayload, 'type'>) => open({ type: 'info',    ...props }),
         success: (props: Omit<NotificationPayload, 'type'>) => open({ type: 'success', ...props }),

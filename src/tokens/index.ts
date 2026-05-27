@@ -75,13 +75,13 @@ export const semanticTokens = {
         info:                '#74c0fc',
     },
 
-    // Mode-independent structure tokens
+    // Mode-independent structure tokens — enterprise scale (tighter than defaults)
     shared: {
-        'radius-sm':   '4px',
-        'radius-md':   '8px',
-        'radius-lg':   '12px',
-        'radius-xl':   '16px',
-        'radius-2xl':  '20px',
+        'radius-sm':   '2px',
+        'radius-md':   '5px',
+        'radius-lg':   '7px',
+        'radius-xl':   '10px',
+        'radius-2xl':  '12px',
         'radius-full': '9999px',
     },
 } as const
