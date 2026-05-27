@@ -1,16 +1,16 @@
 {
-    "name": "@vesops/ui",
+    "name": "@oxygen/ui",
     "version": "0.1.0",
-    "description": "VesOPS Design System — reusable UI primitives with Radix behaviours and Tailwind styling",
-    "author": "VesOPS",
-    "license": "UNLICENSED",
+    "description": "Oxygen Design System — reusable UI primitives built with Radix UI behaviours and Tailwind CSS styling",
+    "author": "G-MAKROGLOU",
+    "license": "MIT",
     "private": false,
     "type": "module",
     "exports": {
         ".": {
+            "types": "./dist/index.d.ts",
             "import": "./dist/index.js",
-            "require": "./dist/index.cjs",
-            "types": "./dist/index.d.ts"
+            "require": "./dist/index.cjs"
         },
         "./styles": "./dist/styles.css"
     },
@@ -28,7 +28,10 @@
         "dev": "tsup --watch",
         "storybook": "storybook dev -p 6006",
         "build-storybook": "storybook build",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint src --max-warnings 0",
+        "lint:fix": "eslint src --fix",
+        "test": "yarn typecheck && yarn lint"
     },
     "dependencies": {
         "@radix-ui/react-accordion": "^1.2.11",
@@ -50,6 +53,8 @@
     },
     "devDependencies": {
         "@chromatic-com/storybook": "^3",
+        "@semantic-release/changelog": "^6.0.3",
+        "@semantic-release/git": "^10.0.1",
         "@storybook/addon-essentials": "^8.6.12",
         "@storybook/addon-interactions": "^8.6.12",
         "@storybook/addon-links": "^8.6.12",
@@ -60,9 +65,15 @@
         "@types/node": "^25.9.1",
         "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
+        "@typescript-eslint/eslint-plugin": "^8.0.0",
+        "@typescript-eslint/parser": "^8.0.0",
         "@vitejs/plugin-react": "^6.0.2",
         "autoprefixer": "^10.4.11",
+        "eslint": "^9.0.0",
+        "eslint-plugin-react": "^7.37.0",
+        "eslint-plugin-react-hooks": "^5.0.0",
         "postcss": "^8.4.16",
+        "semantic-release": "^24.0.0",
         "storybook": "^8.6.12",
         "tailwindcss": "^3.1.8",
         "tsup": "^8.5.0",

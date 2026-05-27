@@ -28,9 +28,9 @@ export interface TreeProps {
 /** ─────────────────── helpers ─────────────────── */
 const isParent = (item: TreeNode) => Boolean(item.children && item.children.length > 0)
 
-const collectParentKeys = (nodes: TreeNode[]): string[] =>
+const _collectParentKeys = (nodes: TreeNode[]): string[] =>
     nodes.flatMap((n) =>
-        isParent(n) ? [n.key, ...collectParentKeys(n.children!)] : []
+        isParent(n) ? [n.key, ..._collectParentKeys(n.children!)] : []
     )
 
 /** ─────────────────── single node ─────────────────── */

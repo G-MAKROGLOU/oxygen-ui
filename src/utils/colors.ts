@@ -1,5 +1,5 @@
 /**
- * VesOPS design-system colour palette.
+ * Oxygen design-system colour palette.
  * Duplicated here so the published package is fully self-contained.
  */
 export const PALETTE = {

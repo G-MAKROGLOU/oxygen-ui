@@ -375,7 +375,7 @@ function TemporalPickerBase({
  * Temporal date/time picker namespace.
  *
  * @example
- * import Temporal from '@vesops/ui'
+ * import Temporal from '@oxygen/ui'
  *
  * <Temporal.DatePicker value={date} onChange={handleChange} label="Date" />
  * <Temporal.TemporalPicker value={year} type="year" lowerLimit={2018} upperLimit={2026} onChange={handleChange} />
