@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.3.0...v1.4.0) (2026-05-27)
+
+
+### Features
+
+* Phase E — fixes, new components, enterprise polish, dark mode stories ([6db1905](https://github.com/G-MAKROGLOU/oxygen-ui/commit/6db1905626e990a787102cd8794f2a255d6b6d50)), closes [#eef4fa](https://github.com/G-MAKROGLOU/oxygen-ui/issues/eef4fa)
+
 # [1.3.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.2.0...v1.3.0) (2026-05-27)
 
 
