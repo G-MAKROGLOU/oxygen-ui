@@ -1,0 +1,225 @@
+import React, { useEffect, useRef, useState } from 'react'
+import * as Popover from '@radix-ui/react-popover'
+import SearchInput from './SearchInput'
+import DropdownPill from './DropdownPill'
+import COLORS from '../../utils/colors'
+
+export interface DropdownItem {
+    key: string | number
+    label: React.ReactNode
+    icon?: React.ReactNode
+}
+
+export interface DropdownProps {
+    isMultiselect?: boolean
+    hasSearch?: boolean
+    label?: React.ReactNode
+    name?: string
+    value?: any
+    onChange?: (e: { target: { value: any; id?: string; name?: string } }) => void
+    onBlur?: React.FocusEventHandler
+    disabled?: boolean
+    /** 'horizontal' | 'vertical' */
+    layout?: string
+    errorMessage?: React.ReactNode
+    style?: React.CSSProperties
+    htmlFor?: string
+    items?: DropdownItem[]
+    labelStyle?: React.CSSProperties
+    placeholder?: string
+    [key: string]: any
+}
+
+/**
+ * Select / multi-select dropdown powered by Radix Popover.
+ *
+ * Radix handles focus-trap within the popover, keyboard dismiss (Escape),
+ * and correct portal-based z-index stacking.
+ *
+ * Emits `{ target: { value, id, name } }` for form-compatibility.
+ *
+ * @example
+ * // Single-select
+ * <Dropdown label="Vessel" items={vessels} value={form.vessel} onChange={handleChange} htmlFor="vessel" />
+ *
+ * // Multi-select
+ * <Dropdown isMultiselect label="Fuels" items={fuels} value={form.fuels} onChange={handleChange} />
+ */
+export default function Dropdown({
+    isMultiselect = false,
+    hasSearch = true,
+    label,
+    name,
+    value,
+    onChange,
+    disabled,
+    layout = 'horizontal',
+    errorMessage,
+    style = {},
+    htmlFor,
+    items = [],
+    labelStyle = {},
+    placeholder,
+}: DropdownProps) {
+    const [open, setOpen] = useState(false)
+    const [selectedItems, setSelectedItems] = useState<(string | number)[]>([])
+    const [hoveredItem, setHoveredItem] = useState<string | number | null>(null)
+    const [searchTerm, setSearchTerm] = useState('')
+    const [innerItems, setInnerItems] = useState<DropdownItem[]>([])
+
+    useEffect(() => {
+        setInnerItems(items)
+    }, [items])
+
+    useEffect(() => {
+        if (isMultiselect && Array.isArray(value)) {
+            setSelectedItems(value)
+        }
+    }, [isMultiselect, value])
+
+    const selectItem = (key: string | number) => {
+        if (isMultiselect) {
+            const next = selectedItems.includes(key)
+                ? selectedItems.filter((it) => it !== key)
+                : [...selectedItems, key]
+            setSelectedItems(next)
+            onChange?.({ target: { value: next, id: htmlFor, name } })
+        } else {
+            setSelectedItems([key])
+            onChange?.({ target: { value: key, id: htmlFor, name } })
+            setOpen(false)
+        }
+    }
+
+    const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const term = e.target.value
+        setSearchTerm(term)
+        setInnerItems(
+            term.trim() === ''
+                ? items
+                : items.filter((it) =>
+                      String(it.label).toLowerCase().includes(term.toLowerCase())
+                  )
+        )
+    }
+
+    const isSelected = (key: string | number) =>
+        Array.isArray(value) ? value.includes(key) : value === key
+
+    return (
+        <div className="mt-2">
+            <div
+                className={`flex ${layout === 'vertical' ? 'flex-col' : 'flex-row items-center gap-2'}`}
+            >
+                {label && (
+                    <label
+                        className="text-md font-bold ml-1 max-content select-none text-prussian-blue dark:text-white"
+                        htmlFor={htmlFor}
+                        style={labelStyle}
+                    >
+                        {label}
+                    </label>
+                )}
+
+                <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
+                    <Popover.Trigger asChild>
+                        <div
+                            id={htmlFor}
+                            role="combobox"
+                            aria-expanded={open}
+                            aria-haspopup="listbox"
+                            style={style}
+                            className={`flex items-center justify-between relative h-9 rounded-lg cursor-pointer select-none ${disabled ? 'cursor-not-allowed bg-disabled' : 'bg-white'}`}
+                            tabIndex={disabled ? -1 : 0}
+                            onKeyDown={(e) => e.key === 'Enter' && !disabled && setOpen(true)}
+                        >
+                            {/* Selected value(s) */}
+                            <div
+                                className={`h-7 pl-2 ${!style?.width ? 'min-w-[240px]' : ''} focus:outline-none text-prussian-blue flex items-center gap-1 overflow-hidden`}
+                            >
+                                {!value || (Array.isArray(value) && value.length === 0) ? (
+                                    <span className="text-roman-silver text-sm">{placeholder}</span>
+                                ) : Array.isArray(value) ? (
+                                    <>
+                                        {value.slice(0, 1).map((val) => (
+                                            <DropdownPill
+                                                key={String(val)}
+                                                hasSiblings={value.length > 1}
+                                                value={innerItems.find((it) => it.key === val)?.label}
+                                            />
+                                        ))}
+                                        {value.length > 1 && <DropdownPill value={`+${value.length - 1} more`} />}
+                                    </>
+                                ) : (
+                                    <DropdownPill value={innerItems.find((it) => it.key === value)?.label} />
+                                )}
+                            </div>
+
+                            {/* Chevron */}
+                            <div className={`transition-transform duration-300 mr-2 ${open ? 'rotate-180' : 'rotate-0'}`}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke={COLORS.PALETTE['prussian-blue']} strokeWidth={2} className="h-4 w-4">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </Popover.Trigger>
+
+                    <Popover.Portal>
+                        <Popover.Content
+                            align="start"
+                            sideOffset={4}
+                            style={{ width: style?.width || 240 }}
+                            className="bg-ice rounded-lg shadow-md z-50 p-2 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+                            onInteractOutside={() => setOpen(false)}
+                        >
+                            {hasSearch && (
+                                <div className="mb-2">
+                                    <SearchInput
+                                        style={{ width: '100%' }}
+                                        inputStyle={{ width: '100%' }}
+                                        value={searchTerm}
+                                        onChange={onSearchChange}
+                                        placeholder="Search..."
+                                    />
+                                </div>
+                            )}
+                            <div role="listbox" aria-multiselectable={isMultiselect} className="max-h-40 overflow-y-auto">
+                                {innerItems.map((item, idx) => (
+                                    <div
+                                        key={item.key}
+                                        role="option"
+                                        aria-selected={isSelected(item.key)}
+                                        aria-rowindex={idx}
+                                        className={`flex items-center justify-between p-2 hover:bg-prussian-blue hover:text-white transition-all duration-150 text-sm text-prussian-blue rounded-lg cursor-pointer ${
+                                            selectedItems.includes(item.key) ? 'bg-ice-dark' : ''
+                                        }`}
+                                        onClick={() => selectItem(item.key)}
+                                        onMouseEnter={() => setHoveredItem(item.key)}
+                                        onMouseLeave={() => setHoveredItem(null)}
+                                    >
+                                        <div className="flex items-center gap-2 text-xs">
+                                            {item.icon && <div>{item.icon}</div>}
+                                            {item.label}
+                                        </div>
+                                        {isSelected(item.key) && (
+                                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                                <path
+                                                    d="M4 10l4.5 4.5L16 6"
+                                                    stroke={hoveredItem === item.key ? '#fff' : COLORS.PALETTE['prussian-blue']}
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </Popover.Content>
+                    </Popover.Portal>
+                </Popover.Root>
+            </div>
+            <div className="text-center text-error dark:text-prussian-blue min-h-0">{errorMessage}</div>
+        </div>
+    )
+}
