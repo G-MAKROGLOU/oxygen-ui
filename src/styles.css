@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Inter variable font — same as the portal */
+@import url('https://rsms.me/inter/inter.css');

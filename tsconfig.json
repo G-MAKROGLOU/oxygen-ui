@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "jsx": "react-jsx",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "allowJs": false,
+        "strict": false,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "ignoreDeprecations": "6.0",
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
+        "outDir": "dist"
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "dist", "**/*.stories.tsx"]
+}
