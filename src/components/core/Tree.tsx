@@ -1,10 +1,9 @@
 import React from 'react'
 import * as Accordion from '@radix-ui/react-accordion'
-import COLORS from '../../utils/colors'
 
 export interface TreeNode {
     key: string
-    value: string
+    label: string
     nodeData?: any
     parentLabel?: string
     children?: TreeNode[]
@@ -19,24 +18,20 @@ export interface TreeItemClickPayload {
 }
 
 export interface TreeProps {
-    structure: TreeNode[]
-    onItemClick: (payload: TreeItemClickPayload) => void
+    nodes: TreeNode[]
+    onNodeClick: (payload: TreeItemClickPayload) => void
     defaultExpandAll?: boolean
     defaultExpandedKeys?: string[]
 }
 
 /** ─────────────────── helpers ─────────────────── */
-const isParent = (item: TreeNode) => Boolean(item.children && item.children.length > 0)
-
-const _collectParentKeys = (nodes: TreeNode[]): string[] =>
-    nodes.flatMap((n) =>
-        isParent(n) ? [n.key, ..._collectParentKeys(n.children!)] : []
-    )
+const isParent = (item: TreeNode) =>
+    Boolean(item.children && item.children.length > 0)
 
 /** ─────────────────── single node ─────────────────── */
 interface NodeProps {
     item: TreeNode
-    onItemClick: TreeProps['onItemClick']
+    onNodeClick: TreeProps['onNodeClick']
     defaultExpandAll: boolean
     defaultExpandedKeys: string[]
     depth?: number
@@ -44,85 +39,86 @@ interface NodeProps {
 
 function TreeNodeItem({
     item,
-    onItemClick,
+    onNodeClick,
     defaultExpandAll,
     defaultExpandedKeys,
     depth = 0,
 }: NodeProps) {
     if (!isParent(item)) {
         return (
-            <div
-                style={{ marginLeft: depth * 10 + 16 }}
-                className="flex items-center gap-2 cursor-pointer py-0.5"
+            <button
+                type="button"
+                className="flex w-full items-center gap-2.5 cursor-pointer select-none group text-left rounded-md px-2 py-1.5 hover:bg-ice dark:hover:bg-oxford-blue-700 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-true-blue"
+                style={{ paddingLeft: depth * 12 + 8 }}
                 onClick={() =>
-                    onItemClick({
+                    onNodeClick({
                         isParent: false,
                         key: item.key,
-                        label: item.value,
+                        label: item.label,
                         data: item.nodeData,
                         parentLabel: item.parentLabel,
                     })
                 }
             >
-                {/* Minus icon */}
-                <svg viewBox="0 0 24 24" fill="none" stroke={COLORS.PALETTE['prussian-blue']} strokeWidth={2} className="h-4 w-4 flex-shrink-0 dark:stroke-white">
-                    <path strokeLinecap="round" d="M5 12h14" />
-                </svg>
-                <span className="text-xs text-prussian-blue dark:text-white select-none transition-all duration-300 hover:bg-ice-dark dark:hover:bg-independence rounded-lg p-1">
-                    {item.value}
+                {/* Leaf dot */}
+                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-roman-silver dark:bg-manatee group-hover:bg-true-blue dark:group-hover:bg-true-blue transition-colors duration-150" />
+                <span className="text-sm text-independence dark:text-manatee group-hover:text-prussian-blue dark:group-hover:text-white transition-colors duration-150">
+                    {item.label}
                 </span>
-            </div>
+            </button>
         )
     }
 
-    /* Build default open state for THIS node's accordion */
     const initialOpen =
-        defaultExpandAll || defaultExpandedKeys.includes(item.key) ? [item.key] : []
+        defaultExpandAll || defaultExpandedKeys.includes(item.key)
+            ? [item.key]
+            : []
 
     return (
         <Accordion.Root
             type="multiple"
             defaultValue={initialOpen}
-            style={{ marginLeft: depth * 10 }}
+            style={{ paddingLeft: depth * 12 }}
         >
             <Accordion.Item value={item.key} className="border-none">
-                <Accordion.Trigger
-                    className="flex items-center gap-2 cursor-pointer py-0.5 group focus:outline-none w-full text-left"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    {/* ChevronDown – rotates via group-data-[state] */}
+                <Accordion.Trigger className="flex items-center gap-2 cursor-pointer py-1.5 px-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-true-blue w-full text-left rounded-md hover:bg-ice dark:hover:bg-oxford-blue-700 transition-colors duration-150">
+                    {/* Chevron — rotates on open/close */}
                     <svg
                         viewBox="0 0 24 24"
                         fill="none"
-                        stroke={COLORS.PALETTE['prussian-blue']}
-                        strokeWidth={2}
-                        className="h-4 w-4 flex-shrink-0 transition-transform duration-300 group-data-[state=closed]:-rotate-90 dark:stroke-white"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                        className="h-3.5 w-3.5 flex-shrink-0 text-black-coral dark:text-manatee transition-transform duration-200 group-data-[state=open]:rotate-0 group-data-[state=closed]:-rotate-90"
                     >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19 9l-7 7-7-7"
+                        />
                     </svg>
                     <span
-                        className="text-sm font-bold text-prussian-blue dark:text-white select-none transition-all duration-300 hover:bg-ice-dark dark:hover:bg-independence rounded-lg p-1"
+                        className="text-sm font-semibold text-prussian-blue dark:text-white select-none"
                         onClick={() =>
-                            onItemClick({
+                            onNodeClick({
                                 isParent: true,
                                 key: item.key,
-                                label: item.value,
+                                label: item.label,
                                 data: item.nodeData,
                                 parentLabel: item.parentLabel,
                             })
                         }
                     >
-                        {item.value}
+                        {item.label}
                     </span>
                 </Accordion.Trigger>
 
                 <Accordion.Content className="overflow-hidden data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
-                    <div className="ml-[7px] border-l border-prussian-blue dark:border-ice-dark">
+                    <div className="ml-3.5 border-l border-ice-dark dark:border-independence py-0.5">
                         {item.children!.map((child) => (
                             <TreeNodeItem
                                 key={child.key}
                                 item={child}
-                                onItemClick={onItemClick}
+                                onNodeClick={onNodeClick}
                                 defaultExpandAll={defaultExpandAll}
                                 defaultExpandedKeys={defaultExpandedKeys}
                                 depth={depth + 1}
@@ -138,31 +134,32 @@ function TreeNodeItem({
 /** ─────────────────── public component ─────────────────── */
 
 /**
- * Hierarchical tree view powered by Radix Accordion (nested).
+ * Hierarchical tree view powered by Radix Accordion.
  *
- * Each parent node is an independent Accordion.Root with `type="multiple"` so
- * sibling branches are independent. Leaf nodes are plain clickable rows.
+ * Each parent node is an independent Accordion.Root with type="multiple" so
+ * sibling branches expand independently. Leaf nodes are plain buttons.
+ * Expand/collapse is animated via CSS keyframes.
  *
  * @example
  * <Tree
- *   structure={fleetTree}
- *   onItemClick={({ key, isParent }) => selectNode(key)}
+ *   nodes={fleetTree}
+ *   onNodeClick={({ key, isParent }) => selectNode(key)}
  *   defaultExpandAll
  * />
  */
 export default function Tree({
-    structure,
-    onItemClick,
+    nodes,
+    onNodeClick,
     defaultExpandAll = false,
     defaultExpandedKeys = [],
 }: TreeProps) {
     return (
-        <div className="p-2">
-            {structure.map((item) => (
+        <div className="p-1 w-full">
+            {nodes.map((item) => (
                 <TreeNodeItem
                     key={item.key}
                     item={item}
-                    onItemClick={onItemClick}
+                    onNodeClick={onNodeClick}
                     defaultExpandAll={defaultExpandAll}
                     defaultExpandedKeys={defaultExpandedKeys}
                 />

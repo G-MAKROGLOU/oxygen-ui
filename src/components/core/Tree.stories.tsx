@@ -35,6 +35,21 @@ const NODES: TreeNode[] = [
             { key: 'v4', label: 'Vessel Triton', children: [] },
         ],
     },
+    {
+        key: 'fleet-3',
+        label: 'Fleet Gamma',
+        children: [
+            {
+                key: 'v5',
+                label: 'Vessel Atlas',
+                children: [
+                    { key: 'v5-1', label: 'Atlas I', children: [] },
+                    { key: 'v5-2', label: 'Atlas II', children: [] },
+                ],
+            },
+            { key: 'v6', label: 'Vessel Orion', children: [] },
+        ],
+    },
 ]
 
 export const Default: Story = {
@@ -42,6 +57,13 @@ export const Default: Story = {
         nodes: NODES,
         onNodeClick: (payload) => console.log('clicked:', payload),
     },
+    decorators: [
+        (Story) => (
+            <div style={{ width: 260 }}>
+                <Story />
+            </div>
+        ),
+    ],
 }
 
 export const AllExpanded: Story = {
@@ -50,4 +72,26 @@ export const AllExpanded: Story = {
         defaultExpandAll: true,
         onNodeClick: (payload) => console.log('clicked:', payload),
     },
+    decorators: [
+        (Story) => (
+            <div style={{ width: 260 }}>
+                <Story />
+            </div>
+        ),
+    ],
+}
+
+export const PartiallyExpanded: Story = {
+    args: {
+        nodes: NODES,
+        defaultExpandedKeys: ['fleet-1', 'v3'],
+        onNodeClick: (payload) => console.log('clicked:', payload),
+    },
+    decorators: [
+        (Story) => (
+            <div style={{ width: 260 }}>
+                <Story />
+            </div>
+        ),
+    ],
 }

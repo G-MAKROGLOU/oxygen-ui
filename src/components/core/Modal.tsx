@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Button from '../inputs/Button'
-import COLORS from '../../utils/colors'
 
 export interface ModalProps {
     /** Pixel dimensions [width, height] */
@@ -18,14 +18,15 @@ export interface ModalProps {
 }
 
 /**
- * Centred modal dialog powered by Radix Dialog.
+ * Centred modal dialog powered by Radix Dialog + Framer Motion.
  *
- * The Radix primitive handles focus-trap, escape-to-close, and ARIA roles.
- * The VesOPS visual style (scale-in animation, prussian-blue header) is preserved.
+ * Radix handles focus-trap, escape-to-close, and ARIA roles.
+ * Framer Motion drives the scale + fade enter/exit animation.
+ * prefers-reduced-motion is respected via useReducedMotion().
  *
  * @example
  * <Modal isOpen={open} onClose={() => setOpen(false)} title="Confirm" onOk={handleOk}>
- *   Are you sure?
+ *   Are you sure you want to delete this item?
  * </Modal>
  */
 export default function Modal({
@@ -40,56 +41,93 @@ export default function Modal({
     title,
     children,
 }: ModalProps) {
+    const reduced = useReducedMotion()
+
     return (
         <Dialog.Root open={isOpen} onOpenChange={(open) => { if (!open) onClose?.() }}>
-            <Dialog.Portal>
-                {/* Backdrop */}
-                <Dialog.Overlay className="fixed inset-0 bg-oxford-blue-700-opaque z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 transition-all duration-300" />
-
-                {/* Panel */}
-                <Dialog.Content
-                    style={{ width: size[0], height: size[1] }}
-                    className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 shadow-md rounded-lg bg-white dark:bg-prussian-blue p-1 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-300 focus:outline-none"
-                >
-                    {/* Header */}
-                    <div className="h-[12%] flex items-center justify-between border-b border-ice dark:border-independence p-2">
-                        <Dialog.Title className="text-prussian-blue dark:text-white font-bold text-lg">
-                            {title}
-                        </Dialog.Title>
-                        <Dialog.Close asChild>
-                            <button
-                                aria-label="Close"
-                                className="cursor-pointer rounded p-1 hover:bg-ice dark:hover:bg-independence transition-colors"
-                            >
-                                {/* XClose icon */}
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15 5L5 15M5 5l10 10" stroke={COLORS.PALETTE['prussian-blue']} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="dark:stroke-white" />
-                                </svg>
-                            </button>
-                        </Dialog.Close>
-                    </div>
-
-                    {/* Body */}
-                    <div className={`${hasFooter ? 'max-h-[77%]' : 'max-h-[90%]'} p-2 overflow-y-auto`}>
-                        {isOpen && children}
-                    </div>
-
-                    {/* Footer */}
-                    {hasFooter && (
-                        <div className="flex justify-end items-center gap-5 border-t border-ice dark:border-independence h-max p-2">
-                            <Button
-                                style={{ width: 100, margin: '0' }}
-                                content={cancelText}
-                                onClick={onCancel}
+            <Dialog.Portal forceMount>
+                {/* ── Backdrop ── */}
+                <AnimatePresence>
+                    {isOpen && (
+                        <Dialog.Overlay asChild>
+                            <motion.div
+                                className="fixed inset-0 bg-oxford-blue-700-opaque z-50"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: reduced ? 0 : 0.18, ease: 'easeOut' }}
                             />
-                            <Button
-                                style={{ width: 100, margin: '0' }}
-                                content={okText}
-                                onClick={onOk}
-                            />
-                        </div>
+                        </Dialog.Overlay>
                     )}
-                </Dialog.Content>
+                </AnimatePresence>
+
+                {/* ── Panel ── */}
+                <AnimatePresence>
+                    {isOpen && (
+                        <Dialog.Content asChild>
+                            <motion.div
+                                className="fixed left-1/2 top-1/2 z-50 flex flex-col bg-white dark:bg-prussian-blue rounded-2xl shadow-2xl shadow-black/20 overflow-hidden focus:outline-none"
+                                style={{
+                                    width: size[0],
+                                    height: size[1],
+                                    x: '-50%',
+                                    y: '-50%',
+                                }}
+                                initial={{ opacity: 0, scale: reduced ? 1 : 0.96 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: reduced ? 1 : 0.96 }}
+                                transition={
+                                    reduced
+                                        ? { duration: 0 }
+                                        : {
+                                              type: 'spring',
+                                              damping: 28,
+                                              stiffness: 380,
+                                              duration: 0.25,
+                                          }
+                                }
+                            >
+                                {/* Header */}
+                                <div className="flex h-14 flex-shrink-0 items-center justify-between border-b border-ice dark:border-independence px-5">
+                                    <Dialog.Title className="text-base font-semibold text-prussian-blue dark:text-white tracking-tight">
+                                        {title}
+                                    </Dialog.Title>
+                                    <Dialog.Close asChild>
+                                        <button
+                                            aria-label="Close"
+                                            className="flex h-7 w-7 items-center justify-center rounded-lg text-black-coral dark:text-manatee hover:bg-ice hover:text-prussian-blue dark:hover:bg-oxford-blue-700 dark:hover:text-white transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-true-blue"
+                                        >
+                                            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                                                <path d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </Dialog.Close>
+                                </div>
+
+                                {/* Body */}
+                                <div className={`flex-1 overflow-y-auto p-5 ${hasFooter ? '' : 'pb-5'}`}>
+                                    {isOpen && children}
+                                </div>
+
+                                {/* Footer */}
+                                {hasFooter && (
+                                    <div className="flex flex-shrink-0 items-center justify-end gap-3 border-t border-ice dark:border-independence px-5 py-3">
+                                        <Button
+                                            style={{ width: 90 }}
+                                            content={cancelText}
+                                            onClick={onCancel}
+                                        />
+                                        <Button
+                                            style={{ width: 90 }}
+                                            content={okText}
+                                            onClick={onOk}
+                                        />
+                                    </div>
+                                )}
+                            </motion.div>
+                        </Dialog.Content>
+                    )}
+                </AnimatePresence>
             </Dialog.Portal>
         </Dialog.Root>
     )
