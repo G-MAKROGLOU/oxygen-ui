@@ -1,4 +1,4 @@
-# @oxygenui/ui
+# @geomak/ui
 
 Oxygen Design System — reusable UI primitives for React applications.
 
@@ -9,21 +9,21 @@ Built with **React 19**, **Radix UI** (accessibility & behaviour), and **Tailwin
 ## Installation
 
 ```bash
-npm install @oxygenui/ui
+npm install @geomak/ui
 # or
-yarn add @oxygenui/ui
+yarn add @geomak/ui
 ```
 
 Import the stylesheet once at your app root:
 
 ```tsx
-import '@oxygenui/ui/styles'
+import '@geomak/ui/styles'
 ```
 
 Wrap your app with the required providers:
 
 ```tsx
-import { TooltipProvider, NotificationProvider } from '@oxygenui/ui'
+import { TooltipProvider, NotificationProvider } from '@geomak/ui'
 
 function App() {
     return (
@@ -77,12 +77,12 @@ yarn lint
 The package ships a colour palette. Add to your `tailwind.config.js`:
 
 ```js
-const PALETTE = require('@oxygenui/ui/src/utils/palette.json')
+const PALETTE = require('@geomak/ui/src/utils/palette.json')
 
 module.exports = {
     content: [
         './src/**/*.{ts,tsx}',
-        './node_modules/@oxygenui/ui/dist/**/*.js',
+        './node_modules/@geomak/ui/dist/**/*.js',
     ],
     darkMode: 'class',
     theme: {
