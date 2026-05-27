@@ -1,5 +1,5 @@
 {
-    "name": "@oxygen/ui",
+    "name": "@oxygenui/ui",
     "version": "0.1.0",
     "description": "Oxygen Design System — reusable UI primitives built with Radix UI behaviours and Tailwind CSS styling",
     "author": "G-MAKROGLOU",
