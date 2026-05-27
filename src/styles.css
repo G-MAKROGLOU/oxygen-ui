@@ -4,3 +4,90 @@
 
 /* Inter variable font — same as the portal */
 @import url('https://rsms.me/inter/inter.css');
+
+/* ── Design Tokens — CSS Custom Properties ───────────────────────────────────
+ *
+ * All semantic tokens are injected here as CSS variables.
+ * Light values live on :root; dark values override them under .dark.
+ * Tailwind's `bg-background`, `text-foreground`, etc. map to these vars
+ * via the theme.extend block in tailwind.config.cjs.
+ *
+ * Raw brand palette classes (bg-prussian-blue, text-true-blue, …) continue
+ * to work unchanged — semantic tokens are an additive layer.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+    :root {
+        /* ── Surfaces ── */
+        --color-background:       #DBF1FD; /* ice            — page-level app shell */
+        --color-surface:          #ffffff; /* white          — card / panel bg */
+        --color-surface-raised:   #ffffff; /* white          — dropdown, popover (shadow elevates) */
+
+        /* ── Borders ── */
+        --color-border:           #d0e3ed; /* ice-dark       — default separator */
+        --color-border-strong:    #7D8597; /* roman-silver   — focus rings, active dividers */
+
+        /* ── Text ── */
+        --color-foreground:           #001845; /* oxford-blue-800 — primary body copy */
+        --color-foreground-secondary: #33415C; /* independence    — labels, captions */
+        --color-foreground-muted:     #5C677D; /* black-coral     — placeholders, helper text */
+
+        /* ── Accent (interactive) ── */
+        --color-accent:            #0466C8; /* true-blue */
+        --color-accent-hover:      #0353A4; /* usafa-blue — darker on light bg */
+        --color-accent-foreground: #ffffff;
+
+        /* ── Status ── */
+        --color-error:   #e03131;
+        --color-warning: #e67700;
+        --color-success: #2f9e44;
+        --color-info:    #1971c2;
+
+        /* ── Radius ── */
+        --radius-sm:   4px;
+        --radius-md:   8px;
+        --radius-lg:   12px;
+        --radius-xl:   16px;
+        --radius-2xl:  20px;
+        --radius-full: 9999px;
+
+        /* ── Shadows (blue-tinted, brand-aware) ── */
+        --shadow-sm: 0 1px 3px rgba(0, 40, 85, 0.06),  0 1px 2px  rgba(0, 40, 85, 0.04);
+        --shadow-md: 0 4px 12px rgba(0, 40, 85, 0.08), 0 2px 6px  rgba(0, 40, 85, 0.05);
+        --shadow-lg: 0 16px 40px rgba(0, 40, 85, 0.12), 0 6px 16px rgba(0, 40, 85, 0.07);
+        --shadow-xl: 0 24px 64px rgba(0, 40, 85, 0.16), 0 8px 24px rgba(0, 40, 85, 0.09);
+    }
+
+    .dark {
+        /* ── Surfaces ── */
+        --color-background:       #001233; /* oxford-blue-900 — deepest shell */
+        --color-surface:          #00273A; /* prussian-blue   — cards / panels */
+        --color-surface-raised:   #002855; /* oxford-blue-700 — dropdowns, popovers */
+
+        /* ── Borders ── */
+        --color-border:           #33415C; /* independence */
+        --color-border-strong:    #5C677D; /* black-coral */
+
+        /* ── Text ── */
+        --color-foreground:           #DBF1FD; /* ice        — avoids harsh pure white */
+        --color-foreground-secondary: #979DAC; /* manatee */
+        --color-foreground-muted:     #7D8597; /* roman-silver */
+
+        /* ── Accent (interactive) ── */
+        --color-accent:            #0466C8; /* true-blue (holds contrast on dark bg) */
+        --color-accent-hover:      #1a80e8; /* lighter tint — brightness up on hover */
+        --color-accent-foreground: #ffffff;
+
+        /* ── Status (brightened for dark bg contrast) ── */
+        --color-error:   #ff6b6b;
+        --color-warning: #ffa94d;
+        --color-success: #69db7c;
+        --color-info:    #74c0fc;
+
+        /* ── Shadows (darker, neutral on dark surfaces) ── */
+        --shadow-sm: 0 1px 3px  rgba(0, 0, 0, 0.25);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+        --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.45);
+        --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.55);
+    }
+}

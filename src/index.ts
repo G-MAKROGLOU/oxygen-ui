@@ -1,6 +1,11 @@
+// ─── Design Tokens ───────────────────────────────────────────────────────────
+// Full token set: import { vars, semanticTokens, palette } from '@geomak/ui'
+// Subpath import:  import { vars } from '@geomak/ui/tokens'
+export { vars, semanticTokens, palette } from './tokens'
+export type { SemanticColorKey, SemanticRadiusKey, VarColorKey, VarRadiusKey, VarShadowKey } from './tokens'
+
 // ─── Utilities ────────────────────────────────────────────────────────────────
 export { default as COLORS } from './utils/colors'
-export type { } from './utils/colors'
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 export { default as Icon } from './icons/icons'
