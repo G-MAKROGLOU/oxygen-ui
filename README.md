@@ -1,29 +1,29 @@
-# @vesops/ui
+# @oxygen/ui
 
-VesOPS Design System — reusable UI primitives for maritime SaaS applications.
+Oxygen Design System — reusable UI primitives for React applications.
 
-Built with **React 19**, **Radix UI** (accessibility & behaviour), and **Tailwind CSS v3** (VesOPS palette). Ships as ESM + CJS + TypeScript declarations.
+Built with **React 19**, **Radix UI** (accessibility & behaviour), and **Tailwind CSS v3**. Ships as ESM + CJS + TypeScript declarations.
 
 ---
 
 ## Installation
 
 ```bash
-npm install @vesops/ui
+npm install @oxygen/ui
 # or
-yarn add @vesops/ui
+yarn add @oxygen/ui
 ```
 
 Import the stylesheet once at your app root:
 
 ```tsx
-import '@vesops/ui/styles'
+import '@oxygen/ui/styles'
 ```
 
 Wrap your app with the required providers:
 
 ```tsx
-import { TooltipProvider, NotificationProvider } from '@vesops/ui'
+import { TooltipProvider, NotificationProvider } from '@oxygen/ui'
 
 function App() {
     return (
@@ -65,21 +65,24 @@ yarn build
 
 # Type-check
 yarn typecheck
+
+# Lint
+yarn lint
 ```
 
 ---
 
 ## Tailwind setup (consuming app)
 
-The package requires the VesOPS Tailwind theme. Add to your `tailwind.config.js`:
+The package ships a colour palette. Add to your `tailwind.config.js`:
 
 ```js
-const PALETTE = require('@vesops/ui/src/utils/palette.json')
+const PALETTE = require('@oxygen/ui/src/utils/palette.json')
 
 module.exports = {
     content: [
         './src/**/*.{ts,tsx}',
-        './node_modules/@vesops/ui/dist/**/*.js',
+        './node_modules/@oxygen/ui/dist/**/*.js',
     ],
     darkMode: 'class',
     theme: {
@@ -91,7 +94,23 @@ module.exports = {
 
 ---
 
+## Releases
+
+This package uses [semantic-release](https://github.com/semantic-release/semantic-release) with [Conventional Commits](https://www.conventionalcommits.org/).
+
+| Commit prefix | Version bump |
+|---|---|
+| `fix:` | patch (0.0.x) |
+| `feat:` | minor (0.x.0) |
+| `feat!:` / `BREAKING CHANGE:` | major (x.0.0) |
+
+Merging to `main` automatically lints, type-checks, publishes to npm, and deploys Storybook to Netlify.
+
+---
+
 ## Publishing
+
+Handled automatically by GitHub Actions on merge to `main`. To publish manually:
 
 ```bash
 yarn build

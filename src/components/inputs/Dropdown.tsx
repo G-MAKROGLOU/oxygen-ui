@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import SearchInput from './SearchInput'
 import DropdownPill from './DropdownPill'

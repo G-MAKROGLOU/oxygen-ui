@@ -12,7 +12,7 @@ export interface WizardStep {
 export interface WizardProps {
     children: React.ReactNode
     steps: WizardStep[]
-    /** localStorage key used to remember dismissal (default: 'vesops_wizard') */
+    /** localStorage key used to remember dismissal (default: 'oxygen_wizard') */
     storageKey?: string
 }
 
