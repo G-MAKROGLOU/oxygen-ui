@@ -1,4 +1,4 @@
-# @oxygen/ui
+# @oxygenui/ui
 
 Oxygen Design System — reusable UI primitives for React applications.
 
@@ -9,21 +9,21 @@ Built with **React 19**, **Radix UI** (accessibility & behaviour), and **Tailwin
 ## Installation
 
 ```bash
-npm install @oxygen/ui
+npm install @oxygenui/ui
 # or
-yarn add @oxygen/ui
+yarn add @oxygenui/ui
 ```
 
 Import the stylesheet once at your app root:
 
 ```tsx
-import '@oxygen/ui/styles'
+import '@oxygenui/ui/styles'
 ```
 
 Wrap your app with the required providers:
 
 ```tsx
-import { TooltipProvider, NotificationProvider } from '@oxygen/ui'
+import { TooltipProvider, NotificationProvider } from '@oxygenui/ui'
 
 function App() {
     return (
@@ -77,12 +77,12 @@ yarn lint
 The package ships a colour palette. Add to your `tailwind.config.js`:
 
 ```js
-const PALETTE = require('@oxygen/ui/src/utils/palette.json')
+const PALETTE = require('@oxygenui/ui/src/utils/palette.json')
 
 module.exports = {
     content: [
         './src/**/*.{ts,tsx}',
-        './node_modules/@oxygen/ui/dist/**/*.js',
+        './node_modules/@oxygenui/ui/dist/**/*.js',
     ],
     darkMode: 'class',
     theme: {
