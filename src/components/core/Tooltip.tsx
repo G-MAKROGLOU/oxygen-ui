@@ -3,47 +3,77 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 
 export interface TooltipProps {
     children: React.ReactNode
+    /** The text or node shown inside the tooltip */
     title: React.ReactNode
-    /** 'top' | 'right' | 'bottom' | 'left' */
+    /** Which side of the trigger the tooltip appears on */
     placement?: 'top' | 'right' | 'bottom' | 'left'
-    /** Delay in ms before showing the tooltip */
+    /** Delay before showing, ms (default 300) */
     delayDuration?: number
+    /** Offset from trigger in px (default 8) */
+    sideOffset?: number
+}
+
+// Each placement animates in from the opposite edge (toward the trigger)
+const ANIMATION: Record<NonNullable<TooltipProps['placement']>, string> = {
+    top:    'data-[state=delayed-open]:animate-tooltip-in-top',
+    bottom: 'data-[state=delayed-open]:animate-tooltip-in-bottom',
+    left:   'data-[state=delayed-open]:animate-tooltip-in-left',
+    right:  'data-[state=delayed-open]:animate-tooltip-in-right',
 }
 
 /**
  * Tooltip powered by Radix Tooltip.
  *
- * Radix handles keyboard navigation (escape), pointer events, and ARIA.
- * The VesOPS prussian-blue style is preserved.
- *
- * Wrap your app in `<TooltipProvider>` (re-exported below) to batch providers.
+ * Radix handles keyboard navigation (Escape), pointer events, and ARIA.
+ * Each placement animates in from the correct direction.
+ * Wrap your app in `<TooltipProvider>` (re-exported below) to share a
+ * single provider instead of nesting one per tooltip.
  *
  * @example
- * <Tooltip title="Delete record" placement="right">
- *   <IconButton icon={<Icon.Trash />} />
- * </Tooltip>
+ * <TooltipProvider>
+ *   <Tooltip title="Delete record" placement="top">
+ *     <IconButton icon={<TrashIcon />} />
+ *   </Tooltip>
+ * </TooltipProvider>
  */
 export default function Tooltip({
     children,
     title,
-    placement = 'left',
-    delayDuration = 400,
+    placement = 'top',
+    delayDuration = 300,
+    sideOffset = 8,
 }: TooltipProps) {
     return (
         <TooltipPrimitive.Provider delayDuration={delayDuration}>
             <TooltipPrimitive.Root>
                 <TooltipPrimitive.Trigger asChild>
-                    {/* Radix Trigger requires a single child element */}
-                    <span className="h-max w-max">{children}</span>
+                    <span className="inline-flex">{children}</span>
                 </TooltipPrimitive.Trigger>
+
                 <TooltipPrimitive.Portal>
                     <TooltipPrimitive.Content
                         side={placement}
-                        sideOffset={8}
-                        className="pointer-events-none z-[500000000] rounded-lg bg-prussian-blue dark:bg-rich-black-fogra px-2 py-1.5 text-white text-sm w-max max-w-xs animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+                        sideOffset={sideOffset}
+                        className={[
+                            // Layout + typography
+                            'pointer-events-none z-[500000] max-w-[220px] px-2.5 py-1.5',
+                            'text-xs font-medium leading-snug text-white',
+                            // Background + border — slightly translucent for depth
+                            'bg-foreground/95 rounded-md border border-white/5',
+                            // Shadow
+                            'shadow-md',
+                            // Out animation (always the same — just fade)
+                            'data-[state=closed]:animate-tooltip-out',
+                            // In animation — direction-aware
+                            ANIMATION[placement],
+                        ].join(' ')}
                     >
                         {title}
-                        <TooltipPrimitive.Arrow className="fill-prussian-blue dark:fill-rich-black-fogra" />
+                        <TooltipPrimitive.Arrow
+                            width={10}
+                            height={5}
+                            className="fill-foreground/95"
+                        />
                     </TooltipPrimitive.Content>
                 </TooltipPrimitive.Portal>
             </TooltipPrimitive.Root>
@@ -51,6 +81,5 @@ export default function Tooltip({
     )
 }
 
-/** Re-export provider so consumers can wrap their app once instead of per-tooltip */
 export { TooltipPrimitive as TooltipPrimitives }
 export const TooltipProvider = TooltipPrimitive.Provider

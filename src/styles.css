@@ -2,92 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Inter variable font — same as the portal */
+/* Inter variable font */
 @import url('https://rsms.me/inter/inter.css');
 
 /* ── Design Tokens — CSS Custom Properties ───────────────────────────────────
  *
- * All semantic tokens are injected here as CSS variables.
- * Light values live on :root; dark values override them under .dark.
- * Tailwind's `bg-background`, `text-foreground`, etc. map to these vars
- * via the theme.extend block in tailwind.config.cjs.
+ * All semantic tokens live here. Light values on :root; dark overrides on .dark.
+ * Tailwind semantic utilities (bg-background, text-foreground, etc.) point to
+ * these vars via theme.extend in tailwind.config.cjs.
  *
- * Raw brand palette classes (bg-prussian-blue, text-true-blue, …) continue
- * to work unchanged — semantic tokens are an additive layer.
+ * Radius scale is deliberately tighter than Tailwind defaults — enterprise
+ * software reads softer corners as draft/consumer. 6px is the new baseline.
  * ───────────────────────────────────────────────────────────────────────── */
 
 @layer base {
     :root {
         /* ── Surfaces ── */
-        --color-background:       #DBF1FD; /* ice            — page-level app shell */
-        --color-surface:          #ffffff; /* white          — card / panel bg */
-        --color-surface-raised:   #ffffff; /* white          — dropdown, popover (shadow elevates) */
+        --color-background:       #eef4fa;  /* cool off-white, softer than ice */
+        --color-surface:          #ffffff;
+        --color-surface-raised:   #ffffff;
 
         /* ── Borders ── */
-        --color-border:           #d0e3ed; /* ice-dark       — default separator */
-        --color-border-strong:    #7D8597; /* roman-silver   — focus rings, active dividers */
+        --color-border:           #d3dde8;
+        --color-border-strong:    #8898aa;
 
         /* ── Text ── */
-        --color-foreground:           #001845; /* oxford-blue-800 — primary body copy */
-        --color-foreground-secondary: #33415C; /* independence    — labels, captions */
-        --color-foreground-muted:     #5C677D; /* black-coral     — placeholders, helper text */
+        --color-foreground:           #0a1929;  /* near-black, blue-tinted */
+        --color-foreground-secondary: #2e4057;
+        --color-foreground-muted:     #536878;
 
-        /* ── Accent (interactive) ── */
-        --color-accent:            #0466C8; /* true-blue */
-        --color-accent-hover:      #0353A4; /* usafa-blue — darker on light bg */
+        /* ── Accent ── */
+        --color-accent:            #0466C8;
+        --color-accent-hover:      #0353A4;
         --color-accent-foreground: #ffffff;
 
         /* ── Status ── */
-        --color-error:   #e03131;
-        --color-warning: #e67700;
-        --color-success: #2f9e44;
-        --color-info:    #1971c2;
+        --color-error:   #c0392b;
+        --color-warning: #d68910;
+        --color-success: #1e8449;
+        --color-info:    #1565c0;
 
-        /* ── Radius ── */
-        --radius-sm:   4px;
-        --radius-md:   8px;
-        --radius-lg:   12px;
-        --radius-xl:   16px;
-        --radius-2xl:  20px;
+        /* ── Radius — enterprise scale ── */
+        --radius-sm:   2px;   /* near-square: tags, badges, small inputs */
+        --radius-md:   5px;   /* buttons, form fields                    */
+        --radius-lg:   7px;   /* cards, panels, dropdowns                */
+        --radius-xl:   10px;  /* modals, drawers, large panels           */
+        --radius-2xl:  12px;  /* reserved for hero elements only         */
         --radius-full: 9999px;
 
-        /* ── Shadows (blue-tinted, brand-aware) ── */
-        --shadow-sm: 0 1px 3px rgba(0, 40, 85, 0.06),  0 1px 2px  rgba(0, 40, 85, 0.04);
-        --shadow-md: 0 4px 12px rgba(0, 40, 85, 0.08), 0 2px 6px  rgba(0, 40, 85, 0.05);
-        --shadow-lg: 0 16px 40px rgba(0, 40, 85, 0.12), 0 6px 16px rgba(0, 40, 85, 0.07);
-        --shadow-xl: 0 24px 64px rgba(0, 40, 85, 0.16), 0 8px 24px rgba(0, 40, 85, 0.09);
+        /* ── Shadows — blue-tinted, layered ── */
+        --shadow-sm: 0 1px 2px rgba(4, 31, 66, 0.06);
+        --shadow-md: 0 2px 8px rgba(4, 31, 66, 0.08),  0 1px 3px rgba(4, 31, 66, 0.05);
+        --shadow-lg: 0 8px 24px rgba(4, 31, 66, 0.10), 0 3px 8px  rgba(4, 31, 66, 0.06);
+        --shadow-xl: 0 20px 48px rgba(4, 31, 66, 0.13), 0 6px 16px rgba(4, 31, 66, 0.08);
     }
 
     .dark {
         /* ── Surfaces ── */
-        --color-background:       #001233; /* oxford-blue-900 — deepest shell */
-        --color-surface:          #00273A; /* prussian-blue   — cards / panels */
-        --color-surface-raised:   #002855; /* oxford-blue-700 — dropdowns, popovers */
+        --color-background:       #060f1a;   /* deeper than oxford-900 */
+        --color-surface:          #0d1f30;
+        --color-surface-raised:   #152638;
 
         /* ── Borders ── */
-        --color-border:           #33415C; /* independence */
-        --color-border-strong:    #5C677D; /* black-coral */
+        --color-border:           #1e3348;
+        --color-border-strong:    #2e4a64;
 
         /* ── Text ── */
-        --color-foreground:           #DBF1FD; /* ice        — avoids harsh pure white */
-        --color-foreground-secondary: #979DAC; /* manatee */
-        --color-foreground-muted:     #7D8597; /* roman-silver */
+        --color-foreground:           #e8f0f8;
+        --color-foreground-secondary: #9ab0c4;
+        --color-foreground-muted:     #5c7a92;
 
-        /* ── Accent (interactive) ── */
-        --color-accent:            #0466C8; /* true-blue (holds contrast on dark bg) */
-        --color-accent-hover:      #1a80e8; /* lighter tint — brightness up on hover */
+        /* ── Accent ── */
+        --color-accent:            #2d88ff;   /* brighter on dark bg */
+        --color-accent-hover:      #4d9aff;
         --color-accent-foreground: #ffffff;
 
-        /* ── Status (brightened for dark bg contrast) ── */
+        /* ── Status ── */
         --color-error:   #ff6b6b;
-        --color-warning: #ffa94d;
-        --color-success: #69db7c;
-        --color-info:    #74c0fc;
+        --color-warning: #ffb347;
+        --color-success: #5cb85c;
+        --color-info:    #5bc0de;
 
-        /* ── Shadows (darker, neutral on dark surfaces) ── */
-        --shadow-sm: 0 1px 3px  rgba(0, 0, 0, 0.25);
-        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
-        --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.45);
-        --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.55);
+        /* ── Radius unchanged ── */
+
+        /* ── Shadows — pure dark, crisp ── */
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+        --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.40), 0 1px 3px rgba(0, 0, 0, 0.25);
+        --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.50), 0 3px 8px rgba(0, 0, 0, 0.30);
+        --shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.60), 0 6px 16px rgba(0, 0, 0, 0.35);
     }
 }
