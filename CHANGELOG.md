@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.1.0...v1.2.0) (2026-05-27)
+
+
+### Features
+
+* Phase B — design token layer (CSS vars, semantic tokens, Tailwind extension) ([f4d7b46](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f4d7b468565dc8c0afbb826f23864561432dc08e))
+
 # [1.1.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.0.0...v1.1.0) (2026-05-27)
 
 
