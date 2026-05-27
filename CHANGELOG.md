@@ -1,3 +1,11 @@
+# [1.3.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.2.0...v1.3.0) (2026-05-27)
+
+
+### Features
+
+* Phase C — Button variants, TopBar, ThemeSwitch cleanup, Notification animation ([64b2279](https://github.com/G-MAKROGLOU/oxygen-ui/commit/64b22792b7fe241cef5aabaad92405c99e41b776)), closes [#fff](https://github.com/G-MAKROGLOU/oxygen-ui/issues/fff)
+* Phase D — MSW + Storybook integration for async story patterns ([2f143b8](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2f143b894aece4e31b02448f596883956350602e))
+
 # [1.2.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.1.0...v1.2.0) (2026-05-27)
 
 
