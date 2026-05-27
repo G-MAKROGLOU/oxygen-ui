@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react'
 import * as Toast from '@radix-ui/react-toast'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 
 /** ─────────────────── types ─────────────────── */
 export type NotificationType = 'info' | 'success' | 'warning' | 'danger'
@@ -28,17 +29,17 @@ const NotificationContext = createContext<NotificationContextValue>({
 })
 
 /** ─────────────────── helpers ─────────────────── */
-const typeClass: Record<NotificationType, string> = {
-    info: 'bg-info',
-    success: 'bg-success',
-    warning: 'bg-warning',
-    danger: 'bg-error',
+const TYPE_BG: Record<NotificationType, string> = {
+    info:    'bg-status-info',
+    success: 'bg-status-success',
+    warning: 'bg-status-warning',
+    danger:  'bg-status-error',
 }
 
 function TypeIcon({ type }: { type: NotificationType }) {
     if (type === 'success') {
         return (
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <svg width="20" height="20" viewBox="0 0 28 28" fill="none" aria-hidden="true">
                 <path
                     fillRule="evenodd"
                     clipRule="evenodd"
@@ -50,23 +51,88 @@ function TypeIcon({ type }: { type: NotificationType }) {
     }
     if (type === 'info') {
         return (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="w-7 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="w-5 h-5" aria-hidden="true">
                 <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
             </svg>
         )
     }
     if (type === 'warning') {
         return (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="w-7 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="w-5 h-5" aria-hidden="true">
                 <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
             </svg>
         )
     }
     // danger
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="w-7 h-7">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" className="w-5 h-5" aria-hidden="true">
             <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 01-.988-1.129c1.454-1.272 3.776-1.272 5.23 0 1.513 1.324 1.513 3.518 0 4.842a3.75 3.75 0 01-.837.552c-.676.328-1.028.774-1.028 1.152v.75a.75.75 0 01-1.5 0v-.75c0-1.279 1.06-2.107 1.875-2.502.182-.088.351-.199.503-.331.83-.727.83-1.857 0-2.584zM12 18a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
         </svg>
+    )
+}
+
+/** ─────────────────── animated toast item ─────────────────── */
+function NotificationItem({
+    n,
+    onClose,
+    reduced,
+}: {
+    n: NotificationEntry
+    onClose: (id: number) => void
+    reduced: boolean | null
+}) {
+    return (
+        <motion.div
+            layout
+            initial={{ opacity: 0, x: reduced ? 0 : 56, scale: reduced ? 0.97 : 1 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{   opacity: 0, x: reduced ? 0 : 40, scale: reduced ? 0.97 : 1 }}
+            transition={
+                reduced
+                    ? { duration: 0 }
+                    : {
+                          opacity: { duration: 0.15 },
+                          x: { type: 'tween', duration: 0.22, ease: [0.16, 1, 0.3, 1] },
+                          layout: { duration: 0.2 },
+                      }
+            }
+        >
+            <Toast.Root
+                open
+                duration={n.duration}
+                onOpenChange={(o) => { if (!o) onClose(n.id) }}
+                className={[
+                    'rounded-xl shadow-md p-3 w-[300px] text-white',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
+                    TYPE_BG[n.type ?? 'info'],
+                ].join(' ')}
+            >
+                <div className="flex items-center gap-2.5">
+                    <span className="flex-shrink-0">
+                        <TypeIcon type={n.type ?? 'info'} />
+                    </span>
+                    <Toast.Title className="font-semibold text-sm leading-snug flex-1">
+                        {n.title}
+                    </Toast.Title>
+                    <Toast.Action asChild altText="Close">
+                        <button
+                            aria-label="Close notification"
+                            onClick={() => onClose(n.id)}
+                            className="flex-shrink-0 rounded-md p-1 hover:bg-white/20 transition-colors duration-150 focus:outline-none focus-visible:ring-1 focus-visible:ring-white/60"
+                        >
+                            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                                <path d="M15 5L5 15M5 5l10 10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                    </Toast.Action>
+                </div>
+                {n.description && (
+                    <Toast.Description className="mt-1.5 text-xs text-white/80 leading-relaxed pl-7">
+                        {n.description}
+                    </Toast.Description>
+                )}
+            </Toast.Root>
+        </motion.div>
     )
 }
 
@@ -77,21 +143,28 @@ function TypeIcon({ type }: { type: NotificationType }) {
  * toast notifications. Then call `useNotification()` anywhere inside to
  * trigger them.
  *
+ * Toasts slide in from the right and exit to the right.
+ * `prefers-reduced-motion` is respected via `useReducedMotion()`.
+ *
  * @example
- * // _app.tsx / main.tsx
+ * // main.tsx / _app.tsx
  * <NotificationProvider>
  *   <App />
  * </NotificationProvider>
  *
  * // Inside a component
  * const notify = useNotification()
- * notify.success({ title: 'Saved!', description: 'Your changes were saved.', duration: 3000 })
+ * notify.success({ title: 'Saved!', description: 'Your changes were saved.' })
  */
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
     const [notifications, setNotifications] = useState<NotificationEntry[]>([])
+    const reduced = useReducedMotion()
 
     const open = (payload: NotificationPayload) => {
-        setNotifications((prev) => [...prev, { duration: 4000, ...payload, id: Date.now() + Math.random() }])
+        setNotifications((prev) => [
+            ...prev,
+            { duration: 4000, ...payload, id: Date.now() + Math.random() },
+        ])
     }
 
     const close = (id: number) => {
@@ -103,41 +176,23 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
             <Toast.Provider swipeDirection="right">
                 {children}
 
-                {notifications.map((n) => (
-                    <Toast.Root
-                        key={n.id}
-                        open
-                        duration={n.duration}
-                        onOpenChange={(o) => { if (!o) close(n.id) }}
-                        className={`rounded-lg shadow-md p-2 w-[300px] text-white ${typeClass[n.type ?? 'info']} data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-right-full data-[state=closed]:slide-out-to-right-full`}
-                    >
-                        <div className="flex items-center justify-between gap-3 border-b border-white pb-1">
-                            <TypeIcon type={n.type ?? 'info'} />
-                            <Toast.Title className="text-center font-bold text-lg flex-1">
-                                {n.title}
-                            </Toast.Title>
-                            <Toast.Action asChild altText="Close">
-                                <button
-                                    aria-label="Close notification"
-                                    onClick={() => close(n.id)}
-                                    className="cursor-pointer rounded p-0.5 hover:bg-white/20 transition-colors"
-                                >
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                                        <path d="M15 5L5 15M5 5l10 10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </button>
-                            </Toast.Action>
-                        </div>
-                        {n.description && (
-                            <Toast.Description className="text-center mt-1 text-sm">
-                                {n.description}
-                            </Toast.Description>
-                        )}
-                    </Toast.Root>
-                ))}
-
-                {/* Fixed viewport – stacks toasts top-right */}
-                <Toast.Viewport className="fixed top-[50px] right-0 flex flex-col gap-2 w-[350px] z-[500000] p-4 outline-none" />
+                <Toast.Viewport
+                    asChild
+                    className="fixed top-[56px] right-0 z-[500000] flex flex-col gap-2 w-[350px] p-4 outline-none"
+                >
+                    <ul>
+                        <AnimatePresence initial={false}>
+                            {notifications.map((n) => (
+                                <NotificationItem
+                                    key={n.id}
+                                    n={n}
+                                    onClose={close}
+                                    reduced={reduced}
+                                />
+                            ))}
+                        </AnimatePresence>
+                    </ul>
+                </Toast.Viewport>
             </Toast.Provider>
         </NotificationContext.Provider>
     )
@@ -146,7 +201,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 /** ─────────────────── hook ─────────────────── */
 
 /**
- * Imperative notification API.
+ * Imperative notification API. Must be called inside `NotificationProvider`.
  *
  * @example
  * const notify = useNotification()
@@ -157,9 +212,9 @@ export function useNotification() {
     const { open } = useContext(NotificationContext)
 
     return {
-        info: (props: Omit<NotificationPayload, 'type'>) => open({ type: 'info', ...props }),
+        info:    (props: Omit<NotificationPayload, 'type'>) => open({ type: 'info',    ...props }),
         success: (props: Omit<NotificationPayload, 'type'>) => open({ type: 'success', ...props }),
         warning: (props: Omit<NotificationPayload, 'type'>) => open({ type: 'warning', ...props }),
-        danger: (props: Omit<NotificationPayload, 'type'>) => open({ type: 'danger', ...props }),
+        danger:  (props: Omit<NotificationPayload, 'type'>) => open({ type: 'danger',  ...props }),
     }
 }

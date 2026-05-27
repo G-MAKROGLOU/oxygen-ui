@@ -89,9 +89,12 @@ export type {
     ExpandRowOptions,
 } from './components/core/Table'
 
-/** Theme-toggle variant of Switch (red/green dot) */
+/** Theme-toggle switch (moon/sun icons, accent track) */
 export { default as ThemeSwitch } from './components/core/Switch'
 export type { ThemeSwitchProps } from './components/core/Switch'
+
+export { default as TopBar } from './components/core/TopBar'
+export type { TopBarProps } from './components/core/TopBar'
 
 // ─── Input components ─────────────────────────────────────────────────────────
 export { default as Button } from './components/inputs/Button'
