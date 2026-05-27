@@ -45,22 +45,24 @@ export const Default: Story = {
     },
 }
 
+function TopBarWithThemeSwitch() {
+    const [dark, setDark] = useState(false)
+    return (
+        <TopBar
+            brand={<Brand />}
+            center={<NavLinks />}
+            actions={
+                <ThemeSwitch
+                    checked={dark}
+                    onChange={({ target }) => setDark(target.checked)}
+                />
+            }
+        />
+    )
+}
+
 export const WithThemeSwitch: Story = {
-    render: () => {
-        const [dark, setDark] = useState(false)
-        return (
-            <TopBar
-                brand={<Brand />}
-                center={<NavLinks />}
-                actions={
-                    <ThemeSwitch
-                        checked={dark}
-                        onChange={({ target }) => setDark(target.checked)}
-                    />
-                }
-            />
-        )
-    },
+    render: () => <TopBarWithThemeSwitch />,
 }
 
 export const BrandOnly: Story = {
