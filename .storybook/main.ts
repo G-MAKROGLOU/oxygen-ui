@@ -6,11 +6,14 @@ const config: StorybookConfig = {
         '@storybook/addon-links',
         '@storybook/addon-essentials',
         '@storybook/addon-interactions',
+        'msw-storybook-addon',
     ],
     framework: {
         name: '@storybook/react-vite',
         options: {},
     },
+    // Serve the MSW service worker from public/
+    staticDirs: ['../public'],
     docs: {
         autodocs: 'tag',
     },

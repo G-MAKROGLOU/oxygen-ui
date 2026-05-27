@@ -11,16 +11,18 @@ const meta: Meta<typeof ThemeSwitch> = {
 export default meta
 type Story = StoryObj<typeof ThemeSwitch>
 
+function DefaultSwitch() {
+    const [checked, setChecked] = useState(false)
+    return (
+        <ThemeSwitch
+            checked={checked}
+            onChange={({ target }) => setChecked(target.checked)}
+        />
+    )
+}
+
 export const Default: Story = {
-    render: () => {
-        const [checked, setChecked] = useState(false)
-        return (
-            <ThemeSwitch
-                checked={checked}
-                onChange={({ target }) => setChecked(target.checked)}
-            />
-        )
-    },
+    render: () => <DefaultSwitch />,
 }
 
 export const DarkModeOn: Story = {
