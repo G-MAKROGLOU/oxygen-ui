@@ -48,7 +48,7 @@ function TreeNodeItem({
         return (
             <button
                 type="button"
-                className="flex w-full items-center gap-2.5 cursor-pointer select-none group text-left rounded-md px-2 py-1.5 hover:bg-ice dark:hover:bg-oxford-blue-700 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-true-blue"
+                className="flex w-full items-center gap-2.5 cursor-pointer select-none group text-left rounded-md px-2 py-1.5 hover:bg-surface-raised transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 style={{ paddingLeft: depth * 12 + 8 }}
                 onClick={() =>
                     onNodeClick({
@@ -61,8 +61,8 @@ function TreeNodeItem({
                 }
             >
                 {/* Leaf dot */}
-                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-roman-silver dark:bg-manatee group-hover:bg-true-blue dark:group-hover:bg-true-blue transition-colors duration-150" />
-                <span className="text-sm text-independence dark:text-manatee group-hover:text-prussian-blue dark:group-hover:text-white transition-colors duration-150">
+                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-foreground-muted group-hover:bg-accent transition-colors duration-150" />
+                <span className="text-sm text-foreground-secondary group-hover:text-foreground transition-colors duration-150">
                     {item.label}
                 </span>
             </button>
@@ -81,14 +81,14 @@ function TreeNodeItem({
             style={{ paddingLeft: depth * 12 }}
         >
             <Accordion.Item value={item.key} className="border-none">
-                <Accordion.Trigger className="flex items-center gap-2 cursor-pointer py-1.5 px-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-true-blue w-full text-left rounded-md hover:bg-ice dark:hover:bg-oxford-blue-700 transition-colors duration-150">
+                <Accordion.Trigger className="flex items-center gap-2 cursor-pointer py-1.5 px-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent w-full text-left rounded-md hover:bg-surface-raised transition-colors duration-150">
                     {/* Chevron — rotates on open/close */}
                     <svg
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth={2.5}
-                        className="h-3.5 w-3.5 flex-shrink-0 text-black-coral dark:text-manatee transition-transform duration-200 group-data-[state=open]:rotate-0 group-data-[state=closed]:-rotate-90"
+                        className="h-3.5 w-3.5 flex-shrink-0 text-foreground-muted transition-transform duration-200 group-data-[state=open]:rotate-0 group-data-[state=closed]:-rotate-90"
                     >
                         <path
                             strokeLinecap="round"
@@ -97,7 +97,7 @@ function TreeNodeItem({
                         />
                     </svg>
                     <span
-                        className="text-sm font-semibold text-prussian-blue dark:text-white select-none"
+                        className="text-sm font-semibold text-foreground select-none"
                         onClick={() =>
                             onNodeClick({
                                 isParent: true,
@@ -113,7 +113,7 @@ function TreeNodeItem({
                 </Accordion.Trigger>
 
                 <Accordion.Content className="overflow-hidden data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
-                    <div className="ml-3.5 border-l border-ice-dark dark:border-independence py-0.5">
+                    <div className="ml-3.5 border-l border-border py-0.5">
                         {item.children!.map((child) => (
                             <TreeNodeItem
                                 key={child.key}

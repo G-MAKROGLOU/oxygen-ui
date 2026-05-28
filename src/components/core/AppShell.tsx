@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import React, { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Sidebar from './Sidebar'
 import type { SidebarSection, SidebarProps } from './Sidebar'
 
@@ -7,6 +7,9 @@ export interface AppShellProps {
     /**
      * Top navigation bar.
      * Typically `<TopBar brand={...} actions={...} />`.
+     * On mobile, a hamburger button is injected to the left of this slot when
+     * `sidebarSections` is non-empty. The TopBar should leave some leading space
+     * (or use its `center` / `actions` props) to avoid overlap.
      */
     topBar?: React.ReactNode
 
@@ -36,7 +39,12 @@ export interface AppShellProps {
  * Full-page application layout skeleton.
  *
  * Composes a sticky TopBar + collapsible Sidebar + scrollable content area.
- * The main area shifts with the sidebar width via a Framer Motion margin animation.
+ *
+ * **Responsive behaviour:**
+ * - **≥ md (768 px):** Sidebar renders inline, collapsible via its own toggle.
+ * - **< md (mobile):** Sidebar becomes a fixed overlay drawer. A hamburger
+ *   button appears to the left of the TopBar slot to open it. Tapping the
+ *   backdrop or the sidebar's own toggle closes it.
  *
  * @example
  * <AppShell
@@ -56,21 +64,72 @@ export default function AppShell({
     children,
     className = '',
 }: AppShellProps) {
-    const [expanded, setExpanded] = useState(sidebarDefaultExpanded)
+    const [expanded,   setExpanded]   = useState(sidebarDefaultExpanded)
+    const [isMobile,   setIsMobile]   = useState(false)
+    const [mobileOpen, setMobileOpen] = useState(false)
+
+    // Track mobile breakpoint
+    useEffect(() => {
+        const mq = window.matchMedia('(max-width: 767px)')
+        const update = (e: MediaQueryList | MediaQueryListEvent) => setIsMobile(e.matches)
+        update(mq)
+        mq.addEventListener('change', update as (e: MediaQueryListEvent) => void)
+        return () => mq.removeEventListener('change', update as (e: MediaQueryListEvent) => void)
+    }, [])
+
+    // Auto-close mobile sidebar on resize to desktop
+    useEffect(() => {
+        if (!isMobile) setMobileOpen(false)
+    }, [isMobile])
+
+    const hasSidebar = sidebarSections.length > 0
 
     return (
         <div className={`flex flex-col h-screen bg-background ${className}`}>
-            {/* ── TopBar ── */}
+
+            {/* ── TopBar row ── */}
             {topBar && (
-                <div className="flex-shrink-0 z-[200]">
-                    {topBar}
+                <div className="flex-shrink-0 flex items-stretch z-topbar">
+                    {/* Mobile hamburger — injected to the left of the TopBar on small screens */}
+                    {hasSidebar && (
+                        <button
+                            type="button"
+                            className={[
+                                'md:hidden flex-shrink-0 self-stretch flex items-center justify-center w-14',
+                                'border-r border-border',
+                                'text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
+                                'transition-colors duration-100',
+                                'focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent',
+                            ].join(' ')}
+                            onClick={() => setMobileOpen((o) => !o)}
+                            aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
+                            aria-expanded={mobileOpen}
+                        >
+                            {mobileOpen ? (
+                                /* X icon */
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                                    <path d="M18 6 6 18M6 6l12 12" />
+                                </svg>
+                            ) : (
+                                /* Hamburger icon */
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                                    <path d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            )}
+                        </button>
+                    )}
+                    {/* TopBar fills remaining width */}
+                    <div className="flex-1 min-w-0">
+                        {topBar}
+                    </div>
                 </div>
             )}
 
             {/* ── Body row: Sidebar + Content ── */}
             <div className="flex flex-1 overflow-hidden">
-                {/* Sidebar */}
-                {sidebarSections.length > 0 && (
+
+                {/* Desktop inline sidebar */}
+                {hasSidebar && !isMobile && (
                     <Sidebar
                         sections={sidebarSections}
                         isExpanded={expanded}
@@ -81,19 +140,58 @@ export default function AppShell({
                     />
                 )}
 
-                {/* Main content — shifts right as sidebar expands */}
-                <motion.main
-                    className="flex-1 overflow-y-auto overflow-x-hidden"
-                    animate={{ marginLeft: 0 }}
-                    transition={{ type: 'tween', duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                    // The Sidebar itself is flex-shrink-0 and uses Framer Motion on its own
-                    // width, so the main area reflowing via flex is sufficient.
-                    // This motion.main exists for custom override / future controlled layout.
-                >
+                {/* Mobile sidebar overlay (portal-less fixed stack) */}
+                {hasSidebar && isMobile && (
+                    <>
+                        {/* Backdrop */}
+                        <AnimatePresence>
+                            {mobileOpen && (
+                                <motion.div
+                                    className="fixed inset-0 bg-black/40 z-overlay md:hidden"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                                    onClick={() => setMobileOpen(false)}
+                                    aria-hidden="true"
+                                />
+                            )}
+                        </AnimatePresence>
+
+                        {/* Sidebar panel */}
+                        <AnimatePresence>
+                            {mobileOpen && (
+                                <motion.div
+                                    className="fixed inset-y-0 left-0 z-modal md:hidden"
+                                    initial={{ x: '-100%' }}
+                                    animate={{ x: 0 }}
+                                    exit={{ x: '-100%' }}
+                                    transition={{
+                                        type: 'tween',
+                                        duration: 0.26,
+                                        ease: [0.16, 1, 0.3, 1], // ease-out-expo
+                                    }}
+                                >
+                                    <Sidebar
+                                        sections={sidebarSections}
+                                        isExpanded={true}
+                                        onToggle={() => setMobileOpen(false)}
+                                        expandedWidth={sidebarExpandedWidth}
+                                        collapsedWidth={sidebarCollapsedWidth}
+                                        footer={sidebarFooter}
+                                    />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </>
+                )}
+
+                {/* Main content */}
+                <main className="flex-1 overflow-y-auto overflow-x-hidden">
                     <div className="h-full p-6">
                         {children}
                     </div>
-                </motion.main>
+                </main>
             </div>
         </div>
     )

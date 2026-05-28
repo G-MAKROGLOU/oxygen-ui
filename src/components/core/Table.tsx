@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import SearchInput from '../inputs/SearchInput'
 import Dropdown from '../inputs/Dropdown'
 import IconButton from './IconButton'
-import COLORS from '../../utils/colors'
 
 /** ─────────────────── types ─────────────────── */
 export interface TableColumn {
@@ -80,12 +79,12 @@ function createDatasets(rows: any[], perPage: number | null): any[][] {
 /** ─────────────────── sub-components ─────────────────── */
 function TableHeader({ columns }: { columns: TableColumn[] }) {
     return (
-        <thead className="dark:bg-prussian-blue bg-ice-dark min-h-[50px] border-b border-b-white border-t-white dark:border-b-independence flex items-center">
+        <thead className="bg-surface-raised min-h-[50px] border-b border-b-border flex items-center">
             <tr className="flex w-full items-center justify-center">
                 {columns.map((col) => (
                     <th
                         key={col.key}
-                        className="text-center w-full text-[13px] text-prussian-blue dark:text-white"
+                        className="text-center w-full text-[13px] text-foreground"
                     >
                         {col.label}
                     </th>
@@ -130,10 +129,10 @@ function TableBody({
             {rows.map((row, i) => (
                 <React.Fragment key={row.key}>
                     <tr
-                        className={`border-b border-b-white dark:border-b-manatee flex min-w-max hover:bg-ice-dark dark:hover:bg-prussian-blue transition-all duration-150 ${
+                        className={`border-b border-b-border flex min-w-max hover:bg-surface-raised transition-all duration-150 ${
                             i % 2 === 0
-                                ? 'bg-ice dark:bg-prussian-blue'
-                                : 'bg-ice-dark dark:bg-black-coral'
+                                ? 'bg-surface'
+                                : 'bg-surface-raised'
                         }`}
                     >
                         {expandRow.enabled && (
@@ -146,7 +145,7 @@ function TableBody({
                                 >
                                     {expandRow.expandIcon ?? (
                                         /* PlusCircle */
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={COLORS.PALETTE['prussian-blue']} className="w-5 h-5 dark:fill-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-foreground-muted">
                                             <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clipRule="evenodd" />
                                         </svg>
                                     )}
@@ -156,7 +155,7 @@ function TableBody({
                         {columns.map((col, index) => (
                             <td
                                 key={index}
-                                className={`text-center min-h-[40px] w-full flex items-center justify-center p-1 border-white dark:border-manatee ${
+                                className={`text-center min-h-[40px] w-full flex items-center justify-center p-1 border-border ${
                                     index !== columns.length - 1 ? 'border-r-2' : ''
                                 }`}
                             >
@@ -236,8 +235,8 @@ function Pagination({
         </svg>
     )
 
-    const disabledColor = COLORS.PALETTE['prussian-blue']
-    const enabledColor = COLORS.PALETTE.white
+    const disabledColor = 'var(--color-foreground-muted)'
+    const enabledColor  = 'var(--color-foreground)'
 
     return (
         <div className="flex gap-2 items-center justify-end pt-2">
@@ -251,7 +250,7 @@ function Pagination({
                 activePage === 0,
                 () => activePage > 0 && onPageChange(activePage - 1)
             )}
-            <span className="bg-ice-dark dark:bg-independence rounded-lg ml-2 mr-2 shadow-md p-2 w-10 text-center select-none">
+            <span className="bg-surface-raised rounded-lg ml-2 mr-2 shadow-sm p-2 w-10 text-center select-none text-foreground">
                 {activePage + 1}
             </span>
             {navBtn(
@@ -396,10 +395,13 @@ export default function Table({
                 )}
             </div>
             <div>{header}</div>
-            <table className="w-full h-full">
-                <TableHeader columns={columns} />
-                <TableBody columns={columns} rows={currentPageRows} expandRow={expandRow} />
-            </table>
+            {/* Horizontal scroll wrapper — enables swipe-scroll on narrow viewports */}
+            <div className="overflow-x-auto rounded-lg">
+                <table className="w-full">
+                    <TableHeader columns={columns} />
+                    <TableBody columns={columns} rows={currentPageRows} expandRow={expandRow} />
+                </table>
+            </div>
             <div>{footer}</div>
         </div>
     )
