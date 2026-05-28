@@ -1,36 +1,111 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
-import DropdownPill from './DropdownPill'
-import COLORS from '../../utils/colors'
 
-export interface TreeSelectItem {
+export interface TreeSelectNode {
     key: string | number
     label: React.ReactNode
     icon?: React.ReactNode
+    /** Nested children. If present, this node is treated as a parent (branch). */
+    children?: TreeSelectNode[]
+    /** Render the node disabled — visible but not selectable. */
+    disabled?: boolean
 }
 
 export interface TreeSelectProps {
-    hasSearch?: boolean
+    /** Tree data. Each node may optionally carry `children` for sub-branches. */
+    items: TreeSelectNode[]
+    /** Currently selected key (single-select). Pass `undefined`/`null` for unset. */
+    value?: string | number | null
+    /** Fires with the next selected key (and the corresponding event-like target). */
+    onChange?: (e: { target: { value: string | number; id?: string; name?: string } }) => void
     label?: React.ReactNode
+    placeholder?: string
+    /** Form control id linkage. */
+    htmlFor?: string
     name?: string
-    value?: any
-    onChange?: (e: { target: { value: any; id?: string; name?: string } }) => void
-    onBlur?: React.FocusEventHandler
+    /** Label/trigger orientation. Defaults to `'horizontal'`. */
+    layout?: 'horizontal' | 'vertical'
     disabled?: boolean
-    /** 'horizontal' | 'vertical' */
-    layout?: string
     errorMessage?: React.ReactNode
     style?: React.CSSProperties
-    htmlFor?: string
-    items?: TreeSelectItem[]
+    /**
+     * Whether parent (branch) nodes can be selected. When `false`, parents
+     * only expand/collapse and only leaves are picked. Default `true`.
+     */
+    parentsSelectable?: boolean
+    /** Keys of nodes that should start expanded. */
+    defaultExpandedKeys?: (string | number)[]
+}
+
+// ── Visible-items flattening ────────────────────────────────────────────────
+// Walk the tree depth-first and emit every node along with its depth.
+// Children of un-expanded parents are skipped. This array is what the
+// keyboard navigation moves through.
+
+interface FlatNode {
+    node: TreeSelectNode
+    depth: number
+    isParent: boolean
+}
+
+function flattenVisible(items: TreeSelectNode[], expanded: Set<React.Key>, depth = 0, out: FlatNode[] = []): FlatNode[] {
+    for (const node of items) {
+        const isParent = !!node.children && node.children.length > 0
+        out.push({ node, depth, isParent })
+        if (isParent && expanded.has(node.key)) {
+            flattenVisible(node.children!, expanded, depth + 1, out)
+        }
+    }
+    return out
+}
+
+function findNodeByKey(items: TreeSelectNode[], key: React.Key): TreeSelectNode | null {
+    for (const n of items) {
+        if (n.key === key) return n
+        if (n.children) {
+            const found = findNodeByKey(n.children, key)
+            if (found) return found
+        }
+    }
+    return null
 }
 
 /**
- * Single-value select with a flat list, powered by Radix Popover.
- * Functionally similar to Dropdown (single-select only).
+ * Hierarchical single-select with expandable branches.
+ *
+ * Built on `@radix-ui/react-popover` for portal positioning and click-outside.
+ * Tree state (expanded keys) is local; selected value is controlled by the
+ * parent.
+ *
+ * **Keyboard model** (focus is on the trigger or any item):
+ * - `Enter` / `Space` / `↓` / `↑` on the trigger — open the popover
+ * - `↓` / `↑` — move active item through the visible (un-collapsed) list
+ * - `→` — expand a branch (or move into it if already expanded)
+ * - `←` — collapse a branch (or move to its parent if already collapsed)
+ * - `Enter` / `Space` — select the active item (if selectable)
+ * - `Esc` — close the popover, return focus to the trigger
  *
  * @example
- * <TreeSelect label="Fleet" items={fleets} value={form.fleet} onChange={handleChange} htmlFor="fleet" />
+ * ```tsx
+ * type FleetKey = number
+ * const [fleet, setFleet] = useState<FleetKey | null>(null)
+ *
+ * const tree: TreeSelectNode[] = [
+ *   { key: 'eu', label: 'Europe', children: [
+ *     { key: 1, label: 'Aegean Fleet' },
+ *     { key: 2, label: 'Adriatic Fleet' },
+ *   ]},
+ *   { key: 'asia', label: 'Asia', children: [{ key: 3, label: 'Pacific Fleet' }] },
+ * ]
+ *
+ * <TreeSelect
+ *   label="Fleet"
+ *   items={tree}
+ *   value={fleet}
+ *   onChange={({ target }) => setFleet(target.value as FleetKey)}
+ *   parentsSelectable={false}
+ * />
+ * ```
  */
 export default function TreeSelect({
     label,
@@ -40,31 +115,103 @@ export default function TreeSelect({
     disabled,
     layout = 'horizontal',
     errorMessage,
-    style = {},
+    style,
     htmlFor,
     items = [],
+    placeholder = 'Select…',
+    parentsSelectable = true,
+    defaultExpandedKeys = [],
 }: TreeSelectProps) {
+    const errorId = useId()
+    const hasError = errorMessage != null
+
     const [open, setOpen] = useState(false)
-    const [hoveredItem, setHoveredItem] = useState<string | number | null>(null)
-    const [innerItems, setInnerItems] = useState<TreeSelectItem[]>([])
+    const [expanded, setExpanded] = useState<Set<React.Key>>(() => new Set(defaultExpandedKeys))
+    const [activeIndex, setActiveIndex] = useState(0)
 
+    const listRef = useRef<HTMLDivElement>(null)
+
+    const visible = useMemo(() => flattenVisible(items, expanded), [items, expanded])
+
+    // Sync `activeIndex` when items change or popover opens — point at the
+    // selected item if there is one, otherwise the first item.
     useEffect(() => {
-        setInnerItems(items)
-    }, [items])
+        if (!open) return
+        const selectedIdx = visible.findIndex((v) => v.node.key === value)
+        setActiveIndex(selectedIdx >= 0 ? selectedIdx : 0)
+    }, [open, visible, value])
 
-    const selectItem = (key: string | number) => {
+    const selectedNode = useMemo(
+        () => (value != null ? findNodeByKey(items, value) : null),
+        [items, value],
+    )
+
+    // ── Actions ────────────────────────────────────────────────────────────
+
+    const toggleExpand = (key: React.Key) => {
+        setExpanded((prev) => {
+            const next = new Set(prev)
+            if (next.has(key)) next.delete(key)
+            else next.add(key)
+            return next
+        })
+    }
+
+    const selectKey = (key: string | number) => {
         onChange?.({ target: { value: key, id: htmlFor, name } })
         setOpen(false)
     }
 
+    // ── Keyboard handler (on the listbox) ──────────────────────────────────
+
+    const onListKey = (e: React.KeyboardEvent) => {
+        if (visible.length === 0) return
+        const cur = visible[activeIndex]
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault()
+            setActiveIndex((i) => Math.min(i + 1, visible.length - 1))
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault()
+            setActiveIndex((i) => Math.max(i - 1, 0))
+        } else if (e.key === 'ArrowRight') {
+            e.preventDefault()
+            if (cur.isParent) {
+                if (!expanded.has(cur.node.key)) toggleExpand(cur.node.key)
+                else setActiveIndex((i) => Math.min(i + 1, visible.length - 1))
+            }
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault()
+            if (cur.isParent && expanded.has(cur.node.key)) {
+                toggleExpand(cur.node.key)
+            } else if (cur.depth > 0) {
+                // Walk back to the nearest ancestor
+                for (let i = activeIndex - 1; i >= 0; i--) {
+                    if (visible[i].depth < cur.depth) { setActiveIndex(i); break }
+                }
+            }
+        } else if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            if (cur.node.disabled) return
+            if (cur.isParent && !parentsSelectable) {
+                toggleExpand(cur.node.key)
+            } else {
+                selectKey(cur.node.key)
+            }
+        } else if (e.key === 'Escape') {
+            e.preventDefault()
+            setOpen(false)
+        }
+    }
+
+    // ── Render ─────────────────────────────────────────────────────────────
+
     return (
-        <div className="mt-2">
-            <div
-                className={`flex ${layout === 'vertical' ? 'flex-col' : 'flex-row items-center gap-2'}`}
-            >
+        <div className="flex flex-col gap-1">
+            <div className={`flex ${layout === 'vertical' ? 'flex-col gap-1' : 'flex-row items-center gap-2'}`}>
                 {label && (
                     <label
-                        className="text-md font-bold ml-1 max-content select-none text-prussian-blue dark:text-white"
+                        className="text-sm font-medium ml-1 max-content select-none text-foreground"
                         htmlFor={htmlFor}
                     >
                         {label}
@@ -73,84 +220,169 @@ export default function TreeSelect({
 
                 <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
                     <Popover.Trigger asChild>
-                        <div
+                        <button
                             id={htmlFor}
+                            type="button"
                             style={style}
                             role="combobox"
                             aria-expanded={open}
                             aria-haspopup="listbox"
-                            className={`flex items-center justify-between relative h-9 rounded-lg p-2 cursor-pointer ${disabled ? 'cursor-not-allowed bg-disabled' : 'bg-white'}`}
-                            tabIndex={disabled ? -1 : 0}
+                            aria-invalid={hasError || undefined}
+                            aria-describedby={hasError ? errorId : undefined}
+                            disabled={disabled}
+                            className={`flex items-center justify-between h-9 rounded-lg border ${hasError ? 'border-status-error' : 'border-border'} px-3 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${disabled ? 'cursor-not-allowed bg-surface-raised text-foreground-muted' : 'bg-surface text-foreground'} ${!style?.width ? 'min-w-[240px]' : ''}`}
                         >
-                            {/* Value display */}
-                            <div className={`h-7 ${!style?.width ? 'min-w-[240px]' : ''} focus:outline-none text-prussian-blue flex items-center gap-1`}>
-                                {Array.isArray(value) ? (
-                                    <>
-                                        {value.slice(0, 1).map((val, id) => (
-                                            <DropdownPill
-                                                key={id}
-                                                hasSiblings={value.length > 1}
-                                                value={innerItems.find((it) => it.key === val)?.label}
-                                            />
-                                        ))}
-                                        {value.length > 1 && <DropdownPill value={`+${value.length - 1} more`} />}
-                                    </>
-                                ) : value != null ? (
-                                    <DropdownPill value={innerItems.find((it) => it.key === value)?.label} />
-                                ) : null}
-                            </div>
-
-                            {/* Chevron */}
-                            <div className={`transition-transform duration-300 ml-2 ${open ? 'rotate-180' : 'rotate-0'}`}>
-                                <svg viewBox="0 0 24 24" fill="none" stroke={COLORS.PALETTE['prussian-blue']} strokeWidth={2} className="h-4 w-4">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </div>
-                        </div>
+                            <span className="text-sm truncate text-left">
+                                {selectedNode ? selectedNode.label : <span className="text-foreground-muted">{placeholder}</span>}
+                            </span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={`h-4 w-4 flex-shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
                     </Popover.Trigger>
 
                     <Popover.Portal>
                         <Popover.Content
                             align="start"
                             sideOffset={4}
-                            style={{ width: style?.width || 240 }}
-                            className="bg-ice rounded-lg shadow-md z-50 p-2 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+                            style={{ width: style?.width || 280 }}
+                            className="bg-surface text-foreground border border-border rounded-lg shadow-md z-50 p-1 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+                            onOpenAutoFocus={(e) => {
+                                e.preventDefault()
+                                listRef.current?.focus()
+                            }}
                         >
-                            <div role="listbox" className="max-h-40 overflow-y-auto">
-                                {innerItems.map((item, idx) => (
-                                    <div
-                                        key={item.key}
-                                        role="option"
-                                        aria-selected={value === item.key}
-                                        aria-rowindex={idx}
-                                        className={`flex items-center justify-between p-2 hover:bg-prussian-blue hover:text-white transition-all duration-150 text-sm text-prussian-blue rounded-lg cursor-pointer`}
-                                        onClick={() => selectItem(item.key)}
-                                        onMouseEnter={() => setHoveredItem(item.key)}
-                                        onMouseLeave={() => setHoveredItem(null)}
-                                    >
-                                        <div className="flex items-center gap-2 text-xs">
-                                            {item.icon && <div>{item.icon}</div>}
-                                            {item.label}
-                                        </div>
-                                        {value === item.key && (
-                                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                                                <path
-                                                    d="M4 10l4.5 4.5L16 6"
-                                                    stroke={hoveredItem === item.key ? '#fff' : COLORS.PALETTE['prussian-blue']}
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                        )}
-                                    </div>
-                                ))}
+                            <div
+                                ref={listRef}
+                                role="tree"
+                                tabIndex={-1}
+                                aria-activedescendant={visible[activeIndex] ? `tree-opt-${visible[activeIndex].node.key}` : undefined}
+                                onKeyDown={onListKey}
+                                className="max-h-72 overflow-y-auto outline-none"
+                            >
+                                {visible.length === 0 ? (
+                                    <div className="px-3 py-4 text-sm text-foreground-secondary text-center">No items</div>
+                                ) : (
+                                    visible.map((v, idx) => (
+                                        <TreeNodeRow
+                                            key={v.node.key}
+                                            node={v.node}
+                                            depth={v.depth}
+                                            isParent={v.isParent}
+                                            isExpanded={expanded.has(v.node.key)}
+                                            isActive={idx === activeIndex}
+                                            isSelected={value === v.node.key}
+                                            parentsSelectable={parentsSelectable}
+                                            onActivate={() => {
+                                                if (v.node.disabled) return
+                                                if (v.isParent && !parentsSelectable) toggleExpand(v.node.key)
+                                                else selectKey(v.node.key)
+                                            }}
+                                            onToggle={() => toggleExpand(v.node.key)}
+                                            onHover={() => setActiveIndex(idx)}
+                                        />
+                                    ))
+                                )}
                             </div>
                         </Popover.Content>
                     </Popover.Portal>
                 </Popover.Root>
             </div>
-            <div className="text-center text-error dark:text-prussian-blue min-h-0">{errorMessage}</div>
+            {hasError && (
+                <div id={errorId} className="text-xs text-status-error ml-1">
+                    {errorMessage}
+                </div>
+            )}
+        </div>
+    )
+}
+
+// ── Row component ───────────────────────────────────────────────────────────
+
+interface RowProps {
+    node: TreeSelectNode
+    depth: number
+    isParent: boolean
+    isExpanded: boolean
+    isActive: boolean
+    isSelected: boolean
+    parentsSelectable: boolean
+    onActivate: () => void
+    onToggle: () => void
+    onHover: () => void
+}
+
+function TreeNodeRow({
+    node, depth, isParent, isExpanded, isActive, isSelected,
+    parentsSelectable, onActivate, onToggle, onHover,
+}: RowProps) {
+    const disabled = node.disabled
+    return (
+        <div
+            id={`tree-opt-${node.key}`}
+            role="treeitem"
+            aria-selected={isSelected}
+            aria-expanded={isParent ? isExpanded : undefined}
+            aria-disabled={disabled || undefined}
+            data-active={isActive ? '' : undefined}
+            onMouseEnter={onHover}
+            className={`flex items-center gap-1 rounded-md px-1 py-1.5 select-none cursor-pointer transition-colors duration-100 ${
+                disabled
+                    ? 'opacity-40 cursor-not-allowed'
+                    : isActive
+                    ? 'bg-accent text-accent-fg'
+                    : isSelected
+                    ? 'bg-surface-raised'
+                    : 'hover:bg-surface-raised'
+            }`}
+            style={{ paddingLeft: depth * 16 + 4 }}
+        >
+            {/* Chevron — only for parents, only toggles expand. Acts as its
+                own button so users can expand without selecting. */}
+            {isParent ? (
+                <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); onToggle() }}
+                    aria-label={isExpanded ? 'Collapse' : 'Expand'}
+                    tabIndex={-1}
+                    className="w-5 h-5 inline-flex items-center justify-center rounded hover:bg-black/10 focus:outline-none"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                        className={`h-3 w-3 transition-transform duration-150 ${isExpanded ? 'rotate-0' : '-rotate-90'}`}
+                        aria-hidden="true"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+            ) : (
+                <span className="w-5 h-5 inline-block" aria-hidden="true" />
+            )}
+
+            {/* Label — clicking selects (or toggles parents when not selectable) */}
+            <button
+                type="button"
+                onClick={onActivate}
+                disabled={disabled}
+                tabIndex={-1}
+                className="flex-1 flex items-center gap-2 text-sm text-left focus:outline-none disabled:cursor-not-allowed"
+            >
+                {node.icon}
+                <span className="truncate">{node.label}</span>
+                {isParent && !parentsSelectable && (
+                    <span className="ml-auto text-xs text-foreground-muted">parent</span>
+                )}
+            </button>
+
+            {/* Selected checkmark */}
+            {isSelected && (
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true" className="ml-1">
+                    <path d="M4 10l4.5 4.5L16 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+            )}
         </div>
     )
 }
