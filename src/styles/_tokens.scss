@@ -1,0 +1,151 @@
+// ── Design Token Output ───────────────────────────────────────────────────────
+//
+// Generates all CSS custom properties from the SCSS config map.
+// Consumers can override any property at runtime:
+//   :root { --color-accent: #e63946; }
+//   .my-section { --radius-md: 8px; }
+// ─────────────────────────────────────────────────────────────────────────────
+@use 'config' as c;
+
+@layer base {
+    // ── Light mode (default) ─────────────────────────────────────────────────
+    :root {
+        // Surfaces
+        --color-background:           #{c.$color-background};
+        --color-surface:              #{c.$color-surface};
+        --color-surface-raised:       #{c.$color-surface-raised};
+
+        // Borders
+        --color-border:               #{c.$color-border};
+        --color-border-strong:        #{c.$color-border-strong};
+
+        // Text
+        --color-foreground:           #{c.$color-foreground};
+        --color-foreground-secondary: #{c.$color-foreground-secondary};
+        --color-foreground-muted:     #{c.$color-foreground-muted};
+
+        // Accent (interactive)
+        --color-accent:               #{c.$color-accent};
+        --color-accent-hover:         #{c.$color-accent-hover};
+        --color-accent-foreground:    #{c.$color-accent-foreground};
+
+        // Status
+        --color-error:                #{c.$color-error};
+        --color-warning:              #{c.$color-warning};
+        --color-success:              #{c.$color-success};
+        --color-info:                 #{c.$color-info};
+
+        // ── Radius ───────────────────────────────────────────────────────────
+        --radius-sm:    #{c.$radius-sm};
+        --radius-md:    #{c.$radius-md};
+        --radius-lg:    #{c.$radius-lg};
+        --radius-xl:    #{c.$radius-xl};
+        --radius-2xl:   #{c.$radius-2xl};
+        --radius-full:  #{c.$radius-full};
+
+        // ── Shadows ──────────────────────────────────────────────────────────
+        --shadow-sm:    #{c.$shadow-sm};
+        --shadow-md:    #{c.$shadow-md};
+        --shadow-lg:    #{c.$shadow-lg};
+        --shadow-xl:    #{c.$shadow-xl};
+
+        // ── Typography ───────────────────────────────────────────────────────
+        --font-family-sans:       #{c.$font-family-sans};
+
+        --font-size-xs:           #{c.$font-size-xs};
+        --font-size-sm:           #{c.$font-size-sm};
+        --font-size-base:         #{c.$font-size-base};
+        --font-size-lg:           #{c.$font-size-lg};
+        --font-size-xl:           #{c.$font-size-xl};
+        --font-size-2xl:          #{c.$font-size-2xl};
+        --font-size-3xl:          #{c.$font-size-3xl};
+
+        --font-weight-normal:     #{c.$font-weight-normal};
+        --font-weight-medium:     #{c.$font-weight-medium};
+        --font-weight-semibold:   #{c.$font-weight-semibold};
+        --font-weight-bold:       #{c.$font-weight-bold};
+
+        --line-height-tight:      #{c.$line-height-tight};
+        --line-height-snug:       #{c.$line-height-snug};
+        --line-height-normal:     #{c.$line-height-normal};
+        --line-height-relaxed:    #{c.$line-height-relaxed};
+
+        --letter-spacing-tight:   #{c.$letter-spacing-tight};
+        --letter-spacing-normal:  #{c.$letter-spacing-normal};
+        --letter-spacing-wide:    #{c.$letter-spacing-wide};
+        --letter-spacing-wider:   #{c.$letter-spacing-wider};
+
+        // ── Component heights / density ───────────────────────────────────────
+        --height-control-xs:      #{c.$height-control-xs};
+        --height-control-sm:      #{c.$height-control-sm};
+        --height-control-md:      #{c.$height-control-md};
+        --height-control-lg:      #{c.$height-control-lg};
+        --height-topbar:          #{c.$height-topbar};
+        --sidebar-expanded:       #{c.$sidebar-expanded};
+        --sidebar-collapsed:      #{c.$sidebar-collapsed};
+
+        // ── Motion ───────────────────────────────────────────────────────────
+        --duration-instant:       #{c.$duration-instant};
+        --duration-fast:          #{c.$duration-fast};
+        --duration-normal:        #{c.$duration-normal};
+        --duration-slow:          #{c.$duration-slow};
+        --duration-gentle:        #{c.$duration-gentle};
+
+        --ease-out-expo:          #{c.$ease-out-expo};
+        --ease-out-quart:         #{c.$ease-out-quart};
+        --ease-out-cubic:         #{c.$ease-out-cubic};
+        --ease-in-out:            #{c.$ease-in-out};
+        --ease-in:                #{c.$ease-in};
+        --ease-linear:            #{c.$ease-linear};
+
+        // ── Z-index ───────────────────────────────────────────────────────────
+        --z-base:     #{c.$z-base};
+        --z-raised:   #{c.$z-raised};
+        --z-dropdown: #{c.$z-dropdown};
+        --z-sticky:   #{c.$z-sticky};
+        --z-topbar:   #{c.$z-topbar};
+        --z-overlay:  #{c.$z-overlay};
+        --z-modal:    #{c.$z-modal};
+        --z-toast:    #{c.$z-toast};
+        --z-tooltip:  #{c.$z-tooltip};
+    }
+
+    // ── Dark mode overrides ──────────────────────────────────────────────────
+    // Applied when the `.dark` class is present on any ancestor element
+    // (typically <html> or a ThemeProvider wrapper).
+    .dark {
+        // Surfaces
+        --color-background:           #{c.$color-dark-background};
+        --color-surface:              #{c.$color-dark-surface};
+        --color-surface-raised:       #{c.$color-dark-surface-raised};
+
+        // Borders
+        --color-border:               #{c.$color-dark-border};
+        --color-border-strong:        #{c.$color-dark-border-strong};
+
+        // Text
+        --color-foreground:           #{c.$color-dark-foreground};
+        --color-foreground-secondary: #{c.$color-dark-foreground-secondary};
+        --color-foreground-muted:     #{c.$color-dark-foreground-muted};
+
+        // Accent
+        --color-accent:               #{c.$color-dark-accent};
+        --color-accent-hover:         #{c.$color-dark-accent-hover};
+        --color-accent-foreground:    #{c.$color-dark-accent-foreground};
+
+        // Status (lightened for dark backgrounds)
+        --color-error:                #{c.$color-dark-error};
+        --color-warning:              #{c.$color-dark-warning};
+        --color-success:              #{c.$color-dark-success};
+        --color-info:                 #{c.$color-dark-info};
+
+        // Shadows — pure dark (no blue tint)
+        --shadow-sm:    #{c.$shadow-dark-sm};
+        --shadow-md:    #{c.$shadow-dark-md};
+        --shadow-lg:    #{c.$shadow-dark-lg};
+        --shadow-xl:    #{c.$shadow-dark-xl};
+
+        // Radius, typography, spacing, motion, z-index are mode-independent
+        // and inherit their :root values unchanged.
+    }
+}

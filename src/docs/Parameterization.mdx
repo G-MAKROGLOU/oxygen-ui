@@ -1,0 +1,235 @@
+{/* src/docs/Parameterization.mdx */}
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Design System/Parameterization" />
+
+# Parameterization Guide
+
+There are three ways to customize the design system, in increasing order of depth.
+
+---
+
+## 1. CSS custom property override (recommended)
+
+The simplest and most flexible method. Works at any CSS scope, no build dependency.
+
+**Global override** — affects the entire app:
+```css
+/* In your global stylesheet, after importing @geomak/ui/styles */
+:root {
+  --color-accent:       #7c3aed;   /* violet brand */
+  --color-accent-hover: #6d28d9;
+  --radius-md:          8px;        /* softer corners */
+  --radius-lg:          12px;
+  --height-control-md:  40px;       /* taller controls */
+  --height-topbar:      64px;
+}
+
+.dark {
+  --color-accent:       #a78bfa;
+  --color-accent-hover: #c4b5fd;
+}
+```
+
+**Scoped override** — only inside a section:
+```css
+.admin-panel {
+  --color-accent: #dc2626;   /* red accent for admin */
+}
+
+[data-theme="compact"] {
+  --height-control-md: 30px;
+  --height-control-lg: 36px;
+  --height-topbar:     48px;
+}
+```
+
+---
+
+## 2. ThemeProvider component
+
+For React tree-scoped overrides. Generates CSS vars as inline styles on a wrapper `div`.
+
+```tsx
+import { ThemeProvider } from '@geomak/ui'
+
+// Brand color swap
+<ThemeProvider
+  theme={{
+    colors: {
+      accent:             '#7c3aed',
+      'accent-hover':     '#6d28d9',
+      'accent-foreground': '#ffffff',
+    }
+  }}
+>
+  <App />
+</ThemeProvider>
+```
+
+### Density / compact mode
+
+```tsx
+<ThemeProvider
+  theme={{
+    density: {
+      controlXs: 20,
+      controlSm: 24,
+      controlMd: 30,
+      controlLg: 36,
+      topbar:    48,
+    }
+  }}
+>
+  <DataTable />
+</ThemeProvider>
+```
+
+### Custom font
+
+```tsx
+<ThemeProvider
+  theme={{
+    typography: {
+      fontFamily: '"Geist", sans-serif',
+    }
+  }}
+>
+  <App />
+</ThemeProvider>
+```
+
+### Managed dark mode
+
+```tsx
+// Follow system preference
+<ThemeProvider colorScheme="system">
+  <App />
+</ThemeProvider>
+
+// Force dark
+<ThemeProvider colorScheme="dark">
+  <App />
+</ThemeProvider>
+
+// Different token values in dark mode
+<ThemeProvider
+  colorScheme="system"
+  theme={{     colors: { accent: '#6366f1' } }}
+  darkTheme={{ colors: { accent: '#818cf8' } }}
+>
+  <App />
+</ThemeProvider>
+```
+
+### Full ThemeConfig type
+
+```ts
+interface ThemeConfig {
+  colors?: {
+    background?: string
+    surface?: string
+    'surface-raised'?: string
+    border?: string
+    'border-strong'?: string
+    foreground?: string
+    'foreground-secondary'?: string
+    'foreground-muted'?: string
+    accent?: string
+    'accent-hover'?: string
+    'accent-foreground'?: string
+    error?: string
+    warning?: string
+    success?: string
+    info?: string
+  }
+  radius?: {
+    sm?: string | number    // number → appended with 'px'
+    md?: string | number
+    lg?: string | number
+    xl?: string | number
+    '2xl'?: string | number
+    full?: string | number
+  }
+  shadows?: {
+    sm?: string
+    md?: string
+    lg?: string
+    xl?: string
+  }
+  typography?: {
+    fontFamily?: string       // e.g. '"Geist", sans-serif'
+    fontSizeXs?: string
+    fontSizeSm?: string
+    fontSizeBase?: string
+    fontSizeLg?: string
+    fontSizeXl?: string
+    fontSize2xl?: string
+    fontSize3xl?: string
+    fontWeightNormal?: number | string
+    fontWeightMedium?: number | string
+    fontWeightSemibold?: number | string
+    fontWeightBold?: number | string
+  }
+  density?: {
+    controlXs?: string | number
+    controlSm?: string | number
+    controlMd?: string | number
+    controlLg?: string | number
+    topbar?: string | number
+  }
+  motion?: {
+    durationFast?: string     // e.g. '60ms'
+    durationNormal?: string
+    durationSlow?: string
+    durationGentle?: string
+  }
+}
+```
+
+---
+
+## 3. SCSS compile-time override (advanced)
+
+If your project processes SCSS, you can override `!default` variables before the token partial compiles. This produces a custom CSS file — useful if you want to eliminate the runtime CSS var layer entirely.
+
+```scss
+// your-app/src/styles/theme.scss
+
+// Override BEFORE the @use — the !default flag means
+// "use this value if not already set"
+@use '@geomak/ui/src/styles/config' with (
+  $color-accent:        #7c3aed,
+  $color-accent-hover:  #6d28d9,
+  $color-dark-accent:   #a78bfa,
+  $radius-md:           8px,
+  $radius-lg:           12px,
+  $height-control-md:   40px,
+  $font-family-sans:    '"Geist"', sans-serif,
+);
+
+// Then use the tokens partial to generate CSS vars
+@use '@geomak/ui/src/styles/tokens';
+@use '@geomak/ui/src/styles/animations';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+This requires exposing the package's `src/styles/` directory, which you can do by installing `@geomak/ui` as a local path during development.
+
+---
+
+## Token reference at a glance
+
+| Category | CSS var prefix | JS path | Tailwind prefix |
+|----------|---------------|---------|-----------------|
+| Colors | `--color-*` | `vars.color.*` | `bg-*`, `text-*`, `border-*` |
+| Radius | `--radius-*` | `vars.radius.*` | `rounded-*` |
+| Shadows | `--shadow-*` | `vars.shadow.*` | `shadow-*` |
+| Font size | `--font-size-*` | `vars.typography.fontSize*` | `text-*` |
+| Font weight | `--font-weight-*` | `vars.typography.fontWeight*` | `font-*` |
+| Heights | `--height-control-*` | `vars.density.*` | `h-control-*` |
+| Motion | `--duration-*`, `--ease-*` | `vars.motion.*` | `duration-*`, `ease-*` |
+| Z-index | `--z-*` | `vars.zIndex.*` | `z-*` |

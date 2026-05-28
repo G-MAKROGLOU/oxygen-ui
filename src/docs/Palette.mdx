@@ -1,0 +1,111 @@
+{/* src/docs/Palette.mdx */}
+import { Meta, ColorPalette, ColorItem } from '@storybook/blocks'
+
+<Meta title="Design System/Palette" />
+
+# Color Palette
+
+Two categories: **brand palette** (raw hex values, never used directly in components) and **semantic tokens** (assigned roles — these are what components consume).
+
+---
+
+## Semantic tokens — Light mode
+
+<ColorPalette>
+  <ColorItem title="background" subtitle="--color-background · Page-level shell" colors={{ background: '#eef4fa' }} />
+  <ColorItem title="surface" subtitle="--color-surface · Cards, panels" colors={{ surface: '#ffffff' }} />
+  <ColorItem title="surface-raised" subtitle="--color-surface-raised · Dropdowns, popovers" colors={{ 'surface-raised': '#ffffff' }} />
+  <ColorItem title="border" subtitle="--color-border · Default separators" colors={{ border: '#d3dde8' }} />
+  <ColorItem title="border-strong" subtitle="--color-border-strong · Focus rings, strong dividers" colors={{ 'border-strong': '#8898aa' }} />
+  <ColorItem title="foreground" subtitle="--color-foreground · Primary text" colors={{ foreground: '#0a1929' }} />
+  <ColorItem title="foreground-secondary" subtitle="--color-foreground-secondary · Labels, captions" colors={{ 'foreground-secondary': '#2e4057' }} />
+  <ColorItem title="foreground-muted" subtitle="--color-foreground-muted · Placeholders, helper text" colors={{ 'foreground-muted': '#536878' }} />
+  <ColorItem title="accent" subtitle="--color-accent · Primary interactive" colors={{ accent: '#0466C8', 'accent-hover': '#0353A4' }} />
+  <ColorItem title="accent-foreground" subtitle="--color-accent-foreground · Text on accent backgrounds" colors={{ 'accent-foreground': '#ffffff' }} />
+</ColorPalette>
+
+## Semantic tokens — Dark mode
+
+<ColorPalette>
+  <ColorItem title="background" subtitle="--color-background" colors={{ background: '#060f1a' }} />
+  <ColorItem title="surface" subtitle="--color-surface" colors={{ surface: '#0d1f30' }} />
+  <ColorItem title="surface-raised" subtitle="--color-surface-raised" colors={{ 'surface-raised': '#152638' }} />
+  <ColorItem title="border" subtitle="--color-border" colors={{ border: '#1e3348' }} />
+  <ColorItem title="border-strong" subtitle="--color-border-strong" colors={{ 'border-strong': '#2e4a64' }} />
+  <ColorItem title="foreground" subtitle="--color-foreground" colors={{ foreground: '#e8f0f8' }} />
+  <ColorItem title="foreground-secondary" subtitle="--color-foreground-secondary" colors={{ 'foreground-secondary': '#9ab0c4' }} />
+  <ColorItem title="foreground-muted" subtitle="--color-foreground-muted" colors={{ 'foreground-muted': '#5c7a92' }} />
+  <ColorItem title="accent" subtitle="--color-accent · Brighter on dark bg" colors={{ accent: '#2d88ff', 'accent-hover': '#4d9aff' }} />
+</ColorPalette>
+
+## Status colors
+
+<ColorPalette>
+  <ColorItem title="error" colors={{ 'light': '#c0392b', 'dark': '#ff6b6b' }} />
+  <ColorItem title="warning" colors={{ 'light': '#d68910', 'dark': '#ffb347' }} />
+  <ColorItem title="success" colors={{ 'light': '#1e8449', 'dark': '#5cb85c' }} />
+  <ColorItem title="info" colors={{ 'light': '#1565c0', 'dark': '#5bc0de' }} />
+</ColorPalette>
+
+---
+
+## Brand palette (raw)
+
+These are the raw brand hex values in `palette.json`. **Do not use these directly in component styles** — use semantic tokens instead. These exist as a reference for picking accent overrides.
+
+<ColorPalette>
+  <ColorItem
+    title="Blues"
+    subtitle="Brand primary family"
+    colors={{
+      'true-blue':              '#0466C8',
+      'usafa-blue':             '#0353A4',
+      'dark-cornflower-blue':   '#023E7D',
+      'oxford-blue-700':        '#002855',
+      'prussian-blue':          '#00273A',
+    }}
+  />
+  <ColorItem
+    title="Neutrals"
+    subtitle="Text and surface family"
+    colors={{
+      'independence':   '#33415C',
+      'black-coral':    '#5C677D',
+      'roman-silver':   '#7D8597',
+      'manatee':        '#979DAC',
+    }}
+  />
+  <ColorItem
+    title="Light"
+    subtitle="Background and ice family"
+    colors={{
+      'ice':      '#DBF1FD',
+      'ice-dark': '#d0e3ed',
+      'white':    '#ffffff',
+    }}
+  />
+</ColorPalette>
+
+---
+
+## Usage
+
+```css
+/* Runtime override — affects all children */
+:root {
+  --color-accent:       #e63946;
+  --color-accent-hover: #c1121f;
+}
+
+/* Scoped override — only within a section */
+.my-section {
+  --color-accent: #7209b7;
+}
+```
+
+```tsx
+// ThemeProvider — React tree scoped
+<ThemeProvider theme={{ colors: { accent: '#e63946', 'accent-hover': '#c1121f' } }}>
+  <App />
+</ThemeProvider>
+```

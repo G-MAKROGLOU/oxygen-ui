@@ -2,7 +2,11 @@
 // Full token set: import { vars, semanticTokens, palette } from '@geomak/ui'
 // Subpath import:  import { vars } from '@geomak/ui/tokens'
 export { vars, semanticTokens, palette } from './tokens'
-export type { SemanticColorKey, SemanticRadiusKey, VarColorKey, VarRadiusKey, VarShadowKey } from './tokens'
+export type {
+    SemanticColorKey, SemanticSharedKey,
+    VarColorKey, VarRadiusKey, VarShadowKey,
+    VarTypoKey, VarDensityKey, VarMotionKey, VarZIndexKey,
+} from './tokens'
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
 export { default as COLORS } from './utils/colors'
@@ -101,6 +105,18 @@ export type { SidebarProps, SidebarItem, SidebarSection } from './components/cor
 
 export { default as AppShell } from './components/core/AppShell'
 export type { AppShellProps } from './components/core/AppShell'
+
+export { default as ThemeProvider } from './components/core/ThemeProvider'
+export type {
+    ThemeProviderProps,
+    ThemeConfig,
+    ThemeColors,
+    ThemeRadius,
+    ThemeShadows,
+    ThemeTypography,
+    ThemeDensity,
+    ThemeMotion,
+} from './components/core/ThemeProvider'
 
 export { SkeletonBox, SkeletonText, SkeletonCircle, SkeletonCard } from './components/core/Skeleton'
 export type { SkeletonBoxProps, SkeletonTextProps, SkeletonCircleProps, SkeletonCardProps } from './components/core/Skeleton'
