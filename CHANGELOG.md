@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.2...v1.7.3) (2026-05-28)
+
+
+### Bug Fixes
+
+* **Table:** generic typing + real <table> semantics + memoized search ([4c206c6](https://github.com/G-MAKROGLOU/oxygen-ui/commit/4c206c6fc75243f84172b70e9e92a17f94ef8d54))
+
 ## [1.7.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.1...v1.7.2) (2026-05-28)
 
 
