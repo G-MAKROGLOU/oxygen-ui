@@ -117,4 +117,79 @@ describe('Table', () => {
         expect(wrapper).toBeInTheDocument()
         expect(wrapper?.querySelector('table')).toBeInTheDocument()
     })
+
+    // ── Semantic table markup ─────────────────────────────────────────────
+    // Real `<thead>` / `<tbody>` / `<th scope="col">` give screen readers row /
+    // column context. Earlier versions used `display: flex` on these elements
+    // which strips that semantic meaning.
+
+    it('uses real <th scope="col"> for column headers', () => {
+        render(<Table columns={COLUMNS} rows={ROWS} />)
+        const headers = screen.getAllByRole('columnheader')
+        expect(headers).toHaveLength(COLUMNS.length)
+        headers.forEach((h) => expect(h).toHaveAttribute('scope', 'col'))
+    })
+
+    it('renders one <tr> per row in <tbody>', () => {
+        const { container } = render(
+            <Table columns={COLUMNS} rows={ROWS} pagination={{ enabled: false }} />
+        )
+        const bodyRows = container.querySelectorAll('tbody > tr')
+        expect(bodyRows).toHaveLength(ROWS.length)
+    })
+
+    // ── Generic typing ─────────────────────────────────────────────────────
+    // Compile-time check: `Table<User>` constrains `keyBind` to keys of User.
+    // If this file ever stops compiling under strict TypeScript, the generic
+    // contract has regressed.
+
+    it('infers cell value types from the row generic', () => {
+        type Vessel = { id: number; name: string; status: 'At Sea' | 'In Port' }
+        const cols: TableColumn<Vessel>[] = [
+            { key: 'name',   label: 'Name',   keyBind: 'name'   },
+            { key: 'status', label: 'Status', keyBind: 'status', width: 120, align: 'right' },
+            {
+                key: 'id',
+                label: 'ID',
+                keyBind: 'id',
+                // `val` is inferred as Vessel[keyof Vessel] (number | string).
+                // The component returning a string is valid ReactNode output.
+                component: (val) => <code>#{String(val)}</code>,
+            },
+        ]
+        const vessels: Vessel[] = [
+            { id: 1, name: 'Aurora',  status: 'At Sea'  },
+            { id: 2, name: 'Beacon',  status: 'In Port' },
+        ]
+        render(<Table<Vessel> columns={cols} rows={vessels} pagination={{ enabled: false }} />)
+        expect(screen.getByText('Aurora')).toBeInTheDocument()
+        expect(screen.getByText('#1')).toBeInTheDocument()
+    })
+
+    // ── getRowKey + expand-row state ──────────────────────────────────────
+    // The custom row-key keeps expand state attached to the same logical row
+    // even if `rows` is reordered or filtered.
+
+    it('uses getRowKey for expand-row state tracking', () => {
+        const expandComp = (row: { name: string }) => <span data-testid={`expanded-${row.name}`}>{row.name} details</span>
+        render(
+            <Table
+                columns={COLUMNS}
+                rows={ROWS}
+                pagination={{ enabled: false }}
+                getRowKey={(row) => (row as typeof ROWS[number]).key}
+                expandRow={{ enabled: true, expandComponent: expandComp }}
+            />
+        )
+        const expandButtons = screen.getAllByRole('button', { name: /expand row/i })
+        expect(expandButtons).toHaveLength(ROWS.length)
+        // Open the second row's expand
+        fireEvent.click(expandButtons[1])
+        expect(screen.getByTestId('expanded-Bob')).toBeInTheDocument()
+        // First and third should not be expanded
+        expect(screen.queryByTestId('expanded-Alice')).not.toBeInTheDocument()
+        expect(screen.queryByTestId('expanded-Charlie')).not.toBeInTheDocument()
+        // Button now reports aria-expanded=true
+        expect(screen.getByRole('button', { name: /collapse row/i })).toBe(expandButtons[1])
+    })
 })

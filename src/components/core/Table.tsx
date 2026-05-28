@@ -4,11 +4,35 @@ import Dropdown from '../inputs/Dropdown'
 import IconButton from './IconButton'
 
 /** ─────────────────── types ─────────────────── */
-export interface TableColumn {
-    key: string | number
+
+/**
+ * Column descriptor for the Table.
+ *
+ * The generic `T` is the shape of a row — `keyBind` must be one of T's
+ * string-keyed properties, and `component(cellValue, row)` receives the
+ * matching value with full type inference. When used without a generic
+ * (`TableColumn[]`), `T` falls back to `Record<string, any>` for backwards
+ * compatibility — narrower typing is preferred whenever possible:
+ *
+ * ```ts
+ * type Vessel = { id: number; name: string; status: 'At Sea' | 'In Port' }
+ * const cols: TableColumn<Vessel>[] = [
+ *   { key: 'name', label: 'Name', keyBind: 'name' }, // cellValue inferred as string
+ * ]
+ * ```
+ */
+export interface TableColumn<T extends Record<string, any> = Record<string, any>> {
+    /** React reconciliation key for the column itself. */
+    key: React.Key
     label: React.ReactNode
-    keyBind: string
-    component?: (cellValue: any, row: any) => React.ReactNode
+    /** Property on the row to read for this column. */
+    keyBind: keyof T & string
+    /** Custom cell renderer. Receives the cell value and the full row. */
+    component?: (cellValue: T[keyof T], row: T) => React.ReactNode
+    /** Explicit column width (CSS length or px number). Optional — defaults to auto. */
+    width?: string | number
+    /** Text alignment for both header and cells. Defaults to `'center'`. */
+    align?: 'left' | 'center' | 'right'
 }
 
 export interface PaginationOptions {
@@ -27,27 +51,33 @@ export interface PaginationOptions {
     onPerPageChange?: (perPage: number) => void
 }
 
-export interface ExpandRowOptions {
+export interface ExpandRowOptions<T extends Record<string, any> = Record<string, any>> {
     enabled?: boolean
     expandIcon?: React.ReactNode
-    expandComponent?: (row: any) => React.ReactNode
+    expandComponent?: (row: T) => React.ReactNode
 }
 
-export interface TableProps {
-    columns?: TableColumn[]
-    rows?: any[]
+export interface TableProps<T extends Record<string, any> = Record<string, any>> {
+    columns?: TableColumn<T>[]
+    rows?: T[]
+    /**
+     * Returns a stable key for each row, used for React reconciliation AND
+     * for tracking expanded state when `expandRow.enabled` is true.
+     * Defaults to the row index — fine for static lists, but pass an
+     * explicit getter (e.g. `(row) => row.id`) if rows can be reordered or
+     * filtered while expand state should persist.
+     */
+    getRowKey?: (row: T, index: number) => React.Key
     pagination?: PaginationOptions
-    expandRow?: ExpandRowOptions
+    expandRow?: ExpandRowOptions<T>
     hasSearch?: boolean
     footer?: React.ReactNode
     header?: React.ReactNode
-    tableRef?: React.Ref<any>
-    [key: string]: any
 }
 
 /** ─────────────────── defaults ─────────────────── */
 const DEFAULT_PICKER: PaginationOptions['pickerOptions'] = [
-    { key: 1, value: 5, label: 5 },
+    { key: 1, value: 5,  label: 5  },
     { key: 2, value: 10, label: 10 },
     { key: 3, value: 15, label: 15 },
     { key: 4, value: 20, label: 20 },
@@ -62,29 +92,47 @@ const DEFAULT_PAGINATION: PaginationOptions = {
 
 const DEFAULT_EXPAND: ExpandRowOptions = {
     enabled: false,
-    expandIcon: <></>,
-    expandComponent: () => <></>,
 }
 
 /** ─────────────────── helpers ─────────────────── */
-function createDatasets(rows: any[], perPage: number | null): any[][] {
+
+function createDatasets<T>(rows: T[], perPage: number | null): T[][] {
     if (!perPage) return [rows.slice()]
-    const all: any[][] = []
+    const all: T[][] = []
     for (let i = 0; i < rows.length; i += perPage) {
         all.push(rows.slice(i, i + perPage))
     }
     return all
 }
 
+/**
+ * Default row-key strategy — index-based. Stable across renders for static
+ * lists; pass an explicit `getRowKey` for any list that mutates.
+ */
+const defaultGetRowKey = (_row: unknown, index: number): React.Key => index
+
+const cellAlign = (align: TableColumn['align']) =>
+    align === 'left' ? 'text-left' : align === 'right' ? 'text-right' : 'text-center'
+
 /** ─────────────────── sub-components ─────────────────── */
-function TableHeader({ columns }: { columns: TableColumn[] }) {
+
+function TableHeader<T extends Record<string, any>>({
+    columns,
+    hasExpand,
+}: {
+    columns: TableColumn<T>[]
+    hasExpand: boolean
+}) {
     return (
-        <thead className="bg-surface-raised min-h-[50px] border-b border-b-border flex items-center">
-            <tr className="flex w-full items-center justify-center">
+        <thead className="bg-surface-raised border-b border-border">
+            <tr>
+                {hasExpand && <th aria-hidden="true" className="w-9" />}
                 {columns.map((col) => (
                     <th
                         key={col.key}
-                        className="text-center w-full text-[13px] text-foreground"
+                        scope="col"
+                        className={`${cellAlign(col.align)} text-sm font-semibold text-foreground py-3 px-3`}
+                        style={col.width != null ? { width: col.width } : undefined}
                     >
                         {col.label}
                     </th>
@@ -94,98 +142,98 @@ function TableHeader({ columns }: { columns: TableColumn[] }) {
     )
 }
 
-function TableBody({
+const DefaultExpandIcon = (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-5 h-5 text-foreground-muted"
+        aria-hidden="true"
+    >
+        <path
+            fillRule="evenodd"
+            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
+            clipRule="evenodd"
+        />
+    </svg>
+)
+
+function TableBody<T extends Record<string, any>>({
     columns,
     rows,
     expandRow,
+    getRowKey,
 }: {
-    activePage?: number
-    columns: TableColumn[]
-    rows: any[]
-    expandRow: ExpandRowOptions
+    columns: TableColumn<T>[]
+    rows: T[]
+    expandRow: ExpandRowOptions<T>
+    getRowKey: (row: T, index: number) => React.Key
 }) {
-    const [visibleRows, setVisibleRows] = useState<Record<string, { visible: boolean }>>({})
+    // Expand state is keyed by the row's stable key — survives reorder/filter
+    // as long as `getRowKey` returns the same value for the same row.
+    const [expanded, setExpanded] = useState<Set<React.Key>>(() => new Set())
 
-    const toggleRow = (rowKey: string) => {
-        setVisibleRows((prev) => ({
-            ...prev,
-            [rowKey]: { visible: !prev[rowKey]?.visible },
-        }))
+    const toggleRow = (rowKey: React.Key) => {
+        setExpanded((prev) => {
+            const next = new Set(prev)
+            if (next.has(rowKey)) next.delete(rowKey)
+            else next.add(rowKey)
+            return next
+        })
     }
 
-    useEffect(() => {
-        if (rows.length && Object.keys(visibleRows).length === 0) {
-            const initial: Record<string, { visible: boolean }> = {}
-            rows.forEach((row) => {
-                initial[row.key] = { visible: false }
-            })
-            setVisibleRows(initial)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [rows])
+    const hasExpand = !!expandRow.enabled
+    const expandColCount = columns.length + (hasExpand ? 1 : 0)
 
     return (
-        <tbody className="w-full">
-            {rows.map((row, i) => (
-                <React.Fragment key={row.key}>
-                    <tr
-                        className={`border-b border-b-border flex min-w-max hover:bg-surface-raised transition-all duration-150 ${
-                            i % 2 === 0
-                                ? 'bg-surface'
-                                : 'bg-surface-raised'
-                        }`}
-                    >
-                        {expandRow.enabled && (
-                            <td className="flex items-center">
-                                <span
-                                    onClick={() => toggleRow(row.key)}
-                                    className={`p-2 cursor-pointer origin-center transition-all duration-200 ${
-                                        visibleRows[row.key]?.visible ? 'rotate-180' : 'rotate-0'
-                                    }`}
-                                >
-                                    {expandRow.expandIcon ?? (
-                                        /* PlusCircle */
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-foreground-muted">
-                                            <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clipRule="evenodd" />
-                                        </svg>
-                                    )}
-                                </span>
-                            </td>
-                        )}
-                        {columns.map((col, index) => (
-                            <td
-                                key={index}
-                                className={`text-center min-h-[40px] w-full flex items-center justify-center p-1 border-border ${
-                                    index !== columns.length - 1 ? 'border-r-2' : ''
-                                }`}
-                            >
-                                {'component' in col && col.component
-                                    ? col.component(row[col.keyBind], row)
-                                    : row[col.keyBind]}
-                            </td>
-                        ))}
-                    </tr>
-
-                    {expandRow.enabled && (
+        <tbody>
+            {rows.map((row, i) => {
+                const rowKey = getRowKey(row, i)
+                const isExpanded = expanded.has(rowKey)
+                return (
+                    <React.Fragment key={rowKey}>
                         <tr
-                            key={`extra-${i}`}
-                            className={`overflow-hidden w-full transition-all duration-300 ${
-                                visibleRows[row.key]?.visible ? 'max-h-[2000px]' : 'max-h-0'
+                            className={`border-b border-border hover:bg-surface-raised transition-colors duration-150 ${
+                                i % 2 === 0 ? 'bg-surface' : 'bg-surface-raised'
                             }`}
                         >
-                            <td colSpan={columns.length} className="p-0 pb-1">
-                                <div
-                                    className={`overflow-hidden w-full transition-[max-height] duration-300 ${
-                                        visibleRows[row.key]?.visible ? 'max-h-[2000px]' : 'max-h-0'
-                                    }`}
+                            {hasExpand && (
+                                <td className="p-0 align-middle w-9">
+                                    <button
+                                        type="button"
+                                        onClick={() => toggleRow(rowKey)}
+                                        aria-expanded={isExpanded}
+                                        aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
+                                        className={`w-9 h-9 inline-flex items-center justify-center rounded-md hover:bg-surface/80 transition-transform duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                                            isExpanded ? 'rotate-180' : ''
+                                        }`}
+                                    >
+                                        {expandRow.expandIcon ?? DefaultExpandIcon}
+                                    </button>
+                                </td>
+                            )}
+                            {columns.map((col) => (
+                                <td
+                                    key={col.key}
+                                    className={`${cellAlign(col.align)} text-sm text-foreground py-2 px-3 align-middle`}
                                 >
-                                    {expandRow.expandComponent?.(row)}
-                                </div>
-                            </td>
+                                    {col.component
+                                        ? col.component(row[col.keyBind] as T[keyof T], row)
+                                        : (row[col.keyBind] as React.ReactNode)}
+                                </td>
+                            ))}
                         </tr>
-                    )}
-                </React.Fragment>
-            ))}
+
+                        {hasExpand && isExpanded && (
+                            <tr className="bg-surface">
+                                <td colSpan={expandColCount} className="p-0 border-b border-border">
+                                    <div className="p-3">{expandRow.expandComponent?.(row)}</div>
+                                </td>
+                            </tr>
+                        )}
+                    </React.Fragment>
+                )
+            })}
         </tbody>
     )
 }
@@ -223,30 +271,27 @@ function Pagination({
         <IconButton disabled={disabled} onClick={onClick} icon={icon} />
     )
 
-    const chevronRight = (color: string) => (
-        <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} className="h-5 w-5">
+    const chevronRight = (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
     )
 
-    const doubleChevronRight = (color: string) => (
-        <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} className="h-5 w-5">
+    const doubleChevronRight = (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
         </svg>
     )
 
-    const disabledColor = 'var(--color-foreground-muted)'
-    const enabledColor  = 'var(--color-foreground)'
-
     return (
         <div className="flex gap-2 items-center justify-end pt-2">
             {navBtn(
-                <span className="rotate-180 inline-flex">{doubleChevronRight(activePage === 0 ? disabledColor : enabledColor)}</span>,
+                <span className="rotate-180 inline-flex">{doubleChevronRight}</span>,
                 activePage === 0,
                 () => onPageChange(0)
             )}
             {navBtn(
-                <span className="rotate-180 inline-flex">{chevronRight(activePage === 0 ? disabledColor : enabledColor)}</span>,
+                <span className="rotate-180 inline-flex">{chevronRight}</span>,
                 activePage === 0,
                 () => activePage > 0 && onPageChange(activePage - 1)
             )}
@@ -254,12 +299,12 @@ function Pagination({
                 {activePage + 1}
             </span>
             {navBtn(
-                chevronRight(activePage === maxPage ? disabledColor : enabledColor),
+                chevronRight,
                 activePage === maxPage,
                 () => activePage < maxPage && onPageChange(activePage + 1)
             )}
             {navBtn(
-                doubleChevronRight(activePage === maxPage ? disabledColor : enabledColor),
+                doubleChevronRight,
                 activePage === maxPage,
                 () => onPageChange(maxPage)
             )}
@@ -287,33 +332,81 @@ function Pagination({
 /**
  * Data table with optional search, pagination, and expandable rows.
  *
- * Supports both client-side and server-side pagination.
+ * - **Typed rows**: pass a generic `T` for full type inference on columns
+ *   and cell renderers (`<Table<Vessel> ... />`).
+ * - **Real `<table>` semantics**: keeps row / col / cell context intact for
+ *   screen readers and lets the browser handle column sizing natively.
+ *   Per-column widths via `column.width`.
+ * - **Search**: client-side filter across ALL row values; result is
+ *   memoized so each keystroke costs O(n) once per term change, not per
+ *   render. Set `pagination.serverSide` to skip client-side filter and
+ *   pagination entirely.
+ * - **Expand**: each row gets a real `<button>` with `aria-expanded`.
+ *   Expand state is keyed by `getRowKey(row, i)` so it survives reorders.
  *
- * @example
- * <Table
- *   columns={[{ key: 'name', label: 'Name', keyBind: 'name' }]}
- *   rows={data}
- *   pagination={{ enabled: true, perPage: 15 }}
+ * @example Static, fully typed
+ * ```tsx
+ * type Vessel = { id: number; name: string; status: string }
+ * <Table<Vessel>
+ *   columns={[
+ *     { key: 'name', label: 'Name', keyBind: 'name' },
+ *     { key: 'status', label: 'Status', keyBind: 'status', width: 120 },
+ *   ]}
+ *   rows={vessels}
+ *   getRowKey={(row) => row.id}
  * />
+ * ```
+ *
+ * @example Server-side pagination
+ * ```tsx
+ * <Table
+ *   columns={cols}
+ *   rows={pageRows}
+ *   pagination={{
+ *     enabled: true, serverSide: true, perPage: 20,
+ *     page: currentPage, totalCount, onPageChange, onPerPageChange,
+ *   }}
+ * />
+ * ```
  */
-export default function Table({
+export default function Table<T extends Record<string, any> = Record<string, any>>({
     columns = [],
     rows = [],
+    getRowKey = defaultGetRowKey,
     pagination = DEFAULT_PAGINATION,
-    expandRow = DEFAULT_EXPAND,
+    expandRow = DEFAULT_EXPAND as ExpandRowOptions<T>,
     hasSearch = true,
     footer = null,
     header = null,
-}: TableProps) {
+}: TableProps<T>) {
     const searchRef = useRef<HTMLInputElement>(null)
     const [searchTerm, setSearchTerm] = useState('')
     const [perPage, setPerPage] = useState(
         typeof pagination.perPage === 'number' ? pagination.perPage : 15
     )
     const [activePage, setActivePage] = useState(0)
-    const [datasets, setDatasets] = useState<any[][]>([])
 
     const isServerSide = !!(pagination.enabled && pagination.serverSide)
+
+    // Filter is derived state — memoized so each keystroke only runs the
+    // O(n × columns) scan once per `searchTerm` change, not on every render.
+    // Server-side mode short-circuits: the consumer's API is the filter.
+    const filteredRows = useMemo(() => {
+        if (isServerSide || !searchTerm) return rows
+        const term = searchTerm.toLowerCase()
+        return rows.filter((row) =>
+            Object.values(row).some(
+                (v) => v != null && String(v).toLowerCase().includes(term)
+            )
+        )
+    }, [rows, searchTerm, isServerSide])
+
+    // Pagination buckets — also derived. Re-bucketed whenever the filtered
+    // set OR page size changes.
+    const datasets = useMemo(() => {
+        if (isServerSide) return [rows]
+        return createDatasets(filteredRows, pagination.enabled ? perPage : null)
+    }, [filteredRows, perPage, pagination.enabled, isServerSide, rows])
 
     const MAX_PAGE = useMemo(() => {
         if (isServerSide && typeof pagination.maxPage === 'number') return Math.max(0, pagination.maxPage)
@@ -324,37 +417,30 @@ export default function Table({
 
     const currentPageRows = useMemo(() => {
         if (isServerSide) return rows
-        return datasets.length ? datasets[activePage] ?? [] : []
+        return datasets[activePage] ?? []
     }, [isServerSide, rows, datasets, activePage])
 
+    // Sync per-page state with pagination prop when not server-side
     useEffect(() => {
-        if (pagination.enabled && !isServerSide) setPerPage(pagination.perPage ?? 15)
-    }, [pagination, isServerSide])
+        if (pagination.enabled && !isServerSide && typeof pagination.perPage === 'number') {
+            setPerPage(pagination.perPage)
+        }
+    }, [pagination.enabled, pagination.perPage, isServerSide])
 
+    // Server-side: mirror the per-page from props
     useEffect(() => {
         if (isServerSide && typeof pagination.perPage === 'number') setPerPage(pagination.perPage)
     }, [isServerSide, pagination.perPage])
 
-    useEffect(() => {
-        if (isServerSide) return
-        setDatasets(createDatasets(rows, pagination.enabled ? perPage : null))
-    }, [rows, perPage, pagination, isServerSide])
-
+    // Server-side: mirror the 1-based page from props
     useEffect(() => {
         if (isServerSide && typeof pagination.page === 'number' && pagination.page >= 1)
             setActivePage(pagination.page - 1)
     }, [isServerSide, pagination.page])
 
     const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const term = e.target.value
-        setSearchTerm(term)
-        if (isServerSide) return
-        const filtered = rows.filter((row) =>
-            Object.values(row).some(
-                (v) => !!v && String(v).toLowerCase().includes(term.toLowerCase())
-            )
-        )
-        setDatasets(createDatasets(filtered, pagination.enabled ? perPage : null))
+        setSearchTerm(e.target.value)
+        // Reset to the first page so the user sees the top of the filtered set.
         setActivePage(0)
     }
 
@@ -395,11 +481,17 @@ export default function Table({
                 )}
             </div>
             <div>{header}</div>
-            {/* Horizontal scroll wrapper — enables swipe-scroll on narrow viewports */}
+            {/* Horizontal scroll wrapper — enables swipe-scroll on narrow viewports
+                without forcing the table itself to layout horizontally. */}
             <div className="overflow-x-auto rounded-lg">
-                <table className="w-full">
-                    <TableHeader columns={columns} />
-                    <TableBody columns={columns} rows={currentPageRows} expandRow={expandRow} />
+                <table className="w-full border-collapse">
+                    <TableHeader columns={columns} hasExpand={!!expandRow.enabled} />
+                    <TableBody
+                        columns={columns}
+                        rows={currentPageRows}
+                        expandRow={expandRow}
+                        getRowKey={getRowKey}
+                    />
                 </table>
             </div>
             <div>{footer}</div>
