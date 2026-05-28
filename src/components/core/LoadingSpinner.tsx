@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import Portal from '../utils/Portal'
+import Portal from '../layout/Portal'
 
 export interface LoadingSpinnerProps {
     /** Text animated letter by letter */

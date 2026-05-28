@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react'
 import * as Toast from '@radix-ui/react-toast'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import Portal from '../utils/Portal'
+import Portal from '../layout/Portal'
 
 /** ─────────────────── types ─────────────────── */
 export type NotificationType = 'info' | 'success' | 'warning' | 'danger'

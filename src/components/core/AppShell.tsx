@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Sidebar from './Sidebar'
 import type { SidebarSection, SidebarProps } from './Sidebar'
-import Portal from '../utils/Portal'
+import Portal from '../layout/Portal'
 
 export interface AppShellProps {
     /**

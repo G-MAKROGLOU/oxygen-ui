@@ -11,16 +11,19 @@ export type {
 // ─── Utilities ────────────────────────────────────────────────────────────────
 export { default as COLORS } from './utils/colors'
 
-/**
- * SSR-safe portal helper. Wrap any `position: fixed` overlay in `<Portal>`
- * to escape ancestor `transform` / `filter` / `contain` containing blocks.
- * See `src/components/utils/Portal.tsx` for the full rationale.
- */
-export { default as Portal } from './components/utils/Portal'
-export type { PortalProps } from './components/utils/Portal'
-
 // ─── Icons ────────────────────────────────────────────────────────────────────
 export { default as Icon } from './icons/icons'
+
+// ─── Layout components ───────────────────────────────────────────────────────
+// Structural primitives that re-anchor or compose rendering.
+//
+// Portal — SSR-safe DOM relocator. Wrap any `position: fixed` element in
+// `<Portal>` to escape ancestor `transform` / `filter` / `contain` containing
+// blocks. Use whenever a component anchors itself to the viewport (overlays,
+// drawers, full-screen loaders). See `src/components/layout/Portal.tsx` for
+// the full rationale and examples.
+export { default as Portal } from './components/layout/Portal'
+export type { PortalProps } from './components/layout/Portal'
 
 // ─── Core components ─────────────────────────────────────────────────────────
 export { default as IconButton } from './components/core/IconButton'
