@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.6.2...v1.7.0) (2026-05-28)
+
+
+### Features
+
+* add reusable <Portal> helper + fix all unportaled fixed overlays ([3237641](https://github.com/G-MAKROGLOU/oxygen-ui/commit/3237641fc8f781f10025a219346ff86aaaf569d7))
+
 ## [1.6.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.6.1...v1.6.2) (2026-05-28)
 
 
