@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.1...v1.7.2) (2026-05-28)
+
+
+### Bug Fixes
+
+* **LoadingSpinner:** rebuild on Framer Motion + Tailwind animate-spin ([fccb36c](https://github.com/G-MAKROGLOU/oxygen-ui/commit/fccb36cc9e1290c29887aa8c1f9f5bc2f0f7cc13))
+
 ## [1.7.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.0...v1.7.1) (2026-05-28)
 
 
