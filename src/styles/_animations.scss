@@ -102,3 +102,12 @@
     from { transform: scaleX(1); }
     to   { transform: scaleX(0); }
 }
+
+// ── LoadingSpinner — breathing centre dot ────────────────────────────────────
+// Scales and pulses opacity simultaneously so the dot reads as "alive"
+// without rotating. Pairs with two concentric rings rotating in opposite
+// directions to give the loader its enterprise-poised character.
+@keyframes breathe {
+    0%, 100% { transform: scale(1);    opacity: 0.6; }
+    50%      { transform: scale(1.35); opacity: 1;   }
+}

@@ -148,6 +148,7 @@ module.exports = {
                 'slide-in-bottom':   'slide-in-from-bottom var(--duration-normal) var(--ease-out-expo)',
                 'slide-in-left':     'slide-in-from-left   var(--duration-normal) var(--ease-out-expo)',
                 'slide-in-right':    'slide-in-from-right  var(--duration-normal) var(--ease-out-expo)',
+                'breathe':           'breathe 2s ease-in-out infinite',
             },
         },
     },
