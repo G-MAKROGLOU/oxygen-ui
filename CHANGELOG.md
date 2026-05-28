@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.5.1...v1.5.2) (2026-05-28)
+
+
+### Bug Fixes
+
+* resolve CI failures — lint unused imports + MDX emphasis parser crash ([f75bbd9](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f75bbd941689aa8116d28fc2a7cb57d41e72f2b3))
+
 ## [1.5.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.5.0...v1.5.1) (2026-05-28)
 
 
