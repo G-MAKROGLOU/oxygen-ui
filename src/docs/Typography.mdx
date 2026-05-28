@@ -1,0 +1,105 @@
+{/* src/docs/Typography.mdx */}
+import { Meta, Typeset } from '@storybook/blocks'
+
+<Meta title="Design System/Typography" />
+
+export const fontSizes = {
+  xs:   '0.75rem',
+  sm:   '0.875rem',
+  base: '1rem',
+  lg:   '1.125rem',
+  xl:   '1.25rem',
+  '2xl':'1.5rem',
+  '3xl':'1.875rem',
+}
+
+# Typography
+
+The type system uses **Inter Variable** — a single font file that covers the full weight range without FOUT or multiple HTTP requests. All values are CSS custom properties, fully overridable.
+
+---
+
+## Font family
+
+```css
+--font-family-sans: "Inter var", sans-serif;
+```
+
+Override with any variable font:
+```css
+:root { --font-family-sans: "Geist", sans-serif; }
+```
+
+---
+
+## Type scale
+
+<Typeset
+  fontSizes={[12, 14, 16, 18, 20, 24, 30]}
+  fontWeight={400}
+  sampleText="The quick brown fox"
+  fontFamily='"Inter var", sans-serif'
+/>
+
+| Token | CSS var | Value | Tailwind |
+|-------|---------|-------|----------|
+| xs | `--font-size-xs` | 0.75rem / 12px | `text-xs` |
+| sm | `--font-size-sm` | 0.875rem / 14px | `text-sm` |
+| base | `--font-size-base` | 1rem / 16px | `text-base` |
+| lg | `--font-size-lg` | 1.125rem / 18px | `text-lg` |
+| xl | `--font-size-xl` | 1.25rem / 20px | `text-xl` |
+| 2xl | `--font-size-2xl` | 1.5rem / 24px | `text-2xl` |
+| 3xl | `--font-size-3xl` | 1.875rem / 30px | `text-3xl` |
+
+---
+
+## Font weight
+
+| Token | CSS var | Value | Tailwind |
+|-------|---------|-------|----------|
+| normal | `--font-weight-normal` | 400 | `font-normal` |
+| medium | `--font-weight-medium` | 500 | `font-medium` |
+| semibold | `--font-weight-semibold` | 600 | `font-semibold` |
+| bold | `--font-weight-bold` | 700 | `font-bold` |
+
+---
+
+## Line height
+
+| Token | CSS var | Value | Tailwind |
+|-------|---------|-------|----------|
+| tight | `--line-height-tight` | 1.25 | `leading-tight` |
+| snug | `--line-height-snug` | 1.375 | `leading-snug` |
+| normal | `--line-height-normal` | 1.5 | `leading-normal` |
+| relaxed | `--line-height-relaxed` | 1.625 | `leading-relaxed` |
+
+---
+
+## Overriding the type scale
+
+Scale the entire type system for a denser or more spacious feel:
+
+```css
+:root {
+  /* Compact scale — shift every step down by ~1 step */
+  --font-size-xs:   0.6875rem;  /* 11px */
+  --font-size-sm:   0.75rem;    /* 12px */
+  --font-size-base: 0.875rem;   /* 14px */
+  --font-size-lg:   1rem;       /* 16px */
+}
+```
+
+Or via `ThemeProvider`:
+```tsx
+<ThemeProvider
+  theme={{
+    typography: {
+      fontFamily:   '"Geist", sans-serif',
+      fontSizeBase: '0.875rem',
+      fontSizeSm:   '0.75rem',
+    }
+  }}
+>
+  <App />
+</ThemeProvider>
+```

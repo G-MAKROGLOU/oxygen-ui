@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import type { Preview, Decorator } from '@storybook/react'
 import { initialize, mswLoader } from 'msw-storybook-addon'
-import '../src/styles.css'
+import '../src/styles/index.scss'
 
 // Start MSW — explicit worker URL avoids path-resolution issues in Vite dev server
 initialize({

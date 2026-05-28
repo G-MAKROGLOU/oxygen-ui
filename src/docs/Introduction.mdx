@@ -1,0 +1,89 @@
+{/* src/docs/Introduction.mdx */}
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Design System/Introduction" />
+
+# @geomak/ui
+
+A production-grade React design system built on [Radix UI](https://www.radix-ui.com/) primitives and [Tailwind CSS](https://tailwindcss.com/). Every visual decision is driven by a fully parameterized CSS custom-property token layer — swap colors, scale, density, or motion system-wide with a single override.
+
+---
+
+## Quick start
+
+```bash
+npm install @geomak/ui
+# or
+yarn add @geomak/ui
+```
+
+**1. Import the stylesheet** (once, at your app entry):
+
+```ts
+import '@geomak/ui/styles'
+```
+
+**2. Add the font** to your HTML `<head>`:
+
+```html
+<link rel="preconnect" href="https://rsms.me/">
+<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+```
+
+**3. Use components:**
+
+```tsx
+import { Button, ThemeProvider } from '@geomak/ui'
+
+export default function App() {
+  return (
+    <ThemeProvider colorScheme="system">
+      <Button variant="primary" content="Launch" />
+    </ThemeProvider>
+  )
+}
+```
+
+---
+
+## Architecture
+
+The system is built in three layers:
+
+| Layer | What it is | When to use |
+|-------|-----------|-------------|
+| **CSS custom properties** | Runtime token values in `:root` and `.dark` | Override at any scope — `:root`, `.my-section`, `[data-theme="compact"]` |
+| **Tailwind utilities** | Semantic utility classes mapped to CSS vars | Use in className strings: `bg-background`, `text-foreground`, `rounded-lg` |
+| **JS/TS vars** | CSS var reference strings for inline styles | CSS-in-JS, canvas, SSR snapshots |
+
+---
+
+## Dark mode
+
+Dark mode is controlled by the `.dark` class on any ancestor element (typically `<html>`).
+
+**Automatic (ThemeProvider):**
+```tsx
+<ThemeProvider colorScheme="system">...</ThemeProvider>
+```
+
+**Manual toggle:**
+```ts
+document.documentElement.classList.toggle('dark', isDark)
+```
+
+---
+
+## Tailwind preset
+
+To use semantic utilities (`bg-background`, `text-foreground`, `rounded-md`, etc.) in your own project, point Tailwind at the package config:
+
+```js
+// tailwind.config.js
+module.exports = {
+  presets: [require('@geomak/ui/tailwind')],  // coming soon
+  content: ['./src/**/*.{tsx,ts}'],
+}
+```
+
+Until the preset is published, copy the `theme.extend` section from the package's `tailwind.config.cjs`.

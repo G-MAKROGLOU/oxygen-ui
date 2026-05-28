@@ -1,0 +1,23 @@
+// ── @geomak/ui — Stylesheet Entry ────────────────────────────────────────────
+//
+// Sass @use rules must appear before all other rules.
+// @tailwind directives are unknown at-rules — Sass passes them through verbatim;
+// PostCSS (Tailwind plugin) processes them in the second build pass.
+//
+// Load order:
+//   1. _tokens.scss   — @layer base { CSS custom properties }
+//   2. _animations.scss — global @keyframes
+//   3. @tailwind base/components/utilities — Tailwind layers
+//
+// Font loading: Inter variable font is NOT embedded here to avoid forcing a
+// specific loading strategy on consumers. Add to your app's <head>:
+//   <link rel="preconnect" href="https://rsms.me/">
+//   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+// ─────────────────────────────────────────────────────────────────────────────
+@use 'tokens';
+@use 'animations';
+
+// Tailwind — processed by PostCSS after Sass compilation
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

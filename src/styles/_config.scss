@@ -1,0 +1,131 @@
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  @geomak/ui — Token Configuration                                        ║
+// ║                                                                          ║
+// ║  Every variable carries !default so consuming projects can override at   ║
+// ║  SCSS compile-time via:                                                  ║
+// ║    @use '@geomak/ui/src/styles/config' with ($color-accent: #e63946);    ║
+// ║                                                                          ║
+// ║  Runtime override (simpler — no build dependency on SCSS):               ║
+// ║    :root { --color-accent: #e63946; }                                    ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
+// ── Colors — Light ────────────────────────────────────────────────────────────
+$color-background:            #eef4fa  !default;
+$color-surface:               #ffffff  !default;
+$color-surface-raised:        #ffffff  !default;
+$color-border:                #d3dde8  !default;
+$color-border-strong:         #8898aa  !default;
+$color-foreground:            #0a1929  !default;
+$color-foreground-secondary:  #2e4057  !default;
+$color-foreground-muted:      #536878  !default;
+$color-accent:                #0466C8  !default;
+$color-accent-hover:          #0353A4  !default;
+$color-accent-foreground:     #ffffff  !default;
+$color-error:                 #c0392b  !default;
+$color-warning:               #d68910  !default;
+$color-success:               #1e8449  !default;
+$color-info:                  #1565c0  !default;
+
+// ── Colors — Dark ─────────────────────────────────────────────────────────────
+$color-dark-background:            #060f1a  !default;
+$color-dark-surface:               #0d1f30  !default;
+$color-dark-surface-raised:        #152638  !default;
+$color-dark-border:                #1e3348  !default;
+$color-dark-border-strong:         #2e4a64  !default;
+$color-dark-foreground:            #e8f0f8  !default;
+$color-dark-foreground-secondary:  #9ab0c4  !default;
+$color-dark-foreground-muted:      #5c7a92  !default;
+$color-dark-accent:                #2d88ff  !default;
+$color-dark-accent-hover:          #4d9aff  !default;
+$color-dark-accent-foreground:     #ffffff  !default;
+$color-dark-error:                 #ff6b6b  !default;
+$color-dark-warning:               #ffb347  !default;
+$color-dark-success:               #5cb85c  !default;
+$color-dark-info:                  #5bc0de  !default;
+
+// ── Radius — enterprise scale (tighter than consumer-app defaults) ─────────────
+$radius-sm:    2px     !default;  // tags, badges, tight inputs
+$radius-md:    5px     !default;  // buttons, form fields
+$radius-lg:    7px     !default;  // cards, panels, dropdowns
+$radius-xl:    10px    !default;  // modals, drawers, large panels
+$radius-2xl:   12px    !default;  // hero elements only
+$radius-full:  9999px  !default;  // pills, avatars
+
+// ── Shadows — Light (blue-tinted, layered) ────────────────────────────────────
+// Comma in box-shadow values: SCSS treats these as comma-separated lists.
+// #{$shadow-*} interpolation joins list items with their separator, preserving commas.
+$shadow-sm:  0 1px 2px rgba(4, 31, 66, 0.06)                                          !default;
+$shadow-md:  0 2px 8px rgba(4, 31, 66, 0.08),  0 1px 3px  rgba(4, 31, 66, 0.05)       !default;
+$shadow-lg:  0 8px 24px rgba(4, 31, 66, 0.10), 0 3px 8px  rgba(4, 31, 66, 0.06)       !default;
+$shadow-xl:  0 20px 48px rgba(4, 31, 66, 0.13), 0 6px 16px rgba(4, 31, 66, 0.08)      !default;
+
+// ── Shadows — Dark (pure, crisp) ──────────────────────────────────────────────
+$shadow-dark-sm:  0 1px 2px rgba(0, 0, 0, 0.30)                                        !default;
+$shadow-dark-md:  0 2px 8px rgba(0, 0, 0, 0.40),  0 1px 3px rgba(0, 0, 0, 0.25)        !default;
+$shadow-dark-lg:  0 8px 24px rgba(0, 0, 0, 0.50), 0 3px 8px rgba(0, 0, 0, 0.30)        !default;
+$shadow-dark-xl:  0 20px 48px rgba(0, 0, 0, 0.60), 0 6px 16px rgba(0, 0, 0, 0.35)     !default;
+
+// ── Typography ────────────────────────────────────────────────────────────────
+// Font family uses single outer quotes so the inner "Inter var" quotes are preserved
+// when interpolated into CSS: --font-family-sans: "Inter var", sans-serif
+$font-family-sans:  '"Inter var"', sans-serif  !default;
+
+$font-size-xs:    0.75rem    !default;  // 12px
+$font-size-sm:    0.875rem   !default;  // 14px
+$font-size-base:  1rem       !default;  // 16px
+$font-size-lg:    1.125rem   !default;  // 18px
+$font-size-xl:    1.25rem    !default;  // 20px
+$font-size-2xl:   1.5rem     !default;  // 24px
+$font-size-3xl:   1.875rem   !default;  // 30px
+
+$font-weight-normal:    400  !default;
+$font-weight-medium:    500  !default;
+$font-weight-semibold:  600  !default;
+$font-weight-bold:      700  !default;
+
+$line-height-tight:    1.25   !default;
+$line-height-snug:     1.375  !default;
+$line-height-normal:   1.5    !default;
+$line-height-relaxed:  1.625  !default;
+
+$letter-spacing-tight:   -0.025em  !default;
+$letter-spacing-normal:   0em      !default;
+$letter-spacing-wide:     0.025em  !default;
+$letter-spacing-wider:    0.05em   !default;
+
+// ── Component heights / density ───────────────────────────────────────────────
+// Override these to shift the whole UI to a denser or more spacious feel.
+$height-control-xs:  24px  !default;  // icon-only buttons, tiny chips
+$height-control-sm:  28px  !default;  // small inputs, secondary actions
+$height-control-md:  36px  !default;  // default inputs, primary buttons
+$height-control-lg:  44px  !default;  // large touch-friendly inputs
+$height-topbar:      56px  !default;  // top navigation bar
+$sidebar-expanded:   220px !default;  // expanded sidebar width
+$sidebar-collapsed:  52px  !default;  // icon-only sidebar width
+
+// ── Motion ────────────────────────────────────────────────────────────────────
+$duration-instant:  50ms   !default;  // micro-interactions (checkbox tick)
+$duration-fast:     80ms   !default;  // hover state transitions
+$duration-normal:   150ms  !default;  // tooltips, dropdowns
+$duration-slow:     220ms  !default;  // modals, drawers, accordions
+$duration-gentle:   350ms  !default;  // page-level transitions
+
+// Easing — cubic-bezier() is parsed as a function call, not a list. Safe to use directly.
+$ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1)   !default;
+$ease-out-quart:  cubic-bezier(0.25, 1, 0.5, 1)   !default;
+$ease-out-cubic:  cubic-bezier(0.33, 1, 0.68, 1)  !default;
+$ease-in-out:     cubic-bezier(0.4, 0, 0.2, 1)    !default;
+$ease-in:         cubic-bezier(0.4, 0, 1, 1)      !default;
+$ease-linear:     linear                           !default;
+
+// ── Z-index ───────────────────────────────────────────────────────────────────
+// Named scale prevents magic numbers across the codebase.
+$z-base:     0    !default;
+$z-raised:   10   !default;
+$z-dropdown: 100  !default;
+$z-sticky:   150  !default;
+$z-topbar:   200  !default;
+$z-overlay:  300  !default;
+$z-modal:    400  !default;
+$z-toast:    500  !default;
+$z-tooltip:  600  !default;
