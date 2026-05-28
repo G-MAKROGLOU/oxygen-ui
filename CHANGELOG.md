@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.5.2...v1.5.3) (2026-05-28)
+
+
+### Bug Fixes
+
+* styled Architecture table + Tooltip background color ([d274313](https://github.com/G-MAKROGLOU/oxygen-ui/commit/d274313cebc4d92a57ec2492ca07bb6d6ebaa05d))
+
 ## [1.5.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.5.1...v1.5.2) (2026-05-28)
 
 
