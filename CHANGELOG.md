@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.0.1...v5.0.2) (2026-05-28)
+
+
+### Bug Fixes
+
+* **animations:** Notification + Wizard — visible enter/exit motion ([2abab65](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2abab655076eb42d88ad01ecd2ce40ca01a08217))
+
 ## [5.0.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.0.0...v5.0.1) (2026-05-28)
 
 
