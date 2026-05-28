@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.6.1...v1.6.2) (2026-05-28)
+
+
+### Bug Fixes
+
+* **notification:** decouple opacity/position timing so motion is visible ([9bae224](https://github.com/G-MAKROGLOU/oxygen-ui/commit/9bae224cd63ba0eee36919fb9f7f9f3730d1ab9e))
+
 ## [1.6.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.6.0...v1.6.1) (2026-05-28)
 
 
