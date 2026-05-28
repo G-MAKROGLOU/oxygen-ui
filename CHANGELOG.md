@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.6.0...v1.6.1) (2026-05-28)
+
+
+### Bug Fixes
+
+* **notification:** replace horizontal slide with y+scale animation ([0506f50](https://github.com/G-MAKROGLOU/oxygen-ui/commit/0506f50582491e5e8c06ce91701fe2290f692d8c))
+
 # [1.6.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.5.3...v1.6.0) (2026-05-28)
 
 
