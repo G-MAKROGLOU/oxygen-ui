@@ -84,6 +84,7 @@
     "msw-storybook-addon": "2",
     "postcss": "^8.4.16",
     "postcss-cli": "^11.0.1",
+    "remark-gfm": "^4.0.1",
     "sass": "^1.100.0",
     "semantic-release": "^24.0.0",
     "storybook": "^8.6.12",
