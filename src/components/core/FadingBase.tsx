@@ -48,10 +48,14 @@ export default function FadingBase({
     if (!shouldRender) return null
 
     return (
+        // `calculated-height` and `dark:glassmorphism` were orphaned CSS classes
+        // (never defined anywhere). Replaced with semantic `min-h-full` +
+        // `bg-surface` which works in both light and dark modes via the
+        // ThemeProvider's CSS vars.
         <div
-            className={`w-full calculated-height pl-2 pr-2 pb-2 transition-opacity duration-300 ${visible ? 'opacity-100' : 'opacity-0'}`}
+            className={`w-full min-h-full pl-2 pr-2 pb-2 transition-opacity duration-300 ${visible ? 'opacity-100' : 'opacity-0'}`}
         >
-            <div className={`bg-ice dark:glassmorphism w-full h-full rounded-lg p-2 ${className}`}>
+            <div className={`bg-surface w-full h-full rounded-lg p-2 ${className}`}>
                 {children}
             </div>
         </div>

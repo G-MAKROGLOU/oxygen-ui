@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
-import COLORS from '../../utils/colors'
 
 export interface AutoCompleteItem {
     key: string
@@ -73,14 +72,14 @@ export default function AutoComplete({
                 style={style ?? {}}
             >
                 {label && (
-                    <label className="text-lg font-bold ml-1 max-content text-prussian-blue dark:text-white">
+                    <label className="text-sm font-medium ml-1 max-content text-foreground">
                         {label}
                     </label>
                 )}
 
                 <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
                     <Popover.Anchor asChild>
-                        <div className="bg-white flex items-center gap-1 rounded-lg pr-2">
+                        <div className="bg-surface text-foreground flex items-center gap-1 rounded-lg border border-border pr-2 focus-within:ring-2 focus-within:ring-accent transition-colors">
                             <input
                                 disabled={disabled}
                                 value={term}
@@ -91,7 +90,7 @@ export default function AutoComplete({
                                 onFocus={() => setOpen(true)}
                                 type="text"
                                 name={name}
-                                className="focus:outline-none pl-2 h-9 w-56 outline-offset-2 text-prussian-blue mt-1 rounded-lg disabled:bg-disabled disabled:cursor-not-allowed"
+                                className="bg-transparent focus:outline-none pl-2 h-9 w-56 rounded-lg disabled:cursor-not-allowed"
                                 style={inputStyle ?? {}}
                                 placeholder={placeholder ?? ''}
                                 autoComplete="off"
@@ -99,7 +98,7 @@ export default function AutoComplete({
                                 aria-expanded={open}
                                 aria-autocomplete="list"
                             />
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={COLORS.PALETTE['prussian-blue']} className="w-5 h-5 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 flex-shrink-0 text-foreground-muted" aria-hidden="true">
                                 <path fillRule="evenodd" d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z" clipRule="evenodd" />
                             </svg>
                         </div>
@@ -110,10 +109,10 @@ export default function AutoComplete({
                             align="start"
                             sideOffset={4}
                             onOpenAutoFocus={(e) => e.preventDefault()}
-                            className="w-64 bg-ice dark:bg-midnight-green-eagle-900 rounded-lg mt-1 shadow-md z-50 overflow-y-auto max-h-36 animate-in fade-in-0 zoom-in-95"
+                            className="w-64 bg-surface border border-border rounded-lg mt-1 shadow-md z-50 overflow-y-auto max-h-36 animate-in fade-in-0 zoom-in-95"
                         >
                             {foundItems.length === 0 ? (
-                                <div className="h-full w-full flex flex-col items-center justify-center py-4 text-sm text-prussian-blue dark:text-white">
+                                <div className="h-full w-full flex flex-col items-center justify-center py-4 text-sm text-foreground-secondary">
                                     {emptyText}
                                 </div>
                             ) : (
@@ -127,7 +126,7 @@ export default function AutoComplete({
                                             key={item.key}
                                             role="option"
                                             tabIndex={0}
-                                            className="text-sm flex items-center gap-2 p-2 transition-all duration-150 hover:bg-ice-dark dark:hover:bg-prussian-blue cursor-pointer text-prussian-blue dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                            className="text-sm flex items-center gap-2 p-2 transition-colors duration-150 hover:bg-surface-raised cursor-pointer text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                             onClick={() => handleSelect(item)}
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter' || e.key === ' ') {

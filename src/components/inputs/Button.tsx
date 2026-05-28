@@ -24,31 +24,33 @@ export interface ButtonProps {
 
 const VARIANT_CLASSES: Record<NonNullable<ButtonProps['variant']>, string> = {
     primary: [
-        'bg-accent text-white',
+        'bg-accent text-accent-fg',
         'hover:bg-accent-hover',
         'active:bg-accent',
-        'disabled:bg-roman-silver disabled:text-white/70 disabled:cursor-not-allowed',
+        'disabled:bg-foreground-muted disabled:text-accent-fg/70 disabled:cursor-not-allowed',
         'focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
     ].join(' '),
 
     secondary: [
         'bg-transparent border border-accent text-accent',
-        'hover:bg-accent hover:text-white',
-        'active:bg-accent-hover active:text-white',
-        'disabled:border-roman-silver disabled:text-roman-silver disabled:cursor-not-allowed',
+        'hover:bg-accent hover:text-accent-fg',
+        'active:bg-accent-hover active:text-accent-fg',
+        'disabled:border-foreground-muted disabled:text-foreground-muted disabled:cursor-not-allowed',
         'focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
     ].join(' '),
 
     ghost: [
+        // Semantic tokens handle both light and dark modes — no `dark:`
+        // variants needed.
         'bg-transparent text-foreground-secondary',
-        'hover:bg-ice dark:hover:bg-oxford-blue-700 hover:text-foreground',
-        'active:bg-ice-dark dark:active:bg-independence',
-        'disabled:text-roman-silver disabled:cursor-not-allowed',
+        'hover:bg-surface-raised hover:text-foreground',
+        'active:bg-surface',
+        'disabled:text-foreground-muted disabled:cursor-not-allowed',
         'focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
     ].join(' '),
 
     danger: [
-        'bg-status-error text-white',
+        'bg-status-error text-accent-fg',
         'hover:opacity-90',
         'active:opacity-100',
         'disabled:opacity-50 disabled:cursor-not-allowed',

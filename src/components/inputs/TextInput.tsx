@@ -54,7 +54,7 @@ export default function TextInput({
                     // some screen readers.
                     <label
                         style={{ color: labelColor || undefined }}
-                        className={`text-md font-bold ml-1 max-content ${!labelColor && 'text-prussian-blue dark:text-white'}`}
+                        className={`text-sm font-medium ml-1 max-content ${!labelColor && 'text-foreground'}`}
                         htmlFor={htmlFor}
                     >
                         {label}
@@ -71,7 +71,7 @@ export default function TextInput({
                     id={htmlFor}
                     aria-invalid={hasError || undefined}
                     aria-describedby={hasError ? errorId : undefined}
-                    className={`${hasError ? 'border border-error' : ''} focus:outline-oxford-blue-700-opaque p-2 h-9 w-60 outline-offset-2 text-prussian-blue mt-1 rounded-lg disabled:bg-disabled disabled:cursor-not-allowed transition-all`}
+                    className={`${hasError ? 'border border-status-error' : 'border border-border'} bg-surface text-foreground p-2 h-9 w-60 mt-1 rounded-lg disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors`}
                     style={inputStyle ?? {}}
                     placeholder={placeholder ?? ''}
                 />
@@ -80,7 +80,7 @@ export default function TextInput({
                 rendered when there is an actual error so screen readers don't
                 read empty descriptions. */}
             {hasError && (
-                <div id={errorId} className="text-center text-error dark:text-prussian-blue min-h-0">
+                <div id={errorId} className="text-center text-status-error text-xs mt-1">
                     {errorMessage}
                 </div>
             )}

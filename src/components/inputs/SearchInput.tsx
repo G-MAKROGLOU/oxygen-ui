@@ -1,5 +1,4 @@
 import React from 'react'
-import COLORS from '../../utils/colors'
 
 export interface SearchInputProps {
     value?: string
@@ -40,11 +39,11 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(functio
                 style={style ?? {}}
             >
                 {label && (
-                    <label className="text-lg font-bold ml-1 max-content text-prussian-blue dark:text-white" htmlFor={htmlFor}>
+                    <label className="text-sm font-medium ml-1 max-content text-foreground" htmlFor={htmlFor}>
                         {label}
                     </label>
                 )}
-                <div className="bg-white flex items-center gap-1 rounded-lg focus:outline-oxford-blue-700-opaque pr-2">
+                <div className="bg-surface text-foreground flex items-center gap-1 rounded-lg border border-border pr-2 focus-within:ring-2 focus-within:ring-accent transition-colors">
                     <input
                         ref={ref}
                         disabled={disabled}
@@ -56,12 +55,12 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(functio
                         enterKeyHint="search"
                         name={name}
                         id={htmlFor}
-                        className="focus:outline-none pl-2 h-9 w-56 outline-offset-2 text-prussian-blue mt-1 rounded-lg disabled:bg-disabled disabled:cursor-not-allowed"
+                        className="bg-transparent focus:outline-none pl-2 h-9 w-56 rounded-lg disabled:cursor-not-allowed"
                         style={inputStyle ?? {}}
                         placeholder={placeholder ?? ''}
                     />
-                    {/* Search icon */}
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={COLORS.PALETTE['prussian-blue']} className="w-6 h-6">
+                    {/* Search icon — uses currentColor so it follows the input text */}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-foreground-muted" aria-hidden="true">
                         <path fillRule="evenodd" d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z" clipRule="evenodd" />
                     </svg>
                 </div>

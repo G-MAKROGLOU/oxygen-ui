@@ -24,9 +24,11 @@ export interface MenuBarProps {
  */
 export default function MenuBar({ items }: MenuBarProps) {
     return (
+        // `calculated-height` was an orphaned CSS class. Replaced with `h-full`
+        // so the MenuBar fills whatever vertical space its parent gives it.
         <nav
             aria-label="Main navigation"
-            className="w-16 calculated-height bg-independence rounded-tr-lg rounded-br-lg flex flex-col gap-2 items-center p-2 z-50"
+            className="w-16 h-full bg-surface-raised rounded-tr-lg rounded-br-lg flex flex-col gap-2 items-center p-2 z-50"
         >
             {items.map((item) => (
                 <MenuBarItem

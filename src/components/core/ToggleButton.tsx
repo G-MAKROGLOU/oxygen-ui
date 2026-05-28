@@ -46,12 +46,14 @@ export default function ToggleButton({ items, onChange, activeKey }: ToggleButto
                     value={item.key}
                     aria-label={typeof item.label === 'string' ? item.label : item.key}
                     className={[
-                        index === 0 && 'rounded-l-lg border-r border-ice-dark',
-                        index === items.length - 1 && 'rounded-r-lg border-l border-ice-dark dark:border-manatee',
-                        'p-2 cursor-pointer transition-all duration-300',
-                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-usafa-blue',
-                        'bg-ice dark:bg-manatee hover:bg-ice-dark dark:hover:bg-black-coral',
-                        'data-[state=on]:bg-ice-dark dark:data-[state=on]:bg-indigo-dye',
+                        // Semantic tokens handle both light and dark modes via
+                        // CSS vars — no `dark:` variants needed.
+                        index === 0 && 'rounded-l-lg border-r border-border',
+                        index === items.length - 1 && 'rounded-r-lg border-l border-border',
+                        'p-2 cursor-pointer transition-colors duration-150 text-foreground-secondary',
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                        'bg-surface hover:bg-surface-raised',
+                        'data-[state=on]:bg-accent data-[state=on]:text-accent-fg',
                     ]
                         .filter(Boolean)
                         .join(' ')}

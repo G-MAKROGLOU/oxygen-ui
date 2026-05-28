@@ -34,10 +34,13 @@ export default function IconButton({
 }: IconButtonProps) {
     const colorScheme = useMemo(() => {
         if (type === 'primary') {
-            return 'hover:bg-true-blue bg-usafa-blue dark:bg-independence dark:hover:bg-black-coral'
+            // Single semantic palette handles both light and dark modes via
+            // CSS vars on the consumer's ThemeProvider — no `dark:` variants
+            // needed.
+            return 'bg-accent text-accent-fg hover:bg-accent-hover'
         }
         if (type === 'bordered') {
-            return 'bg-ice hover:bg-ice-dark border border-prussian-blue disabled:border-disabled'
+            return 'bg-surface text-foreground hover:bg-surface-raised border border-border-strong'
         }
         return ''
     }, [type])
@@ -47,7 +50,7 @@ export default function IconButton({
             type={buttonType}
             disabled={disabled || loading}
             onClick={onClick}
-            className={`${size === 'sm' ? 'p-1' : 'p-2'} rounded-lg shadow-lg transition-all duration-150 ${colorScheme} dark:disabled:bg-manatee disabled:bg-disabled disabled:cursor-not-allowed`}
+            className={`${size === 'sm' ? 'p-1' : 'p-2'} rounded-lg shadow-md transition-colors duration-150 ${colorScheme} disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
         >
             {loading ? loadingIcon : icon}
         </button>

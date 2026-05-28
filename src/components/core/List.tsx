@@ -33,8 +33,8 @@ export default function List({ items, onItemClick, activeKey }: ListProps) {
                     role="option"
                     aria-selected={activeKey === item.key}
                     tabIndex={0}
-                    className={`hover:bg-ice-dark dark:hover:bg-independence cursor-pointer p-3 border-b border-b-ice-dark dark:border-b-independence transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                        activeKey === item.key ? 'bg-ice-dark dark:bg-independence' : ''
+                    className={`hover:bg-surface-raised cursor-pointer p-3 border-b border-border transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                        activeKey === item.key ? 'bg-surface-raised text-foreground' : 'text-foreground-secondary'
                     }`}
                     onClick={() => onItemClick(item)}
                     onKeyDown={(e) => {

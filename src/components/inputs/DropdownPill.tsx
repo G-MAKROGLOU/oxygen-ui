@@ -11,7 +11,7 @@ export interface DropdownPillProps {
 export default function DropdownPill({ value, hasSiblings = false }: DropdownPillProps) {
     return (
         <div
-            className={`bg-prussian-blue text-white text-sm text-ellipsis ${hasSiblings ? 'w-24' : 'w-max'} p-1 rounded-lg whitespace-nowrap overflow-hidden`}
+            className={`bg-accent text-accent-fg text-sm text-ellipsis ${hasSiblings ? 'w-24' : 'w-max'} p-1 px-2 rounded-lg whitespace-nowrap overflow-hidden`}
         >
             {value}
         </div>

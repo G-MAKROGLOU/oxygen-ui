@@ -32,15 +32,17 @@ export default function Switch({
 
     return (
         <div>
-            <label htmlFor={id} className="flex items-center cursor-pointer mr-12 select-none">
+            // mr-12 was a hardcoded right margin that broke layouts; spacing
+            // is the parent's responsibility now.
+            <label htmlFor={id} className="flex items-center cursor-pointer select-none">
                 <SwitchPrimitive.Root
                     id={id}
                     checked={checked}
                     onCheckedChange={(c) => onChange?.({ target: { checked: c } })}
-                    className="relative inline-flex h-6 w-14 items-center rounded-full bg-prussian-blue dark:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-usafa-blue"
+                    className="relative inline-flex h-6 w-14 items-center rounded-full bg-foreground-secondary data-[state=checked]:bg-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 >
                     <SwitchPrimitive.Thumb
-                        className="pointer-events-none inline-flex h-8 w-8 items-center justify-center rounded-full bg-independence dark:bg-prussian-blue shadow transition-transform duration-200 data-[state=checked]:translate-x-[22px] data-[state=unchecked]:translate-x-[-4px]"
+                        className="pointer-events-none inline-flex h-8 w-8 items-center justify-center rounded-full bg-background text-foreground shadow transition-transform duration-200 data-[state=checked]:translate-x-[22px] data-[state=unchecked]:translate-x-[-4px]"
                     >
                         {checkedIcon && uncheckedIcon
                             ? checked

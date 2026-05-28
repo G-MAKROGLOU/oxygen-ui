@@ -2,7 +2,6 @@ import React, { useEffect, useId, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import SearchInput from './SearchInput'
 import DropdownPill from './DropdownPill'
-import COLORS from '../../utils/colors'
 
 export interface DropdownItem {
     key: string | number
@@ -74,7 +73,6 @@ export default function Dropdown({
 }: DropdownProps) {
     const [open, setOpen] = useState(false)
     const [selectedItems, setSelectedItems] = useState<(string | number)[]>([])
-    const [hoveredItem, setHoveredItem] = useState<string | number | null>(null)
     const [searchTerm, setSearchTerm] = useState('')
     const [innerItems, setInnerItems] = useState<DropdownItem[]>([])
     // Stable id for the error region so the combobox can point at it via
@@ -128,7 +126,7 @@ export default function Dropdown({
             >
                 {label && (
                     <label
-                        className="text-md font-bold ml-1 max-content select-none text-prussian-blue dark:text-white"
+                        className="text-sm font-medium ml-1 max-content select-none text-foreground"
                         htmlFor={htmlFor}
                         style={labelStyle}
                     >
@@ -146,7 +144,7 @@ export default function Dropdown({
                             aria-invalid={hasError || undefined}
                             aria-describedby={hasError ? errorId : undefined}
                             style={style}
-                            className={`flex items-center justify-between relative h-9 rounded-lg cursor-pointer select-none ${disabled ? 'cursor-not-allowed bg-disabled' : 'bg-white'}`}
+                            className={`flex items-center justify-between relative h-9 rounded-lg border border-border cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${disabled ? 'cursor-not-allowed bg-surface-raised text-foreground-muted' : 'bg-surface text-foreground'} ${hasError ? 'border-status-error' : ''}`}
                             tabIndex={disabled ? -1 : 0}
                             onKeyDown={(e) => {
                                 if (disabled) return
@@ -160,10 +158,10 @@ export default function Dropdown({
                         >
                             {/* Selected value(s) */}
                             <div
-                                className={`h-7 pl-2 ${!style?.width ? 'min-w-[240px]' : ''} focus:outline-none text-prussian-blue flex items-center gap-1 overflow-hidden`}
+                                className={`h-7 pl-2 ${!style?.width ? 'min-w-[240px]' : ''} flex items-center gap-1 overflow-hidden`}
                             >
                                 {!value || (Array.isArray(value) && value.length === 0) ? (
-                                    <span className="text-roman-silver text-sm">{placeholder}</span>
+                                    <span className="text-foreground-muted text-sm">{placeholder}</span>
                                 ) : Array.isArray(value) ? (
                                     <>
                                         {value.slice(0, 1).map((val) => (
@@ -180,9 +178,9 @@ export default function Dropdown({
                                 )}
                             </div>
 
-                            {/* Chevron */}
-                            <div className={`transition-transform duration-300 mr-2 ${open ? 'rotate-180' : 'rotate-0'}`}>
-                                <svg viewBox="0 0 24 24" fill="none" stroke={COLORS.PALETTE['prussian-blue']} strokeWidth={2} className="h-4 w-4">
+                            {/* Chevron — currentColor follows trigger text */}
+                            <div className={`transition-transform duration-200 mr-2 ${open ? 'rotate-180' : 'rotate-0'}`} aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </div>
@@ -194,7 +192,7 @@ export default function Dropdown({
                             align="start"
                             sideOffset={4}
                             style={{ width: style?.width || 240 }}
-                            className="bg-ice rounded-lg shadow-md z-50 p-2 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+                            className="bg-surface text-foreground border border-border rounded-lg shadow-md z-50 p-2 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
                             onInteractOutside={() => setOpen(false)}
                         >
                             {hasSearch && (
@@ -222,8 +220,8 @@ export default function Dropdown({
                                         role="option"
                                         aria-selected={isSelected(item.key)}
                                         tabIndex={0}
-                                        className={`flex items-center justify-between p-2 hover:bg-prussian-blue hover:text-white transition-all duration-150 text-sm text-prussian-blue rounded-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                                            selectedItems.includes(item.key) ? 'bg-ice-dark' : ''
+                                        className={`flex items-center justify-between p-2 hover:bg-accent hover:text-accent-fg transition-colors duration-150 text-sm rounded-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                                            selectedItems.includes(item.key) ? 'bg-surface-raised text-foreground' : 'text-foreground'
                                         }`}
                                         onClick={() => selectItem(item.key)}
                                         onKeyDown={(e) => {
@@ -232,18 +230,19 @@ export default function Dropdown({
                                                 selectItem(item.key)
                                             }
                                         }}
-                                        onMouseEnter={() => setHoveredItem(item.key)}
-                                        onMouseLeave={() => setHoveredItem(null)}
                                     >
                                         <div className="flex items-center gap-2 text-xs">
                                             {item.icon && <div>{item.icon}</div>}
                                             {item.label}
                                         </div>
                                         {isSelected(item.key) && (
-                                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                            // currentColor — checkmark follows
+                                            // the item's text colour, which
+                                            // flips automatically on hover.
+                                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                                                 <path
                                                     d="M4 10l4.5 4.5L16 6"
-                                                    stroke={hoveredItem === item.key ? '#fff' : COLORS.PALETTE['prussian-blue']}
+                                                    stroke="currentColor"
                                                     strokeWidth="2"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
@@ -258,7 +257,7 @@ export default function Dropdown({
                 </Popover.Root>
             </div>
             {hasError && (
-                <div id={errorId} className="text-center text-error dark:text-prussian-blue min-h-0">
+                <div id={errorId} className="text-center text-status-error text-xs mt-1">
                     {errorMessage}
                 </div>
             )}

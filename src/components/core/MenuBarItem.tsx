@@ -30,9 +30,9 @@ export default function MenuBarItem({ icon, isActive, title, onClick }: MenuBarI
                 role="button"
                 aria-label={title}
                 aria-current={isActive ? 'page' : undefined}
-                className={`transition duration-300 hover:bg-prussian-blue ${
-                    isActive ? 'bg-prussian-blue' : ''
-                } rounded-lg p-2 cursor-pointer`}
+                className={`transition duration-300 hover:bg-accent hover:text-accent-fg ${
+                    isActive ? 'bg-accent text-accent-fg' : 'text-foreground-secondary'
+                } rounded-lg p-2 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
                 onClick={onClick}
                 tabIndex={0}
                 onKeyDown={(e) => {
