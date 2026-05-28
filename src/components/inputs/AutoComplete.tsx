@@ -119,11 +119,22 @@ export default function AutoComplete({
                             ) : (
                                 <div role="listbox">
                                     {foundItems.map((item) => (
+                                        // tabIndex + Enter/Space onKeyDown
+                                        // makes each option keyboard-activatable.
+                                        // Full roving-tabindex / arrow-key nav
+                                        // is deferred to the Phase-5 rewrite.
                                         <div
                                             key={item.key}
                                             role="option"
-                                            className="text-sm flex items-center gap-2 p-2 transition-all duration-150 hover:bg-ice-dark dark:hover:bg-prussian-blue cursor-pointer text-prussian-blue dark:text-white"
+                                            tabIndex={0}
+                                            className="text-sm flex items-center gap-2 p-2 transition-all duration-150 hover:bg-ice-dark dark:hover:bg-prussian-blue cursor-pointer text-prussian-blue dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                             onClick={() => handleSelect(item)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    e.preventDefault()
+                                                    handleSelect(item)
+                                                }
+                                            }}
                                         >
                                             {item.icon}
                                             <span>

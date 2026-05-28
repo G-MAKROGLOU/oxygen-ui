@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useId, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import SearchInput from './SearchInput'
 import DropdownPill from './DropdownPill'
@@ -77,6 +77,10 @@ export default function Dropdown({
     const [hoveredItem, setHoveredItem] = useState<string | number | null>(null)
     const [searchTerm, setSearchTerm] = useState('')
     const [innerItems, setInnerItems] = useState<DropdownItem[]>([])
+    // Stable id for the error region so the combobox can point at it via
+    // aria-describedby when validation fails.
+    const errorId = useId()
+    const hasError = errorMessage != null
 
     useEffect(() => {
         setInnerItems(items)
@@ -139,10 +143,20 @@ export default function Dropdown({
                             role="combobox"
                             aria-expanded={open}
                             aria-haspopup="listbox"
+                            aria-invalid={hasError || undefined}
+                            aria-describedby={hasError ? errorId : undefined}
                             style={style}
                             className={`flex items-center justify-between relative h-9 rounded-lg cursor-pointer select-none ${disabled ? 'cursor-not-allowed bg-disabled' : 'bg-white'}`}
                             tabIndex={disabled ? -1 : 0}
-                            onKeyDown={(e) => e.key === 'Enter' && !disabled && setOpen(true)}
+                            onKeyDown={(e) => {
+                                if (disabled) return
+                                // Open on Enter, Space, ArrowDown, ArrowUp — the
+                                // canonical combobox activation keys per WAI-ARIA.
+                                if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                                    e.preventDefault()
+                                    setOpen(true)
+                                }
+                            }}
                         >
                             {/* Selected value(s) */}
                             <div
@@ -195,16 +209,29 @@ export default function Dropdown({
                                 </div>
                             )}
                             <div role="listbox" aria-multiselectable={isMultiselect} className="max-h-40 overflow-y-auto">
-                                {innerItems.map((item, idx) => (
+                                {innerItems.map((item) => (
+                                    // aria-rowindex was previously set here but
+                                    // it's invalid ARIA on role="option" (it
+                                    // belongs on rows of a grid/treegrid). Dropped.
+                                    // tabIndex={0} + Enter/Space handler makes the
+                                    // option keyboard-activatable; the full
+                                    // combobox roving-tabindex pattern is deferred
+                                    // until the planned Phase-5 rewrite.
                                     <div
                                         key={item.key}
                                         role="option"
                                         aria-selected={isSelected(item.key)}
-                                        aria-rowindex={idx}
-                                        className={`flex items-center justify-between p-2 hover:bg-prussian-blue hover:text-white transition-all duration-150 text-sm text-prussian-blue rounded-lg cursor-pointer ${
+                                        tabIndex={0}
+                                        className={`flex items-center justify-between p-2 hover:bg-prussian-blue hover:text-white transition-all duration-150 text-sm text-prussian-blue rounded-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                                             selectedItems.includes(item.key) ? 'bg-ice-dark' : ''
                                         }`}
                                         onClick={() => selectItem(item.key)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                e.preventDefault()
+                                                selectItem(item.key)
+                                            }
+                                        }}
                                         onMouseEnter={() => setHoveredItem(item.key)}
                                         onMouseLeave={() => setHoveredItem(null)}
                                     >
@@ -230,7 +257,11 @@ export default function Dropdown({
                     </Popover.Portal>
                 </Popover.Root>
             </div>
-            <div className="text-center text-error dark:text-prussian-blue min-h-0">{errorMessage}</div>
+            {hasError && (
+                <div id={errorId} className="text-center text-error dark:text-prussian-blue min-h-0">
+                    {errorMessage}
+                </div>
+            )}
         </div>
     )
 }

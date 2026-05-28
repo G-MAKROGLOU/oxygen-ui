@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useId, useState } from 'react'
 import COLORS from '../../utils/colors'
 
 export interface PasswordProps {
@@ -40,6 +40,10 @@ export default function Password({
 }: PasswordProps) {
     const [passwordVisible, setPasswordVisible] = useState(false)
     const color = iconColor ?? COLORS.PALETTE['prussian-blue']
+    // Stable, SSR-safe id for the error region — `aria-describedby` on the
+    // input points here so screen readers announce the validation message.
+    const errorId = useId()
+    const hasError = errorMessage != null
 
     return (
         <div className="relative flex flex-col items-center justify-center" style={style ?? {}}>
@@ -66,7 +70,9 @@ export default function Password({
                         type={passwordVisible ? 'text' : 'password'}
                         name={name}
                         id={htmlFor}
-                        className={`${errorMessage !== undefined ? 'border border-error' : ''} focus:outline-oxford-blue-700-opaque p-2 h-9 w-52 outline-offset-2 text-prussian-blue mt-1 rounded-lg disabled:bg-disabled disabled:cursor-not-allowed transition-all`}
+                        aria-invalid={hasError || undefined}
+                        aria-describedby={hasError ? errorId : undefined}
+                        className={`${hasError ? 'border border-error' : ''} focus:outline-oxford-blue-700-opaque p-2 h-9 w-52 outline-offset-2 text-prussian-blue mt-1 rounded-lg disabled:bg-disabled disabled:cursor-not-allowed transition-all`}
                         style={inputStyle ?? {}}
                         placeholder={placeholder ?? ''}
                     />
@@ -93,7 +99,12 @@ export default function Password({
                     </button>
                 </div>
             </div>
-            <div className="text-center text-error dark:text-prussian-blue min-h-0">{errorMessage}</div>
+            {/* Error region keyed to the input via aria-describedby. */}
+            {hasError && (
+                <div id={errorId} className="text-center text-error dark:text-prussian-blue min-h-0">
+                    {errorMessage}
+                </div>
+            )}
         </div>
     )
 }

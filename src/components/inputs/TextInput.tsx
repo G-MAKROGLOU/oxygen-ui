@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useId } from 'react'
 
 export interface TextInputProps {
     value?: string
@@ -36,6 +36,12 @@ export default function TextInput({
     errorMessage,
     labelColor,
 }: TextInputProps) {
+    // `useId` gives us a stable, SSR-safe id for the error region so that
+    // `aria-describedby` on the input can point at it. The id only matters
+    // when an error is actually being announced.
+    const errorId = useId()
+    const hasError = errorMessage != null
+
     return (
         <div className="relative flex flex-col items-center justify-center">
             <div
@@ -63,14 +69,21 @@ export default function TextInput({
                     type="text"
                     name={name}
                     id={htmlFor}
-                    className={`${errorMessage !== undefined ? 'border border-error' : ''} focus:outline-oxford-blue-700-opaque p-2 h-9 w-60 outline-offset-2 text-prussian-blue mt-1 rounded-lg disabled:bg-disabled disabled:cursor-not-allowed transition-all`}
+                    aria-invalid={hasError || undefined}
+                    aria-describedby={hasError ? errorId : undefined}
+                    className={`${hasError ? 'border border-error' : ''} focus:outline-oxford-blue-700-opaque p-2 h-9 w-60 outline-offset-2 text-prussian-blue mt-1 rounded-lg disabled:bg-disabled disabled:cursor-not-allowed transition-all`}
                     style={inputStyle ?? {}}
                     placeholder={placeholder ?? ''}
                 />
             </div>
-            <div className="text-center text-error dark:text-prussian-blue min-h-0">
-                {errorMessage}
-            </div>
+            {/* Error region is keyed to the input via aria-describedby. Only
+                rendered when there is an actual error so screen readers don't
+                read empty descriptions. */}
+            {hasError && (
+                <div id={errorId} className="text-center text-error dark:text-prussian-blue min-h-0">
+                    {errorMessage}
+                </div>
+            )}
         </div>
     )
 }
