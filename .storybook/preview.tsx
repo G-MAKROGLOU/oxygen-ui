@@ -57,6 +57,37 @@ const preview: Preview = {
         msw: {
             handlers: [],
         },
+
+        // ── Sidebar order ─────────────────────────────────────────────────────
+        // Design System docs always appear first. Component groups follow in the
+        // intended product hierarchy. '*' catches any group not listed explicitly.
+        options: {
+            storySort: {
+                order: [
+                    'Design System',
+                    [
+                        'Introduction',
+                        'Palette',
+                        'Typography',
+                        'Tokens',
+                        'Parameterization',
+                    ],
+                    'Layout',
+                    'Feedback',
+                    'Data Display',
+                    'Forms',
+                    'Progress',
+                    'Reporting',
+                    'E-Commerce',
+                    'Sci-Fi',
+                    'Hooks',
+                    // Legacy groups — will be reorganized into the sections above
+                    'Core',
+                    'Inputs',
+                    '*',
+                ],
+            },
+        },
     },
 }
 

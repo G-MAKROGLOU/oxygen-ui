@@ -3,9 +3,14 @@ import { Meta } from '@storybook/blocks'
 
 <Meta title="Design System/Parameterization" />
 
+export const th = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)' })
+export const td0 = { ...td(false), color: 'var(--color-foreground)', fontWeight: 600 }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
 # Parameterization Guide
 
-There are three ways to customize the design system, in increasing order of depth.
+Three ways to customize the design system, in increasing order of depth.
 
 ---
 
@@ -14,14 +19,14 @@ There are three ways to customize the design system, in increasing order of dept
 The simplest and most flexible method. Works at any CSS scope, no build dependency.
 
 **Global override** — affects the entire app:
+
 ```css
-/* In your global stylesheet, after importing @geomak/ui/styles */
+/* After importing @geomak/ui/styles */
 :root {
-  --color-accent:       #7c3aed;   /* violet brand */
+  --color-accent:       #7c3aed;
   --color-accent-hover: #6d28d9;
-  --radius-md:          8px;        /* softer corners */
-  --radius-lg:          12px;
-  --height-control-md:  40px;       /* taller controls */
+  --radius-md:          8px;
+  --height-control-md:  40px;
   --height-topbar:      64px;
 }
 
@@ -32,9 +37,10 @@ The simplest and most flexible method. Works at any CSS scope, no build dependen
 ```
 
 **Scoped override** — only inside a section:
+
 ```css
 .admin-panel {
-  --color-accent: #dc2626;   /* red accent for admin */
+  --color-accent: #dc2626;
 }
 
 [data-theme="compact"] {
@@ -48,17 +54,18 @@ The simplest and most flexible method. Works at any CSS scope, no build dependen
 
 ## 2. ThemeProvider component
 
-For React tree-scoped overrides. Generates CSS vars as inline styles on a wrapper `div`.
+React tree-scoped overrides. Generates CSS vars as inline styles on a wrapper element.
+
+**Brand color swap:**
 
 ```tsx
 import { ThemeProvider } from '@geomak/ui'
 
-// Brand color swap
 <ThemeProvider
   theme={{
     colors: {
-      accent:             '#7c3aed',
-      'accent-hover':     '#6d28d9',
+      accent:              '#7c3aed',
+      'accent-hover':      '#6d28d9',
       'accent-foreground': '#ffffff',
     }
   }}
@@ -67,7 +74,7 @@ import { ThemeProvider } from '@geomak/ui'
 </ThemeProvider>
 ```
 
-### Density / compact mode
+**Compact density:**
 
 ```tsx
 <ThemeProvider
@@ -85,13 +92,14 @@ import { ThemeProvider } from '@geomak/ui'
 </ThemeProvider>
 ```
 
-### Custom font
+**Custom font + type scale:**
 
 ```tsx
 <ThemeProvider
   theme={{
     typography: {
-      fontFamily: '"Geist", sans-serif',
+      fontFamily:   '"Geist", sans-serif',
+      fontSizeBase: '0.9375rem',
     }
   }}
 >
@@ -99,20 +107,16 @@ import { ThemeProvider } from '@geomak/ui'
 </ThemeProvider>
 ```
 
-### Managed dark mode
+**Managed dark mode:**
 
 ```tsx
-// Follow system preference
-<ThemeProvider colorScheme="system">
-  <App />
-</ThemeProvider>
+{/* Follow system preference */}
+<ThemeProvider colorScheme="system"><App /></ThemeProvider>
 
-// Force dark
-<ThemeProvider colorScheme="dark">
-  <App />
-</ThemeProvider>
+{/* Force dark */}
+<ThemeProvider colorScheme="dark"><App /></ThemeProvider>
 
-// Different token values in dark mode
+{/* Different accent per mode */}
 <ThemeProvider
   colorScheme="system"
   theme={{     colors: { accent: '#6366f1' } }}
@@ -122,67 +126,37 @@ import { ThemeProvider } from '@geomak/ui'
 </ThemeProvider>
 ```
 
-### Full ThemeConfig type
+### Full `ThemeConfig` type
 
 ```ts
 interface ThemeConfig {
   colors?: {
-    background?: string
-    surface?: string
-    'surface-raised'?: string
-    border?: string
-    'border-strong'?: string
-    foreground?: string
-    'foreground-secondary'?: string
-    'foreground-muted'?: string
-    accent?: string
-    'accent-hover'?: string
-    'accent-foreground'?: string
-    error?: string
-    warning?: string
-    success?: string
-    info?: string
+    background?: string;  surface?: string;  'surface-raised'?: string
+    border?: string;  'border-strong'?: string
+    foreground?: string;  'foreground-secondary'?: string;  'foreground-muted'?: string
+    accent?: string;  'accent-hover'?: string;  'accent-foreground'?: string
+    error?: string;  warning?: string;  success?: string;  info?: string
   }
   radius?: {
-    sm?: string | number    // number → appended with 'px'
-    md?: string | number
-    lg?: string | number
-    xl?: string | number
-    '2xl'?: string | number
-    full?: string | number
+    sm?: string | number;  md?: string | number;  lg?: string | number
+    xl?: string | number;  '2xl'?: string | number;  full?: string | number
   }
-  shadows?: {
-    sm?: string
-    md?: string
-    lg?: string
-    xl?: string
-  }
+  shadows?: { sm?: string;  md?: string;  lg?: string;  xl?: string }
   typography?: {
-    fontFamily?: string       // e.g. '"Geist", sans-serif'
-    fontSizeXs?: string
-    fontSizeSm?: string
-    fontSizeBase?: string
-    fontSizeLg?: string
-    fontSizeXl?: string
-    fontSize2xl?: string
-    fontSize3xl?: string
-    fontWeightNormal?: number | string
-    fontWeightMedium?: number | string
-    fontWeightSemibold?: number | string
-    fontWeightBold?: number | string
+    fontFamily?: string      // e.g. '"Geist", sans-serif'
+    fontSizeXs?: string;     fontSizeSm?: string;    fontSizeBase?: string
+    fontSizeLg?: string;     fontSizeXl?: string;    fontSize2xl?: string;   fontSize3xl?: string
+    fontWeightNormal?: number | string;   fontWeightMedium?: number | string
+    fontWeightSemibold?: number | string; fontWeightBold?: number | string
   }
   density?: {
-    controlXs?: string | number
-    controlSm?: string | number
-    controlMd?: string | number
-    controlLg?: string | number
+    controlXs?: string | number;  controlSm?: string | number
+    controlMd?: string | number;  controlLg?: string | number
     topbar?: string | number
   }
   motion?: {
-    durationFast?: string     // e.g. '60ms'
-    durationNormal?: string
-    durationSlow?: string
-    durationGentle?: string
+    durationFast?: string;  durationNormal?: string
+    durationSlow?: string;  durationGentle?: string
   }
 }
 ```
@@ -191,24 +165,19 @@ interface ThemeConfig {
 
 ## 3. SCSS compile-time override (advanced)
 
-If your project processes SCSS, you can override `!default` variables before the token partial compiles. This produces a custom CSS file — useful if you want to eliminate the runtime CSS var layer entirely.
+Override `!default` variables before the token partial compiles — useful for eliminating the CSS var runtime layer entirely.
 
 ```scss
 // your-app/src/styles/theme.scss
-
-// Override BEFORE the @use — the !default flag means
-// "use this value if not already set"
 @use '@geomak/ui/src/styles/config' with (
-  $color-accent:        #7c3aed,
-  $color-accent-hover:  #6d28d9,
-  $color-dark-accent:   #a78bfa,
-  $radius-md:           8px,
-  $radius-lg:           12px,
-  $height-control-md:   40px,
-  $font-family-sans:    '"Geist"', sans-serif,
+  $color-accent:       #7c3aed,
+  $color-accent-hover: #6d28d9,
+  $color-dark-accent:  #a78bfa,
+  $radius-md:          8px,
+  $font-family-sans:   '"Geist"', sans-serif,
+  $height-control-md:  40px,
 );
 
-// Then use the tokens partial to generate CSS vars
 @use '@geomak/ui/src/styles/tokens';
 @use '@geomak/ui/src/styles/animations';
 
@@ -217,19 +186,69 @@ If your project processes SCSS, you can override `!default` variables before the
 @tailwind utilities;
 ```
 
-This requires exposing the package's `src/styles/` directory, which you can do by installing `@geomak/ui` as a local path during development.
+All `_config.scss` variables carry `!default` — only the variables you specify are overridden; the rest use system defaults.
 
 ---
 
-## Token reference at a glance
+## Token reference
 
-| Category | CSS var prefix | JS path | Tailwind prefix |
-|----------|---------------|---------|-----------------|
-| Colors | `--color-*` | `vars.color.*` | `bg-*`, `text-*`, `border-*` |
-| Radius | `--radius-*` | `vars.radius.*` | `rounded-*` |
-| Shadows | `--shadow-*` | `vars.shadow.*` | `shadow-*` |
-| Font size | `--font-size-*` | `vars.typography.fontSize*` | `text-*` |
-| Font weight | `--font-weight-*` | `vars.typography.fontWeight*` | `font-*` |
-| Heights | `--height-control-*` | `vars.density.*` | `h-control-*` |
-| Motion | `--duration-*`, `--ease-*` | `vars.motion.*` | `duration-*`, `ease-*` |
-| Z-index | `--z-*` | `vars.zIndex.*` | `z-*` |
+<table style={tbl}>
+  <thead>
+    <tr>
+      <th style={th}>Category</th>
+      <th style={th}>CSS var prefix</th>
+      <th style={th}>JS path</th>
+      <th style={th}>Tailwind utilities</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={td0}>Colors</td>
+      <td style={td(true)}>--color-*</td>
+      <td style={td(true)}>vars.color.*</td>
+      <td style={td(true)}>bg-* · text-* · border-*</td>
+    </tr>
+    <tr>
+      <td style={td0}>Radius</td>
+      <td style={td(true)}>--radius-*</td>
+      <td style={td(true)}>vars.radius.*</td>
+      <td style={td(true)}>rounded-sm/md/lg/xl/2xl/full</td>
+    </tr>
+    <tr>
+      <td style={td0}>Shadows</td>
+      <td style={td(true)}>--shadow-*</td>
+      <td style={td(true)}>vars.shadow.*</td>
+      <td style={td(true)}>shadow-sm/md/lg/xl</td>
+    </tr>
+    <tr>
+      <td style={td0}>Font size</td>
+      <td style={td(true)}>--font-size-*</td>
+      <td style={td(true)}>vars.typography.fontSize*</td>
+      <td style={td(true)}>text-xs/sm/base/lg/xl/2xl/3xl</td>
+    </tr>
+    <tr>
+      <td style={td0}>Font weight</td>
+      <td style={td(true)}>--font-weight-*</td>
+      <td style={td(true)}>vars.typography.fontWeight*</td>
+      <td style={td(true)}>font-normal/medium/semibold/bold</td>
+    </tr>
+    <tr>
+      <td style={td0}>Heights</td>
+      <td style={td(true)}>--height-control-*</td>
+      <td style={td(true)}>vars.density.*</td>
+      <td style={td(true)}>h-control-xs/sm/md/lg · h-topbar</td>
+    </tr>
+    <tr>
+      <td style={td0}>Motion</td>
+      <td style={td(true)}>--duration-* · --ease-*</td>
+      <td style={td(true)}>vars.motion.*</td>
+      <td style={td(true)}>duration-fast/normal/slow · ease-out-expo</td>
+    </tr>
+    <tr>
+      <td style={td0}>Z-index</td>
+      <td style={td(true)}>--z-*</td>
+      <td style={td(true)}>vars.zIndex.*</td>
+      <td style={td(true)}>z-dropdown/modal/toast/tooltip</td>
+    </tr>
+  </tbody>
+</table>
