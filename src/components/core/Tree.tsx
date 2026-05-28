@@ -81,7 +81,23 @@ function TreeNodeItem({
             style={{ paddingLeft: depth * 12 }}
         >
             <Accordion.Item value={item.key} className="border-none">
-                <Accordion.Trigger className="flex items-center gap-2 cursor-pointer py-1.5 px-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent w-full text-left rounded-md hover:bg-surface-raised transition-colors duration-150">
+                {/* The Trigger handles BOTH expand/collapse (via Radix) and
+                    onNodeClick — clicking anywhere on the parent row fires
+                    both, consistently. Previously only the label fired
+                    onNodeClick while the chevron only toggled — asymmetric
+                    behaviour that confused consumers. */}
+                <Accordion.Trigger
+                    onClick={() =>
+                        onNodeClick({
+                            isParent: true,
+                            key: item.key,
+                            label: item.label,
+                            data: item.nodeData,
+                            parentLabel: item.parentLabel,
+                        })
+                    }
+                    className="flex items-center gap-2 cursor-pointer py-1.5 px-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent w-full text-left rounded-md hover:bg-surface-raised transition-colors duration-150"
+                >
                     {/* Chevron — rotates on open/close */}
                     <svg
                         viewBox="0 0 24 24"
@@ -89,6 +105,7 @@ function TreeNodeItem({
                         stroke="currentColor"
                         strokeWidth={2.5}
                         className="h-3.5 w-3.5 flex-shrink-0 text-foreground-muted transition-transform duration-200 group-data-[state=open]:rotate-0 group-data-[state=closed]:-rotate-90"
+                        aria-hidden="true"
                     >
                         <path
                             strokeLinecap="round"
@@ -96,18 +113,7 @@ function TreeNodeItem({
                             d="M19 9l-7 7-7-7"
                         />
                     </svg>
-                    <span
-                        className="text-sm font-semibold text-foreground select-none"
-                        onClick={() =>
-                            onNodeClick({
-                                isParent: true,
-                                key: item.key,
-                                label: item.label,
-                                data: item.nodeData,
-                                parentLabel: item.parentLabel,
-                            })
-                        }
-                    >
+                    <span className="text-sm font-semibold text-foreground select-none">
                         {item.label}
                     </span>
                 </Accordion.Trigger>

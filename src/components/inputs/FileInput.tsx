@@ -32,7 +32,9 @@ export default function FileInput({
     const [files, setFiles] = useState<File[]>([])
 
     const openPicker = () => {
-        fileInput.current?.dispatchEvent(new MouseEvent('click', { bubbles: false }))
+        // Native .click() is the idiomatic call — synthesising a MouseEvent
+        // works but is noisy in test environments (jsdom) and unnecessary.
+        fileInput.current?.click()
     }
 
     const handleFiles = (list: File[]) => {
@@ -70,9 +72,21 @@ export default function FileInput({
     }
 
     return (
+        // Dropzone is keyboard-activatable: role="button", focusable via
+        // tabIndex, and Space/Enter trigger the file picker. Without these
+        // a keyboard-only user could not upload a file.
         <div
+            role="button"
+            tabIndex={0}
+            aria-label="Upload file — click or drop"
             onClick={openPicker}
-            className="border-2 hover:border-prussian-blue border-ice-dark w-full h-full rounded-md transition-all duration-300 border-dashed dark:border-independence hover:dark:border-ice-dark cursor-pointer"
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    openPicker()
+                }
+            }}
+            className="border-2 hover:border-prussian-blue border-ice-dark w-full h-full rounded-md transition-all duration-300 border-dashed dark:border-independence hover:dark:border-ice-dark cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             onDragOver={(e) => e.preventDefault()}
             onDrop={onDrop}
         >

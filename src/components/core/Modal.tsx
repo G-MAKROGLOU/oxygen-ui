@@ -7,8 +7,13 @@ export interface ModalProps {
     /**
      * Max width of the modal panel in pixels (default 600).
      * On narrow viewports the panel fills the screen minus 1 rem on each side.
-     * Height is always content-driven — `size[1]` is accepted for backwards
-     * compatibility but is no longer used; remove it when convenient.
+     * Height is always content-driven (max 90 dvh).
+     */
+    width?: number
+    /**
+     * @deprecated Use `width` instead. The second tuple value (height) was
+     * never honoured and is silently ignored. Kept for backwards
+     * compatibility — will be removed in a future major version.
      */
     size?: [number, number] | [number]
     isOpen?: boolean
@@ -35,7 +40,8 @@ export interface ModalProps {
  * </Modal>
  */
 export default function Modal({
-    size = [600, 400],
+    width,
+    size,
     isOpen = false,
     onClose,
     onOk,
@@ -47,6 +53,9 @@ export default function Modal({
     children,
 }: ModalProps) {
     const reduced = useReducedMotion()
+    // Prefer the new `width` prop; fall back to the deprecated `size[0]`;
+    // finally default to 600 px.
+    const maxWidth = width ?? size?.[0] ?? 600
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={(open) => { if (!open) onClose?.() }}>
@@ -73,7 +82,7 @@ export default function Modal({
                             <motion.div
                                 className="fixed left-1/2 top-1/2 z-modal flex flex-col w-[calc(100%-2rem)] max-h-[90dvh] bg-surface rounded-2xl shadow-xl overflow-hidden focus:outline-none"
                                 style={{
-                                    maxWidth: size[0],
+                                    maxWidth,
                                     x: '-50%',
                                     y: '-50%',
                                 }}
@@ -108,9 +117,13 @@ export default function Modal({
                                     </Dialog.Close>
                                 </div>
 
-                                {/* Body */}
+                                {/* Body — render children unconditionally so they
+                                    stay mounted through Radix's exit animation.
+                                    Previously `{isOpen && children}` unmounted
+                                    children the moment isOpen flipped to false,
+                                    losing form state mid-close. */}
                                 <div className={`flex-1 overflow-y-auto p-5 ${hasFooter ? '' : 'pb-5'}`}>
-                                    {isOpen && children}
+                                    {children}
                                 </div>
 
                                 {/* Footer */}

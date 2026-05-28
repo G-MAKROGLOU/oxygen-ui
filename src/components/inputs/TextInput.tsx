@@ -43,13 +43,18 @@ export default function TextInput({
                 className={`flex ${layout === 'vertical' ? 'flex-col' : 'flex-row items-center gap-2'}`}
                 style={style ?? {}}
             >
-                <label
-                    style={{ color: labelColor || undefined }}
-                    className={`text-md font-bold ml-1 max-content ${!labelColor && 'text-prussian-blue dark:text-white'}`}
-                    htmlFor={htmlFor}
-                >
-                    {label}
-                </label>
+                {label && (
+                    // Render <label> only when a label is provided. An empty
+                    // <label htmlFor=…> announces as an unlabeled control in
+                    // some screen readers.
+                    <label
+                        style={{ color: labelColor || undefined }}
+                        className={`text-md font-bold ml-1 max-content ${!labelColor && 'text-prussian-blue dark:text-white'}`}
+                        htmlFor={htmlFor}
+                    >
+                        {label}
+                    </label>
+                )}
                 <input
                     autoComplete="off"
                     disabled={disabled}

@@ -50,7 +50,10 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(functio
                         disabled={disabled}
                         value={value}
                         onChange={onChange}
-                        type="text"
+                        // `type="search"` gives consumers the native clear button
+                        // and an Enter-friendly virtual keyboard hint on mobile.
+                        type="search"
+                        enterKeyHint="search"
                         name={name}
                         id={htmlFor}
                         className="focus:outline-none pl-2 h-9 w-56 outline-offset-2 text-prussian-blue mt-1 rounded-lg disabled:bg-disabled disabled:cursor-not-allowed"

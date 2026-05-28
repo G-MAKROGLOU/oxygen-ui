@@ -1,17 +1,18 @@
 import { useMemo } from 'react'
 
+export type IconButtonVariant = 'primary' | 'bordered'
+
 export interface IconButtonProps {
     icon?: React.ReactNode
     onClick?: React.MouseEventHandler<HTMLButtonElement>
-    /** 'primary' | 'bordered' */
-    type?: string
+    /** Visual style. Defaults to `'primary'`. */
+    type?: IconButtonVariant
     buttonType?: 'button' | 'submit' | 'reset'
     disabled?: boolean
     size?: 'sm' | 'lg'
     loading?: boolean
     loadingIcon?: React.ReactNode
     title?: string
-    [key: string]: any
 }
 
 /**

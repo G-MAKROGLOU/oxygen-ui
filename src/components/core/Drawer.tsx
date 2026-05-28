@@ -105,9 +105,13 @@ export default function Drawer({
                                     </Dialog.Close>
                                 </div>
 
-                                {/* Body */}
+                                {/* Body — render children unconditionally so they
+                                    stay mounted through Radix's exit animation.
+                                    Previously `{isOpen && children}` unmounted
+                                    children the moment isOpen flipped to false,
+                                    losing form state mid-close. */}
                                 <div className="flex-1 overflow-y-auto p-5">
-                                    {isOpen && children}
+                                    {children}
                                 </div>
 
                                 {/* Footer */}

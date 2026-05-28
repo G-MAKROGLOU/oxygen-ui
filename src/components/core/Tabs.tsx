@@ -107,32 +107,41 @@ export default function Tabs({
                     className="flex-1 flex items-center gap-1 overflow-x-auto overflow-y-hidden rounded-lg scroll-smooth snap-x snap-mandatory hidden-scrollbar"
                 >
                     {tabs.map((tab) => (
-                        <TabsPrimitive.Trigger
+                        // Trigger + close button are SIBLINGS, not nested.
+                        // Nesting a clickable element inside <button> is invalid
+                        // HTML and breaks keyboard activation of the inner one.
+                        // The wrapper carries `group` so the close button can
+                        // react to the trigger's `data-state=active` for styling.
+                        <div
                             key={tab.key}
-                            value={tab.key}
-                            className="snap-start snap-always flex items-center justify-between gap-2 px-3 py-2 rounded-3xl cursor-pointer transition-all duration-200 select-none h-10 flex-1 min-w-[120px] max-w-[220px] flex-shrink-0
-                                       text-foreground-secondary bg-surface-raised
-                                       hover:bg-surface hover:text-foreground
-                                       data-[state=active]:bg-accent data-[state=active]:text-accent-foreground
-                                       focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                            className="snap-start snap-always relative flex items-center flex-1 min-w-[120px] max-w-[220px] flex-shrink-0 group"
                         >
-                            <span className="truncate text-sm">{tab.title}</span>
+                            <TabsPrimitive.Trigger
+                                value={tab.key}
+                                className={`w-full ${tabsClosable ? 'pr-8' : 'pr-3'} pl-3 py-2 rounded-3xl cursor-pointer transition-all duration-200 select-none h-10 text-left
+                                           text-foreground-secondary bg-surface-raised
+                                           hover:bg-surface hover:text-foreground
+                                           data-[state=active]:bg-accent data-[state=active]:text-accent-foreground
+                                           focus:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
+                            >
+                                <span className="truncate text-sm block">{tab.title}</span>
+                            </TabsPrimitive.Trigger>
                             {tabsClosable && (
-                                <span
-                                    role="button"
+                                <button
+                                    type="button"
                                     aria-label={`Close ${tab.title}`}
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         onTabClose?.(tab.key)
                                     }}
-                                    className="flex-shrink-0 rounded hover:bg-black/10 p-0.5 transition-colors"
+                                    className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-0.5 text-foreground-secondary group-data-[state=active]:text-accent-foreground hover:bg-black/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 >
-                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                                         <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
-                                </span>
+                                </button>
                             )}
-                        </TabsPrimitive.Trigger>
+                        </div>
                     ))}
                 </TabsPrimitive.List>
 

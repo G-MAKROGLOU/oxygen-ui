@@ -35,7 +35,15 @@ export default function MenuBarItem({ icon, isActive, title, onClick }: MenuBarI
                 } rounded-lg p-2 cursor-pointer`}
                 onClick={onClick}
                 tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
+                onKeyDown={(e) => {
+                    // Space and Enter are both canonical activation keys for
+                    // role="button". preventDefault stops Space from scrolling
+                    // the page when the button is focused.
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        onClick?.()
+                    }
+                }}
             >
                 {icon}
             </div>
