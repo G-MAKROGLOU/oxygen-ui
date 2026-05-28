@@ -1,3 +1,28 @@
+# [5.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v4.0.0...v5.0.0) (2026-05-28)
+
+
+* feat(DatePicker)!: Phase 5e — keyboard-navigable grid calendar rewrite ([6653e2b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/6653e2be94ba9f02399ba9ebfc30105c692e8ab7))
+
+
+### BREAKING CHANGES
+
+* `DatePicker.value` is no longer required (`Date` →
+`Date | null | undefined`). `disableBefore`/`disableAfter` are replaced
+by `min`/`max` (Date only — string accepted previously is gone).
+`onChange` signature changed: the previous synthetic event shape
+`(e: { target: { value: Date, ... } }) => void` is replaced with
+`(date: Date | null) => void`. Inline migration:
+
+```diff
+- onChange={({ target }) => setField('date', target.value)}
++ onChange={(date) => setField('date', date)}
+```
+
+Test count: 109 → 123 (+14).
+
+Verified: typecheck, lint, 123/123 tests, library build, Storybook build.
+
+
 # [4.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v3.0.0...v4.0.0) (2026-05-28)
 
 
