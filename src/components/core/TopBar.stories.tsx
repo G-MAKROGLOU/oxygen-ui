@@ -5,7 +5,7 @@ import ThemeSwitch from './Switch'
 import Button from '../inputs/Button'
 
 const meta: Meta<typeof TopBar> = {
-    title: 'Core/TopBar',
+    title: 'Layout/TopBar',
     component: TopBar,
     parameters: { layout: 'fullscreen' },
     tags: ['autodocs'],

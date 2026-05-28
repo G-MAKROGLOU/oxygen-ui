@@ -5,7 +5,7 @@ import type { NotificationPosition } from './Notification'
 import Button from '../inputs/Button'
 
 const meta: Meta = {
-    title: 'Core/Notification',
+    title: 'Feedback/Notification',
     parameters: { layout: 'centered' },
     tags: ['autodocs'],
 }

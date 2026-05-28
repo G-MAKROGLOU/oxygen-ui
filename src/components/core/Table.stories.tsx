@@ -5,7 +5,7 @@ import Table from './Table'
 import type { TableColumn, PaginationOptions } from './Table'
 
 const meta: Meta<typeof Table> = {
-    title: 'Core/Table',
+    title: 'Data Display/Table',
     component: Table,
     parameters: { layout: 'padded' },
     tags: ['autodocs'],
