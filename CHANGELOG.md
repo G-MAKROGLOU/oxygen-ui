@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.0.0...v5.0.1) (2026-05-28)
+
+
+### Bug Fixes
+
+* critical bug batch — LoadingSpinner colour, Switch text leak, NumberInput corners, TreeSelect focus ([0355df1](https://github.com/G-MAKROGLOU/oxygen-ui/commit/0355df181571b1d318d0866dfc867b04903570ca))
+
 # [5.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v4.0.0...v5.0.0) (2026-05-28)
 
 
