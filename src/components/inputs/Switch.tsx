@@ -32,8 +32,7 @@ export default function Switch({
 
     return (
         <div>
-            // mr-12 was a hardcoded right margin that broke layouts; spacing
-            // is the parent's responsibility now.
+            {/* Spacing is the parent's responsibility — no baked-in margins. */}
             <label htmlFor={id} className="flex items-center cursor-pointer select-none">
                 <SwitchPrimitive.Root
                     id={id}

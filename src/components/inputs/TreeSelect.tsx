@@ -133,13 +133,25 @@ export default function TreeSelect({
 
     const visible = useMemo(() => flattenVisible(items, expanded), [items, expanded])
 
-    // Sync `activeIndex` when items change or popover opens — point at the
-    // selected item if there is one, otherwise the first item.
+    // Sync `activeIndex` only on the open transition (or when `value` changes
+    // while open). Previously this ran on every `visible` mutation, so any
+    // expand/collapse yanked focus back to the selected item — wrong if the
+    // user was navigating to a different branch. We use a ref to track
+    // whether we've already done the open-time sync.
+    const didSyncOnOpenRef = useRef(false)
     useEffect(() => {
-        if (!open) return
+        if (!open) {
+            didSyncOnOpenRef.current = false
+            return
+        }
+        if (didSyncOnOpenRef.current) return
         const selectedIdx = visible.findIndex((v) => v.node.key === value)
         setActiveIndex(selectedIdx >= 0 ? selectedIdx : 0)
-    }, [open, visible, value])
+        didSyncOnOpenRef.current = true
+        // visible intentionally excluded — we want to sync ONCE on open,
+        // not on every expand/collapse.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, value])
 
     const selectedNode = useMemo(
         () => (value != null ? findNodeByKey(items, value) : null),

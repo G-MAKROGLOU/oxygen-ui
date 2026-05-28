@@ -135,7 +135,7 @@ export default function NumberInput({
                 )}
                 <div
                     style={style}
-                    className={`flex items-center rounded-lg border ${hasError ? 'border-status-error' : 'border-border'} ${disabled ? 'bg-surface-raised text-foreground-muted cursor-not-allowed' : 'bg-surface text-foreground'} focus-within:ring-2 focus-within:ring-accent transition-colors`}
+                    className={`flex items-center rounded-lg border overflow-hidden ${hasError ? 'border-status-error' : 'border-border'} ${disabled ? 'bg-surface-raised text-foreground-muted cursor-not-allowed' : 'bg-surface text-foreground'} focus-within:ring-2 focus-within:ring-accent transition-colors`}
                 >
                     <input
                         min={min}
