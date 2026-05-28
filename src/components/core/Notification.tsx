@@ -42,27 +42,27 @@ const TYPE_BG: Record<NotificationType, string> = {
 
 // Viewport positioning classes per position
 const VIEWPORT_CLASSES: Record<NotificationPosition, string> = {
-    'top-right':     'fixed top-14 right-0     flex flex-col       items-end',
-    'top-left':      'fixed top-14 left-0      flex flex-col       items-start',
+    'top-right':     'fixed top-14 right-4     flex flex-col       items-end',
+    'top-left':      'fixed top-14 left-4      flex flex-col       items-start',
     'top-center':    'fixed top-14 left-1/2    flex flex-col       items-center -translate-x-1/2',
-    'bottom-right':  'fixed bottom-4 right-0   flex flex-col-reverse items-end',
-    'bottom-left':   'fixed bottom-4 left-0    flex flex-col-reverse items-start',
+    'bottom-right':  'fixed bottom-4 right-4   flex flex-col-reverse items-end',
+    'bottom-left':   'fixed bottom-4 left-4    flex flex-col-reverse items-start',
     'bottom-center': 'fixed bottom-4 left-1/2  flex flex-col-reverse items-center -translate-x-1/2',
 }
 
 // Initial animation state per position.
-// All positions use y + scale only — no x translation — so the card always
-// stays within the viewport boundary and the animation is fully visible.
-// Horizontal slide (x: ±40) was the previous approach; it caused the card to
-// start outside the right edge of the fixed container, making the animation
-// invisible and creating a horizontal scrollbar in the Storybook iframe.
+// Uses y + scale only — no x translation — so the card always stays within
+// the viewport boundary and the animation is fully visible.
+// y is large enough (±24px) to be perceptible, and opacity completes faster
+// than the position tween so the card is already opaque while it still has
+// meaningful distance left to travel — making the movement clearly visible.
 function getInitialMotion(pos: NotificationPosition, reduced: boolean | null) {
     if (reduced) return { opacity: 0, y: 0, scale: 1 }
     const bottom = pos.startsWith('bottom')
     return {
         opacity: 0,
-        y:     bottom ? 10 : -10,  // drop in from above (top) or rise from below (bottom)
-        scale: 0.94,
+        y:     bottom ? 24 : -24,   // rise from below (bottom) or drop from above (top)
+        scale: 0.92,
     }
 }
 
@@ -118,18 +118,26 @@ function NotificationItem({
 
     return (
         <motion.div
-            layout
             initial={initial}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={initial}
+            exit={{ opacity: 0, y: pos.startsWith('bottom') ? 16 : -16, scale: 0.94,
+                transition: reduced
+                    ? { duration: 0 }
+                    : {
+                          opacity: { duration: 0.14, delay: 0.06 },
+                          y:       { type: 'tween', duration: 0.22, ease: [0.4, 0, 1, 1] },
+                          scale:   { type: 'tween', duration: 0.22, ease: [0.4, 0, 1, 1] },
+                      },
+            }}
             transition={
                 reduced
                     ? { duration: 0 }
                     : {
-                          opacity: { duration: 0.18 },
-                          y:       { type: 'tween', duration: 0.24, ease: [0.16, 1, 0.3, 1] },
-                          scale:   { type: 'tween', duration: 0.24, ease: [0.16, 1, 0.3, 1] },
-                          layout:  { duration: 0.2, ease: [0.16, 1, 0.3, 1] },
+                          // Opacity finishes in 0.15 s — card is fully opaque while y/scale
+                          // still have ~55 % of their travel left → movement is clearly visible.
+                          opacity: { duration: 0.15 },
+                          y:       { type: 'tween', duration: 0.34, ease: [0.16, 1, 0.3, 1] },
+                          scale:   { type: 'tween', duration: 0.34, ease: [0.16, 1, 0.3, 1] },
                       }
             }
             onMouseEnter={() => setHovered(true)}
@@ -243,7 +251,7 @@ export function NotificationProvider({
                     asChild
                     className={[
                         VIEWPORT_CLASSES[position],
-                        'z-[500000] gap-2 w-[332px] p-4 outline-none',
+                        'z-[500000] gap-2 w-[340px] p-4 outline-none overflow-hidden',
                     ].join(' ')}
                 >
                     <ul>
