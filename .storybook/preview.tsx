@@ -58,6 +58,20 @@ const preview: Preview = {
             handlers: [],
         },
 
+        // ── Viewport presets ──────────────────────────────────────────────────
+        // Matches the Tailwind breakpoints used in component responsive rules.
+        // Switch via the toolbar phone/tablet icon in the Storybook canvas.
+        viewport: {
+            viewports: {
+                mobile:  { name: 'Mobile  (375)',  styles: { width: '375px',  height: '812px'  } },
+                mobileLg:{ name: 'Mobile  (430)',  styles: { width: '430px',  height: '932px'  } },
+                tablet:  { name: 'Tablet  (768)',  styles: { width: '768px',  height: '1024px' } },
+                desktop: { name: 'Desktop (1280)', styles: { width: '1280px', height: '900px'  } },
+                wide:    { name: 'Wide    (1920)', styles: { width: '1920px', height: '1080px' } },
+            },
+            defaultViewport: 'desktop',
+        },
+
         // ── Sidebar order ─────────────────────────────────────────────────────
         // Design System docs always appear first. Component groups follow in the
         // intended product hierarchy. '*' catches any group not listed explicitly.
