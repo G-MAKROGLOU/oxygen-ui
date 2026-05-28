@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.5.0...v1.5.1) (2026-05-28)
+
+
+### Bug Fixes
+
+* MDX table rendering, sidebar sort order, remark-gfm ([fe65cf3](https://github.com/G-MAKROGLOU/oxygen-ui/commit/fe65cf37c9f8dc5babd390216a98d95beb998be3))
+
 # [1.5.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.4.0...v1.5.0) (2026-05-28)
 
 
