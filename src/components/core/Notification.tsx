@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react'
 import * as Toast from '@radix-ui/react-toast'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import Portal from '../utils/Portal'
 
 /** ─────────────────── types ─────────────────── */
 export type NotificationType = 'info' | 'success' | 'warning' | 'danger'
@@ -41,10 +42,15 @@ const TYPE_BG: Record<NotificationType, string> = {
 }
 
 // Viewport positioning classes per position
+// The Viewport is rendered into a React portal at `document.body`, so these
+// `fixed` positions are guaranteed to resolve against the real viewport — never
+// against a transformed/filtered ancestor (the standard CSS containing-block
+// gotcha: any ancestor with `transform`, `filter`, `perspective`, or `contain`
+// creates a new containing block for fixed descendants, silently breaking layout).
 const VIEWPORT_CLASSES: Record<NotificationPosition, string> = {
-    'top-right':     'fixed top-14 right-4     flex flex-col       items-end',
-    'top-left':      'fixed top-14 left-4      flex flex-col       items-start',
-    'top-center':    'fixed top-14 left-1/2    flex flex-col       items-center -translate-x-1/2',
+    'top-right':     'fixed top-4    right-4   flex flex-col         items-end',
+    'top-left':      'fixed top-4    left-4    flex flex-col         items-start',
+    'top-center':    'fixed top-4    left-1/2  flex flex-col         items-center -translate-x-1/2',
     'bottom-right':  'fixed bottom-4 right-4   flex flex-col-reverse items-end',
     'bottom-left':   'fixed bottom-4 left-4    flex flex-col-reverse items-start',
     'bottom-center': 'fixed bottom-4 left-1/2  flex flex-col-reverse items-center -translate-x-1/2',
@@ -118,6 +124,10 @@ function NotificationItem({
 
     return (
         <motion.div
+            // pointer-events-auto re-enables clicks on the toast card itself;
+            // the parent viewport is pointer-events-none so empty space doesn't
+            // block interaction with the page underneath.
+            className="pointer-events-auto"
             initial={initial}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: pos.startsWith('bottom') ? 16 : -16, scale: 0.94,
@@ -247,27 +257,31 @@ export function NotificationProvider({
             }>
                 {children}
 
-                <Toast.Viewport
-                    asChild
-                    className={[
-                        VIEWPORT_CLASSES[position],
-                        'z-[500000] gap-2 w-[340px] p-4 outline-none overflow-hidden',
-                    ].join(' ')}
-                >
-                    <ul>
-                        <AnimatePresence initial={false}>
-                            {notifications.map((n) => (
-                                <NotificationItem
-                                    key={n.id}
-                                    n={n}
-                                    pos={position}
-                                    onClose={close}
-                                    reduced={reduced}
-                                />
-                            ))}
-                        </AnimatePresence>
-                    </ul>
-                </Toast.Viewport>
+                {/* Portaled into <body> so `position: fixed` resolves against
+                    the real viewport — see Portal.tsx for the why. */}
+                <Portal>
+                    <Toast.Viewport
+                        asChild
+                        className={[
+                            VIEWPORT_CLASSES[position],
+                            'z-[500000] gap-2 w-[332px] outline-none pointer-events-none',
+                        ].join(' ')}
+                    >
+                        <ul>
+                            <AnimatePresence initial={false}>
+                                {notifications.map((n) => (
+                                    <NotificationItem
+                                        key={n.id}
+                                        n={n}
+                                        pos={position}
+                                        onClose={close}
+                                        reduced={reduced}
+                                    />
+                                ))}
+                            </AnimatePresence>
+                        </ul>
+                    </Toast.Viewport>
+                </Portal>
             </Toast.Provider>
         </NotificationContext.Provider>
     )

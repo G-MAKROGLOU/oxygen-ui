@@ -11,6 +11,14 @@ export type {
 // ─── Utilities ────────────────────────────────────────────────────────────────
 export { default as COLORS } from './utils/colors'
 
+/**
+ * SSR-safe portal helper. Wrap any `position: fixed` overlay in `<Portal>`
+ * to escape ancestor `transform` / `filter` / `contain` containing blocks.
+ * See `src/components/utils/Portal.tsx` for the full rationale.
+ */
+export { default as Portal } from './components/utils/Portal'
+export type { PortalProps } from './components/utils/Portal'
+
 // ─── Icons ────────────────────────────────────────────────────────────────────
 export { default as Icon } from './icons/icons'
 

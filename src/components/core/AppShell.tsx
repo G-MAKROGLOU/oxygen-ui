@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Sidebar from './Sidebar'
 import type { SidebarSection, SidebarProps } from './Sidebar'
+import Portal from '../utils/Portal'
 
 export interface AppShellProps {
     /**
@@ -140,9 +141,12 @@ export default function AppShell({
                     />
                 )}
 
-                {/* Mobile sidebar overlay (portal-less fixed stack) */}
+                {/* Mobile sidebar overlay — portaled to <body> so the fixed
+                    backdrop and drawer always cover the real viewport, never
+                    a transformed/contained ancestor (page-transition libs,
+                    CSS `contain`, parent `will-change`, etc.). */}
                 {hasSidebar && isMobile && (
-                    <>
+                    <Portal>
                         {/* Backdrop */}
                         <AnimatePresence>
                             {mobileOpen && (
@@ -183,7 +187,7 @@ export default function AppShell({
                                 </motion.div>
                             )}
                         </AnimatePresence>
-                    </>
+                    </Portal>
                 )}
 
                 {/* Main content */}
