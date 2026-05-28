@@ -107,8 +107,13 @@ function NotificationItem({
     onClose: (id: number) => void
     reduced: boolean | null
 }) {
-    const initial = getInitialMotion(pos, reduced)
-    const center  = pos.endsWith('center')
+    const [hovered, setHovered] = useState(false)
+    const initial  = getInitialMotion(pos, reduced)
+    const center   = pos.endsWith('center')
+    const duration = n.duration ?? 4000
+    // Only show the progress bar when there is a finite, positive auto-dismiss
+    // duration and the user has not requested reduced motion.
+    const showProgress = !reduced && isFinite(duration) && duration > 0
 
     return (
         <motion.div
@@ -127,10 +132,12 @@ function NotificationItem({
                           layout:  { duration: 0.18 },
                       }
             }
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
         >
             <Toast.Root
                 open
-                duration={n.duration}
+                duration={duration}
                 onOpenChange={(o) => { if (!o) onClose(n.id) }}
                 className={[
                     'w-[300px] rounded-md shadow-lg overflow-hidden',
@@ -139,7 +146,7 @@ function NotificationItem({
                     TYPE_BG[n.type ?? 'info'],
                 ].join(' ')}
             >
-                {/* Colored side accent strip — thin, meaningful */}
+                {/* Content row ──────────────────────────────────────────────── */}
                 <div className="flex items-start gap-3 p-3 pr-2.5">
                     <span className="mt-0.5 flex-shrink-0 text-white/90">
                         <TypeIcon type={n.type ?? 'info'} />
@@ -168,6 +175,24 @@ function NotificationItem({
                         </button>
                     </Toast.Action>
                 </div>
+
+                {/* Countdown progress bar ────────────────────────────────────
+                    Lives inside overflow-hidden, so the bottom corners are
+                    clipped to match the card's border-radius automatically.
+                    The fill is a CSS animation (scaleX 1→0) so it costs zero
+                    JS — no intervals, no RAF. animationPlayState mirrors
+                    Radix's own hover-pause, keeping both in exact sync.      */}
+                {showProgress && (
+                    <div className="relative h-[3px] bg-white/20 overflow-hidden">
+                        <div
+                            className="absolute inset-0 bg-white/60 [transform-origin:left]"
+                            style={{
+                                animation: `notification-progress ${duration}ms linear forwards`,
+                                animationPlayState: hovered ? 'paused' : 'running',
+                            }}
+                        />
+                    </div>
+                )}
             </Toast.Root>
         </motion.div>
     )

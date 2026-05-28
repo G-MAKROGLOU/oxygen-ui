@@ -93,3 +93,12 @@
     from { opacity: 0; transform: translateX(8px); }
     to   { opacity: 1; transform: translateX(0);   }
 }
+
+// ── Notification countdown progress bar ──────────────────────────────────────
+// Applied inline with a variable duration: animation-duration = n.duration ms.
+// transform-origin must be set to 'left' on the element so the bar depletes
+// from right to left (visually shrinks rather than shifts).
+@keyframes notification-progress {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
