@@ -1,3 +1,10 @@
+## [1.7.5](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.4...v1.7.5) (2026-05-28)
+
+
+### Bug Fixes
+
+* **a11y:** Phase 3 — form-error linkage + keyboard handlers on option items ([48ef9f5](https://github.com/G-MAKROGLOU/oxygen-ui/commit/48ef9f5455ee9f2d1223c67c69ddb143008c36c4))
+
 ## [1.7.4](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.3...v1.7.4) (2026-05-28)
 
 
