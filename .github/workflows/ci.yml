@@ -10,6 +10,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Force all action runners (checkout, setup-node, upload/download-artifact, etc.)
+# to use Node.js 24 instead of the deprecated Node.js 20 default.
+# Remove once GitHub sets Node.js 24 as the new default (expected late 2026).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   # ─────────────────────────────────────────────
   # 1. Lint + type-check + build (all pushes / PRs)
