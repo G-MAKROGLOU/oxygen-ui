@@ -4,7 +4,7 @@ import Tabs from './Tabs'
 import type { TabItem } from './Tabs'
 
 const meta: Meta<typeof Tabs> = {
-    title: 'Core/Tabs',
+    title: 'Data Display/Tabs',
     component: Tabs,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],

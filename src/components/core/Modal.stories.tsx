@@ -4,7 +4,7 @@ import Modal from './Modal'
 import Button from '../inputs/Button'
 
 const meta: Meta<typeof Modal> = {
-    title: 'Core/Modal',
+    title: 'Feedback/Modal',
     component: Modal,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],

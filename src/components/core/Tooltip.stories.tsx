@@ -5,7 +5,7 @@ import Button from '../inputs/Button'
 import IconButton from './IconButton'
 
 const meta: Meta<typeof Tooltip> = {
-    title: 'Core/Tooltip',
+    title: 'Feedback/Tooltip',
     component: Tooltip,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],

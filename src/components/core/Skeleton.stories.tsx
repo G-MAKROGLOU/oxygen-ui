@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { SkeletonBox, SkeletonText, SkeletonCircle, SkeletonCard } from './Skeleton'
 
 const meta: Meta = {
-    title: 'Core/Skeleton',
+    title: 'Progress/Skeleton',
     parameters: { layout: 'padded' },
     tags: ['autodocs'],
 }

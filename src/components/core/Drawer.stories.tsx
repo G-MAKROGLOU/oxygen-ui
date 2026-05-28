@@ -4,7 +4,7 @@ import Drawer from './Drawer'
 import Button from '../inputs/Button'
 
 const meta: Meta<typeof Drawer> = {
-    title: 'Core/Drawer',
+    title: 'Feedback/Drawer',
     component: Drawer,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],

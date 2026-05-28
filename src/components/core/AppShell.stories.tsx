@@ -7,7 +7,7 @@ import ThemeSwitch from './Switch'
 import Button from '../inputs/Button'
 
 const meta: Meta<typeof AppShell> = {
-    title: 'Core/AppShell',
+    title: 'Layout/AppShell',
     component: AppShell,
     parameters: { layout: 'fullscreen' },
     tags: ['autodocs'],
