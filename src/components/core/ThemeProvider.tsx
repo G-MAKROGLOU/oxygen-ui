@@ -200,8 +200,44 @@ function toCssVars(theme?: ThemeConfig): Record<string, string> {
     return out
 }
 
+// ── XSS-safe CSS-value sanitiser ─────────────────────────────────────────────
+// The dark-theme CSS vars are serialised into a `<style>` block via
+// `dangerouslySetInnerHTML`. If a consumer-supplied value contained `</style>`,
+// `;`, or `}`, it would close the style block early and let arbitrary HTML
+// (including `<script>`) execute. We allow normal CSS value characters
+// (letters, digits, punctuation needed for `rgb()`, `oklch()`, multi-word
+// font-family lists, etc.) but reject the characters that can break CSS
+// escaping — including comment delimiters and the backslash hex-escape.
+//
+// React inline `style={…}` values do NOT need this check: React applies them
+// as DOM `.style.<prop> = value`, where a malicious value can only affect
+// that single property and cannot break out into siblings.
+const CSS_VALUE_REJECT_RE = /[;{}<>\\]|\*\/|\/\*/
+
+function isSafeCssValue(v: unknown): v is string {
+    if (typeof v !== 'string') return false
+    if (v.length > 500) return false  // unreasonable values are suspicious
+    return !CSS_VALUE_REJECT_RE.test(v)
+}
+
 function varsToStyleString(vars: Record<string, string>): string {
-    return Object.entries(vars).map(([k, v]) => `${k}: ${v};`).join(' ')
+    const out: string[] = []
+    for (const [k, v] of Object.entries(vars)) {
+        if (!isSafeCssValue(v)) {
+            // Warn unconditionally — these values are a security risk; the
+            // consumer needs to fix them in both dev and prod. (We don't
+            // gate on `process.env.NODE_ENV` because that's not always
+            // defined in browser bundles.)
+            console.warn(
+                `[ThemeProvider] Dropping unsafe value for "${k}". ` +
+                `Theme values may contain letters, digits, and CSS punctuation ` +
+                `but must not include: ; { } < > \\ /* */`,
+            )
+            continue
+        }
+        out.push(`${k}: ${v};`)
+    }
+    return out.join(' ')
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
