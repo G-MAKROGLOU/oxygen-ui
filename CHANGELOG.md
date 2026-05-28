@@ -1,3 +1,10 @@
+## [1.7.4](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.3...v1.7.4) (2026-05-28)
+
+
+### Bug Fixes
+
+* **ThemeProvider:** sanitize CSS values before dangerouslySetInnerHTML ([645d6c8](https://github.com/G-MAKROGLOU/oxygen-ui/commit/645d6c8a99559b32530019741a6312ab2a55a7c7))
+
 ## [1.7.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.2...v1.7.3) (2026-05-28)
 
 
