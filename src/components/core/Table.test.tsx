@@ -1,6 +1,6 @@
 import React from 'react'
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent, within } from '@testing-library/react'
+import { describe, it, expect } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
 import Table, { TableColumn } from './Table'
 
 const COLUMNS: TableColumn[] = [
