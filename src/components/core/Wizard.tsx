@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import Button from '../inputs/Button'
 import Portal from '../layout/Portal'
 
@@ -206,6 +207,7 @@ export default function Wizard({
     const tooltipRef = useRef<HTMLDivElement>(null)
     const tooltipTitleId = useId()
     const tooltipBodyId  = useId()
+    const reduced = useReducedMotion()
 
     // Open the wizard only when not previously dismissed and there is
     // actually at least one step.
@@ -271,34 +273,63 @@ export default function Wizard({
         <>
             {children}
 
-            {open && step && (
-                <Portal>
-                    {/* Backdrop — blocks clicks underneath. Wizards are modal
-                        experiences; the user should advance via the tooltip
-                        buttons, not by stumbling onto unrelated UI. */}
-                    <div
-                        className="fixed inset-0 z-[7000000] bg-foreground/40 backdrop-blur-[1px] pointer-events-auto"
-                        aria-hidden="true"
-                    />
+            <AnimatePresence>
+                {open && step && (
+                    <Portal>
+                        {/* Backdrop fades in/out — wizards are modal experiences;
+                            the user advances via the tooltip buttons, not by
+                            clicking through to unrelated UI. */}
+                        <motion.div
+                            className="fixed inset-0 z-[7000000] bg-foreground/40 backdrop-blur-[1px] pointer-events-auto"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: reduced ? 0 : 0.18, ease: 'easeOut' }}
+                            aria-hidden="true"
+                        />
 
-                    {/* Spotlight outline — tracks the target's bbox without
-                        ever touching its DOM. */}
-                    <div
-                        className="fixed z-[7000001] pointer-events-none rounded-md ring-2 ring-accent ring-offset-2 ring-offset-background transition-all duration-200"
-                        style={highlightStyle}
-                        aria-hidden="true"
-                    />
+                        {/* Spotlight outline — `layout` lets Framer Motion
+                            animate the bbox change between steps, with a soft
+                            pulse on the first appearance to draw the eye. */}
+                        <motion.div
+                            className="fixed z-[7000001] pointer-events-none rounded-md ring-2 ring-accent ring-offset-2 ring-offset-background"
+                            style={highlightStyle}
+                            initial={{ opacity: 0, scale: 1.08 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 1.08 }}
+                            transition={{
+                                duration: reduced ? 0 : 0.32,
+                                ease: [0.16, 1, 0.3, 1], // ease-out-expo — settles softly
+                            }}
+                            aria-hidden="true"
+                        />
 
-                    {/* Tooltip — focus-trapped, Esc-dismissible, keyboard-navigable */}
-                    <div
-                        ref={tooltipRef}
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby={step.title ? tooltipTitleId : undefined}
-                        aria-describedby={tooltipBodyId}
-                        className="fixed z-[7000002] rounded-lg bg-surface text-foreground border border-border shadow-xl p-4 pointer-events-auto"
-                        style={tooltipStyle}
-                    >
+                        {/* Tooltip cross-fades + slides between steps. The
+                            `key={activeIndex}` makes AnimatePresence treat each
+                            step as a separate mount, triggering enter/exit on
+                            navigation. Focus-trapped + Esc-dismissible. */}
+                        <motion.div
+                            key={activeIndex}
+                            ref={tooltipRef}
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby={step.title ? tooltipTitleId : undefined}
+                            aria-describedby={tooltipBodyId}
+                            className="fixed z-[7000002] rounded-lg bg-surface text-foreground border border-border shadow-xl p-4 pointer-events-auto"
+                            style={tooltipStyle}
+                            initial={{ opacity: 0, scale: 0.96, y: 6 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.97, y: 4 }}
+                            transition={
+                                reduced
+                                    ? { duration: 0 }
+                                    : {
+                                          opacity: { duration: 0.18 },
+                                          scale:   { type: 'tween', duration: 0.26, ease: [0.16, 1, 0.3, 1] },
+                                          y:       { type: 'tween', duration: 0.26, ease: [0.16, 1, 0.3, 1] },
+                                      }
+                            }
+                        >
                         {step.title && (
                             <h3 id={tooltipTitleId} className="text-sm font-semibold text-foreground mb-1">
                                 {step.title}
@@ -338,9 +369,10 @@ export default function Wizard({
                                 />
                             </div>
                         </div>
-                    </div>
-                </Portal>
-            )}
+                        </motion.div>
+                    </Portal>
+                )}
+            </AnimatePresence>
         </>
     )
 }

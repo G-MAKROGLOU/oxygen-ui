@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import Wizard, { type WizardStep } from './Wizard'
 
 beforeEach(() => {
@@ -77,14 +77,14 @@ describe('Wizard', () => {
 
     // ── Completion + persistence ───────────────────────────────────────────
 
-    it('fires onComplete when Done is clicked on the last step', () => {
+    it('fires onComplete when Done is clicked on the last step', async () => {
         const onComplete = vi.fn()
         render(<Harness onComplete={onComplete} />)
         fireEvent.click(screen.getByRole('button', { name: 'Next' }))
         fireEvent.click(screen.getByRole('button', { name: 'Done' }))
         expect(onComplete).toHaveBeenCalledOnce()
-        // Tooltip closes
-        expect(screen.queryByText('Step two')).toBeNull()
+        // Tooltip closes (after the AnimatePresence exit animation completes)
+        await waitFor(() => expect(screen.queryByText('Step two')).toBeNull())
     })
 
     it('persists completion to localStorage when a storageKey is provided', () => {
@@ -102,12 +102,12 @@ describe('Wizard', () => {
 
     // ── Skip / dismiss ─────────────────────────────────────────────────────
 
-    it('fires onSkip and closes when Skip is clicked', () => {
+    it('fires onSkip and closes when Skip is clicked', async () => {
         const onSkip = vi.fn()
         render(<Harness onSkip={onSkip} />)
         fireEvent.click(screen.getByRole('button', { name: 'Skip' }))
         expect(onSkip).toHaveBeenCalledOnce()
-        expect(screen.queryByText('Step one')).toBeNull()
+        await waitFor(() => expect(screen.queryByText('Step one')).toBeNull())
     })
 
     it('does not show Skip when dismissible=false', () => {
