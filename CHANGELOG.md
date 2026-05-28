@@ -1,3 +1,26 @@
+# [3.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v2.0.0...v3.0.0) (2026-05-28)
+
+
+* feat(Wizard)!: Phase 5a — SSR-safe portaled rewrite with focus trap ([130ea54](https://github.com/G-MAKROGLOU/oxygen-ui/commit/130ea54f2306425195480ce76b8f9472a6769694))
+
+
+### BREAKING CHANGES
+
+* `WizardStep.positioning?: 'natural' | 'center'` is
+replaced by `WizardStep.placement?: 'right' | 'left' | 'top' | 'bottom'`.
+The old values silently mapped to "right" and "centred over target"
+respectively; the new model is explicit and supports four sides.
+Consumers using `positioning` need to switch to `placement` — the
+mapping is `'natural'` → `'right'` and `'center'` → `'bottom'` (closest
+visual equivalent). Also: the default `storageKey` changed from
+`'po_wizard'` to `'oxygen.wizard.completed'` so existing users get the
+tour again. Pass `'po_wizard'` explicitly to preserve the old key.
+
+Test count: 86 → 99 (+13).
+
+Verified: typecheck, lint, 99/99 tests, library build.
+
+
 # [2.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.9.0...v2.0.0) (2026-05-28)
 
 
