@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import Tooltip, { TooltipProvider } from './Tooltip'
 import Button from '../inputs/Button'
 import IconButton from './IconButton'

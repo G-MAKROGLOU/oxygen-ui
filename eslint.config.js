@@ -2,6 +2,7 @@ import tsPlugin from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import storybook from 'eslint-plugin-storybook'
 
 export default [
     // ── TypeScript source files ──────────────────────────────────────────
@@ -60,6 +61,9 @@ export default [
             'no-console': 'off',
         },
     },
+
+    // ── Storybook plugin (flat/recommended): a11y, hooks-in-stories, etc.
+    ...storybook.configs['flat/recommended'],
 
     // ── Ignores ───────────────────────────────────────────────────────────
     {

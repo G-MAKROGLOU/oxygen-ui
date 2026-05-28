@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { NotificationProvider, useNotification } from './Notification'
 import type { NotificationPosition } from './Notification'
 import Button from '../inputs/Button'
