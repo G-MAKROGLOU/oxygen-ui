@@ -1,3 +1,10 @@
 <!-- Inter variable font — loaded here so the SCSS entry doesn't force a loading strategy -->
 <link rel="preconnect" href="https://rsms.me/">
 <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
+<!-- Storybook canvas hygiene: kill any default body margin and prevent
+     horizontal scrollbars in the canvas iframe. Components that need
+     horizontal scrolling should opt in via their own overflow-x-auto. -->
+<style>
+    html, body { margin: 0; padding: 0; overflow-x: hidden; }
+</style>

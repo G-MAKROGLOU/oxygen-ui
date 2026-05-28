@@ -11,7 +11,7 @@ const ITEMS = [
 ]
 
 const meta: Meta<typeof AutoComplete> = {
-    title: 'Forms/AutoComplete',
+    title: 'Inputs/AutoComplete',
     component: AutoComplete,
     tags: ['autodocs'],
     parameters: { layout: 'centered' },

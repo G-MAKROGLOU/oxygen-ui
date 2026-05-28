@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import ThemeSwitch from './Switch'
 
 const meta: Meta<typeof ThemeSwitch> = {
-    title: 'Forms/ThemeSwitch',
+    title: 'Themes/ThemeSwitch',
     component: ThemeSwitch,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],

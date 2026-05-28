@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import DropdownPill from './DropdownPill'
 
 const meta: Meta<typeof DropdownPill> = {
-    title: 'Data Display/DropdownPill',
+    title: 'Inputs/DropdownPill',
     component: DropdownPill,
     tags: ['autodocs'],
     parameters: { layout: 'centered' },

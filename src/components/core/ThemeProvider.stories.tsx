@@ -4,7 +4,7 @@ import ThemeProvider from './ThemeProvider'
 import Button from '../inputs/Button'
 
 const meta: Meta<typeof ThemeProvider> = {
-    title: 'Design System/ThemeProvider',
+    title: 'Themes/ThemeProvider',
     component: ThemeProvider,
     tags: ['autodocs'],
     parameters: {

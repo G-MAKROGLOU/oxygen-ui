@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import TextInput from './TextInput'
 
 const meta: Meta<typeof TextInput> = {
-    title: 'Forms/TextInput',
+    title: 'Inputs/TextInput',
     component: TextInput,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],

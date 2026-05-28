@@ -1,75 +1,149 @@
 import React, { useRef, useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import Tooltip from './Tooltip'
-import IconButton from './IconButton'
 
 export interface ScalableContainerProps {
+    /** Resting width. Any CSS length / percent. Default `'100%'`. */
     width?: React.CSSProperties['width']
+    /** Resting height. Any CSS length / percent. Default `'auto'`. */
     height?: React.CSSProperties['height']
+    /** Content to render inside. */
     children?: React.ReactNode
-    /** CSS class applied to the children wrapper when expanded */
+    /** CSS class appended to the expanded children wrapper. */
     assignClassOnClick?: string
+    /** Override the expand-button icon. */
+    expandIcon?: React.ReactNode
+    /** Override the collapse-button icon. */
+    collapseIcon?: React.ReactNode
+    /**
+     * Position of the toggle button inside the container.
+     * Default `'top-right'` — matches the OS-window convention.
+     */
+    togglePosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+}
+
+const TOGGLE_POSITION_CLASS: Record<NonNullable<ScalableContainerProps['togglePosition']>, string> = {
+    'top-left':     'top-2 left-2',
+    'top-right':    'top-2 right-2',
+    'bottom-left':  'bottom-2 left-2',
+    'bottom-right': 'bottom-2 right-2',
 }
 
 /**
- * Container that can be expanded to fill its parent, with a tooltip-annotated
- * expand/collapse icon button.
+ * Container that smoothly expands to fill its parent on click and
+ * collapses back to its resting size. Reads like a macOS / Windows
+ * window resizing — subtle elevation shift, smooth scale, no flash
+ * of colour or harsh background change.
+ *
+ * **What's different from the previous version**
+ * - Animates BOTH width and height (was width-only).
+ * - No baked-in background — the container is transparent by default,
+ *   so it overlays whatever surface the consumer puts behind it.
+ * - Shadow lifts on expand (`shadow-md` → `shadow-2xl`) like a window
+ *   being raised. No colour change.
+ * - The toggle button is a plain rounded chip with the chevron icon,
+ *   not the old `IconButton` with the heavy background. Floats over
+ *   the content via absolute positioning so it doesn't push layout.
+ * - Configurable toggle position (default top-right, matching OS
+ *   close-button convention).
  *
  * @example
- * <ScalableContainer width="50%" height={300}>
- *   <Chart data={data} />
+ * ```tsx
+ * <ScalableContainer width={480} height={300}>
+ *   <Chart data={metrics} />
  * </ScalableContainer>
+ * ```
  */
 export default function ScalableContainer({
-    width,
-    height,
+    width = '100%',
+    height = 'auto',
     children,
     assignClassOnClick,
+    expandIcon,
+    collapseIcon,
+    togglePosition = 'top-right',
 }: ScalableContainerProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const [isScaled, setScaled] = useState(false)
-    const [wrapperClass, setWrapperClass] = useState('')
+    const reduced = useReducedMotion()
 
-    const onClick = () => {
+    const onToggle = () => {
         const next = !isScaled
         setScaled(next)
-        setTimeout(() => {
-            containerRef.current?.scrollIntoView({ behavior: 'smooth' })
-            if (assignClassOnClick) {
-                setWrapperClass(next ? assignClassOnClick : '')
-            }
-        }, 200)
+        // Scroll the container into view after the resize starts so the
+        // newly-expanded content is fully visible.
+        requestAnimationFrame(() => containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }))
     }
 
+    const wrapperClass = isScaled ? assignClassOnClick : undefined
+
     return (
-        <div
+        <motion.div
             ref={containerRef}
-            style={{
-                width: isScaled ? '100%' : width,
+            layout
+            animate={{
+                width:  isScaled ? '100%' : width,
                 height: isScaled ? '100%' : height,
             }}
-            className="rounded-lg bg-surface-raised flex flex-col transition-all duration-300 origin-center"
+            transition={
+                reduced
+                    ? { duration: 0 }
+                    : {
+                          width:  { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] },
+                          height: { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] },
+                          layout: { duration: 0.32, ease: [0.16, 1, 0.3, 1] },
+                      }
+            }
+            className={[
+                'relative rounded-lg overflow-hidden',
+                // OS-window aesthetic: subtle elevation at rest, lifted shadow
+                // when expanded. No background colour change.
+                isScaled ? 'shadow-2xl' : 'shadow-md',
+                'transition-shadow duration-300',
+            ].join(' ')}
         >
-            <div className="p-2 w-max">
-                <Tooltip placement="right" title={isScaled ? 'Collapse' : 'Expand'}>
-                    <IconButton
-                        onClick={onClick}
-                        icon={
-                            isScaled ? (
-                                /* Collapse (arrows-pointing-in) */
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                                    <path fillRule="evenodd" d="M3.22 3.22a.75.75 0 011.06 0l3.97 3.97V4.5a.75.75 0 011.5 0V9a.75.75 0 01-.75.75H4.5a.75.75 0 010-1.5h2.69L3.22 4.28a.75.75 0 010-1.06zm17.56 0a.75.75 0 010 1.06l-3.97 3.97h2.69a.75.75 0 010 1.5H15a.75.75 0 01-.75-.75V4.5a.75.75 0 011.5 0v2.69l3.97-3.97a.75.75 0 011.06 0zM3.75 15a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-2.69l-3.97 3.97a.75.75 0 01-1.06-1.06l3.97-3.97H4.5a.75.75 0 01-.75-.75zm10.5 0a.75.75 0 01.75-.75h4.5a.75.75 0 01.75.75 .75.75 0 01-.75.75h-2.69l3.97 3.97a.75.75 0 11-1.06 1.06l-3.97-3.97v2.69a.75.75 0 01-1.5 0V15z" clipRule="evenodd" />
-                                </svg>
-                            ) : (
-                                /* Expand (arrows-pointing-out) */
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                                    <path fillRule="evenodd" d="M15 3a.75.75 0 01.75-.75h5.25A.75.75 0 0121 3v5.25a.75.75 0 01-1.5 0V4.81l-5.72 5.72a.75.75 0 11-1.06-1.06L18.19 3.75H15.75A.75.75 0 0115 3zM3 15a.75.75 0 01.75-.75h2.44l5.72-5.72a.75.75 0 111.06 1.06l-5.72 5.72v2.44a.75.75 0 01-1.5 0V15.75A.75.75 0 013 15zm0-11.25A.75.75 0 013.75 3h5.25a.75.75 0 010 1.5H4.81l5.72 5.72a.75.75 0 11-1.06 1.06L3.75 5.56V8.25a.75.75 0 01-1.5 0V3.75A.75.75 0 013 3zm18 12a.75.75 0 01-.75.75h-5.25a.75.75 0 010-1.5h2.44l-5.72-5.72a.75.75 0 111.06-1.06l5.72 5.72v-2.44a.75.75 0 011.5 0V15z" clipRule="evenodd" />
-                                </svg>
-                            )
-                        }
-                    />
-                </Tooltip>
-            </div>
+            {/* Toggle button — floats over content, no background flash. */}
+            <Tooltip placement="bottom" title={isScaled ? 'Collapse' : 'Expand'}>
+                <button
+                    type="button"
+                    onClick={onToggle}
+                    aria-label={isScaled ? 'Collapse container' : 'Expand container'}
+                    aria-expanded={isScaled}
+                    className={[
+                        'absolute z-10',
+                        TOGGLE_POSITION_CLASS[togglePosition],
+                        'w-7 h-7 inline-flex items-center justify-center',
+                        'rounded-md bg-surface/80 backdrop-blur-sm border border-border',
+                        'text-foreground-secondary hover:text-foreground hover:bg-surface',
+                        'shadow-sm transition-colors duration-150',
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                    ].join(' ')}
+                >
+                    {isScaled
+                        ? collapseIcon ?? <CollapseIcon />
+                        : expandIcon ?? <ExpandIcon />}
+                </button>
+            </Tooltip>
+
             <div className={wrapperClass}>{children}</div>
-        </div>
+        </motion.div>
+    )
+}
+
+/** Arrows-pointing-in (collapse). */
+function CollapseIcon() {
+    return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 9L4 4M9 9V4M9 9H4M15 9L20 4M15 9V4M15 9H20M9 15L4 20M9 15V20M9 15H4M15 15L20 20M15 15V20M15 15H20" />
+        </svg>
+    )
+}
+
+/** Arrows-pointing-out (expand). */
+function ExpandIcon() {
+    return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" />
+        </svg>
     )
 }

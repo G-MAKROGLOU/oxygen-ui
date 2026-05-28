@@ -27,7 +27,17 @@ const withDarkMode: Decorator = (Story, context) => {
     }, [isDark])
 
     return (
-        <div style={{ minHeight: '100%', background: isDark ? DARK_BG : undefined }}>
+        // `overflowX: 'hidden'` + `width: '100%'` keeps any rogue child
+        // (e.g. a fixed-positioned overlay momentarily oversized during a
+        // Framer Motion enter animation) from triggering a canvas-wide
+        // horizontal scrollbar. Components that legitimately need horizontal
+        // scroll should opt in via their own `overflow-x-auto` wrapper.
+        <div style={{
+            minHeight: '100%',
+            width: '100%',
+            overflowX: 'hidden',
+            background: isDark ? DARK_BG : undefined,
+        }}>
             <Story />
         </div>
     )
@@ -82,31 +92,33 @@ const preview: Preview = {
         },
 
         // ── Sidebar order ─────────────────────────────────────────────────────
-        // Design System docs always appear first. Component groups follow in the
-        // intended product hierarchy. '*' catches any group not listed explicitly.
+        // Themes docs always appear first (they explain how the design system
+        // is parameterized). Component groups follow in the intended product
+        // hierarchy. '*' catches any group not listed explicitly.
         options: {
             storySort: {
                 order: [
-                    'Design System',
+                    'Themes',
                     [
                         'Introduction',
                         'Palette',
                         'Typography',
                         'Tokens',
                         'Parameterization',
+                        'ThemeProvider',
+                        'ThemeSwitch',
                     ],
                     'Layout',
-                    'Feedback',
+                    'Buttons',
+                    'Inputs',
+                    'Forms',          // empty for now — placeholder for FormProvider
                     'Data Display',
-                    'Forms',
+                    'Feedback',
                     'Progress',
                     'Reporting',
                     'E-Commerce',
                     'Sci-Fi',
                     'Hooks',
-                    // Legacy groups — will be reorganized into the sections above
-                    'Core',
-                    'Inputs',
                     '*',
                 ],
             },

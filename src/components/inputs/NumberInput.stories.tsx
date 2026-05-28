@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import NumberInput from './NumberInput'
 
 const meta: Meta<typeof NumberInput> = {
-    title: 'Forms/NumberInput',
+    title: 'Inputs/NumberInput',
     component: NumberInput,
     tags: ['autodocs'],
     parameters: { layout: 'centered' },

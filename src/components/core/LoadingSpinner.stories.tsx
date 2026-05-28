@@ -4,7 +4,7 @@ import LoadingSpinner from './LoadingSpinner'
 import Button from '../inputs/Button'
 
 const meta: Meta<typeof LoadingSpinner> = {
-    title: 'Feedback/LoadingSpinner',
+    title: 'Progress/LoadingSpinner',
     component: LoadingSpinner,
     tags: ['autodocs'],
     parameters: {

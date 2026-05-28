@@ -80,12 +80,6 @@ export type { CatalogCarouselProps } from './components/core/CatalogCarousel'
 export { default as Catalog } from './components/core/Catalog'
 export type { CatalogProps } from './components/core/Catalog'
 
-export { default as MenuBarItem } from './components/core/MenuBarItem'
-export type { MenuBarItemProps } from './components/core/MenuBarItem'
-
-export { default as MenuBar } from './components/core/MenuBar'
-export type { MenuBarProps, MenuBarItemConfig } from './components/core/MenuBar'
-
 export { default as ContextMenu } from './components/core/ContextMenu'
 export type {
     ContextMenuProps,

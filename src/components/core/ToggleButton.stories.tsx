@@ -15,7 +15,7 @@ const ListIcon = (
 )
 
 const meta: Meta<typeof ToggleButton> = {
-    title: 'Inputs/ToggleButton',
+    title: 'Buttons/ToggleButton',
     component: ToggleButton,
     tags: ['autodocs'],
     parameters: { layout: 'centered' },

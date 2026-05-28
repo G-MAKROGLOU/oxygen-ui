@@ -15,7 +15,7 @@ const Spinner = (
 )
 
 const meta: Meta<typeof IconButton> = {
-    title: 'Inputs/IconButton',
+    title: 'Buttons/IconButton',
     component: IconButton,
     tags: ['autodocs'],
     parameters: { layout: 'centered' },

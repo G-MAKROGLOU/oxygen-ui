@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import Password from './Password'
 
 const meta: Meta<typeof Password> = {
-    title: 'Forms/Password',
+    title: 'Inputs/Password',
     component: Password,
     tags: ['autodocs'],
     parameters: { layout: 'centered' },

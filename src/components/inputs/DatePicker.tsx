@@ -138,6 +138,10 @@ export default function DatePicker({
     const [viewMonth, setViewMonth] = useState(() => startOfMonth(value ?? new Date()))
     // The keyboard-focused day in the grid.
     const [focusDate, setFocusDate] = useState<Date>(() => value ?? new Date())
+    // Which picker view is showing: days grid, months grid (12 months), or
+    // years grid (12-year decade). Lets the user jump from 2026 to 1991 in
+    // 3 clicks (year header → previous decade × N → pick year → pick month).
+    const [view, setView] = useState<'days' | 'months' | 'years'>('days')
 
     const gridRef = useRef<HTMLTableElement>(null)
 
@@ -147,6 +151,7 @@ export default function DatePicker({
         const target = value ?? new Date()
         setViewMonth(startOfMonth(target))
         setFocusDate(target)
+        setView('days')
     }, [open, value])
 
     // After the active cell changes, move DOM focus to it so screen readers
@@ -246,30 +251,110 @@ export default function DatePicker({
                                 // Focus is moved by the focusDate effect once the grid mounts
                             }}
                         >
-                            {/* Month navigation row */}
+                            {/* View-aware navigation header */}
                             <div className="flex items-center justify-between mb-2">
                                 <button
                                     type="button"
-                                    onClick={() => setViewMonth(addMonths(viewMonth, -1))}
-                                    aria-label="Previous month"
+                                    onClick={() => {
+                                        if (view === 'days')        setViewMonth(addMonths(viewMonth, -1))
+                                        else if (view === 'months') setViewMonth(new Date(viewMonth.getFullYear() - 1, viewMonth.getMonth(), 1))
+                                        else                        setViewMonth(new Date(viewMonth.getFullYear() - 10, viewMonth.getMonth(), 1))
+                                    }}
+                                    aria-label={view === 'days' ? 'Previous month' : view === 'months' ? 'Previous year' : 'Previous decade'}
                                     className="w-7 h-7 inline-flex items-center justify-center rounded-md hover:bg-surface-raised focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors"
                                 >
                                     <ChevronLeft />
                                 </button>
-                                <div className="text-sm font-semibold select-none">
-                                    {MONTH_NAMES[viewMonth.getMonth()]} {viewMonth.getFullYear()}
-                                </div>
+
+                                {/* Header label — clicking promotes to the next-broader view.
+                                    In `years` view it's not clickable (we're already at the top). */}
                                 <button
                                     type="button"
-                                    onClick={() => setViewMonth(addMonths(viewMonth, 1))}
-                                    aria-label="Next month"
+                                    onClick={() => {
+                                        if (view === 'days') setView('months')
+                                        else if (view === 'months') setView('years')
+                                    }}
+                                    disabled={view === 'years'}
+                                    aria-label="Change view"
+                                    className="text-sm font-semibold select-none rounded-md px-2 py-0.5 hover:bg-surface-raised focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors disabled:cursor-default disabled:hover:bg-transparent"
+                                >
+                                    {view === 'days'   && `${MONTH_NAMES[viewMonth.getMonth()]} ${viewMonth.getFullYear()}`}
+                                    {view === 'months' && `${viewMonth.getFullYear()}`}
+                                    {view === 'years'  && (() => {
+                                        const decadeStart = Math.floor(viewMonth.getFullYear() / 10) * 10
+                                        return `${decadeStart} – ${decadeStart + 11}`
+                                    })()}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (view === 'days')        setViewMonth(addMonths(viewMonth, 1))
+                                        else if (view === 'months') setViewMonth(new Date(viewMonth.getFullYear() + 1, viewMonth.getMonth(), 1))
+                                        else                        setViewMonth(new Date(viewMonth.getFullYear() + 10, viewMonth.getMonth(), 1))
+                                    }}
+                                    aria-label={view === 'days' ? 'Next month' : view === 'months' ? 'Next year' : 'Next decade'}
                                     className="w-7 h-7 inline-flex items-center justify-center rounded-md hover:bg-surface-raised focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors"
                                 >
                                     <ChevronRight />
                                 </button>
                             </div>
 
-                            {/* Calendar grid — real <table> semantics */}
+                            {/* MONTHS view — 4×3 grid of month buttons */}
+                            {view === 'months' && (
+                                <div className="grid grid-cols-3 gap-1 min-w-[224px]">
+                                    {MONTH_NAMES.map((name, idx) => {
+                                        const isCurrent = value && value.getFullYear() === viewMonth.getFullYear() && value.getMonth() === idx
+                                        return (
+                                            <button
+                                                key={name}
+                                                type="button"
+                                                onClick={() => {
+                                                    setViewMonth(new Date(viewMonth.getFullYear(), idx, 1))
+                                                    setView('days')
+                                                }}
+                                                className={`px-2 py-2 rounded-md text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                                                    isCurrent ? 'bg-accent text-accent-fg' : 'text-foreground hover:bg-surface-raised'
+                                                }`}
+                                            >
+                                                {name.slice(0, 3)}
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            )}
+
+                            {/* YEARS view — 4×3 grid of years for the current decade
+                                (plus 1 spillover slot for the year after) */}
+                            {view === 'years' && (() => {
+                                const decadeStart = Math.floor(viewMonth.getFullYear() / 10) * 10
+                                const years = Array.from({ length: 12 }, (_, i) => decadeStart + i)
+                                return (
+                                    <div className="grid grid-cols-3 gap-1 min-w-[224px]">
+                                        {years.map((y) => {
+                                            const isCurrent = value?.getFullYear() === y
+                                            return (
+                                                <button
+                                                    key={y}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setViewMonth(new Date(y, viewMonth.getMonth(), 1))
+                                                        setView('months')
+                                                    }}
+                                                    className={`px-2 py-2 rounded-md text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                                                        isCurrent ? 'bg-accent text-accent-fg' : 'text-foreground hover:bg-surface-raised'
+                                                    }`}
+                                                >
+                                                    {y}
+                                                </button>
+                                            )
+                                        })}
+                                    </div>
+                                )
+                            })()}
+
+                            {/* DAYS view — the calendar grid */}
+                            {view === 'days' && (
                             <table
                                 ref={gridRef}
                                 role="grid"
@@ -326,6 +411,7 @@ export default function DatePicker({
                                     ))}
                                 </tbody>
                             </table>
+                            )}
 
                             {/* Footer — Today + Clear */}
                             <div className="mt-2 flex items-center justify-between gap-2 border-t border-border pt-2">

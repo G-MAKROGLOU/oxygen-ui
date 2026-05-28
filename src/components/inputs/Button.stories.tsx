@@ -4,7 +4,7 @@ import { expect, fn, userEvent, within } from 'storybook/test'
 import Button from './Button'
 
 const meta: Meta<typeof Button> = {
-    title: 'Forms/Button',
+    title: 'Buttons/Button',
     component: Button,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],

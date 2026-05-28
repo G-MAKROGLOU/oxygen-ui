@@ -4,7 +4,7 @@ import TreeSelect from './TreeSelect'
 import type { TreeSelectNode } from './TreeSelect'
 
 const meta: Meta<typeof TreeSelect> = {
-    title: 'Forms/TreeSelect',
+    title: 'Inputs/TreeSelect',
     component: TreeSelect,
     tags: ['autodocs'],
     parameters: { layout: 'centered' },
