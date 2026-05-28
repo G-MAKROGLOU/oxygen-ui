@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.5...v1.8.0) (2026-05-28)
+
+
+### Features
+
+* **LoadingSpinner:** enterprise visual redesign + size & inline variants ([90ee834](https://github.com/G-MAKROGLOU/oxygen-ui/commit/90ee834e86e452137ea1ddeb10131918912427de))
+
 ## [1.7.5](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.4...v1.7.5) (2026-05-28)
 
 
