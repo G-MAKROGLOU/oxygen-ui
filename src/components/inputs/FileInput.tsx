@@ -7,7 +7,6 @@ export interface FileInputProps {
     name?: string
     /** Accepted MIME types / extensions */
     accept?: string
-    [key: string]: any
 }
 
 /**

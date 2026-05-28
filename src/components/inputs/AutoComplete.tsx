@@ -16,13 +16,12 @@ export interface AutoCompleteProps {
     name?: string
     inputStyle?: React.CSSProperties
     style?: React.CSSProperties
-    /** 'horizontal' | 'vertical' */
-    layout?: string
+    /** Label/input orientation. Defaults to `'vertical'`. */
+    layout?: 'horizontal' | 'vertical'
     items?: AutoCompleteItem[]
     onItemClick?: (value: string) => void
     /** Custom "empty" message */
     emptyText?: string
-    [key: string]: any
 }
 
 /**

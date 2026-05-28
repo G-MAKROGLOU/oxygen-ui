@@ -1,7 +1,7 @@
 import React from 'react'
 
 export interface TextInputProps {
-    value?: any
+    value?: string
     onChange?: React.ChangeEventHandler<HTMLInputElement>
     disabled?: boolean
     label?: React.ReactNode
@@ -10,13 +10,12 @@ export interface TextInputProps {
     name?: string
     inputStyle?: React.CSSProperties
     style?: React.CSSProperties
-    /** 'horizontal' | 'vertical' */
-    layout?: string
+    /** Label/input orientation. Defaults to `'horizontal'`. */
+    layout?: 'horizontal' | 'vertical'
     onBlur?: React.FocusEventHandler<HTMLInputElement>
     errorMessage?: React.ReactNode
     labelColor?: string
     id?: string
-    [key: string]: any
 }
 
 /**

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import COLORS from '../../utils/colors'
 
 export interface PasswordProps {
-    value?: any
+    value?: string
     onChange?: React.ChangeEventHandler<HTMLInputElement>
     disabled?: boolean
     label?: React.ReactNode
@@ -11,12 +11,12 @@ export interface PasswordProps {
     name?: string
     inputStyle?: React.CSSProperties
     style?: React.CSSProperties
-    layout?: string
+    /** Label/input orientation. Defaults to `'horizontal'`. */
+    layout?: 'horizontal' | 'vertical'
     onBlur?: React.FocusEventHandler<HTMLInputElement>
     errorMessage?: React.ReactNode
     labelColor?: string
     iconColor?: string
-    [key: string]: any
 }
 
 /**

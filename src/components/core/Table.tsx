@@ -316,10 +316,13 @@ function Pagination({
                     isMultiselect={false}
                     value={displayPerPageKey}
                     onChange={({ target: { value } }) => {
-                        const key = typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : value
-                        if (!serverSide) setPerPageKey(key)
-                        const opt = picker.find((o) => o.key === key)
-                        onPerPageChange(opt?.label ?? opt?.value ?? key)
+                        // Pagination is single-select; ignore array values that
+                        // could come through from a multi-select Dropdown.
+                        if (Array.isArray(value)) return
+                        const numKey = typeof value === 'number' ? value : Number(value)
+                        if (!serverSide) setPerPageKey(numKey)
+                        const opt = picker.find((o) => o.key === numKey)
+                        onPerPageChange(opt?.label ?? opt?.value ?? numKey)
                     }}
                 />
             )}

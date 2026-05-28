@@ -10,24 +10,35 @@ export interface DropdownItem {
     icon?: React.ReactNode
 }
 
+/**
+ * Item key type — DOM-friendly subset of `React.Key` (no bigint, since UI
+ * keys are always strings or numbers in practice).
+ */
+export type DropdownKey = string | number
+
+/**
+ * Selected value(s). In single-select mode this is a single key matching
+ * one of the items. In multi-select mode it is an array of keys.
+ */
+export type DropdownValue = DropdownKey | DropdownKey[]
+
 export interface DropdownProps {
     isMultiselect?: boolean
     hasSearch?: boolean
     label?: React.ReactNode
     name?: string
-    value?: any
-    onChange?: (e: { target: { value: any; id?: string; name?: string } }) => void
+    value?: DropdownValue
+    onChange?: (e: { target: { value: DropdownValue; id?: string; name?: string } }) => void
     onBlur?: React.FocusEventHandler
     disabled?: boolean
-    /** 'horizontal' | 'vertical' */
-    layout?: string
+    /** Label/input orientation. Defaults to `'vertical'`. */
+    layout?: 'horizontal' | 'vertical'
     errorMessage?: React.ReactNode
     style?: React.CSSProperties
     htmlFor?: string
     items?: DropdownItem[]
     labelStyle?: React.CSSProperties
     placeholder?: string
-    [key: string]: any
 }
 
 /**

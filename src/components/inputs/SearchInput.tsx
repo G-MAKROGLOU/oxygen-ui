@@ -2,7 +2,7 @@ import React from 'react'
 import COLORS from '../../utils/colors'
 
 export interface SearchInputProps {
-    value?: any
+    value?: string
     onChange?: React.ChangeEventHandler<HTMLInputElement>
     disabled?: boolean
     label?: React.ReactNode
@@ -11,8 +11,8 @@ export interface SearchInputProps {
     name?: string
     inputStyle?: React.CSSProperties
     style?: React.CSSProperties
-    layout?: string
-    [key: string]: any
+    /** Label/input orientation. Defaults to `'vertical'`. */
+    layout?: 'horizontal' | 'vertical'
 }
 
 /**

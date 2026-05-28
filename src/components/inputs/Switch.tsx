@@ -6,7 +6,6 @@ export interface SwitchInputProps {
     onChange?: (e: { target: { checked: boolean } }) => void
     checkedIcon?: React.ReactNode
     uncheckedIcon?: React.ReactNode
-    [key: string]: any
 }
 
 /**

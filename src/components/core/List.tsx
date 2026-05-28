@@ -3,7 +3,6 @@ import React from 'react'
 export interface ListItem {
     key: string | number
     label: React.ReactNode
-    [key: string]: any
 }
 
 export interface ListProps {

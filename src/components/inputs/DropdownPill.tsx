@@ -1,5 +1,7 @@
+import type { ReactNode } from 'react'
+
 export interface DropdownPillProps {
-    value?: React.ReactNode
+    value?: ReactNode
     hasSiblings?: boolean
 }
 
