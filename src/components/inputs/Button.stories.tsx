@@ -1,6 +1,6 @@
 import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { expect, fn, userEvent, within } from '@storybook/test'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, fn, userEvent, within } from 'storybook/test'
 import Button from './Button'
 
 const meta: Meta<typeof Button> = {

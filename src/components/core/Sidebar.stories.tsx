@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import Sidebar from './Sidebar'
 import type { SidebarSection } from './Sidebar'
 import ThemeSwitch from './Switch'
