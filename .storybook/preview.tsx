@@ -61,16 +61,24 @@ const preview: Preview = {
         },
 
         // ── Viewport presets ──────────────────────────────────────────────────
-        // Matches the Tailwind breakpoints used in component responsive rules.
-        // Switch via the toolbar phone/tablet icon in the Storybook canvas.
+        // WIDTH matches the Tailwind breakpoints — that's what stories should
+        // simulate. HEIGHT is intentionally lower than each device's native
+        // resolution: Storybook 10 only honours fixed pixel heights for the
+        // iframe (no `100%` / auto-fit), and a 900+px tall iframe overflows
+        // most laptop screens once OS chrome, browser tabs, the Storybook
+        // toolbar, addons panel, and bottom toolbar are subtracted. 700 px
+        // fits comfortably on a 1080 p display and still gives `h-screen`
+        // components (AppShell, full-bleed layouts) enough room to breathe.
+        // Adjust the H input in the canvas controls per-story if a specific
+        // layout needs more vertical space.
         viewport: {
             options: {
-                mobile:  { name: 'Mobile  (375)',  styles: { width: '375px',  height: '812px'  } },
-                mobileLg:{ name: 'Mobile  (430)',  styles: { width: '430px',  height: '932px'  } },
-                tablet:  { name: 'Tablet  (768)',  styles: { width: '768px',  height: '1024px' } },
-                desktop: { name: 'Desktop (1280)', styles: { width: '1280px', height: '900px'  } },
-                wide:    { name: 'Wide    (1920)', styles: { width: '1920px', height: '1080px' } },
-            }
+                mobile:   { name: 'Mobile  (375)',  styles: { width: '375px',  height: '700px' } },
+                mobileLg: { name: 'Mobile  (430)',  styles: { width: '430px',  height: '700px' } },
+                tablet:   { name: 'Tablet  (768)',  styles: { width: '768px',  height: '700px' } },
+                desktop:  { name: 'Desktop (1280)', styles: { width: '1280px', height: '700px' } },
+                wide:     { name: 'Wide    (1920)', styles: { width: '1920px', height: '700px' } },
+            },
         },
 
         // ── Sidebar order ─────────────────────────────────────────────────────
