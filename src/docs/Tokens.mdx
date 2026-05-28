@@ -3,105 +3,112 @@ import { Meta } from '@storybook/blocks'
 
 <Meta title="Design System/Tokens" />
 
-export const Row = ({ name, value, preview }) => (
-  <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-    <td style={{ padding: '8px 12px', fontFamily: 'monospace', fontSize: 13, color: 'var(--color-foreground)' }}>{name}</td>
-    <td style={{ padding: '8px 12px', fontFamily: 'monospace', fontSize: 12, color: 'var(--color-foreground-muted)' }}>{value}</td>
-    <td style={{ padding: '8px 12px' }}>{preview}</td>
-  </tr>
-)
-
-export const Table = ({ children }) => (
-  <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 32 }}>
-    <thead>
-      <tr style={{ borderBottom: '2px solid var(--color-border-strong)' }}>
-        <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 12, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Token</th>
-        <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 12, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Default value</th>
-        <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 12, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Preview</th>
-      </tr>
-    </thead>
-    <tbody>{children}</tbody>
-  </table>
-)
+export const styles = {
+  tbl: { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' },
+  th:  { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' },
+  td:  { padding: '9px 16px', fontFamily: 'monospace', fontSize: 13, color: 'var(--color-foreground)', borderBottom: '1px solid var(--color-border)' },
+  val: { padding: '9px 16px', fontFamily: 'monospace', fontSize: 12, color: 'var(--color-foreground-muted)', borderBottom: '1px solid var(--color-border)' },
+  pre: { padding: '9px 16px', borderBottom: '1px solid var(--color-border)' },
+  tw:  { padding: '9px 16px', fontFamily: 'monospace', fontSize: 12, color: 'var(--color-foreground-secondary)', borderBottom: '1px solid var(--color-border)' },
+}
 
 # Design Tokens
 
-All token categories. Every value is a CSS custom property on `:root` — override at any scope.
+Every value here is a CSS custom property defined on `:root`. Override at any CSS scope — globally, per-section, or per-component via `ThemeProvider`.
 
 ---
 
 ## Border radius
 
-<Table>
-  <Row name="--radius-sm" value="2px" preview={<span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:2 }} />} />
-  <Row name="--radius-md" value="5px" preview={<span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:5 }} />} />
-  <Row name="--radius-lg" value="7px" preview={<span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:7 }} />} />
-  <Row name="--radius-xl" value="10px" preview={<span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:10 }} />} />
-  <Row name="--radius-2xl" value="12px" preview={<span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:12 }} />} />
-  <Row name="--radius-full" value="9999px" preview={<span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:9999 }} />} />
-</Table>
-
-Tailwind utilities: `rounded-sm`, `rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-2xl`, `rounded-full`
+<table style={styles.tbl}>
+  <thead><tr><th style={styles.th}>Token</th><th style={styles.th}>Default</th><th style={styles.th}>Tailwind</th><th style={styles.th}>Preview</th></tr></thead>
+  <tbody>
+    <tr><td style={styles.td}>--radius-sm</td><td style={styles.val}>2px</td><td style={styles.tw}>rounded-sm</td><td style={styles.pre}><span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:2 }} /></td></tr>
+    <tr><td style={styles.td}>--radius-md</td><td style={styles.val}>5px</td><td style={styles.tw}>rounded-md</td><td style={styles.pre}><span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:5 }} /></td></tr>
+    <tr><td style={styles.td}>--radius-lg</td><td style={styles.val}>7px</td><td style={styles.tw}>rounded-lg</td><td style={styles.pre}><span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:7 }} /></td></tr>
+    <tr><td style={styles.td}>--radius-xl</td><td style={styles.val}>10px</td><td style={styles.tw}>rounded-xl</td><td style={styles.pre}><span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:10 }} /></td></tr>
+    <tr><td style={styles.td}>--radius-2xl</td><td style={styles.val}>12px</td><td style={styles.tw}>rounded-2xl</td><td style={styles.pre}><span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:12 }} /></td></tr>
+    <tr><td style={styles.td}>--radius-full</td><td style={styles.val}>9999px</td><td style={styles.tw}>rounded-full</td><td style={styles.pre}><span style={{ display:'inline-block', width:40, height:20, background:'var(--color-accent)', borderRadius:9999 }} /></td></tr>
+  </tbody>
+</table>
 
 ---
 
 ## Shadows
 
-<Table>
-  <Row name="--shadow-sm" value="0 1px 2px rgba(4,31,66,.06)" preview={<span style={{ display:'inline-block', width:48, height:24, background:'var(--color-surface)', borderRadius:4, boxShadow:'var(--shadow-sm)', border:'1px solid var(--color-border)' }} />} />
-  <Row name="--shadow-md" value="0 2px 8px + 0 1px 3px" preview={<span style={{ display:'inline-block', width:48, height:24, background:'var(--color-surface)', borderRadius:4, boxShadow:'var(--shadow-md)' }} />} />
-  <Row name="--shadow-lg" value="0 8px 24px + 0 3px 8px" preview={<span style={{ display:'inline-block', width:48, height:24, background:'var(--color-surface)', borderRadius:4, boxShadow:'var(--shadow-lg)' }} />} />
-  <Row name="--shadow-xl" value="0 20px 48px + 0 6px 16px" preview={<span style={{ display:'inline-block', width:48, height:24, background:'var(--color-surface)', borderRadius:4, boxShadow:'var(--shadow-xl)' }} />} />
-</Table>
-
-Tailwind utilities: `shadow-sm`, `shadow-md`, `shadow-lg`, `shadow-xl`
+<table style={styles.tbl}>
+  <thead><tr><th style={styles.th}>Token</th><th style={styles.th}>Default</th><th style={styles.th}>Tailwind</th><th style={styles.th}>Preview</th></tr></thead>
+  <tbody>
+    <tr><td style={styles.td}>--shadow-sm</td><td style={styles.val}>0 1px 2px rgba(4,31,66,.06)</td><td style={styles.tw}>shadow-sm</td><td style={styles.pre}><span style={{ display:'inline-block', width:52, height:28, background:'var(--color-surface)', borderRadius:5, boxShadow:'var(--shadow-sm)', border:'1px solid var(--color-border)' }} /></td></tr>
+    <tr><td style={styles.td}>--shadow-md</td><td style={styles.val}>layered 2-stop</td><td style={styles.tw}>shadow-md</td><td style={styles.pre}><span style={{ display:'inline-block', width:52, height:28, background:'var(--color-surface)', borderRadius:5, boxShadow:'var(--shadow-md)' }} /></td></tr>
+    <tr><td style={styles.td}>--shadow-lg</td><td style={styles.val}>layered 2-stop</td><td style={styles.tw}>shadow-lg</td><td style={styles.pre}><span style={{ display:'inline-block', width:52, height:28, background:'var(--color-surface)', borderRadius:5, boxShadow:'var(--shadow-lg)' }} /></td></tr>
+    <tr><td style={styles.td}>--shadow-xl</td><td style={styles.val}>layered 2-stop</td><td style={styles.tw}>shadow-xl</td><td style={styles.pre}><span style={{ display:'inline-block', width:52, height:28, background:'var(--color-surface)', borderRadius:5, boxShadow:'var(--shadow-xl)' }} /></td></tr>
+  </tbody>
+</table>
 
 ---
 
 ## Component heights (density)
 
-<Table>
-  <Row name="--height-control-xs" value="24px" preview={<span style={{ display:'inline-flex', alignItems:'center', height:24, padding:'0 8px', background:'var(--color-accent)', color:'#fff', borderRadius:4, fontSize:11 }}>XS</span>} />
-  <Row name="--height-control-sm" value="28px" preview={<span style={{ display:'inline-flex', alignItems:'center', height:28, padding:'0 10px', background:'var(--color-accent)', color:'#fff', borderRadius:4, fontSize:12 }}>SM</span>} />
-  <Row name="--height-control-md" value="36px" preview={<span style={{ display:'inline-flex', alignItems:'center', height:36, padding:'0 14px', background:'var(--color-accent)', color:'#fff', borderRadius:4, fontSize:13 }}>Default</span>} />
-  <Row name="--height-control-lg" value="44px" preview={<span style={{ display:'inline-flex', alignItems:'center', height:44, padding:'0 18px', background:'var(--color-accent)', color:'#fff', borderRadius:4, fontSize:14 }}>LG</span>} />
-  <Row name="--height-topbar" value="56px" preview={<span style={{ display:'inline-flex', alignItems:'center', height:56, padding:'0 16px', background:'var(--color-surface-raised)', border:'1px solid var(--color-border)', borderRadius:4, fontSize:13, color:'var(--color-foreground)' }}>TopBar</span>} />
-</Table>
-
-Tailwind utilities: `h-control-xs`, `h-control-sm`, `h-control-md`, `h-control-lg`, `h-topbar`
+<table style={styles.tbl}>
+  <thead><tr><th style={styles.th}>Token</th><th style={styles.th}>Default</th><th style={styles.th}>Tailwind</th><th style={styles.th}>Preview</th></tr></thead>
+  <tbody>
+    <tr>
+      <td style={styles.td}>--height-control-xs</td><td style={styles.val}>24px</td><td style={styles.tw}>h-control-xs</td>
+      <td style={styles.pre}><span style={{ display:'inline-flex', alignItems:'center', height:24, padding:'0 8px', background:'var(--color-accent)', color:'#fff', borderRadius:4, fontSize:11, fontFamily:'sans-serif', whiteSpace:'nowrap' }}>XS · 24px</span></td>
+    </tr>
+    <tr>
+      <td style={styles.td}>--height-control-sm</td><td style={styles.val}>28px</td><td style={styles.tw}>h-control-sm</td>
+      <td style={styles.pre}><span style={{ display:'inline-flex', alignItems:'center', height:28, padding:'0 10px', background:'var(--color-accent)', color:'#fff', borderRadius:4, fontSize:12, fontFamily:'sans-serif', whiteSpace:'nowrap' }}>SM · 28px</span></td>
+    </tr>
+    <tr>
+      <td style={styles.td}>--height-control-md</td><td style={styles.val}>36px</td><td style={styles.tw}>h-control-md</td>
+      <td style={styles.pre}><span style={{ display:'inline-flex', alignItems:'center', height:36, padding:'0 14px', background:'var(--color-accent)', color:'#fff', borderRadius:5, fontSize:13, fontFamily:'sans-serif', whiteSpace:'nowrap' }}>MD · 36px (default)</span></td>
+    </tr>
+    <tr>
+      <td style={styles.td}>--height-control-lg</td><td style={styles.val}>44px</td><td style={styles.tw}>h-control-lg</td>
+      <td style={styles.pre}><span style={{ display:'inline-flex', alignItems:'center', height:44, padding:'0 18px', background:'var(--color-accent)', color:'#fff', borderRadius:5, fontSize:14, fontFamily:'sans-serif', whiteSpace:'nowrap' }}>LG · 44px</span></td>
+    </tr>
+    <tr>
+      <td style={styles.td}>--height-topbar</td><td style={styles.val}>56px</td><td style={styles.tw}>h-topbar</td>
+      <td style={styles.pre}><span style={{ display:'inline-flex', alignItems:'center', height:56, padding:'0 16px', background:'var(--color-surface-raised)', border:'1px solid var(--color-border)', borderRadius:5, fontSize:13, fontFamily:'sans-serif', color:'var(--color-foreground)', whiteSpace:'nowrap' }}>TopBar · 56px</span></td>
+    </tr>
+  </tbody>
+</table>
 
 ---
 
 ## Motion
 
-<Table>
-  <Row name="--duration-instant" value="50ms" preview={null} />
-  <Row name="--duration-fast" value="80ms" preview={null} />
-  <Row name="--duration-normal" value="150ms" preview={null} />
-  <Row name="--duration-slow" value="220ms" preview={null} />
-  <Row name="--duration-gentle" value="350ms" preview={null} />
-  <Row name="--ease-out-expo" value="cubic-bezier(0.16, 1, 0.3, 1)" preview={null} />
-  <Row name="--ease-out-quart" value="cubic-bezier(0.25, 1, 0.5, 1)" preview={null} />
-  <Row name="--ease-out-cubic" value="cubic-bezier(0.33, 1, 0.68, 1)" preview={null} />
-  <Row name="--ease-in-out" value="cubic-bezier(0.4, 0, 0.2, 1)" preview={null} />
-</Table>
-
-Tailwind utilities: `duration-fast`, `duration-normal`, `duration-slow`, `ease-out-expo`, `ease-out-quart`
+<table style={styles.tbl}>
+  <thead><tr><th style={styles.th}>Token</th><th style={styles.th}>Default</th><th style={styles.th}>Tailwind</th><th style={styles.th}>Use for</th></tr></thead>
+  <tbody>
+    <tr><td style={styles.td}>--duration-instant</td><td style={styles.val}>50ms</td><td style={styles.tw}>duration-instant</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Checkbox tick, toggle state</td></tr>
+    <tr><td style={styles.td}>--duration-fast</td><td style={styles.val}>80ms</td><td style={styles.tw}>duration-fast</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Hover states, small icons</td></tr>
+    <tr><td style={styles.td}>--duration-normal</td><td style={styles.val}>150ms</td><td style={styles.tw}>duration-normal</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Tooltips, dropdowns, badges</td></tr>
+    <tr><td style={styles.td}>--duration-slow</td><td style={styles.val}>220ms</td><td style={styles.tw}>duration-slow</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Modals, drawers, accordions</td></tr>
+    <tr><td style={styles.td}>--duration-gentle</td><td style={styles.val}>350ms</td><td style={styles.tw}>duration-gentle</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Page-level transitions</td></tr>
+    <tr><td style={styles.td}>--ease-out-expo</td><td style={styles.val}>cubic-bezier(0.16,1,0.3,1)</td><td style={styles.tw}>ease-out-expo</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Snappy enter animations</td></tr>
+    <tr><td style={styles.td}>--ease-out-quart</td><td style={styles.val}>cubic-bezier(0.25,1,0.5,1)</td><td style={styles.tw}>ease-out-quart</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Accordions, height transitions</td></tr>
+    <tr><td style={styles.td}>--ease-out-cubic</td><td style={styles.val}>cubic-bezier(0.33,1,0.68,1)</td><td style={styles.tw}>ease-out-cubic</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>General purpose enter</td></tr>
+  </tbody>
+</table>
 
 ---
 
 ## Z-index
 
-<Table>
-  <Row name="--z-base" value="0" preview={null} />
-  <Row name="--z-raised" value="10" preview={null} />
-  <Row name="--z-dropdown" value="100" preview={null} />
-  <Row name="--z-sticky" value="150" preview={null} />
-  <Row name="--z-topbar" value="200" preview={null} />
-  <Row name="--z-overlay" value="300" preview={null} />
-  <Row name="--z-modal" value="400" preview={null} />
-  <Row name="--z-toast" value="500" preview={null} />
-  <Row name="--z-tooltip" value="600" preview={null} />
-</Table>
-
-Tailwind utilities: `z-dropdown`, `z-modal`, `z-toast`, `z-tooltip`
+<table style={styles.tbl}>
+  <thead><tr><th style={styles.th}>Token</th><th style={styles.th}>Value</th><th style={styles.th}>Tailwind</th><th style={styles.th}>Layer</th></tr></thead>
+  <tbody>
+    <tr><td style={styles.td}>--z-base</td><td style={styles.val}>0</td><td style={styles.tw}>z-base</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Normal document flow</td></tr>
+    <tr><td style={styles.td}>--z-raised</td><td style={styles.val}>10</td><td style={styles.tw}>z-raised</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Cards, elevated surfaces</td></tr>
+    <tr><td style={styles.td}>--z-dropdown</td><td style={styles.val}>100</td><td style={styles.tw}>z-dropdown</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Dropdowns, select menus</td></tr>
+    <tr><td style={styles.td}>--z-sticky</td><td style={styles.val}>150</td><td style={styles.tw}>z-sticky</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Sticky table headers, floats</td></tr>
+    <tr><td style={styles.td}>--z-topbar</td><td style={styles.val}>200</td><td style={styles.tw}>z-topbar</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Fixed navigation bar</td></tr>
+    <tr><td style={styles.td}>--z-overlay</td><td style={styles.val}>300</td><td style={styles.tw}>z-overlay</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Backdrop / scrim</td></tr>
+    <tr><td style={styles.td}>--z-modal</td><td style={styles.val}>400</td><td style={styles.tw}>z-modal</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Modals, drawers, dialogs</td></tr>
+    <tr><td style={styles.td}>--z-toast</td><td style={styles.val}>500</td><td style={styles.tw}>z-toast</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Notification toasts</td></tr>
+    <tr><td style={styles.td}>--z-tooltip</td><td style={styles.val}>600</td><td style={styles.tw}>z-tooltip</td><td style={{ ...styles.val, fontFamily: 'sans-serif', fontSize: 13 }}>Tooltips — always on top</td></tr>
+  </tbody>
+</table>

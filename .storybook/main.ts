@@ -1,3 +1,4 @@
+import remarkGfm from 'remark-gfm'
 import type { StorybookConfig } from '@storybook/react-vite'
 
 const config: StorybookConfig = {
@@ -12,10 +13,15 @@ const config: StorybookConfig = {
         name: '@storybook/react-vite',
         options: {},
     },
-    // Serve the MSW service worker from public/
     staticDirs: ['../public'],
     docs: {
         autodocs: 'tag',
+        // Enable GFM so markdown tables render correctly in MDX docs
+        mdxPluginOptions: {
+            mdxCompileOptions: {
+                remarkPlugins: [remarkGfm],
+            },
+        },
     },
 }
 

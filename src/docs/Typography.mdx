@@ -3,19 +3,14 @@ import { Meta, Typeset } from '@storybook/blocks'
 
 <Meta title="Design System/Typography" />
 
-export const fontSizes = {
-  xs:   '0.75rem',
-  sm:   '0.875rem',
-  base: '1rem',
-  lg:   '1.125rem',
-  xl:   '1.25rem',
-  '2xl':'1.5rem',
-  '3xl':'1.875rem',
-}
+export const th = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td = (mono) => ({ padding: '9px 16px', fontSize: 14, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)' })
+export const td0 = { ...td(true), color: 'var(--color-foreground)', fontWeight: 500 }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
 
 # Typography
 
-The type system uses **Inter Variable** — a single font file that covers the full weight range without FOUT or multiple HTTP requests. All values are CSS custom properties, fully overridable.
+The type system uses **Inter Variable** — a single font file covering the full weight range without FOUT or multiple HTTP requests. Every value is a CSS custom property, fully overridable.
 
 ---
 
@@ -26,6 +21,7 @@ The type system uses **Inter Variable** — a single font file that covers the f
 ```
 
 Override with any variable font:
+
 ```css
 :root { --font-family-sans: "Geist", sans-serif; }
 ```
@@ -37,41 +33,96 @@ Override with any variable font:
 <Typeset
   fontSizes={[12, 14, 16, 18, 20, 24, 30]}
   fontWeight={400}
-  sampleText="The quick brown fox"
+  sampleText="The quick brown fox jumps"
   fontFamily='"Inter var", sans-serif'
 />
 
-| Token | CSS var | Value | Tailwind |
-|-------|---------|-------|----------|
-| xs | `--font-size-xs` | 0.75rem / 12px | `text-xs` |
-| sm | `--font-size-sm` | 0.875rem / 14px | `text-sm` |
-| base | `--font-size-base` | 1rem / 16px | `text-base` |
-| lg | `--font-size-lg` | 1.125rem / 18px | `text-lg` |
-| xl | `--font-size-xl` | 1.25rem / 20px | `text-xl` |
-| 2xl | `--font-size-2xl` | 1.5rem / 24px | `text-2xl` |
-| 3xl | `--font-size-3xl` | 1.875rem / 30px | `text-3xl` |
+<table style={tbl}>
+  <thead>
+    <tr>
+      <th style={th}>Step</th>
+      <th style={th}>CSS var</th>
+      <th style={th}>Value</th>
+      <th style={th}>Tailwind class</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style={td0}>xs</td><td style={td(true)}>--font-size-xs</td><td style={td()}>0.75rem / 12px</td><td style={td(true)}>text-xs</td></tr>
+    <tr><td style={td0}>sm</td><td style={td(true)}>--font-size-sm</td><td style={td()}>0.875rem / 14px</td><td style={td(true)}>text-sm</td></tr>
+    <tr><td style={td0}>base</td><td style={td(true)}>--font-size-base</td><td style={td()}>1rem / 16px</td><td style={td(true)}>text-base</td></tr>
+    <tr><td style={td0}>lg</td><td style={td(true)}>--font-size-lg</td><td style={td()}>1.125rem / 18px</td><td style={td(true)}>text-lg</td></tr>
+    <tr><td style={td0}>xl</td><td style={td(true)}>--font-size-xl</td><td style={td()}>1.25rem / 20px</td><td style={td(true)}>text-xl</td></tr>
+    <tr><td style={td0}>2xl</td><td style={td(true)}>--font-size-2xl</td><td style={td()}>1.5rem / 24px</td><td style={td(true)}>text-2xl</td></tr>
+    <tr><td style={td0}>3xl</td><td style={td(true)}>--font-size-3xl</td><td style={td()}>1.875rem / 30px</td><td style={td(true)}>text-3xl</td></tr>
+  </tbody>
+</table>
 
 ---
 
 ## Font weight
 
-| Token | CSS var | Value | Tailwind |
-|-------|---------|-------|----------|
-| normal | `--font-weight-normal` | 400 | `font-normal` |
-| medium | `--font-weight-medium` | 500 | `font-medium` |
-| semibold | `--font-weight-semibold` | 600 | `font-semibold` |
-| bold | `--font-weight-bold` | 700 | `font-bold` |
+<table style={tbl}>
+  <thead>
+    <tr>
+      <th style={th}>Name</th>
+      <th style={th}>CSS var</th>
+      <th style={th}>Value</th>
+      <th style={th}>Tailwind class</th>
+      <th style={th}>Sample</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={td0}>normal</td>
+      <td style={td(true)}>--font-weight-normal</td>
+      <td style={td()}>400</td>
+      <td style={td(true)}>font-normal</td>
+      <td style={{ ...td(), fontWeight: 400, fontFamily: '"Inter var", sans-serif', fontSize: 15 }}>The quick brown fox</td>
+    </tr>
+    <tr>
+      <td style={td0}>medium</td>
+      <td style={td(true)}>--font-weight-medium</td>
+      <td style={td()}>500</td>
+      <td style={td(true)}>font-medium</td>
+      <td style={{ ...td(), fontWeight: 500, fontFamily: '"Inter var", sans-serif', fontSize: 15 }}>The quick brown fox</td>
+    </tr>
+    <tr>
+      <td style={td0}>semibold</td>
+      <td style={td(true)}>--font-weight-semibold</td>
+      <td style={td()}>600</td>
+      <td style={td(true)}>font-semibold</td>
+      <td style={{ ...td(), fontWeight: 600, fontFamily: '"Inter var", sans-serif', fontSize: 15 }}>The quick brown fox</td>
+    </tr>
+    <tr>
+      <td style={td0}>bold</td>
+      <td style={td(true)}>--font-weight-bold</td>
+      <td style={td()}>700</td>
+      <td style={td(true)}>font-bold</td>
+      <td style={{ ...td(), fontWeight: 700, fontFamily: '"Inter var", sans-serif', fontSize: 15 }}>The quick brown fox</td>
+    </tr>
+  </tbody>
+</table>
 
 ---
 
 ## Line height
 
-| Token | CSS var | Value | Tailwind |
-|-------|---------|-------|----------|
-| tight | `--line-height-tight` | 1.25 | `leading-tight` |
-| snug | `--line-height-snug` | 1.375 | `leading-snug` |
-| normal | `--line-height-normal` | 1.5 | `leading-normal` |
-| relaxed | `--line-height-relaxed` | 1.625 | `leading-relaxed` |
+<table style={tbl}>
+  <thead>
+    <tr>
+      <th style={th}>Name</th>
+      <th style={th}>CSS var</th>
+      <th style={th}>Value</th>
+      <th style={th}>Tailwind class</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style={td0}>tight</td><td style={td(true)}>--line-height-tight</td><td style={td()}>1.25</td><td style={td(true)}>leading-tight</td></tr>
+    <tr><td style={td0}>snug</td><td style={td(true)}>--line-height-snug</td><td style={td()}>1.375</td><td style={td(true)}>leading-snug</td></tr>
+    <tr><td style={td0}>normal</td><td style={td(true)}>--line-height-normal</td><td style={td()}>1.5</td><td style={td(true)}>leading-normal</td></tr>
+    <tr><td style={td0}>relaxed</td><td style={td(true)}>--line-height-relaxed</td><td style={td()}>1.625</td><td style={td(true)}>leading-relaxed</td></tr>
+  </tbody>
+</table>
 
 ---
 
@@ -81,15 +132,16 @@ Scale the entire type system for a denser or more spacious feel:
 
 ```css
 :root {
-  /* Compact scale — shift every step down by ~1 step */
-  --font-size-xs:   0.6875rem;  /* 11px */
-  --font-size-sm:   0.75rem;    /* 12px */
-  --font-size-base: 0.875rem;   /* 14px */
-  --font-size-lg:   1rem;       /* 16px */
+  /* Compact scale — shift every step down ~1 size */
+  --font-size-xs:   0.6875rem;   /* 11px */
+  --font-size-sm:   0.75rem;     /* 12px */
+  --font-size-base: 0.875rem;    /* 14px */
+  --font-size-lg:   1rem;        /* 16px */
 }
 ```
 
 Or via `ThemeProvider`:
+
 ```tsx
 <ThemeProvider
   theme={{
