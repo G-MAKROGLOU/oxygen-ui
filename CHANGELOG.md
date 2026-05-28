@@ -1,3 +1,24 @@
+# [4.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v3.0.0...v4.0.0) (2026-05-28)
+
+
+* feat(TreeSelect)!: Phase 5d — actual hierarchical tree-select with keyboard nav ([e057618](https://github.com/G-MAKROGLOU/oxygen-ui/commit/e05761881d6e910a28ca2dccc8f2aa98d1b63833))
+
+
+### BREAKING CHANGES
+
+* TreeSelect now expects hierarchical `TreeSelectNode[]`
+with optional `children`, not flat `TreeSelectItem[]`. The old
+type-alias `TreeSelectItem` was removed; rename it to `TreeSelectNode`
+in your imports. Flat consumers can pass an array with no `children`
+on any node and the component behaves like the previous single-select.
+The trigger is now a `<button>` not a `<div>` — any styles targeting
+the previous `div[role="combobox"]` will need to update the selector.
+
+Test count: 99 → 109 (+10).
+
+Verified: typecheck, lint, 109/109 tests, library build.
+
+
 # [3.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v2.0.0...v3.0.0) (2026-05-28)
 
 
