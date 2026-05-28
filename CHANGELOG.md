@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.5.3...v1.6.0) (2026-05-28)
+
+
+### Features
+
+* **notification:** animated enter/exit + countdown progress bar ([83b32ba](https://github.com/G-MAKROGLOU/oxygen-ui/commit/83b32ba3c197d704bfda61b24a6005489129a871))
+
 ## [1.5.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.5.2...v1.5.3) (2026-05-28)
 
 
