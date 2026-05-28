@@ -1,3 +1,41 @@
+# [2.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.9.0...v2.0.0) (2026-05-28)
+
+
+* feat(ContextMenu)!: Phase 5b — rebuild on @radix-ui/react-context-menu ([308c4d0](https://github.com/G-MAKROGLOU/oxygen-ui/commit/308c4d06dd492ec6171125dc00124b9c5931b171))
+
+
+### BREAKING CHANGES
+
+* ContextMenu is now trigger-based instead of
+coordinate-controlled. The previous API was:
+
+```tsx
+<ContextMenu
+  items={items}
+  position={{ x, y }}
+  visible={visible}
+  onClose={() => setVisible(false)}
+/>
+```
+
+The new API wraps the right-clickable element directly:
+
+```tsx
+<ContextMenu items={items}>
+  <Card vessel={vessel} />
+</ContextMenu>
+```
+
+The new model is more idiomatic (matches the OS context-menu pattern), but
+existing consumers managing `position` / `visible` state will need to
+remove that state and wrap their target subtree. `ContextMenuPosition` is
+re-exported as `@deprecated` so old imports keep compiling.
+
+Test count: 81 → 86 (+5).
+
+Verified: typecheck, lint, 86/86 tests, library build.
+
+
 # [1.9.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.8.0...v1.9.0) (2026-05-28)
 
 
