@@ -3,6 +3,11 @@ import { Meta } from '@storybook/blocks'
 
 <Meta title="Design System/Introduction" />
 
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)' })
+export const td0 = { padding: '9px 16px', fontSize: 13, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600 }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
 # @geomak/ui
 
 A production-grade React design system built on [Radix UI](https://www.radix-ui.com/) primitives and [Tailwind CSS](https://tailwindcss.com/). Every visual decision is driven by a fully parameterized CSS custom-property token layer — swap colors, scale, density, or motion system-wide with a single override.
@@ -50,11 +55,32 @@ export default function App() {
 
 The system is built in three layers:
 
-| Layer | What it is | When to use |
-|-------|-----------|-------------|
-| **CSS custom properties** | Runtime token values in `:root` and `.dark` | Override at any scope — `:root`, `.my-section`, `[data-theme="compact"]` |
-| **Tailwind utilities** | Semantic utility classes mapped to CSS vars | Use in className strings: `bg-background`, `text-foreground`, `rounded-lg` |
-| **JS/TS vars** | CSS var reference strings for inline styles | CSS-in-JS, canvas, SSR snapshots |
+<table style={tbl}>
+  <thead>
+    <tr>
+      <th style={th}>Layer</th>
+      <th style={th}>What it is</th>
+      <th style={th}>When to use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={td0}>CSS custom properties</td>
+      <td style={td(false)}>Runtime token values in <code>:root</code> and <code>.dark</code></td>
+      <td style={td(false)}>Override at any scope — <code>:root</code>, <code>.my-section</code>, <code>{'[data-theme="compact"]'}</code></td>
+    </tr>
+    <tr>
+      <td style={td0}>Tailwind utilities</td>
+      <td style={td(false)}>Semantic utility classes mapped to CSS vars</td>
+      <td style={td(false)}>Use in className strings: <code>bg-background</code>, <code>text-foreground</code>, <code>rounded-lg</code></td>
+    </tr>
+    <tr>
+      <td style={td0}>JS/TS vars</td>
+      <td style={td(false)}>CSS var reference strings for inline styles</td>
+      <td style={td(false)}>CSS-in-JS, canvas, SSR snapshots</td>
+    </tr>
+  </tbody>
+</table>
 
 ---
 
