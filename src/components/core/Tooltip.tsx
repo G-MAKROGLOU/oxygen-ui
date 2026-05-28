@@ -57,11 +57,11 @@ export default function Tooltip({
                         className={[
                             // Layout + typography
                             'pointer-events-none z-[500000] max-w-[220px] px-2.5 py-1.5',
-                            'text-xs font-medium leading-snug text-white',
-                            // Background + border — slightly translucent for depth
-                            'bg-foreground/95 rounded-md border border-white/5',
-                            // Shadow
-                            'shadow-md',
+                            // Inverted surface: dark on light, light on dark — both readable
+                            'bg-foreground text-background',
+                            'text-xs font-medium leading-snug',
+                            // Shape + shadow
+                            'rounded-md shadow-md',
                             // Out animation (always the same — just fade)
                             'data-[state=closed]:animate-tooltip-out',
                             // In animation — direction-aware
@@ -72,7 +72,7 @@ export default function Tooltip({
                         <TooltipPrimitive.Arrow
                             width={10}
                             height={5}
-                            className="fill-foreground/95"
+                            className="fill-foreground"
                         />
                     </TooltipPrimitive.Content>
                 </TooltipPrimitive.Portal>
