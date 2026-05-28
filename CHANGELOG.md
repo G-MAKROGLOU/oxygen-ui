@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.0...v1.7.1) (2026-05-28)
+
+
+### Bug Fixes
+
+* **components:** Phase 1a — bug-fix sweep across healthy components ([34d4513](https://github.com/G-MAKROGLOU/oxygen-ui/commit/34d45130587e8d2a93aebe08e86d7b0046a213f0))
+
 # [1.7.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.6.2...v1.7.0) (2026-05-28)
 
 
