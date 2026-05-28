@@ -1,5 +1,6 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
+import { expect, fn, userEvent, within } from '@storybook/test'
 import Button from './Button'
 
 const meta: Meta<typeof Button> = {
@@ -7,7 +8,10 @@ const meta: Meta<typeof Button> = {
     component: Button,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],
-    args: { content: 'Click me' },
+    args: {
+        content: 'Click me',
+        onClick: fn(), // captures clicks in the Actions panel
+    },
 }
 export default meta
 type Story = StoryObj<typeof Button>
@@ -55,6 +59,31 @@ export const Loading: Story = {
 
 export const Disabled: Story = {
     args: { disabled: true, content: 'Unavailable' },
+}
+
+// ── Interaction tests (visible in the Storybook Interactions panel) ───────────
+
+export const ClickFiresCallback: Story = {
+    name: 'Interaction — click fires callback',
+    args: { content: 'Click me', variant: 'primary' },
+    play: async ({ canvasElement, args }) => {
+        const canvas = within(canvasElement)
+        const btn = canvas.getByRole('button', { name: 'Click me' })
+        await userEvent.click(btn)
+        await expect(args.onClick).toHaveBeenCalledTimes(1)
+    },
+}
+
+export const DisabledDoesNotFire: Story = {
+    name: 'Interaction — disabled blocks click',
+    args: { content: 'Unavailable', disabled: true },
+    play: async ({ canvasElement, args }) => {
+        const canvas = within(canvasElement)
+        const btn = canvas.getByRole('button', { name: 'Unavailable' })
+        await expect(btn).toBeDisabled()
+        await userEvent.click(btn, { pointerEventsCheck: 0 })
+        await expect(args.onClick).not.toHaveBeenCalled()
+    },
 }
 
 export const WithIcon: Story = {
