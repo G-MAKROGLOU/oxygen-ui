@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.8.0...v1.9.0) (2026-05-28)
+
+
+### Features
+
+* **NumberInput:** Phase 5c — full rewrite with keyboard a11y + FP precision ([395742f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/395742fc17468d15c8ec3d961db443b499ebfe5b))
+
 # [1.8.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.5...v1.8.0) (2026-05-28)
 
 
