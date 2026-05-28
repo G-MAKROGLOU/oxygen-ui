@@ -50,18 +50,19 @@ const VIEWPORT_CLASSES: Record<NotificationPosition, string> = {
     'bottom-center': 'fixed bottom-4 left-1/2  flex flex-col-reverse items-center -translate-x-1/2',
 }
 
-// Initial animation state per position
+// Initial animation state per position.
+// All positions use y + scale only — no x translation — so the card always
+// stays within the viewport boundary and the animation is fully visible.
+// Horizontal slide (x: ±40) was the previous approach; it caused the card to
+// start outside the right edge of the fixed container, making the animation
+// invisible and creating a horizontal scrollbar in the Storybook iframe.
 function getInitialMotion(pos: NotificationPosition, reduced: boolean | null) {
-    if (reduced) return { opacity: 0, x: 0, y: 0, scale: 1 }
-    const right  = pos.endsWith('right')
-    const left   = pos.endsWith('left')
-    const center = pos.endsWith('center')
+    if (reduced) return { opacity: 0, y: 0, scale: 1 }
     const bottom = pos.startsWith('bottom')
     return {
         opacity: 0,
-        x: right ? 40 : left ? -40 : 0,
-        y: center ? (bottom ? 12 : -12) : 0,
-        scale: center ? 0.96 : 1,
+        y:     bottom ? 10 : -10,  // drop in from above (top) or rise from below (bottom)
+        scale: 0.94,
     }
 }
 
@@ -119,17 +120,16 @@ function NotificationItem({
         <motion.div
             layout
             initial={initial}
-            animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-            exit={{ ...initial, opacity: 0 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={initial}
             transition={
                 reduced
                     ? { duration: 0 }
                     : {
-                          opacity: { duration: 0.14 },
-                          x:       { type: 'tween', duration: 0.22, ease: [0.16, 1, 0.3, 1] },
-                          y:       { type: 'tween', duration: 0.22, ease: [0.16, 1, 0.3, 1] },
-                          scale:   { type: 'tween', duration: 0.22, ease: [0.16, 1, 0.3, 1] },
-                          layout:  { duration: 0.18 },
+                          opacity: { duration: 0.18 },
+                          y:       { type: 'tween', duration: 0.24, ease: [0.16, 1, 0.3, 1] },
+                          scale:   { type: 'tween', duration: 0.24, ease: [0.16, 1, 0.3, 1] },
+                          layout:  { duration: 0.2, ease: [0.16, 1, 0.3, 1] },
                       }
             }
             onMouseEnter={() => setHovered(true)}
