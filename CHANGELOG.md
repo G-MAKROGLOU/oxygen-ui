@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.4.0...v1.5.0) (2026-05-28)
+
+
+### Features
+
+* SCSS migration + full design token parameterization ([4778546](https://github.com/G-MAKROGLOU/oxygen-ui/commit/47785467b73014de6b64313ffcd1e3b250ed02da))
+
 # [1.4.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.3.0...v1.4.0) (2026-05-27)
 
 
