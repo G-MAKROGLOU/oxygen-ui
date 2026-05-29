@@ -1,3 +1,10 @@
+## [5.0.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.0.2...v5.0.3) (2026-05-29)
+
+
+### Bug Fixes
+
+* round 3 polish batch — focus styling, canvas overflow, shimmer, xs spinner, etc. ([d210411](https://github.com/G-MAKROGLOU/oxygen-ui/commit/d21041112939b972ec8cdf377de849704332633f))
+
 ## [5.0.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.0.1...v5.0.2) (2026-05-28)
 
 
