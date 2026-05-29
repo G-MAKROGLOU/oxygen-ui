@@ -1,3 +1,10 @@
+# [5.5.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.4.0...v5.5.0) (2026-05-29)
+
+
+### Features
+
+* **inputs:** P1 batch — OTP, Rating, TimePicker, DateRangePicker, ColorPicker ([f1cfac2](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f1cfac2b8d0d210625de5203ef963a396fcd623b))
+
 # [5.4.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.3.0...v5.4.0) (2026-05-29)
 
 
