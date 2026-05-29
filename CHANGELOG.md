@@ -1,3 +1,10 @@
+## [5.5.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.5.1...v5.5.2) (2026-05-29)
+
+
+### Bug Fixes
+
+* **inputs+layout:** remove ToggleButton, drop field focus ring, fix canvas clipping, ScalableContainer push demo ([05f14d6](https://github.com/G-MAKROGLOU/oxygen-ui/commit/05f14d637cb7a280db06c600904cefb5878287c4))
+
 ## [5.5.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.5.0...v5.5.1) (2026-05-29)
 
 
