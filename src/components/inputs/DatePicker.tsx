@@ -232,7 +232,7 @@ export default function DatePicker({
                             aria-describedby={hasError ? errorId : undefined}
                             aria-haspopup="dialog"
                             aria-expanded={open}
-                            className={`flex items-center justify-between h-9 rounded-lg border px-3 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${hasError ? 'border-status-error' : 'border-border'} ${disabled ? 'cursor-not-allowed bg-surface-raised text-foreground-muted' : 'bg-surface text-foreground'} ${!style?.width ? 'min-w-[200px]' : ''}`}
+                            className={`flex items-center justify-between h-9 rounded-lg border px-3 cursor-pointer select-none focus:outline-none focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-accent ${hasError ? 'border-status-error' : 'border-border'} ${disabled ? 'cursor-not-allowed bg-surface-raised text-foreground-muted' : 'bg-surface text-foreground'} ${!style?.width ? 'min-w-[200px]' : ''}`}
                         >
                             <span className={`text-sm truncate ${displayValue ? '' : 'text-foreground-muted'}`}>
                                 {displayValue || placeholder}

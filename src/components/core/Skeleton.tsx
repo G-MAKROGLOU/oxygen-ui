@@ -8,12 +8,24 @@ interface SkeletonBaseProps {
     style?: React.CSSProperties
 }
 
-// Shared shimmer classes — the gradient sweeps across the element on repeat
+// Shared shimmer classes — a semi-transparent sheen sweeps across the
+// surface-raised base via a `::before` pseudo-element.
+//
+// Previously the shimmer used `bg-gradient-to-r from-border via-border-strong/40 to-border`
+// — Tailwind's `/40` opacity modifier does not produce a valid colour when the
+// underlying token is a hex-valued CSS var (the case for all our semantic
+// tokens), so the gradient resolved to a flat single colour and no movement
+// was visible. The pseudo-element approach uses `white/30` which Tailwind
+// handles correctly (white is a hex literal in the palette), and transforms
+// instead of background-position so it composites on the GPU.
 const SHIMMER = [
-    'animate-shimmer rounded-sm',
-    'bg-[length:400%_100%]',
-    'bg-gradient-to-r',
-    'from-border via-border-strong/40 to-border',
+    'relative overflow-hidden rounded-sm bg-surface-raised',
+    'before:absolute before:inset-0 before:content-[""]',
+    'before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent',
+    'before:animate-[shimmer_1.6s_linear_infinite]',
+    // Respect prefers-reduced-motion — the resting bg-surface-raised is still
+    // a perfectly legible placeholder for users who have animations off.
+    'motion-reduce:before:hidden',
 ].join(' ')
 
 /** ─────────────────── SkeletonBox ─────────────────── */

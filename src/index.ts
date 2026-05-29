@@ -142,9 +142,6 @@ export type { PasswordProps } from './components/inputs/Password'
 export { default as SearchInput } from './components/inputs/SearchInput'
 export type { SearchInputProps } from './components/inputs/SearchInput'
 
-export { default as DropdownPill } from './components/inputs/DropdownPill'
-export type { DropdownPillProps } from './components/inputs/DropdownPill'
-
 export { default as Checkbox } from './components/inputs/Checkbox'
 export type { CheckboxProps } from './components/inputs/Checkbox'
 

@@ -32,6 +32,13 @@ export interface DropdownProps {
     disabled?: boolean
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
+    /**
+     * Show a "+N more" pill alongside the first selected item in multiselect
+     * mode. Defaults to `false` — a single pill is shown with the first
+     * selection and consumers typically open the dropdown to see the rest.
+     * Set `true` if you want the count visible on the trigger.
+     */
+    showSelectedCount?: boolean
     errorMessage?: React.ReactNode
     style?: React.CSSProperties
     htmlFor?: string
@@ -70,6 +77,7 @@ export default function Dropdown({
     items = [],
     labelStyle = {},
     placeholder,
+    showSelectedCount = false,
 }: DropdownProps) {
     const [open, setOpen] = useState(false)
     const [selectedItems, setSelectedItems] = useState<(string | number)[]>([])
@@ -144,7 +152,7 @@ export default function Dropdown({
                             aria-invalid={hasError || undefined}
                             aria-describedby={hasError ? errorId : undefined}
                             style={style}
-                            className={`flex items-center justify-between relative h-9 rounded-lg border border-border cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${disabled ? 'cursor-not-allowed bg-surface-raised text-foreground-muted' : 'bg-surface text-foreground'} ${hasError ? 'border-status-error' : ''}`}
+                            className={`flex items-center justify-between relative h-9 rounded-lg border border-border cursor-pointer select-none focus:outline-none focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-accent ${disabled ? 'cursor-not-allowed bg-surface-raised text-foreground-muted' : 'bg-surface text-foreground'} ${hasError ? 'border-status-error' : ''}`}
                             tabIndex={disabled ? -1 : 0}
                             onKeyDown={(e) => {
                                 if (disabled) return
@@ -171,7 +179,9 @@ export default function Dropdown({
                                                 value={innerItems.find((it) => it.key === val)?.label}
                                             />
                                         ))}
-                                        {value.length > 1 && <DropdownPill value={`+${value.length - 1} more`} />}
+                                        {showSelectedCount && value.length > 1 && (
+                                            <DropdownPill value={`+${value.length - 1} more`} />
+                                        )}
                                     </>
                                 ) : (
                                     <DropdownPill value={innerItems.find((it) => it.key === value)?.label} />

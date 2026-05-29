@@ -98,20 +98,14 @@ const preview: Preview = {
         options: {
             storySort: {
                 order: [
+                    'Docs',
+                    ['Introduction', 'Palette', 'Typography', 'Tokens', 'Parameterization'],
                     'Themes',
-                    [
-                        'Introduction',
-                        'Palette',
-                        'Typography',
-                        'Tokens',
-                        'Parameterization',
-                        'ThemeProvider',
-                        'ThemeSwitch',
-                    ],
+                    ['ThemeProvider', 'ThemeSwitch'],
                     'Layout',
                     'Buttons',
                     'Inputs',
-                    'Forms',          // empty for now — placeholder for FormProvider
+                    'Forms',          // empty placeholder — slot for FormProvider work
                     'Data Display',
                     'Feedback',
                     'Progress',
@@ -126,15 +120,23 @@ const preview: Preview = {
     },
 
     initialGlobals: {
+        // No initial viewport — the iframe auto-fits the available canvas
+        // pane width. Users can still pick a specific preset (Mobile / Tablet
+        // / Desktop / Wide) from the toolbar to test responsive behaviour.
+        //
+        // Previously this was hardcoded to `'desktop'` (1280×700), which
+        // forced every story to render in a 1280-wide iframe regardless of
+        // the user's monitor / sidebar / addons-panel state — producing
+        // horizontal scroll on smaller canvas areas.
         viewport: {
-            value: 'desktop',
-            isRotated: false
+            value: undefined,
+            isRotated: false,
         },
 
         backgrounds: {
-            value: 'light'
-        }
-    }
+            value: 'light',
+        },
+    },
 }
 
 export default preview

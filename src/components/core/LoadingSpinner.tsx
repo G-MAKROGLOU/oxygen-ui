@@ -2,7 +2,7 @@ import React from 'react'
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import Portal from '../layout/Portal'
 
-export type LoadingSpinnerSize = 'sm' | 'md' | 'lg'
+export type LoadingSpinnerSize = 'xs' | 'sm' | 'md' | 'lg'
 
 export interface LoadingSpinnerProps {
     /**
@@ -39,9 +39,12 @@ export interface LoadingSpinnerProps {
 // ── Size → dimensions table ─────────────────────────────────────────────────
 // Outer ring, inner ring, centre dot, ring stroke width, text size.
 const SIZE_MAP = {
-    sm: { outer: 'w-8 h-8',   inner: 'w-4 h-4',   dot: 'w-1 h-1',   stroke: 'border-2',   text: 'text-xs' },
-    md: { outer: 'w-20 h-20', inner: 'w-12 h-12', dot: 'w-2 h-2',   stroke: 'border-[3px]', text: 'text-2xl' },
-    lg: { outer: 'w-32 h-32', inner: 'w-20 h-20', dot: 'w-3 h-3',   stroke: 'border-4',   text: 'text-4xl' },
+    // xs is sized to fit beside button text (~14px) — async AutoComplete,
+    // Button loading prop, inline status badges, etc.
+    xs: { outer: 'w-3.5 h-3.5', inner: 'w-1.5 h-1.5', dot: 'w-0.5 h-0.5', stroke: 'border-[1.5px]', text: 'text-[10px]' },
+    sm: { outer: 'w-8 h-8',     inner: 'w-4 h-4',    dot: 'w-1 h-1',     stroke: 'border-2',        text: 'text-xs'    },
+    md: { outer: 'w-20 h-20',   inner: 'w-12 h-12',  dot: 'w-2 h-2',     stroke: 'border-[3px]',    text: 'text-2xl'   },
+    lg: { outer: 'w-32 h-32',   inner: 'w-20 h-20',  dot: 'w-3 h-3',     stroke: 'border-4',        text: 'text-4xl'   },
 } as const satisfies Record<LoadingSpinnerSize, {
     outer: string; inner: string; dot: string; stroke: string; text: string
 }>

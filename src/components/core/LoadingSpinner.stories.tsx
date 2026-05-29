@@ -63,12 +63,16 @@ export const Sizes: Story = {
         docs: {
             description: {
                 story:
-                    'Three size presets — `sm` for inline use inside small surfaces, `md` for the default fullscreen overlay, `lg` for marquee loaders. All three rotate at the same speed so the visual rhythm is consistent across the system.',
+                    'Four size presets — `xs` for use inside button text or async input affordances, `sm` for compact surfaces, `md` for the default fullscreen overlay, `lg` for marquee loaders. All four rotate at the same speed so the visual rhythm is consistent across the system.',
             },
         },
     },
     render: () => (
         <div className="p-10 flex items-end justify-center gap-16">
+            <div className="flex flex-col items-center gap-3">
+                <LoadingSpinner inline size="xs" />
+                <code className="text-xs text-foreground-muted">size="xs"</code>
+            </div>
             <div className="flex flex-col items-center gap-3">
                 <LoadingSpinner inline size="sm" />
                 <code className="text-xs text-foreground-muted">size="sm"</code>

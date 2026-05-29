@@ -242,7 +242,7 @@ export default function TreeSelect({
                             aria-invalid={hasError || undefined}
                             aria-describedby={hasError ? errorId : undefined}
                             disabled={disabled}
-                            className={`flex items-center justify-between h-9 rounded-lg border ${hasError ? 'border-status-error' : 'border-border'} px-3 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${disabled ? 'cursor-not-allowed bg-surface-raised text-foreground-muted' : 'bg-surface text-foreground'} ${!style?.width ? 'min-w-[240px]' : ''}`}
+                            className={`flex items-center justify-between h-9 rounded-lg border ${hasError ? 'border-status-error' : 'border-border'} px-3 cursor-pointer select-none focus:outline-none focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-accent ${disabled ? 'cursor-not-allowed bg-surface-raised text-foreground-muted' : 'bg-surface text-foreground'} ${!style?.width ? 'min-w-[240px]' : ''}`}
                         >
                             <span className="text-sm truncate text-left">
                                 {selectedNode ? selectedNode.label : <span className="text-foreground-muted">{placeholder}</span>}

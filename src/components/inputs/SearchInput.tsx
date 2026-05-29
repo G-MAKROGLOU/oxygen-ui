@@ -43,7 +43,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(functio
                         {label}
                     </label>
                 )}
-                <div className="bg-surface text-foreground flex items-center gap-1 rounded-lg border border-border pr-2 focus-within:ring-2 focus-within:ring-accent transition-colors">
+                <div className="bg-surface text-foreground flex items-center gap-1 rounded-lg border border-border pr-2 focus-within:border-transparent focus-within:ring-2 focus-within:ring-accent transition-colors">
                     <input
                         ref={ref}
                         disabled={disabled}

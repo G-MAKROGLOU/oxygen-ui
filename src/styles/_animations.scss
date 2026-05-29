@@ -51,9 +51,12 @@
 }
 
 // ── Skeleton shimmer ──────────────────────────────────────────────────────────
+// Transform-based — translates a semi-transparent "sheen" overlay across the
+// placeholder. Transform is composited (no repaint) so this is GPU-friendly,
+// scales to long lists of skeletons without jank.
 @keyframes shimmer {
-    0%   { background-position: -400% 0; }
-    100% { background-position:  400% 0; }
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 // ── Fade in ───────────────────────────────────────────────────────────────────

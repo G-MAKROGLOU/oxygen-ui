@@ -71,7 +71,7 @@ export default function TextInput({
                     id={htmlFor}
                     aria-invalid={hasError || undefined}
                     aria-describedby={hasError ? errorId : undefined}
-                    className={`${hasError ? 'border border-status-error' : 'border border-border'} bg-surface text-foreground p-2 h-9 w-60 mt-1 rounded-lg disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors`}
+                    className={`${hasError ? 'border border-status-error' : 'border border-border'} bg-surface text-foreground p-2 h-9 w-60 mt-1 rounded-lg disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus:border-transparent focus:ring-2 focus:ring-accent transition-colors`}
                     style={inputStyle ?? {}}
                     placeholder={placeholder ?? ''}
                 />

@@ -10,7 +10,7 @@ const ITEMS = [
 ]
 
 const meta: Meta<typeof Dropdown> = {
-    title: 'Forms/Dropdown',
+    title: 'Inputs/Dropdown',
     component: Dropdown,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],
