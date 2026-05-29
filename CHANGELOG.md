@@ -1,3 +1,10 @@
+## [5.5.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.5.2...v5.5.3) (2026-05-29)
+
+
+### Bug Fixes
+
+* **inputs:** final detail pass — OTP halo, Radio props, Dropdown chevron, SB controls ([de0297b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/de0297b9ad142e2a735b6839722063bf9b127da2))
+
 ## [5.5.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.5.1...v5.5.2) (2026-05-29)
 
 
