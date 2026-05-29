@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import LoadingSpinner from '../core/LoadingSpinner'
+import { fieldShell, type FieldSize } from './_field'
 
 export interface AutoCompleteItem {
     key: string
@@ -41,6 +42,10 @@ export interface AutoCompleteProps {
     emptyText?: string
     /** Custom "loading" message — shown in async mode while a query is in flight. */
     loadingText?: string
+    /** Size preset. Default `'md'`. */
+    size?: FieldSize
+    /** Override the leading search icon (hidden while loading). */
+    icon?: React.ReactNode
 }
 
 /**
@@ -93,6 +98,8 @@ export default function AutoComplete({
     onItemClick,
     emptyText = 'No results found',
     loadingText = 'Searching…',
+    size = 'md',
+    icon,
 }: AutoCompleteProps) {
     const [term, setTerm] = useState('')
     const [open, setOpen] = useState(false)
@@ -157,20 +164,20 @@ export default function AutoComplete({
     }
 
     return (
-        <div className="relative flex flex-col items-center justify-center">
-            <div
-                className={`flex ${layout === 'vertical' ? 'flex-col' : 'flex-row items-center gap-2'}`}
-                style={style ?? {}}
-            >
-                {label && (
-                    <label className="text-sm font-medium ml-1 max-content text-foreground">
-                        {label}
-                    </label>
-                )}
+        <div
+            className={`flex ${layout === 'vertical' ? 'flex-col gap-1.5' : 'flex-row items-start gap-3'}`}
+            style={style}
+        >
+            {label && (
+                <label className={`text-sm font-medium text-foreground select-none ${layout === 'horizontal' ? 'mt-2 flex-shrink-0' : ''}`}>
+                    {label}
+                </label>
+            )}
 
+            <div className="flex flex-col min-w-0 flex-1">
                 <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
                     <Popover.Anchor asChild>
-                        <div className="bg-surface text-foreground flex items-center gap-1 rounded-lg border border-border pr-2 focus-within:border-transparent focus-within:ring-2 focus-within:ring-accent transition-colors">
+                        <div className={`flex items-center ${fieldShell({ size, disabled, focusWithin: true })}`}>
                             <input
                                 disabled={disabled}
                                 value={term}
@@ -181,8 +188,8 @@ export default function AutoComplete({
                                 onFocus={() => setOpen(true)}
                                 type="text"
                                 name={name}
-                                className="bg-transparent focus:outline-none pl-2 h-9 w-56 rounded-lg disabled:cursor-not-allowed"
-                                style={inputStyle ?? {}}
+                                className="min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed placeholder:text-foreground-muted"
+                                style={inputStyle}
                                 placeholder={placeholder ?? ''}
                                 autoComplete="off"
                                 aria-haspopup="listbox"
@@ -191,13 +198,17 @@ export default function AutoComplete({
                                 aria-busy={loading || undefined}
                             />
                             {loading ? (
-                                <span className="w-5 h-5 flex-shrink-0 flex items-center justify-center text-accent" aria-hidden="true">
+                                <span className="ml-2 w-4 h-4 flex-shrink-0 flex items-center justify-center text-accent" aria-hidden="true">
                                     <LoadingSpinner inline size="xs" spinnerColor="currentColor" />
                                 </span>
                             ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 flex-shrink-0 text-foreground-muted" aria-hidden="true">
-                                    <path fillRule="evenodd" d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z" clipRule="evenodd" />
-                                </svg>
+                                <span className="ml-2 flex-shrink-0 text-foreground-muted">
+                                    {icon ?? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" aria-hidden="true">
+                                            <path fillRule="evenodd" d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z" clipRule="evenodd" />
+                                        </svg>
+                                    )}
+                                </span>
                             )}
                         </div>
                     </Popover.Anchor>

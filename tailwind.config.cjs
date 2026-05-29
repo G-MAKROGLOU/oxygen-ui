@@ -42,6 +42,13 @@ module.exports = {
                 'status-warning':       'var(--color-warning)',
                 'status-success':       'var(--color-success)',
                 'status-info':          'var(--color-info)',
+                // Soft focus-halo colours — `color-mix` reads the accent / error
+                // var live, so theme overrides flow through. Used as the ring
+                // colour for the refined input focus state (crisp 1px border +
+                // low-opacity 3px halo). Avoids the `/opacity` modifier, which
+                // produces invalid CSS on hex-valued CSS-var tokens.
+                'focus-ring':           'color-mix(in oklab, var(--color-accent) 22%, transparent)',
+                'focus-ring-error':     'color-mix(in oklab, var(--color-error) 22%, transparent)',
             },
 
             // ── Radius utilities — rounded-sm, rounded-md, etc. ──────────────

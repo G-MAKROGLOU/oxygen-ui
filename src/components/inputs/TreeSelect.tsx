@@ -1,5 +1,6 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
+import { fieldShell, type FieldSize } from './_field'
 
 export interface TreeSelectNode {
     key: string | number
@@ -35,6 +36,8 @@ export interface TreeSelectProps {
     parentsSelectable?: boolean
     /** Keys of nodes that should start expanded. */
     defaultExpandedKeys?: (string | number)[]
+    /** Size preset. Default `'md'`. */
+    size?: FieldSize
 }
 
 // ── Visible-items flattening ────────────────────────────────────────────────
@@ -121,6 +124,7 @@ export default function TreeSelect({
     placeholder = 'Select…',
     parentsSelectable = true,
     defaultExpandedKeys = [],
+    size = 'md',
 }: TreeSelectProps) {
     const errorId = useId()
     const hasError = errorMessage != null
@@ -242,7 +246,7 @@ export default function TreeSelect({
                             aria-invalid={hasError || undefined}
                             aria-describedby={hasError ? errorId : undefined}
                             disabled={disabled}
-                            className={`flex items-center justify-between h-9 rounded-lg border ${hasError ? 'border-status-error' : 'border-border'} px-3 cursor-pointer select-none focus:outline-none focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-accent ${disabled ? 'cursor-not-allowed bg-surface-raised text-foreground-muted' : 'bg-surface text-foreground'} ${!style?.width ? 'min-w-[240px]' : ''}`}
+                            className={`flex items-center justify-between cursor-pointer select-none ${!style?.width ? 'min-w-[240px]' : ''} ${fieldShell({ size, hasError, disabled })}`}
                         >
                             <span className="text-sm truncate text-left">
                                 {selectedNode ? selectedNode.label : <span className="text-foreground-muted">{placeholder}</span>}

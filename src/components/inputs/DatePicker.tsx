@@ -1,5 +1,6 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
+import { fieldShell, type FieldSize } from './_field'
 
 // ── Public API ──────────────────────────────────────────────────────────────
 
@@ -31,6 +32,8 @@ export interface DatePickerProps {
     weekStartsOn?: 0 | 1
     /** Allow the user to clear the date with a button in the popover. Default `true`. */
     clearable?: boolean
+    /** Size preset. Default `'md'`. */
+    size?: FieldSize
 }
 
 // Legacy alias — the previous component exported `TemporalPickerProps`. Keep
@@ -128,6 +131,7 @@ export default function DatePicker({
     format = defaultFormat,
     weekStartsOn = 0,
     clearable = true,
+    size = 'md',
 }: DatePickerProps) {
     const errorId = useId()
     const hasError = errorMessage != null
@@ -232,7 +236,7 @@ export default function DatePicker({
                             aria-describedby={hasError ? errorId : undefined}
                             aria-haspopup="dialog"
                             aria-expanded={open}
-                            className={`flex items-center justify-between h-9 rounded-lg border px-3 cursor-pointer select-none focus:outline-none focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-accent ${hasError ? 'border-status-error' : 'border-border'} ${disabled ? 'cursor-not-allowed bg-surface-raised text-foreground-muted' : 'bg-surface text-foreground'} ${!style?.width ? 'min-w-[200px]' : ''}`}
+                            className={`flex items-center justify-between cursor-pointer select-none ${!style?.width ? 'min-w-[200px]' : ''} ${fieldShell({ size, hasError, disabled })}`}
                         >
                             <span className={`text-sm truncate ${displayValue ? '' : 'text-foreground-muted'}`}>
                                 {displayValue || placeholder}

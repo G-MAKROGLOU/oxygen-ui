@@ -1,4 +1,5 @@
 import React, { useId } from 'react'
+import { Field, fieldShell, type FieldSize } from './_field'
 
 export interface NumberInputProps {
     /** Step size for the up/down buttons and native arrow-key handling. Default `1`. */
@@ -11,9 +12,12 @@ export interface NumberInputProps {
     htmlFor?: string
     name?: string
     disabled?: boolean
-    /** Label/input orientation. Defaults to `'horizontal'`. */
+    /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
+    /** Size preset. Default `'md'`. */
+    size?: FieldSize
     errorMessage?: React.ReactNode
+    required?: boolean
     inputStyle?: React.CSSProperties
     labelStyle?: React.CSSProperties
     placeholder?: string
@@ -65,8 +69,10 @@ export default function NumberInput({
     htmlFor,
     name,
     disabled,
-    layout = 'horizontal',
+    layout = 'vertical',
+    size = 'md',
     errorMessage,
+    required,
     inputStyle,
     labelStyle,
     placeholder,
@@ -122,72 +128,67 @@ export default function NumberInput({
     }
 
     return (
-        <div className="flex flex-col gap-1">
-            <div className={`flex ${layout === 'vertical' ? 'flex-col gap-1' : 'flex-row items-center gap-2'}`}>
-                {label && (
-                    <label
-                        className="text-sm font-medium ml-1 max-content select-none text-foreground"
-                        style={labelStyle}
-                        htmlFor={htmlFor}
+        <Field
+            label={label}
+            htmlFor={htmlFor}
+            errorId={errorId}
+            errorMessage={errorMessage}
+            layout={layout}
+            required={required}
+            labelStyle={labelStyle}
+        >
+            {/* `overflow-hidden` clips the stepper buttons to the rounded
+                shell; `pr-0` removes the shell's right padding so the steppers
+                sit flush against the edge. */}
+            <div
+                style={style}
+                className={`flex items-center overflow-hidden pr-0 ${fieldShell({ size, hasError, disabled, focusWithin: true })}`}
+            >
+                <input
+                    min={min}
+                    max={max}
+                    autoComplete="off"
+                    disabled={disabled}
+                    name={name}
+                    id={htmlFor}
+                    step={step}
+                    value={value ?? ''}
+                    onChange={handleInputChange}
+                    type="number"
+                    aria-invalid={hasError || undefined}
+                    aria-describedby={hasError ? errorId : undefined}
+                    className="min-w-0 flex-1 bg-transparent outline-none h-full disabled:cursor-not-allowed [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder:text-foreground-muted"
+                    style={inputStyle}
+                    placeholder={placeholder ?? ''}
+                    readOnly={readOnly}
+                />
+                <div className="flex flex-col self-stretch border-l border-border flex-shrink-0">
+                    <button
+                        type="button"
+                        tabIndex={-1}
+                        onClick={onIncrement}
+                        disabled={disabled || readOnly || (max !== undefined && numeric >= max)}
+                        aria-label="Increase value"
+                        className="flex-1 px-1.5 flex items-center justify-center text-foreground-muted hover:bg-surface-raised hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     >
-                        {label}
-                    </label>
-                )}
-                <div
-                    style={style}
-                    className={`flex items-center rounded-lg border overflow-hidden ${hasError ? 'border-status-error' : 'border-border'} ${disabled ? 'bg-surface-raised text-foreground-muted cursor-not-allowed' : 'bg-surface text-foreground'} focus-within:border-transparent focus-within:ring-2 focus-within:ring-accent transition-colors`}
-                >
-                    <input
-                        min={min}
-                        max={max}
-                        autoComplete="off"
-                        disabled={disabled}
-                        name={name}
-                        id={htmlFor}
-                        step={step}
-                        value={value ?? ''}
-                        onChange={handleInputChange}
-                        type="number"
-                        aria-invalid={hasError || undefined}
-                        aria-describedby={hasError ? errorId : undefined}
-                        className="bg-transparent focus:outline-none h-9 w-full px-3 disabled:cursor-not-allowed [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        style={inputStyle ?? {}}
-                        placeholder={placeholder ?? ''}
-                        readOnly={readOnly}
-                    />
-                    <div className="flex flex-col border-l border-border h-9">
-                        <button
-                            type="button"
-                            tabIndex={-1}
-                            onClick={onIncrement}
-                            disabled={disabled || readOnly || (max !== undefined && numeric >= max)}
-                            aria-label="Increase value"
-                            className="flex-1 px-1.5 flex items-center justify-center hover:bg-surface-raised disabled:opacity-30 disabled:cursor-not-allowed transition-colors focus:outline-none focus-visible:bg-surface-raised"
-                        >
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-3 w-3" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
-                            </svg>
-                        </button>
-                        <button
-                            type="button"
-                            tabIndex={-1}
-                            onClick={onDecrement}
-                            disabled={disabled || readOnly || (min !== undefined && numeric <= min)}
-                            aria-label="Decrease value"
-                            className="flex-1 px-1.5 flex items-center justify-center hover:bg-surface-raised disabled:opacity-30 disabled:cursor-not-allowed transition-colors focus:outline-none focus-visible:bg-surface-raised border-t border-border"
-                        >
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-3 w-3" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                    </div>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-3 w-3" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+                        </svg>
+                    </button>
+                    <button
+                        type="button"
+                        tabIndex={-1}
+                        onClick={onDecrement}
+                        disabled={disabled || readOnly || (min !== undefined && numeric <= min)}
+                        aria-label="Decrease value"
+                        className="flex-1 px-1.5 flex items-center justify-center text-foreground-muted hover:bg-surface-raised hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-t border-border"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-3 w-3" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
                 </div>
             </div>
-            {hasError && (
-                <div id={errorId} className="text-xs text-status-error ml-1">
-                    {errorMessage}
-                </div>
-            )}
-        </div>
+        </Field>
     )
 }

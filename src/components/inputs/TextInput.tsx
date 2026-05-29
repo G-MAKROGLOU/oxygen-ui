@@ -1,4 +1,5 @@
 import React, { useId } from 'react'
+import { Field, fieldShell, type FieldSize } from './_field'
 
 export interface TextInputProps {
     value?: string
@@ -8,18 +9,45 @@ export interface TextInputProps {
     htmlFor?: string
     placeholder?: string
     name?: string
+    /** Native input type. Defaults to `'text'`. */
+    type?: 'text' | 'email' | 'url' | 'tel'
     inputStyle?: React.CSSProperties
     style?: React.CSSProperties
-    /** Label/input orientation. Defaults to `'horizontal'`. */
+    /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
+    /** Size preset — controls height, padding, and font. Default `'md'`. */
+    size?: FieldSize
     onBlur?: React.FocusEventHandler<HTMLInputElement>
     errorMessage?: React.ReactNode
-    labelColor?: string
+    /** Mark the field required (renders an asterisk after the label). */
+    required?: boolean
+    /** Optional leading adornment (icon / prefix). */
+    prefix?: React.ReactNode
+    /** Optional trailing adornment (icon / suffix / unit). */
+    suffix?: React.ReactNode
     id?: string
 }
 
 /**
- * Standard text input with label and validation message.
+ * Single-line text input. Full-width by default (responsive) — constrain it
+ * with the parent layout or `style={{ maxWidth }}`. Supports an optional
+ * leading `prefix` and trailing `suffix` adornment (icon, unit, etc.).
+ *
+ * @example
+ * ```tsx
+ * <TextInput label="Vessel name" value={name} onChange={(e) => setName(e.target.value)} />
+ * ```
+ *
+ * @example With adornment + error
+ * ```tsx
+ * <TextInput
+ *   label="IMO"
+ *   prefix={<HashIcon />}
+ *   value={imo}
+ *   onChange={onChange}
+ *   errorMessage={touched && !valid ? 'Invalid IMO number' : undefined}
+ * />
+ * ```
  */
 export default function TextInput({
     value,
@@ -29,58 +57,67 @@ export default function TextInput({
     htmlFor,
     placeholder,
     name,
+    type = 'text',
     inputStyle,
     style,
-    layout,
+    layout = 'vertical',
+    size = 'md',
     onBlur,
     errorMessage,
-    labelColor,
+    required,
+    prefix,
+    suffix,
 }: TextInputProps) {
-    // `useId` gives us a stable, SSR-safe id for the error region so that
-    // `aria-describedby` on the input can point at it. The id only matters
-    // when an error is actually being announced.
     const errorId = useId()
     const hasError = errorMessage != null
+    const hasAdornment = prefix != null || suffix != null
+
+    const input = (
+        <input
+            autoComplete="off"
+            disabled={disabled}
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur}
+            type={type}
+            name={name}
+            id={htmlFor}
+            aria-invalid={hasError || undefined}
+            aria-describedby={hasError ? errorId : undefined}
+            placeholder={placeholder ?? ''}
+            // When wrapped for adornments, the input is borderless/transparent
+            // and the wrapper carries the shell. Otherwise the input IS the shell.
+            className={
+                hasAdornment
+                    ? 'min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed placeholder:text-foreground-muted'
+                    : fieldShell({ size, hasError, disabled })
+            }
+            style={inputStyle}
+        />
+    )
 
     return (
-        // In horizontal mode the row layout is [label, input-with-error-column].
-        // The error sits under the input ONLY, not spanning the label too.
-        // In vertical mode the whole thing is a column.
-        <div
-            className={`flex ${layout === 'vertical' ? 'flex-col gap-1' : 'flex-row items-start gap-2'}`}
-            style={style ?? {}}
+        <Field
+            label={label}
+            htmlFor={htmlFor}
+            errorId={errorId}
+            errorMessage={errorMessage}
+            layout={layout}
+            required={required}
+            className={style ? undefined : undefined}
         >
-            {label && (
-                <label
-                    style={{ color: labelColor || undefined }}
-                    className={`text-sm font-medium ${layout === 'horizontal' ? 'mt-2' : ''} max-content ${!labelColor && 'text-foreground'}`}
-                    htmlFor={htmlFor}
+            {hasAdornment ? (
+                <div
+                    className={`flex items-center ${fieldShell({ size, hasError, disabled, focusWithin: true })}`}
+                    style={style}
                 >
-                    {label}
-                </label>
+                    {prefix && <span className="flex-shrink-0 mr-2 text-foreground-muted">{prefix}</span>}
+                    {input}
+                    {suffix && <span className="flex-shrink-0 ml-2 text-foreground-muted">{suffix}</span>}
+                </div>
+            ) : (
+                input
             )}
-            <div className="flex flex-col">
-                <input
-                    autoComplete="off"
-                    disabled={disabled}
-                    value={value}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    type="text"
-                    name={name}
-                    id={htmlFor}
-                    aria-invalid={hasError || undefined}
-                    aria-describedby={hasError ? errorId : undefined}
-                    className={`${hasError ? 'border border-status-error' : 'border border-border'} bg-surface text-foreground p-2 h-9 w-60 rounded-lg disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus:border-transparent focus:ring-2 focus:ring-accent transition-colors`}
-                    style={inputStyle ?? {}}
-                    placeholder={placeholder ?? ''}
-                />
-                {hasError && (
-                    <div id={errorId} className="text-status-error text-xs mt-1">
-                        {errorMessage}
-                    </div>
-                )}
-            </div>
-        </div>
+        </Field>
     )
 }

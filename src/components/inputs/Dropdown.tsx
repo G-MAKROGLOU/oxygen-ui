@@ -2,6 +2,7 @@ import React, { useEffect, useId, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import SearchInput from './SearchInput'
 import DropdownPill from './DropdownPill'
+import { fieldShell } from './_field'
 
 export interface DropdownItem {
     key: string | number
@@ -45,6 +46,8 @@ export interface DropdownProps {
     items?: DropdownItem[]
     labelStyle?: React.CSSProperties
     placeholder?: string
+    /** Size preset. Default `'md'`. */
+    size?: import('./_field').FieldSize
 }
 
 /**
@@ -78,6 +81,7 @@ export default function Dropdown({
     labelStyle = {},
     placeholder,
     showSelectedCount = false,
+    size = 'md',
 }: DropdownProps) {
     const [open, setOpen] = useState(false)
     const [selectedItems, setSelectedItems] = useState<(string | number)[]>([])
@@ -152,7 +156,7 @@ export default function Dropdown({
                             aria-invalid={hasError || undefined}
                             aria-describedby={hasError ? errorId : undefined}
                             style={style}
-                            className={`flex items-center justify-between relative h-9 rounded-lg border border-border cursor-pointer select-none focus:outline-none focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-accent ${disabled ? 'cursor-not-allowed bg-surface-raised text-foreground-muted' : 'bg-surface text-foreground'} ${hasError ? 'border-status-error' : ''}`}
+                            className={`flex items-center justify-between cursor-pointer select-none ${fieldShell({ size, hasError, disabled })}`}
                             tabIndex={disabled ? -1 : 0}
                             onKeyDown={(e) => {
                                 if (disabled) return
@@ -166,7 +170,7 @@ export default function Dropdown({
                         >
                             {/* Selected value(s) */}
                             <div
-                                className={`h-7 pl-2 ${!style?.width ? 'min-w-[240px]' : ''} flex items-center gap-1 overflow-hidden`}
+                                className={`${!style?.width ? 'min-w-[200px]' : ''} flex items-center gap-1 overflow-hidden`}
                             >
                                 {!value || (Array.isArray(value) && value.length === 0) ? (
                                     <span className="text-foreground-muted text-sm">{placeholder}</span>
@@ -189,7 +193,7 @@ export default function Dropdown({
                             </div>
 
                             {/* Chevron — currentColor follows trigger text */}
-                            <div className={`transition-transform duration-200 mr-2 ${open ? 'rotate-180' : 'rotate-0'}`} aria-hidden="true">
+                            <div className={`flex-shrink-0 ml-2 text-foreground-muted transition-transform duration-200 ${open ? 'rotate-180' : 'rotate-0'}`} aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                                 </svg>
