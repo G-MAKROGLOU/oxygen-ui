@@ -217,3 +217,15 @@ export type { FileInputProps } from './components/inputs/FileInput'
 
 export { default as Temporal } from './components/inputs/DatePicker'
 export type { DatePickerProps, TemporalPickerProps } from './components/inputs/DatePicker'
+
+export { default as TextArea } from './components/inputs/TextArea'
+export type { TextAreaProps } from './components/inputs/TextArea'
+
+export { default as SegmentedControl } from './components/inputs/SegmentedControl'
+export type { SegmentedControlProps, SegmentedOption } from './components/inputs/SegmentedControl'
+
+export { default as Slider } from './components/inputs/Slider'
+export type { SliderProps, SliderValue, SliderMark } from './components/inputs/Slider'
+
+export { default as TagsInput } from './components/inputs/TagsInput'
+export type { TagsInputProps } from './components/inputs/TagsInput'
