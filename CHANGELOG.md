@@ -1,3 +1,10 @@
+# [5.4.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.3.0...v5.4.0) (2026-05-29)
+
+
+### Features
+
+* **inputs:** P0 batch — TextArea, SegmentedControl, Slider, TagsInput ([3ca4e0f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/3ca4e0ff5e14c1199d0d0a5580a823e3cd98a233))
+
 # [5.3.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.2.0...v5.3.0) (2026-05-29)
 
 
