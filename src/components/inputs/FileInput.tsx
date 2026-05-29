@@ -1,141 +1,212 @@
-import React, { useRef, useState } from 'react'
+import React, { useId, useRef, useState } from 'react'
+import { Field } from './_field'
 
 export interface FileInputProps {
     allowMultiple?: boolean
     onChange?: (e: { target: { files: File[]; name?: string; id?: string; value?: string } }) => void
     name?: string
-    /** Accepted MIME types / extensions */
+    htmlFor?: string
+    label?: React.ReactNode
+    /** Accepted MIME types / extensions, e.g. `'.xlsx,application/pdf'`. */
     accept?: string
+    /** Primary call-to-action copy. Default `'Click to upload or drag and drop'`. */
+    prompt?: React.ReactNode
+    /** Secondary hint under the prompt — typically the accepted types / max size. */
+    hint?: React.ReactNode
+    /** Maximum file size in bytes. Files above this are rejected with an error. */
+    maxSize?: number
+    errorMessage?: React.ReactNode
+    disabled?: boolean
+    required?: boolean
+    /** Override the upload glyph in the empty state. */
+    icon?: React.ReactNode
 }
 
+function formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 B'
+    const units = ['B', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(1024))
+    return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1)} ${units[i]}`
+}
+
+const UploadGlyph = (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 16V4m0 0L8 8m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+    </svg>
+)
+
+const FileGlyph = (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M14 3v4a1 1 0 001 1h4M5 3h9l5 5v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" />
+    </svg>
+)
+
 /**
- * Drag-and-drop / click file input.
+ * Drag-and-drop file input with an enterprise dropzone aesthetic: a calm
+ * dashed surface with a contained icon badge, primary + secondary copy, an
+ * accent-tinted drag-over state, and selected files shown as horizontal chips
+ * with name + size and a remove button.
  *
- * Decoupled from ThemeContext — uses CSS `dark:` classes.
+ * Keyboard-accessible (the dropzone is a `role="button"` activatable via
+ * Enter / Space) and form-friendly (`errorMessage`, `required`, `name`).
  *
  * @example
+ * ```tsx
  * <FileInput
- *   name="xlsxUpload"
- *   accept=".xlsx"
+ *   label="Crew manifest"
+ *   accept=".xlsx,.csv"
+ *   hint="XLSX or CSV, up to 5 MB"
+ *   maxSize={5 * 1024 * 1024}
  *   onChange={(e) => setFile(e.target.files[0])}
  * />
+ * ```
  */
 export default function FileInput({
     allowMultiple = false,
     onChange,
     name,
-    accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.xlsx',
+    htmlFor,
+    label,
+    accept,
+    prompt = 'Click to upload or drag and drop',
+    hint,
+    maxSize,
+    errorMessage,
+    disabled,
+    required,
+    icon,
 }: FileInputProps) {
-    const fileInput = useRef<HTMLInputElement>(null)
+    const inputRef = useRef<HTMLInputElement>(null)
+    const errorId = useId()
     const [files, setFiles] = useState<File[]>([])
+    const [dragging, setDragging] = useState(false)
+    const [sizeError, setSizeError] = useState<string | null>(null)
 
-    const openPicker = () => {
-        // Native .click() is the idiomatic call — synthesising a MouseEvent
-        // works but is noisy in test environments (jsdom) and unnecessary.
-        fileInput.current?.click()
-    }
+    const effectiveError = errorMessage ?? sizeError ?? undefined
 
-    const handleFiles = (list: File[]) => {
+    const openPicker = () => { if (!disabled) inputRef.current?.click() }
+
+    const commit = (list: File[]) => {
+        if (maxSize != null) {
+            const tooBig = list.find((f) => f.size > maxSize)
+            if (tooBig) {
+                setSizeError(`"${tooBig.name}" exceeds the ${formatBytes(maxSize)} limit`)
+                return
+            }
+        }
+        setSizeError(null)
         setFiles(list)
-        onChange?.({ target: { files: list } })
+        onChange?.({ target: { files: list, name, id: htmlFor ?? name } })
     }
 
     const onDrop = (e: React.DragEvent) => {
         e.preventDefault()
-        const fileList: File[] = []
-        if (e.dataTransfer.items) {
-            for (let i = 0; i < e.dataTransfer.items.length; i++) {
-                if (e.dataTransfer.items[i].kind === 'file') {
-                    const f = e.dataTransfer.items[i].getAsFile()
-                    if (f) fileList.push(f)
-                }
-            }
-        } else {
-            for (let i = 0; i < e.dataTransfer.files.length; i++) {
-                fileList.push(e.dataTransfer.files[i])
-            }
-        }
-        handleFiles(fileList)
+        setDragging(false)
+        if (disabled) return
+        const dropped = Array.from(e.dataTransfer.files ?? [])
+        commit(allowMultiple ? dropped : dropped.slice(0, 1))
     }
 
-    const localOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        handleFiles(Array.from(e.target.files ?? []))
-    }
-
-    const removeFile = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        setFiles([])
-        onChange?.({ target: { files: [], name, id: name, value: '' } })
-        if (fileInput.current) fileInput.current.value = ''
+    const removeFile = (idx: number) => {
+        const next = files.filter((_, i) => i !== idx)
+        setFiles(next)
+        setSizeError(null)
+        onChange?.({ target: { files: next, name, id: htmlFor ?? name, value: '' } })
+        if (next.length === 0 && inputRef.current) inputRef.current.value = ''
     }
 
     return (
-        // Dropzone is keyboard-activatable: role="button", focusable via
-        // tabIndex, and Space/Enter trigger the file picker. Without these
-        // a keyboard-only user could not upload a file.
-        <div
-            role="button"
-            tabIndex={0}
-            aria-label="Upload file — click or drop"
-            onClick={openPicker}
-            onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
-                    openPicker()
-                }
-            }}
-            className="border-2 border-dashed border-border hover:border-accent w-full h-full rounded-md transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent text-foreground-secondary hover:text-foreground"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={onDrop}
+        <Field
+            label={label}
+            htmlFor={htmlFor}
+            errorId={errorId}
+            errorMessage={effectiveError}
+            required={required}
         >
-            <input
-                id={name}
-                name={name}
-                onChange={localOnChange}
-                ref={fileInput}
-                hidden
-                type="file"
-                accept={accept}
-                multiple={allowMultiple}
-            />
+            <div
+                role="button"
+                tabIndex={disabled ? -1 : 0}
+                aria-label={typeof prompt === 'string' ? prompt : 'Upload file'}
+                aria-disabled={disabled || undefined}
+                aria-invalid={effectiveError != null || undefined}
+                aria-describedby={effectiveError != null ? errorId : undefined}
+                onClick={openPicker}
+                onKeyDown={(e) => {
+                    if (disabled) return
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPicker() }
+                }}
+                onDragOver={(e) => { e.preventDefault(); if (!disabled) setDragging(true) }}
+                onDragLeave={() => setDragging(false)}
+                onDrop={onDrop}
+                className={[
+                    'group flex flex-col items-center justify-center gap-3 w-full rounded-xl border border-dashed px-6 py-8 text-center',
+                    'transition-colors duration-150 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring',
+                    disabled
+                        ? 'border-border bg-surface-raised cursor-not-allowed opacity-60'
+                        : effectiveError != null
+                        ? 'border-status-error bg-surface cursor-pointer'
+                        : dragging
+                        ? 'border-accent bg-surface-raised cursor-copy'
+                        : 'border-border bg-surface hover:border-border-strong cursor-pointer',
+                ].join(' ')}
+            >
+                <input
+                    id={htmlFor ?? name}
+                    name={name}
+                    onChange={(e) => commit(Array.from(e.target.files ?? []))}
+                    ref={inputRef}
+                    hidden
+                    type="file"
+                    accept={accept}
+                    multiple={allowMultiple}
+                    disabled={disabled}
+                />
 
-            {files.length === 0 ? (
-                <div className="flex flex-col h-full items-center justify-center gap-2">
-                    {/* Upload icon — currentColor lets the parent's text-foreground drive it */}
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-16 h-16" aria-hidden="true">
-                        <path fillRule="evenodd" d="M11.47 2.47a.75.75 0 011.06 0l4.5 4.5a.75.75 0 01-1.06 1.06l-3.22-3.22V16.5a.75.75 0 01-1.5 0V4.81L8.03 8.03a.75.75 0 01-1.06-1.06l4.5-4.5zM3 15.75a.75.75 0 01.75.75v2.25a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5V16.5a.75.75 0 011.5 0v2.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V16.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
-                    </svg>
-                    <div className="text-sm">Click or Drop a file</div>
+                {/* Icon badge — a contained surface, not a giant raw glyph. */}
+                <span
+                    className={[
+                        'flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-150',
+                        dragging ? 'bg-accent text-accent-fg' : 'bg-surface-raised text-foreground-secondary group-hover:text-foreground',
+                    ].join(' ')}
+                >
+                    {icon ?? UploadGlyph}
+                </span>
+
+                <div className="space-y-0.5">
+                    <div className="text-sm font-medium text-foreground">
+                        {dragging ? 'Drop to upload' : prompt}
+                    </div>
+                    {hint && <div className="text-xs text-foreground-muted">{hint}</div>}
                 </div>
-            ) : (
-                <div className="flex gap-3 items-center justify-center w-full h-full p-3">
-                    {files.map((file, id) => (
-                        <div
-                            key={`${id}${file.name}`}
-                            className="text-xs flex flex-col items-center w-20 h-24 text-center bg-surface-raised text-foreground p-4 rounded-md relative"
+            </div>
+
+            {/* Selected file chips */}
+            {files.length > 0 && (
+                <ul className="mt-3 flex flex-col gap-2">
+                    {files.map((file, idx) => (
+                        <li
+                            key={`${idx}-${file.name}`}
+                            className="flex items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2"
                         >
+                            <span className="flex-shrink-0 text-foreground-muted">{FileGlyph}</span>
+                            <span className="flex-1 min-w-0">
+                                <span className="block text-sm text-foreground truncate">{file.name}</span>
+                                <span className="block text-xs text-foreground-muted">{formatBytes(file.size)}</span>
+                            </span>
                             <button
                                 type="button"
-                                onClick={removeFile}
-                                className="bg-status-error rounded-full w-4 h-4 absolute right-[-5px] top-[-5px] cursor-pointer flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                                aria-label="Remove file"
+                                onClick={(e) => { e.stopPropagation(); removeFile(idx) }}
+                                aria-label={`Remove ${file.name}`}
+                                className="flex-shrink-0 w-7 h-7 inline-flex items-center justify-center rounded-md text-foreground-muted hover:text-status-error hover:bg-surface-raised transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                             >
-                                <svg width="10" height="10" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                                    <path d="M15 5L5 15M5 5l10 10" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                                    <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </button>
-                            {/* File icon */}
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10" aria-hidden="true">
-                                <path fillRule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0016.5 9h-1.875a1.875 1.875 0 01-1.875-1.875V5.25A3.75 3.75 0 009 1.5H5.625z" clipRule="evenodd" />
-                                <path d="M12.971 1.816A5.23 5.23 0 0114.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 013.434 1.279 9.768 9.768 0 00-6.963-6.963z" />
-                            </svg>
-                            <span className="text-ellipsis whitespace-nowrap overflow-hidden w-full">
-                                {file.name}
-                            </span>
-                        </div>
+                        </li>
                     ))}
-                </div>
+                </ul>
             )}
-        </div>
+        </Field>
     )
 }

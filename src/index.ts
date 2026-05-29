@@ -192,6 +192,13 @@ export type { SearchInputProps } from './components/inputs/SearchInput'
 export { default as Checkbox } from './components/inputs/Checkbox'
 export type { CheckboxProps } from './components/inputs/Checkbox'
 
+export { default as RadioGroup } from './components/inputs/RadioGroup'
+export type { RadioGroupProps, RadioOption } from './components/inputs/RadioGroup'
+
+/** Shared input field foundation — exported for consumers building custom inputs. */
+export { Field, fieldShell } from './components/inputs/_field'
+export type { FieldProps, FieldShellOptions, FieldSize } from './components/inputs/_field'
+
 /** Form variant of Switch (custom thumb icons) */
 export { default as Switch } from './components/inputs/Switch'
 export type { SwitchInputProps } from './components/inputs/Switch'
