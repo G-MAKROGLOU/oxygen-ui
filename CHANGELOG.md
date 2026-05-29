@@ -1,3 +1,10 @@
+# [5.3.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.2.0...v5.3.0) (2026-05-29)
+
+
+### Features
+
+* **inputs:** redesigned FileInput dropzone + new RadioGroup ([236809d](https://github.com/G-MAKROGLOU/oxygen-ui/commit/236809d34e10099739fc72db2291686aaa76e890))
+
 # [5.2.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.1.0...v5.2.0) (2026-05-29)
 
 
