@@ -7,6 +7,15 @@ export interface ScalableContainerProps {
     width?: React.CSSProperties['width']
     /** Resting height. Any CSS length / percent. Default `'auto'`. */
     height?: React.CSSProperties['height']
+    /** Width when expanded. Default `'100%'` (fills parent). */
+    expandedWidth?: React.CSSProperties['width']
+    /** Height when expanded. Default `'100%'`. Set a concrete value (e.g. 420)
+     *  when the container lives in normal flow and should push siblings down. */
+    expandedHeight?: React.CSSProperties['height']
+    /** Controlled expanded state. */
+    expanded?: boolean
+    /** Fires when the user toggles. */
+    onExpandedChange?: (expanded: boolean) => void
     /** Content to render inside. */
     children?: React.ReactNode
     /** CSS class appended to the expanded children wrapper. */
@@ -57,6 +66,10 @@ const TOGGLE_POSITION_CLASS: Record<NonNullable<ScalableContainerProps['togglePo
 export default function ScalableContainer({
     width = '100%',
     height = 'auto',
+    expandedWidth = '100%',
+    expandedHeight = '100%',
+    expanded,
+    onExpandedChange,
     children,
     assignClassOnClick,
     expandIcon,
@@ -64,15 +77,22 @@ export default function ScalableContainer({
     togglePosition = 'top-right',
 }: ScalableContainerProps) {
     const containerRef = useRef<HTMLDivElement>(null)
-    const [isScaled, setScaled] = useState(false)
+    const [internalScaled, setInternalScaled] = useState(false)
+    const isScaled = expanded ?? internalScaled
     const reduced = useReducedMotion()
 
     const onToggle = () => {
         const next = !isScaled
-        setScaled(next)
-        // Scroll the container into view after the resize starts so the
-        // newly-expanded content is fully visible.
-        requestAnimationFrame(() => containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }))
+        if (expanded === undefined) setInternalScaled(next)
+        onExpandedChange?.(next)
+        // After the expand transition settles, scroll the container into view
+        // so the newly-grown content is fully visible (only when growing).
+        if (next) {
+            window.setTimeout(
+                () => containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }),
+                reduced ? 0 : 340,
+            )
+        }
     }
 
     const wrapperClass = isScaled ? assignClassOnClick : undefined
@@ -80,10 +100,9 @@ export default function ScalableContainer({
     return (
         <motion.div
             ref={containerRef}
-            layout
             animate={{
-                width:  isScaled ? '100%' : width,
-                height: isScaled ? '100%' : height,
+                width:  isScaled ? expandedWidth : width,
+                height: isScaled ? expandedHeight : height,
             }}
             transition={
                 reduced
@@ -91,7 +110,6 @@ export default function ScalableContainer({
                     : {
                           width:  { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] },
                           height: { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] },
-                          layout: { duration: 0.32, ease: [0.16, 1, 0.3, 1] },
                       }
             }
             className={[

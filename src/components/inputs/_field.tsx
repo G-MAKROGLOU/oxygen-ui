@@ -38,20 +38,22 @@ export const FIELD_SIZE: Record<FieldSize, SizeSpec> = {
 // These MUST be written as full literal strings so Tailwind's JIT scanner
 // emits the CSS. Do not template the variant prefix.
 
-// CONSISTENCY: every input shows the IDENTICAL halo under the same conditions.
-// We use `:focus` (not `:focus-visible`) so the halo appears on BOTH mouse
-// click and keyboard focus — text inputs already do this via `focus-within`,
-// and popover triggers (Dropdown / DatePicker / TreeSelect / TimePicker /
-// ColorPicker / DateRangePicker) now match. `data-[state=open]` keeps the
-// halo lit while a popover is open even after Radix moves focus into it.
+// CONSISTENCY: every input shows the IDENTICAL focus treatment under the same
+// conditions — the border turns accent. We deliberately use NO ring/box-shadow
+// halo: a ring is a box-shadow that any ancestor with `overflow` (incl. the
+// Storybook canvas) clips, producing the choppy "rounded-top, square-bottom"
+// artifact. A border-colour change can never be clipped and reads cleanly.
+// `:focus` (not `:focus-visible`) so it shows on mouse + keyboard, matching
+// text inputs (focus-within). `data-[state=open]` keeps it lit while a popover
+// trigger's panel is open even after Radix moves focus into the panel.
 const FOCUS_WITHIN =
-    'focus-within:outline-none focus-within:border-accent focus-within:ring-[3px] focus-within:ring-focus-ring'
+    'focus-within:outline-none focus-within:border-accent'
 const FOCUS_ELEMENT =
-    'focus:outline-none focus:border-accent focus:ring-[3px] focus:ring-focus-ring data-[state=open]:border-accent data-[state=open]:ring-[3px] data-[state=open]:ring-focus-ring'
+    'focus:outline-none focus:border-accent data-[state=open]:border-accent'
 const FOCUS_WITHIN_ERROR =
-    'focus-within:border-status-error focus-within:ring-focus-ring-error'
+    'focus-within:border-status-error'
 const FOCUS_ELEMENT_ERROR =
-    'focus:border-status-error focus:ring-focus-ring-error data-[state=open]:border-status-error data-[state=open]:ring-focus-ring-error'
+    'focus:border-status-error data-[state=open]:border-status-error'
 
 export interface FieldShellOptions {
     size?: FieldSize

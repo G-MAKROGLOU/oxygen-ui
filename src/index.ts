@@ -91,9 +91,6 @@ export type { TabsProps, TabItem } from './components/core/Tabs'
 export { default as Tree } from './components/core/Tree'
 export type { TreeProps, TreeNode, TreeItemClickPayload } from './components/core/Tree'
 
-export { default as ToggleButton } from './components/core/ToggleButton'
-export type { ToggleButtonProps, ToggleItem } from './components/core/ToggleButton'
-
 export {
     NotificationProvider,
     useNotification,

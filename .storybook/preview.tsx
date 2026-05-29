@@ -27,15 +27,15 @@ const withDarkMode: Decorator = (Story, context) => {
     }, [isDark])
 
     return (
-        // `overflowX: 'hidden'` + `width: '100%'` keeps any rogue child
-        // (e.g. a fixed-positioned overlay momentarily oversized during a
-        // Framer Motion enter animation) from triggering a canvas-wide
-        // horizontal scrollbar. Components that legitimately need horizontal
-        // scroll should opt in via their own `overflow-x-auto` wrapper.
+        // No `overflow` here: setting `overflow-x: hidden` forces
+        // `overflow-y: auto` per the CSS spec, turning this wrapper into a clip
+        // box that chops focus rings, popovers, and oversized triggers (the
+        // "rounded-top, square-bottom" focus artifact and the half-cut Dropdown
+        // came from exactly this). Horizontal-scroll prevention is handled by
+        // the auto-fit viewport (no fixed initial viewport), not by clipping.
         <div style={{
             minHeight: '100%',
             width: '100%',
-            overflowX: 'hidden',
             background: isDark ? DARK_BG : undefined,
         }}>
             <Story />

@@ -2,9 +2,10 @@
 <link rel="preconnect" href="https://rsms.me/">
 <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
-<!-- Storybook canvas hygiene: kill any default body margin and prevent
-     horizontal scrollbars in the canvas iframe. Components that need
-     horizontal scrolling should opt in via their own overflow-x-auto. -->
+<!-- Storybook canvas hygiene: kill the default body margin. We do NOT set
+     overflow-x:hidden here — that forces overflow-y:auto and clips focus
+     borders / popovers near the edge. The auto-fit viewport handles
+     horizontal-scroll prevention. -->
 <style>
-    html, body { margin: 0; padding: 0; overflow-x: hidden; }
+    html, body { margin: 0; padding: 0; }
 </style>
