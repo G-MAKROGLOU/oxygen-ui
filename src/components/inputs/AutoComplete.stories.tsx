@@ -44,6 +44,10 @@ export const Disabled: Story = {
     args: { items: PORTS, disabled: true },
 }
 
+export const WithError: Story = {
+    args: { items: PORTS, errorMessage: 'Select a port of call', required: true },
+}
+
 // ── Async mode ──────────────────────────────────────────────────────────────
 
 // Simulate a server query with 800 ms latency.

@@ -31,4 +31,5 @@ export const CustomSwatches: Story = {
     render: (a) => <Controlled {...a} />,
     args: { label: 'Theme', swatches: ['#0a1929', '#0466c8', '#1e8449', '#d68910', '#c0392b', '#8e44ad'] },
 }
+export const Horizontal: Story = { render: (a) => <Controlled {...a} />, args: { label: 'Brand colour', layout: 'horizontal', value: '#0466c8' } }
 export const WithError: Story = { render: (a) => <Controlled {...a} />, args: { label: 'Colour', errorMessage: 'Pick a colour' } }

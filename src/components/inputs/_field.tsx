@@ -38,14 +38,20 @@ export const FIELD_SIZE: Record<FieldSize, SizeSpec> = {
 // These MUST be written as full literal strings so Tailwind's JIT scanner
 // emits the CSS. Do not template the variant prefix.
 
+// CONSISTENCY: every input shows the IDENTICAL halo under the same conditions.
+// We use `:focus` (not `:focus-visible`) so the halo appears on BOTH mouse
+// click and keyboard focus — text inputs already do this via `focus-within`,
+// and popover triggers (Dropdown / DatePicker / TreeSelect / TimePicker /
+// ColorPicker / DateRangePicker) now match. `data-[state=open]` keeps the
+// halo lit while a popover is open even after Radix moves focus into it.
 const FOCUS_WITHIN =
     'focus-within:outline-none focus-within:border-accent focus-within:ring-[3px] focus-within:ring-focus-ring'
-const FOCUS_VISIBLE =
-    'focus-visible:outline-none focus-visible:border-accent focus-visible:ring-[3px] focus-visible:ring-focus-ring'
+const FOCUS_ELEMENT =
+    'focus:outline-none focus:border-accent focus:ring-[3px] focus:ring-focus-ring data-[state=open]:border-accent data-[state=open]:ring-[3px] data-[state=open]:ring-focus-ring'
 const FOCUS_WITHIN_ERROR =
     'focus-within:border-status-error focus-within:ring-focus-ring-error'
-const FOCUS_VISIBLE_ERROR =
-    'focus-visible:border-status-error focus-visible:ring-focus-ring-error'
+const FOCUS_ELEMENT_ERROR =
+    'focus:border-status-error focus:ring-focus-ring-error data-[state=open]:border-status-error data-[state=open]:ring-focus-ring-error'
 
 export interface FieldShellOptions {
     size?: FieldSize
@@ -87,8 +93,8 @@ export function fieldShell({
             ? 'bg-surface-raised text-foreground-muted cursor-not-allowed'
             : hasError ? '' : 'hover:border-border-strong',
         // focus
-        focusWithin ? FOCUS_WITHIN : FOCUS_VISIBLE,
-        hasError ? (focusWithin ? FOCUS_WITHIN_ERROR : FOCUS_VISIBLE_ERROR) : '',
+        focusWithin ? FOCUS_WITHIN : FOCUS_ELEMENT,
+        hasError ? (focusWithin ? FOCUS_WITHIN_ERROR : FOCUS_ELEMENT_ERROR) : '',
         // placeholder colour for native inputs
         'placeholder:text-foreground-muted',
     ].filter(Boolean).join(' ')
@@ -158,7 +164,9 @@ export function Field({
                     style={{ width: horizontal ? labelWidth : undefined, ...labelStyle }}
                     className={[
                         'text-sm font-medium text-foreground select-none',
-                        horizontal ? 'mt-2 flex-shrink-0' : '',
+                        // In horizontal layout the label must not wrap onto
+                        // multiple lines (e.g. "Report date", "Select option").
+                        horizontal ? 'mt-2 flex-shrink-0 whitespace-nowrap' : '',
                     ].filter(Boolean).join(' ')}
                 >
                     {label}

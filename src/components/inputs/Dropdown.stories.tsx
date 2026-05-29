@@ -53,13 +53,13 @@ const MultiDemo = () => {
 export const Single: Story = { render: () => <SingleDemo /> }
 export const Multiselect: Story = { render: () => <MultiDemo /> }
 
-export const ShowSelectedCount: Story = {
-    name: 'Multiselect with "+N more" count',
+export const MultiselectPrefilled: Story = {
+    name: 'Multiselect with removable tags',
     parameters: {
         docs: {
             description: {
                 story:
-                    'By default Dropdown only shows the first selected item as a pill. Pass `showSelectedCount` to additionally render a "+N more" pill when more than one item is selected.',
+                    'Selected values render as removable tag chips (the same chip the TagsInput uses). Clicking a tag\'s × deselects that option; the trigger grows to fit wrapped tags.',
             },
         },
     },
@@ -73,7 +73,6 @@ export const ShowSelectedCount: Story = {
                         value={val}
                         label="Select options"
                         isMultiselect
-                        showSelectedCount
                         onChange={(e) => setVal(e.target.value as any)}
                     />
                 </div>

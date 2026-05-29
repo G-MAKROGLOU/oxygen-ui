@@ -1,5 +1,6 @@
 import React, { useId, useRef, useState } from 'react'
 import { Field, fieldShell, type FieldSize } from './_field'
+import Tag from './_tag'
 
 export interface TagsInputProps {
     /** Controlled list of tags. */
@@ -137,23 +138,14 @@ export default function TagsInput({
                 onClick={() => inputRef.current?.focus()}
             >
                 {tags.map((tag, idx) => (
-                    <span
+                    <Tag
                         key={`${tag}-${idx}`}
-                        className="inline-flex items-center gap-1 rounded-md bg-surface-raised text-foreground text-xs pl-2 pr-1 py-0.5 border border-border"
+                        disabled={disabled}
+                        removeLabel={`Remove ${tag}`}
+                        onRemove={() => removeTag(idx)}
                     >
                         {tag}
-                        <button
-                            type="button"
-                            disabled={disabled}
-                            onClick={(e) => { e.stopPropagation(); removeTag(idx) }}
-                            aria-label={`Remove ${tag}`}
-                            className="inline-flex items-center justify-center w-4 h-4 rounded text-foreground-muted hover:text-status-error hover:bg-surface transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-accent"
-                        >
-                            <svg width="10" height="10" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                                <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                            </svg>
-                        </button>
-                    </span>
+                    </Tag>
                 ))}
                 <input
                     ref={inputRef}

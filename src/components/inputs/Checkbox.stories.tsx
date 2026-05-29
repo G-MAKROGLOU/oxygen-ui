@@ -100,3 +100,40 @@ function CheckboxGroup() {
 export const Group: Story = {
     render: () => <CheckboxGroup />,
 }
+
+export const LabelLeft: Story = {
+    name: 'Horizontal, label on the left',
+    args: {
+        checked: true,
+        label: 'Enabled',
+        htmlFor: 'll',
+        labelPosition: 'left',
+        onChange: () => undefined,
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: 'In horizontal layout, `labelPosition="left"` renders the label before the box (useful in right-aligned settings rows).',
+            },
+        },
+    },
+}
+
+export const Vertical: Story = {
+    name: 'Vertical layout',
+    args: {
+        checked: false,
+        label: 'Stack the label above',
+        htmlFor: 'vert',
+        layout: 'vertical',
+        labelPosition: 'left',
+        onChange: () => undefined,
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: '`layout="vertical"` stacks box and label. With `labelPosition="left"` the label sits above the box; `"right"` puts it below.',
+            },
+        },
+    },
+}

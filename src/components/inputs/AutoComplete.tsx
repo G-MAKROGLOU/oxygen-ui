@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useId, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import LoadingSpinner from '../core/LoadingSpinner'
-import { fieldShell, type FieldSize } from './_field'
+import { Field, fieldShell, type FieldSize } from './_field'
 
 export interface AutoCompleteItem {
     key: string
@@ -46,6 +46,11 @@ export interface AutoCompleteProps {
     size?: FieldSize
     /** Override the leading search icon (hidden while loading). */
     icon?: React.ReactNode
+    /** Validation message — turns the field red and links via aria-describedby. */
+    errorMessage?: React.ReactNode
+    /** Mark required (asterisk after the label). */
+    required?: boolean
+    htmlFor?: string
 }
 
 /**
@@ -100,7 +105,12 @@ export default function AutoComplete({
     loadingText = 'Searching…',
     size = 'md',
     icon,
+    errorMessage,
+    required,
+    htmlFor,
 }: AutoCompleteProps) {
+    const errorId = useId()
+    const hasError = errorMessage != null
     const [term, setTerm] = useState('')
     const [open, setOpen] = useState(false)
     const [asyncItems, setAsyncItems] = useState<AutoCompleteItem[]>([])
@@ -164,21 +174,19 @@ export default function AutoComplete({
     }
 
     return (
-        <div
-            className={`flex ${layout === 'vertical' ? 'flex-col gap-1.5' : 'flex-row items-start gap-3'}`}
-            style={style}
+        <Field
+            label={label}
+            htmlFor={htmlFor}
+            errorId={errorId}
+            errorMessage={errorMessage}
+            layout={layout}
+            required={required}
         >
-            {label && (
-                <label className={`text-sm font-medium text-foreground select-none ${layout === 'horizontal' ? 'mt-2 flex-shrink-0' : ''}`}>
-                    {label}
-                </label>
-            )}
-
-            <div className="flex flex-col min-w-0 flex-1">
                 <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
                     <Popover.Anchor asChild>
-                        <div className={`flex items-center ${fieldShell({ size, disabled, focusWithin: true })}`}>
+                        <div className={`flex items-center ${fieldShell({ size, hasError, disabled, focusWithin: true })}`} style={style}>
                             <input
+                                id={htmlFor}
                                 disabled={disabled}
                                 value={term}
                                 onChange={(e) => {
@@ -196,6 +204,8 @@ export default function AutoComplete({
                                 aria-expanded={open}
                                 aria-autocomplete="list"
                                 aria-busy={loading || undefined}
+                                aria-invalid={hasError || undefined}
+                                aria-describedby={hasError ? errorId : undefined}
                             />
                             {loading ? (
                                 <span className="ml-2 w-4 h-4 flex-shrink-0 flex items-center justify-center text-accent" aria-hidden="true">
@@ -256,7 +266,6 @@ export default function AutoComplete({
                         </Popover.Content>
                     </Popover.Portal>
                 </Popover.Root>
-            </div>
-        </div>
+        </Field>
     )
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import SearchInput from './SearchInput'
-import DropdownPill from './DropdownPill'
+import Tag from './_tag'
 import { fieldShell } from './_field'
 
 export interface DropdownItem {
@@ -33,13 +33,6 @@ export interface DropdownProps {
     disabled?: boolean
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
-    /**
-     * Show a "+N more" pill alongside the first selected item in multiselect
-     * mode. Defaults to `false` — a single pill is shown with the first
-     * selection and consumers typically open the dropdown to see the rest.
-     * Set `true` if you want the count visible on the trigger.
-     */
-    showSelectedCount?: boolean
     errorMessage?: React.ReactNode
     style?: React.CSSProperties
     htmlFor?: string
@@ -80,7 +73,6 @@ export default function Dropdown({
     items = [],
     labelStyle = {},
     placeholder,
-    showSelectedCount = false,
     size = 'md',
 }: DropdownProps) {
     const [open, setOpen] = useState(false)
@@ -116,6 +108,21 @@ export default function Dropdown({
         }
     }
 
+    // Remove a selected value via its tag's × button. In multi-select this
+    // toggles the option off; in single-select it clears the field.
+    const removeSelected = (key: string | number) => {
+        if (isMultiselect) {
+            const next = selectedItems.filter((it) => it !== key)
+            setSelectedItems(next)
+            onChange?.({ target: { value: next, id: htmlFor, name } })
+        } else {
+            setSelectedItems([])
+            onChange?.({ target: { value: '', id: htmlFor, name } })
+        }
+    }
+
+    const labelFor = (key: string | number) => innerItems.find((it) => it.key === key)?.label ?? String(key)
+
     const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const term = e.target.value
         setSearchTerm(term)
@@ -132,13 +139,13 @@ export default function Dropdown({
         Array.isArray(value) ? value.includes(key) : value === key
 
     return (
-        <div className="mt-2">
+        <div>
             <div
-                className={`flex ${layout === 'vertical' ? 'flex-col' : 'flex-row items-center gap-2'}`}
+                className={`flex ${layout === 'vertical' ? 'flex-col gap-1.5' : 'flex-row items-start gap-3'}`}
             >
                 {label && (
                     <label
-                        className="text-sm font-medium ml-1 max-content select-none text-foreground"
+                        className={`text-sm font-medium select-none text-foreground ${layout === 'horizontal' ? 'mt-2 flex-shrink-0 whitespace-nowrap' : ''}`}
                         htmlFor={htmlFor}
                         style={labelStyle}
                     >
@@ -156,7 +163,7 @@ export default function Dropdown({
                             aria-invalid={hasError || undefined}
                             aria-describedby={hasError ? errorId : undefined}
                             style={style}
-                            className={`flex items-center justify-between cursor-pointer select-none ${fieldShell({ size, hasError, disabled })}`}
+                            className={`flex items-center justify-between gap-1 cursor-pointer select-none min-h-[36px] px-3 py-1.5 ${fieldShell({ size, hasError, disabled, sized: false })}`}
                             tabIndex={disabled ? -1 : 0}
                             onKeyDown={(e) => {
                                 if (disabled) return
@@ -168,27 +175,34 @@ export default function Dropdown({
                                 }
                             }}
                         >
-                            {/* Selected value(s) */}
+                            {/* Selected value(s) — rendered as removable tags.
+                                Clicking a tag's × deselects (multi) or clears
+                                (single). The × calls stopPropagation so it
+                                doesn't toggle the popover. */}
                             <div
-                                className={`${!style?.width ? 'min-w-[200px]' : ''} flex items-center gap-1 overflow-hidden`}
+                                className={`${!style?.width ? 'min-w-[200px]' : ''} flex flex-wrap items-center gap-1.5`}
                             >
                                 {!value || (Array.isArray(value) && value.length === 0) ? (
                                     <span className="text-foreground-muted text-sm">{placeholder}</span>
                                 ) : Array.isArray(value) ? (
-                                    <>
-                                        {value.slice(0, 1).map((val) => (
-                                            <DropdownPill
-                                                key={String(val)}
-                                                hasSiblings={value.length > 1}
-                                                value={innerItems.find((it) => it.key === val)?.label}
-                                            />
-                                        ))}
-                                        {showSelectedCount && value.length > 1 && (
-                                            <DropdownPill value={`+${value.length - 1} more`} />
-                                        )}
-                                    </>
+                                    value.map((val) => (
+                                        <Tag
+                                            key={String(val)}
+                                            disabled={disabled}
+                                            removeLabel={`Remove ${labelFor(val)}`}
+                                            onRemove={() => removeSelected(val)}
+                                        >
+                                            {labelFor(val)}
+                                        </Tag>
+                                    ))
                                 ) : (
-                                    <DropdownPill value={innerItems.find((it) => it.key === value)?.label} />
+                                    <Tag
+                                        disabled={disabled}
+                                        removeLabel={`Remove ${labelFor(value)}`}
+                                        onRemove={() => removeSelected(value)}
+                                    >
+                                        {labelFor(value)}
+                                    </Tag>
                                 )}
                             </div>
 

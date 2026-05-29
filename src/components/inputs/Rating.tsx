@@ -126,14 +126,19 @@ export default function Rating({
                                 }
                             }}
                         >
-                            {/* Empty layer */}
+                            {/* Empty layer — full star outline */}
                             <span className="absolute inset-0 text-foreground-muted">{icon(false)}</span>
-                            {/* Filled layer, clipped to the fill fraction */}
+                            {/* Filled layer: a clip box (width = fill fraction)
+                                containing a FULL-SIZE star pinned left, so a
+                                50% clip reveals the exact left half — not a
+                                squished half-width star. */}
                             <span
-                                className="absolute inset-0 overflow-hidden"
+                                className="absolute inset-y-0 left-0 overflow-hidden"
                                 style={{ width: `${fillFraction * 100}%` }}
                             >
-                                {icon(true)}
+                                <span className={`block absolute inset-y-0 left-0 ${ICON_SIZE[size]} max-w-none`}>
+                                    {icon(true)}
+                                </span>
                             </span>
                         </span>
                     )

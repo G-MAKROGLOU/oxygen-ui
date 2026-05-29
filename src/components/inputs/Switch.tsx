@@ -38,15 +38,19 @@ export default function Switch({
                     id={id}
                     checked={checked}
                     onCheckedChange={(c) => onChange?.({ target: { checked: c } })}
-                    className="relative inline-flex h-6 w-14 items-center rounded-full bg-foreground-secondary data-[state=checked]:bg-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                    className="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full bg-foreground-secondary data-[state=checked]:bg-accent transition-colors focus:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
                 >
+                    {/* Thumb is 20px inside a 24px track (2px inset each side),
+                        travelling 2px → 22px. Keeping the thumb SMALLER than the
+                        track is what makes it read as a clean pill rather than a
+                        bulging blob. */}
                     <SwitchPrimitive.Thumb
-                        className="pointer-events-none inline-flex h-8 w-8 items-center justify-center rounded-full bg-background text-foreground shadow transition-transform duration-200 data-[state=checked]:translate-x-[22px] data-[state=unchecked]:translate-x-[-4px]"
+                        className="pointer-events-none flex h-5 w-5 items-center justify-center rounded-full bg-background text-foreground shadow transition-transform duration-200 data-[state=checked]:translate-x-[22px] data-[state=unchecked]:translate-x-[2px]"
                     >
                         {checkedIcon && uncheckedIcon
                             ? checked
-                                ? checkedIcon
-                                : uncheckedIcon
+                                ? <span className="flex items-center justify-center w-3 h-3">{checkedIcon}</span>
+                                : <span className="flex items-center justify-center w-3 h-3">{uncheckedIcon}</span>
                             : null}
                     </SwitchPrimitive.Thumb>
                 </SwitchPrimitive.Root>
