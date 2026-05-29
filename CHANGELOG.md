@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.0.3...v5.1.0) (2026-05-29)
+
+
+### Features
+
+* Wizard spotlight cutout + new Avatar/Typography/Box/Flex/Grid + List enhancement ([85e2cfa](https://github.com/G-MAKROGLOU/oxygen-ui/commit/85e2cfadeb46e0e0a3dd692c4c2835be9af679fa))
+
 ## [5.0.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.0.2...v5.0.3) (2026-05-29)
 
 
