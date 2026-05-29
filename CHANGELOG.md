@@ -1,3 +1,10 @@
+# [5.2.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.1.0...v5.2.0) (2026-05-29)
+
+
+### Features
+
+* AutoComplete async, Table loading skeleton, input error alignment, ScalableContainer grid ([6d4d439](https://github.com/G-MAKROGLOU/oxygen-ui/commit/6d4d43921a8fffcedd2a2ede32360f6ea3d9d23a))
+
 # [5.1.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.0.3...v5.1.0) (2026-05-29)
 
 
