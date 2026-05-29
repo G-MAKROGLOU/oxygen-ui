@@ -51,10 +51,29 @@ const preview: Preview = {
         actions: { argTypesRegex: '^on[A-Z].*' },
 
         controls: {
+            // `expanded` shows the prop description + default beside each control.
+            expanded: true,
             matchers: {
-                color: /(background|color)$/i,
+                color: /(background|color|swatch)$/i,
                 date:  /Date$/i,
             },
+            // Hide props that can't be meaningfully driven from a control panel
+            // (callbacks, render-node slots, controlled value/collection props,
+            // refs, custom formatters). This keeps every story's Controls panel
+            // focused on the real knobs — size, layout, disabled, error, etc.
+            // String-literal unions (size/layout/labelPosition) and booleans are
+            // auto-inferred from the TS types as select / toggle controls.
+            exclude: [
+                'value', 'defaultValue', 'onChange', 'onChangeEnd', 'onSearch',
+                'onItemClick', 'onComplete', 'onExpandedChange', 'onBlur', 'onOk',
+                'onCancel', 'onClose', 'onNodeClick', 'onTabChange', 'onTabClose',
+                'items', 'options', 'rows', 'nodes', 'columns', 'sections', 'steps', 'tabs',
+                'icon', 'prefix', 'suffix', 'showIcon', 'hideIcon', 'expandIcon',
+                'collapseIcon', 'checkedIcon', 'uncheckedIcon', 'fallback', 'avatar',
+                'trailing', 'children', 'format', 'formatValue', 'validate',
+                'getRowKey', 'expandComponent', 'tableRef', 'style', 'inputStyle',
+                'labelStyle', 'className', 'marks', 'presets', 'swatches', 'pagination',
+            ],
         },
 
         // Two backgrounds map directly to light/dark token sets.

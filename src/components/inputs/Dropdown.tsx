@@ -163,7 +163,7 @@ export default function Dropdown({
                             aria-invalid={hasError || undefined}
                             aria-describedby={hasError ? errorId : undefined}
                             style={style}
-                            className={`flex items-center justify-between gap-1 cursor-pointer select-none min-h-[36px] px-3 py-1.5 ${fieldShell({ size, hasError, disabled, sized: false })}`}
+                            className={`flex items-center justify-between gap-2 cursor-pointer select-none min-h-[36px] px-3 py-1.5 ${!style?.width ? 'min-w-[200px]' : ''} ${fieldShell({ size, hasError, disabled, sized: false })}`}
                             tabIndex={disabled ? -1 : 0}
                             onKeyDown={(e) => {
                                 if (disabled) return
@@ -179,9 +179,7 @@ export default function Dropdown({
                                 Clicking a tag's × deselects (multi) or clears
                                 (single). The × calls stopPropagation so it
                                 doesn't toggle the popover. */}
-                            <div
-                                className={`${!style?.width ? 'min-w-[200px]' : ''} flex flex-wrap items-center gap-1.5`}
-                            >
+                            <div className="flex-1 min-w-0 flex flex-wrap items-center gap-1.5">
                                 {!value || (Array.isArray(value) && value.length === 0) ? (
                                     <span className="text-foreground-muted text-sm">{placeholder}</span>
                                 ) : Array.isArray(value) ? (
@@ -207,7 +205,7 @@ export default function Dropdown({
                             </div>
 
                             {/* Chevron — currentColor follows trigger text */}
-                            <div className={`flex-shrink-0 ml-2 text-foreground-muted transition-transform duration-200 ${open ? 'rotate-180' : 'rotate-0'}`} aria-hidden="true">
+                            <div className={`flex-shrink-0 text-foreground-muted transition-transform duration-200 ${open ? 'rotate-180' : 'rotate-0'}`} aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                                 </svg>

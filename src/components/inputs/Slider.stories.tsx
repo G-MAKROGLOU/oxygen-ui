@@ -16,22 +16,43 @@ const meta: Meta<typeof Slider> = {
         },
     },
     decorators: [(S) => <div className="w-80"><S /></div>],
+    args: {
+        label: 'Volume',
+        min: 0,
+        max: 100,
+        step: 1,
+        size: 'md',
+        showValue: true,
+        tooltip: false,
+        disabled: false,
+    },
+    argTypes: {
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+        min: { control: { type: 'number' } },
+        max: { control: { type: 'number' } },
+        step: { control: { type: 'number', min: 1 } },
+        showValue: { control: 'boolean' },
+        tooltip: { control: 'boolean' },
+        disabled: { control: 'boolean' },
+        label: { control: 'text' },
+    },
 }
 export default meta
 type Story = StoryObj<typeof Slider>
 
-export const Single: Story = {
-    render: () => {
-        const [v, setV] = useState<SliderValue>(40)
-        return <Slider label="Volume" value={v} onChange={setV} showValue />
-    },
+// Controlled wrapper spreading args so size/min/max/step/showValue/tooltip
+// are all live from the Controls panel.
+function Controlled(args: React.ComponentProps<typeof Slider> & { initial?: SliderValue }) {
+    const { initial = 40, ...rest } = args
+    const [v, setV] = useState<SliderValue>(initial)
+    return <Slider {...rest} value={v} onChange={setV} />
 }
 
+export const Single: Story = { render: (a) => <Controlled {...a} initial={40} /> }
+
 export const Range: Story = {
-    render: () => {
-        const [v, setV] = useState<SliderValue>([20, 80])
-        return <Slider label="Price range" value={v} onChange={setV} showValue formatValue={(n) => `$${n}`} />
-    },
+    render: (a) => <Controlled {...a} initial={[20, 80]} />,
+    args: { label: 'Price range', formatValue: (n) => `$${n}` },
 }
 
 export const WithMarks: Story = {

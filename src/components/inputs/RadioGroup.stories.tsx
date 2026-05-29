@@ -16,6 +16,15 @@ const meta: Meta<typeof RadioGroup> = {
         },
     },
     decorators: [(S) => <div className="w-80"><S /></div>],
+    argTypes: {
+        layout: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
+        labelPosition: { control: 'inline-radio', options: ['right', 'left'] },
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+        disabled: { control: 'boolean' },
+        required: { control: 'boolean' },
+        label: { control: 'text' },
+        errorMessage: { control: 'text' },
+    },
 }
 export default meta
 type Story = StoryObj<typeof RadioGroup>
@@ -42,12 +51,33 @@ export const Horizontal: Story = {
     args: {
         label: 'Density',
         name: 'density',
-        orientation: 'horizontal',
+        layout: 'horizontal',
         options: [
             { value: 'compact', label: 'Compact' },
             { value: 'cozy', label: 'Cozy' },
             { value: 'comfortable', label: 'Comfortable' },
         ],
+    },
+}
+
+export const LabelLeft: Story = {
+    name: 'Label on the left',
+    render: (a) => <Controlled {...a} />,
+    args: {
+        label: 'Alignment',
+        name: 'align',
+        labelPosition: 'left',
+        options: [
+            { value: 'a', label: 'Option A', description: 'Label sits left of the dot' },
+            { value: 'b', label: 'Option B' },
+        ],
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: '`labelPosition="left"` renders each label before its radio dot (useful in right-aligned settings columns).',
+            },
+        },
     },
 }
 

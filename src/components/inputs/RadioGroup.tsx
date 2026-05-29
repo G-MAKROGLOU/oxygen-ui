@@ -22,8 +22,17 @@ export interface RadioGroupProps {
     onChange?: (value: string) => void
     name?: string
     label?: React.ReactNode
-    /** Group orientation. Default `'vertical'`. */
-    orientation?: 'vertical' | 'horizontal'
+    /**
+     * Option arrangement. `'vertical'` (default) stacks options in a column;
+     * `'horizontal'` lays them in a row. Named `layout` for consistency with
+     * the other inputs.
+     */
+    layout?: 'vertical' | 'horizontal'
+    /**
+     * Where each option's label sits relative to its radio dot.
+     * `'right'` (default) → dot then label; `'left'` → label then dot.
+     */
+    labelPosition?: 'left' | 'right'
     /** Size preset — controls the dot + text size. Default `'md'`. */
     size?: FieldSize
     disabled?: boolean
@@ -73,7 +82,8 @@ export default function RadioGroup({
     onChange,
     name,
     label,
-    orientation = 'vertical',
+    layout = 'vertical',
+    labelPosition = 'right',
     size = 'md',
     disabled,
     required,
@@ -82,6 +92,7 @@ export default function RadioGroup({
     const errorId = useId()
     const groupId = useId()
     const hasError = errorMessage != null
+    const labelFirst = labelPosition === 'left'
 
     return (
         <Field
@@ -101,45 +112,52 @@ export default function RadioGroup({
                 required={required}
                 aria-invalid={hasError || undefined}
                 aria-describedby={hasError ? errorId : undefined}
-                orientation={orientation}
-                className={orientation === 'horizontal' ? 'flex flex-row flex-wrap gap-5' : 'flex flex-col gap-3'}
+                orientation={layout}
+                className={layout === 'horizontal' ? 'flex flex-row flex-wrap gap-5' : 'flex flex-col gap-3'}
             >
                 {options.map((opt) => {
                     const itemId = `${groupId}-${opt.value}`
+                    const dot = (
+                        <RadioGroupPrimitive.Item
+                            id={itemId}
+                            value={opt.value}
+                            disabled={opt.disabled}
+                            className={[
+                                DOT_SIZE[size],
+                                'mt-0.5 flex-shrink-0 rounded-full border bg-surface transition-colors duration-150',
+                                'border-border-strong',
+                                'hover:border-accent',
+                                'data-[state=checked]:border-accent',
+                                // Border-only focus, consistent with the fields.
+                                'focus:outline-none focus-visible:border-accent',
+                                'disabled:cursor-not-allowed disabled:opacity-50',
+                            ].join(' ')}
+                        >
+                            <RadioGroupPrimitive.Indicator className="flex h-full w-full items-center justify-center">
+                                <span className="block h-1/2 w-1/2 rounded-full bg-accent" />
+                            </RadioGroupPrimitive.Indicator>
+                        </RadioGroupPrimitive.Item>
+                    )
+                    const labelEl = (
+                        <label
+                            htmlFor={itemId}
+                            className={[
+                                'select-none',
+                                opt.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
+                                labelFirst ? 'text-right' : '',
+                            ].filter(Boolean).join(' ')}
+                        >
+                            <span className={`block ${TEXT_SIZE[size]} text-foreground`}>{opt.label}</span>
+                            {opt.description && (
+                                <span className="block text-xs text-foreground-secondary mt-0.5">
+                                    {opt.description}
+                                </span>
+                            )}
+                        </label>
+                    )
                     return (
                         <div key={opt.value} className="flex items-start gap-2.5">
-                            <RadioGroupPrimitive.Item
-                                id={itemId}
-                                value={opt.value}
-                                disabled={opt.disabled}
-                                className={[
-                                    DOT_SIZE[size],
-                                    'mt-0.5 flex-shrink-0 rounded-full border bg-surface transition-colors duration-150',
-                                    'border-border-strong',
-                                    'hover:border-accent',
-                                    'data-[state=checked]:border-accent',
-                                    'focus:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring',
-                                    'disabled:cursor-not-allowed disabled:opacity-50',
-                                ].join(' ')}
-                            >
-                                <RadioGroupPrimitive.Indicator className="flex h-full w-full items-center justify-center">
-                                    <span className="block h-1/2 w-1/2 rounded-full bg-accent" />
-                                </RadioGroupPrimitive.Indicator>
-                            </RadioGroupPrimitive.Item>
-                            <label
-                                htmlFor={itemId}
-                                className={[
-                                    'select-none',
-                                    opt.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
-                                ].join(' ')}
-                            >
-                                <span className={`block ${TEXT_SIZE[size]} text-foreground`}>{opt.label}</span>
-                                {opt.description && (
-                                    <span className="block text-xs text-foreground-secondary mt-0.5">
-                                        {opt.description}
-                                    </span>
-                                )}
-                            </label>
+                            {labelFirst ? <>{labelEl}{dot}</> : <>{dot}{labelEl}</>}
                         </div>
                     )
                 })}

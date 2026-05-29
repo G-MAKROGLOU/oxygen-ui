@@ -139,10 +139,11 @@ export default function OtpInput({
                             className={[
                                 BOX_SIZE[size],
                                 'text-center font-medium rounded-lg border bg-surface text-foreground',
-                                'transition-[border-color,box-shadow] duration-150',
+                                'transition-[border-color] duration-150',
                                 hasError ? 'border-status-error' : 'border-border',
                                 'hover:border-border-strong',
-                                'focus:outline-none focus:border-accent focus:ring-[3px] focus:ring-focus-ring',
+                                // Border-only focus, consistent with every field (no clip-prone ring).
+                                'focus:outline-none focus:border-accent',
                                 'disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed',
                             ].join(' ')}
                         />

@@ -14,44 +14,58 @@ const meta: Meta<typeof Dropdown> = {
     component: Dropdown,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],
+    args: {
+        label: 'Select option',
+        placeholder: 'Choose…',
+        items: ITEMS,
+        isMultiselect: false,
+        hasSearch: true,
+        layout: 'vertical',
+        size: 'md',
+        disabled: false,
+    },
+    argTypes: {
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+        layout: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
+        isMultiselect: { control: 'boolean' },
+        hasSearch: { control: 'boolean' },
+        disabled: { control: 'boolean' },
+        label: { control: 'text' },
+        placeholder: { control: 'text' },
+        errorMessage: { control: 'text' },
+    },
 }
 export default meta
 type Story = StoryObj<typeof Dropdown>
 
-const SingleDemo = () => {
-    const [val, setVal] = useState<number | string>('')
+// Controlled wrapper: owns selection state while spreading every arg from the
+// Controls panel through to the component, so size/layout/multiselect/etc. are
+// all live-editable.
+function Controlled(args: React.ComponentProps<typeof Dropdown>) {
+    const [val, setVal] = useState<number | string | (number | string)[]>(
+        args.isMultiselect ? [] : '',
+    )
+    // Reset the held value when the selection mode flips, so a stale array
+    // doesn't leak into single mode (or vice-versa).
+    React.useEffect(() => {
+        setVal(args.isMultiselect ? [] : '')
+    }, [args.isMultiselect])
     return (
-        <div style={{ width: 220 }}>
-            <Dropdown
-                items={ITEMS}
-                value={val}
-                label="Select option"
-                isMultiselect={false}
-                onChange={(e) => setVal(e.target.value as any)}
-            />
-            <p className="mt-2 text-sm">Selected: {String(val)}</p>
+        <div style={{ minWidth: 240 }}>
+            <Dropdown {...args} value={val} onChange={(e) => setVal(e.target.value)} />
+            <p className="mt-2 text-sm text-foreground-secondary">
+                Selected: {Array.isArray(val) ? val.join(', ') || '—' : String(val) || '—'}
+            </p>
         </div>
     )
 }
 
-const MultiDemo = () => {
-    const [val, setVal] = useState<(number | string)[]>([])
-    return (
-        <div style={{ width: 220 }}>
-            <Dropdown
-                items={ITEMS}
-                value={val}
-                label="Select options"
-                isMultiselect={true}
-                onChange={(e) => setVal(e.target.value as any)}
-            />
-            <p className="mt-2 text-sm">Selected: {(val as any[]).join(', ')}</p>
-        </div>
-    )
-}
+export const Single: Story = { render: (a) => <Controlled {...a} /> }
 
-export const Single: Story = { render: () => <SingleDemo /> }
-export const Multiselect: Story = { render: () => <MultiDemo /> }
+export const Multiselect: Story = {
+    render: (a) => <Controlled {...a} />,
+    args: { label: 'Select options', isMultiselect: true },
+}
 
 export const MultiselectPrefilled: Story = {
     name: 'Multiselect with removable tags',

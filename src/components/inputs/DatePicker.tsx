@@ -215,10 +215,10 @@ export default function DatePicker({
 
     return (
         <div className="flex flex-col gap-1">
-            <div className={`flex ${layout === 'vertical' ? 'flex-col gap-1' : 'flex-row items-center gap-2'}`}>
+            <div className={`flex ${layout === 'vertical' ? 'flex-col gap-1.5' : 'flex-row items-start gap-3'}`}>
                 {label && (
                     <label
-                        className="text-sm font-medium ml-1 max-content select-none text-foreground"
+                        className={`text-sm font-medium select-none text-foreground ${layout === 'horizontal' ? 'mt-2 flex-shrink-0 whitespace-nowrap' : ''}`}
                         htmlFor={htmlFor}
                     >
                         {label}
