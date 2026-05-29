@@ -25,7 +25,54 @@ export { default as Icon } from './icons/icons'
 export { default as Portal } from './components/layout/Portal'
 export type { PortalProps } from './components/layout/Portal'
 
+// Box / Flex / Grid — tokenised layout primitives. Use them in place of
+// className-only `<div>`s when you want padding, surface, border, radius,
+// shadow, or flex/grid behaviour spelled out via design-system tokens.
+export { default as Box } from './components/layout/Box'
+export type {
+    BoxProps,
+    Spacing,
+    BoxBackground,
+    BoxBorder,
+    BoxRadius,
+    BoxShadow,
+} from './components/layout/Box'
+
+export { default as Flex } from './components/layout/Flex'
+export type {
+    FlexProps,
+    FlexDirection,
+    FlexAlign,
+    FlexJustify,
+    FlexWrap,
+} from './components/layout/Flex'
+
+export { default as Grid } from './components/layout/Grid'
+export type { GridProps } from './components/layout/Grid'
+
 // ─── Core components ─────────────────────────────────────────────────────────
+// Avatar — circular / rounded-square user avatar with image-fallback +
+// optional presence dot. Built on `@radix-ui/react-avatar`.
+export { default as Avatar } from './components/core/Avatar'
+export type {
+    AvatarProps,
+    AvatarSize,
+    AvatarShape,
+    AvatarStatus,
+} from './components/core/Avatar'
+
+// Typography — polymorphic text primitive with semantic variants
+// (display / h1-h4 / subtitle / body / caption / overline / code).
+export { default as Typography } from './components/core/Typography'
+export type {
+    TypographyProps,
+    TypographyVariant,
+    TypographyColor,
+    TypographyWeight,
+    TypographyAlign,
+} from './components/core/Typography'
+
+
 export { default as IconButton } from './components/core/IconButton'
 export type { IconButtonProps } from './components/core/IconButton'
 

@@ -254,14 +254,44 @@ export default function Wizard({
         if (activeIndex > 0) setActiveIndex((i) => i - 1)
     }
 
-    // We need to compute these no matter what so the conditional render
-    // path stays simple. Falsy bbox => offscreen sentinel.
+    // The spotlight ring + click blocker get a small padding around the bbox
+    // so they read as a halo, not as a tight outline.
+    const SPOT_PAD = 6
+
     const highlightStyle: React.CSSProperties = bbox
         ? {
-              left: bbox.left - 4,
-              top: bbox.top - 4,
-              width: bbox.width + 8,
-              height: bbox.height + 8,
+              left: bbox.left - SPOT_PAD,
+              top: bbox.top - SPOT_PAD,
+              width: bbox.width + SPOT_PAD * 2,
+              height: bbox.height + SPOT_PAD * 2,
+          }
+        : { display: 'none' }
+
+    // Four backdrop rectangles surrounding the target bbox — they share the
+    // blur + tint, but leave the target area itself crystal clear. A
+    // transparent fifth rect sits ON the target and blocks pointer events so
+    // the user can't accidentally interact with the highlighted UI during
+    // the tour (they advance via the tooltip buttons).
+    const backdropTop: React.CSSProperties = bbox
+        ? { left: 0, top: 0, right: 0, height: Math.max(0, bbox.top - SPOT_PAD) }
+        : { display: 'none' }
+    const backdropBottom: React.CSSProperties = bbox
+        ? { left: 0, top: bbox.bottom + SPOT_PAD, right: 0, bottom: 0 }
+        : { display: 'none' }
+    const backdropLeft: React.CSSProperties = bbox
+        ? {
+              left: 0,
+              top: bbox.top - SPOT_PAD,
+              width: Math.max(0, bbox.left - SPOT_PAD),
+              height: bbox.height + SPOT_PAD * 2,
+          }
+        : { display: 'none' }
+    const backdropRight: React.CSSProperties = bbox
+        ? {
+              left: bbox.right + SPOT_PAD,
+              top: bbox.top - SPOT_PAD,
+              right: 0,
+              height: bbox.height + SPOT_PAD * 2,
           }
         : { display: 'none' }
 
@@ -276,11 +306,35 @@ export default function Wizard({
             <AnimatePresence>
                 {open && step && (
                     <Portal>
-                        {/* Backdrop fades in/out — wizards are modal experiences;
-                            the user advances via the tooltip buttons, not by
-                            clicking through to unrelated UI. */}
+                        {/* Backdrop is built from FOUR rectangles surrounding
+                            the target — the area inside the spotlight stays
+                            crystal clear (no blur, no tint). All four fade
+                            in/out together. */}
+                        {(['top', 'bottom', 'left', 'right'] as const).map((side) => (
+                            <motion.div
+                                key={side}
+                                className="fixed z-[7000000] bg-foreground/40 backdrop-blur-[2px] pointer-events-auto"
+                                style={
+                                    side === 'top'    ? backdropTop    :
+                                    side === 'bottom' ? backdropBottom :
+                                    side === 'left'   ? backdropLeft   :
+                                                        backdropRight
+                                }
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: reduced ? 0 : 0.18, ease: 'easeOut' }}
+                                aria-hidden="true"
+                            />
+                        ))}
+
+                        {/* Transparent click blocker over the target — keeps
+                            the highlight visually untouched but stops the user
+                            from accidentally interacting with the spotlit UI
+                            mid-tour. */}
                         <motion.div
-                            className="fixed inset-0 z-[7000000] bg-foreground/40 backdrop-blur-[1px] pointer-events-auto"
+                            className="fixed z-[7000001] pointer-events-auto"
+                            style={highlightStyle}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -288,11 +342,9 @@ export default function Wizard({
                             aria-hidden="true"
                         />
 
-                        {/* Spotlight outline — `layout` lets Framer Motion
-                            animate the bbox change between steps, with a soft
-                            pulse on the first appearance to draw the eye. */}
+                        {/* Spotlight outline ring drawn on top of the blocker. */}
                         <motion.div
-                            className="fixed z-[7000001] pointer-events-none rounded-md ring-2 ring-accent ring-offset-2 ring-offset-background"
+                            className="fixed z-[7000002] pointer-events-none rounded-md ring-2 ring-accent"
                             style={highlightStyle}
                             initial={{ opacity: 0, scale: 1.08 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -315,7 +367,7 @@ export default function Wizard({
                             aria-modal="true"
                             aria-labelledby={step.title ? tooltipTitleId : undefined}
                             aria-describedby={tooltipBodyId}
-                            className="fixed z-[7000002] rounded-lg bg-surface text-foreground border border-border shadow-xl p-4 pointer-events-auto"
+                            className="fixed z-[7000003] rounded-lg bg-surface text-foreground border border-border shadow-xl p-4 pointer-events-auto"
                             style={tooltipStyle}
                             initial={{ opacity: 0, scale: 0.96, y: 6 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
