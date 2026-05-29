@@ -1,3 +1,10 @@
+## [5.5.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.5.0...v5.5.1) (2026-05-29)
+
+
+### Bug Fixes
+
+* **inputs:** review pass — unified focus, nowrap labels, removable tags, layout + geometry fixes ([3d51c33](https://github.com/G-MAKROGLOU/oxygen-ui/commit/3d51c3392866fffa055ea824488ccf323617522f))
+
 # [5.5.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.4.0...v5.5.0) (2026-05-29)
 
 
