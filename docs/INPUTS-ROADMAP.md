@@ -60,10 +60,18 @@ tokens, `<Field>` label/error layout, responsive `w-full`.
     buttons + selects attached to an input (we have ad-hoc prefix/suffix
     on TextInput; a group primitive generalises it).
 
-## Recommendation
+## Unified components (not standalone inputs)
 
-Build **TextArea → Slider → TagsInput → SegmentedControl** as the next input
-batch. They're the four a developer most immediately notices missing, all
-sit cleanly on the existing foundation, and three of the four have a Radix
-primitive to wrap (low risk). TimePicker + DateRangePicker follow naturally
-once we factor the DatePicker popover into a shared calendar scaffold.
+Some "inputs" only make sense as part of a larger composite and must NOT be
+exposed individually:
+
+- **CreditCardForm** — card number (type detection + Luhn validation), expiry
+  (MM/YY parsing), CVV, cardholder name. A CVV field has no use outside this
+  form. Build as one `<CreditCardForm>` component **after the Form API
+  (FormProvider / useForm / useFormField)** lands, so it gets cross-field
+  validation and submission for free. Do not ship `<CvvInput>` and friends.
+
+## Status
+
+- **P0 — DONE:** TextArea, Slider (single + range), TagsInput, SegmentedControl.
+- **Next:** P1 — TimePicker, DateRangePicker, OTP/PIN, Rating, ColorPicker.

@@ -229,3 +229,18 @@ export type { SliderProps, SliderValue, SliderMark } from './components/inputs/S
 
 export { default as TagsInput } from './components/inputs/TagsInput'
 export type { TagsInputProps } from './components/inputs/TagsInput'
+
+export { default as OtpInput } from './components/inputs/OtpInput'
+export type { OtpInputProps } from './components/inputs/OtpInput'
+
+export { default as Rating } from './components/inputs/Rating'
+export type { RatingProps } from './components/inputs/Rating'
+
+export { default as TimePicker } from './components/inputs/TimePicker'
+export type { TimePickerProps } from './components/inputs/TimePicker'
+
+export { default as DateRangePicker } from './components/inputs/DateRangePicker'
+export type { DateRangePickerProps, DateRange, DateRangePreset } from './components/inputs/DateRangePicker'
+
+export { default as ColorPicker } from './components/inputs/ColorPicker'
+export type { ColorPickerProps } from './components/inputs/ColorPicker'
