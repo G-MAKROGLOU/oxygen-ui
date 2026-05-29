@@ -43,3 +43,29 @@ export const TogglePositions: Story = {
         </div>
     ),
 }
+
+export const InteractiveGrid: Story = {
+    name: 'Grid — push behaviour',
+    parameters: {
+        docs: {
+            description: {
+                story:
+                    'A 3×3 grid of ScalableContainers. Click any toggle to expand one — the siblings flex to make room. Use this story to spot animation glitches in how containers push each other during the transition.',
+            },
+        },
+    },
+    render: () => (
+        <div className="grid grid-cols-3 gap-3 w-full max-w-4xl">
+            {Array.from({ length: 9 }, (_, i) => (
+                <div key={i} className="h-40 bg-surface-raised rounded-lg p-2">
+                    <ScalableContainer width="100%" height="100%">
+                        <div className="h-full w-full bg-surface border border-border rounded-md p-3 text-sm text-foreground">
+                            <div className="text-xs text-foreground-muted">Panel #{i + 1}</div>
+                            <div className="mt-1">Click the chevron to expand. Watch the siblings reflow.</div>
+                        </div>
+                    </ScalableContainer>
+                </div>
+            ))}
+        </div>
+    ),
+}

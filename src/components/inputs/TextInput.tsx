@@ -43,23 +43,23 @@ export default function TextInput({
     const hasError = errorMessage != null
 
     return (
-        <div className="relative flex flex-col items-center justify-center">
-            <div
-                className={`flex ${layout === 'vertical' ? 'flex-col' : 'flex-row items-center gap-2'}`}
-                style={style ?? {}}
-            >
-                {label && (
-                    // Render <label> only when a label is provided. An empty
-                    // <label htmlFor=…> announces as an unlabeled control in
-                    // some screen readers.
-                    <label
-                        style={{ color: labelColor || undefined }}
-                        className={`text-sm font-medium ml-1 max-content ${!labelColor && 'text-foreground'}`}
-                        htmlFor={htmlFor}
-                    >
-                        {label}
-                    </label>
-                )}
+        // In horizontal mode the row layout is [label, input-with-error-column].
+        // The error sits under the input ONLY, not spanning the label too.
+        // In vertical mode the whole thing is a column.
+        <div
+            className={`flex ${layout === 'vertical' ? 'flex-col gap-1' : 'flex-row items-start gap-2'}`}
+            style={style ?? {}}
+        >
+            {label && (
+                <label
+                    style={{ color: labelColor || undefined }}
+                    className={`text-sm font-medium ${layout === 'horizontal' ? 'mt-2' : ''} max-content ${!labelColor && 'text-foreground'}`}
+                    htmlFor={htmlFor}
+                >
+                    {label}
+                </label>
+            )}
+            <div className="flex flex-col">
                 <input
                     autoComplete="off"
                     disabled={disabled}
@@ -71,19 +71,16 @@ export default function TextInput({
                     id={htmlFor}
                     aria-invalid={hasError || undefined}
                     aria-describedby={hasError ? errorId : undefined}
-                    className={`${hasError ? 'border border-status-error' : 'border border-border'} bg-surface text-foreground p-2 h-9 w-60 mt-1 rounded-lg disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus:border-transparent focus:ring-2 focus:ring-accent transition-colors`}
+                    className={`${hasError ? 'border border-status-error' : 'border border-border'} bg-surface text-foreground p-2 h-9 w-60 rounded-lg disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus:border-transparent focus:ring-2 focus:ring-accent transition-colors`}
                     style={inputStyle ?? {}}
                     placeholder={placeholder ?? ''}
                 />
+                {hasError && (
+                    <div id={errorId} className="text-status-error text-xs mt-1">
+                        {errorMessage}
+                    </div>
+                )}
             </div>
-            {/* Error region is keyed to the input via aria-describedby. Only
-                rendered when there is an actual error so screen readers don't
-                read empty descriptions. */}
-            {hasError && (
-                <div id={errorId} className="text-center text-status-error text-xs mt-1">
-                    {errorMessage}
-                </div>
-            )}
         </div>
     )
 }

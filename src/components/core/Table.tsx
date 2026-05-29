@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import SearchInput from '../inputs/SearchInput'
 import Dropdown from '../inputs/Dropdown'
 import IconButton from './IconButton'
+import { SkeletonBox } from './Skeleton'
 
 /** ─────────────────── types ─────────────────── */
 
@@ -73,6 +74,16 @@ export interface TableProps<T extends Record<string, any> = Record<string, any>>
     hasSearch?: boolean
     footer?: React.ReactNode
     header?: React.ReactNode
+    /**
+     * When `true`, the body renders skeleton rows (one per column with the
+     * shared shimmer animation) instead of data. Use during initial data
+     * fetch, server-side pagination transitions, or any time the dataset is
+     * not yet ready. Combine with `pagination.serverSide` for the canonical
+     * "loading next page" pattern.
+     */
+    loading?: boolean
+    /** Number of skeleton rows to render when `loading` is true. Default `8`. */
+    loadingRowCount?: number
 }
 
 /** ─────────────────── defaults ─────────────────── */
@@ -381,6 +392,8 @@ export default function Table<T extends Record<string, any> = Record<string, any
     hasSearch = true,
     footer = null,
     header = null,
+    loading = false,
+    loadingRowCount = 8,
 }: TableProps<T>) {
     const searchRef = useRef<HTMLInputElement>(null)
     const [searchTerm, setSearchTerm] = useState('')
@@ -487,17 +500,58 @@ export default function Table<T extends Record<string, any> = Record<string, any
             {/* Horizontal scroll wrapper — enables swipe-scroll on narrow viewports
                 without forcing the table itself to layout horizontally. */}
             <div className="overflow-x-auto rounded-lg">
-                <table className="w-full border-collapse">
+                <table className="w-full border-collapse" aria-busy={loading || undefined}>
                     <TableHeader columns={columns} hasExpand={!!expandRow.enabled} />
-                    <TableBody
-                        columns={columns}
-                        rows={currentPageRows}
-                        expandRow={expandRow}
-                        getRowKey={getRowKey}
-                    />
+                    {loading ? (
+                        <TableSkeletonBody
+                            columns={columns}
+                            rowCount={loadingRowCount}
+                            hasExpand={!!expandRow.enabled}
+                        />
+                    ) : (
+                        <TableBody
+                            columns={columns}
+                            rows={currentPageRows}
+                            expandRow={expandRow}
+                            getRowKey={getRowKey}
+                        />
+                    )}
                 </table>
             </div>
             <div>{footer}</div>
         </div>
+    )
+}
+
+// ── Skeleton body ───────────────────────────────────────────────────────────
+// Renders `rowCount` placeholder rows matching the column count. Used by the
+// Table's `loading` prop during initial fetch or server-side pagination
+// transitions.
+
+function TableSkeletonBody<T extends Record<string, any>>({
+    columns,
+    rowCount,
+    hasExpand,
+}: {
+    columns: TableColumn<T>[]
+    rowCount: number
+    hasExpand: boolean
+}) {
+    return (
+        <tbody aria-hidden="true">
+            {Array.from({ length: rowCount }).map((_, i) => (
+                <tr
+                    key={i}
+                    className={`border-b border-border ${i % 2 === 0 ? 'bg-surface' : 'bg-surface-raised'}`}
+                >
+                    {hasExpand && <td className="p-0 align-middle w-9" />}
+                    {columns.map((col) => (
+                        <td key={col.key} className="py-3 px-3 align-middle">
+                            <SkeletonBox height={12} width={`${50 + (i % 4) * 12}%`} />
+                        </td>
+                    ))}
+                </tr>
+            ))}
+        </tbody>
     )
 }

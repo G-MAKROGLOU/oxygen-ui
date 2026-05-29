@@ -267,7 +267,7 @@ export default function Dropdown({
                 </Popover.Root>
             </div>
             {hasError && (
-                <div id={errorId} className="text-center text-status-error text-xs mt-1">
+                <div id={errorId} className="text-status-error text-xs mt-1">
                     {errorMessage}
                 </div>
             )}

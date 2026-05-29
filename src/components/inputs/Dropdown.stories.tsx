@@ -52,6 +52,49 @@ const MultiDemo = () => {
 
 export const Single: Story = { render: () => <SingleDemo /> }
 export const Multiselect: Story = { render: () => <MultiDemo /> }
+
+export const ShowSelectedCount: Story = {
+    name: 'Multiselect with "+N more" count',
+    parameters: {
+        docs: {
+            description: {
+                story:
+                    'By default Dropdown only shows the first selected item as a pill. Pass `showSelectedCount` to additionally render a "+N more" pill when more than one item is selected.',
+            },
+        },
+    },
+    render: () => {
+        function Demo() {
+            const [val, setVal] = useState<(number | string)[]>([1, 2, 3])
+            return (
+                <div style={{ width: 280 }}>
+                    <Dropdown
+                        items={ITEMS}
+                        value={val}
+                        label="Select options"
+                        isMultiselect
+                        showSelectedCount
+                        onChange={(e) => setVal(e.target.value as any)}
+                    />
+                </div>
+            )
+        }
+        return <Demo />
+    },
+}
+
+export const WithError: Story = {
+    args: { items: ITEMS, label: 'Pick one', errorMessage: 'Selection is required' },
+    parameters: {
+        docs: {
+            description: {
+                story:
+                    'When `errorMessage` is set, the trigger gets a red border + `aria-invalid` and the message renders under the trigger only (not under the label in horizontal layouts).',
+            },
+        },
+    },
+}
+
 export const Disabled: Story = {
     args: { items: ITEMS, value: 1, isMultiselect: false, disabled: true, label: 'Disabled' },
 }

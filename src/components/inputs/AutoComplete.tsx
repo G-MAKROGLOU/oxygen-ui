@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
+import LoadingSpinner from '../core/LoadingSpinner'
 
 export interface AutoCompleteItem {
     key: string
@@ -17,24 +18,66 @@ export interface AutoCompleteProps {
     style?: React.CSSProperties
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
+    /**
+     * Static list — when provided, the component does its own substring
+     * filtering on `label` and `key`. Mutually exclusive with `onSearch`.
+     */
     items?: AutoCompleteItem[]
+    /**
+     * Async resolver — when provided, `items` is ignored and `onSearch(term)`
+     * is called (debounced) every time the user pauses typing. Its returned
+     * promise drives the option list. The component manages an internal
+     * `loading` state and shows an `xs` LoadingSpinner where the search icon
+     * normally lives while a query is in flight.
+     */
+    onSearch?: (term: string) => Promise<AutoCompleteItem[]>
+    /**
+     * Debounce delay (ms) before `onSearch` fires after the user stops
+     * typing. Default `250`. Ignored when `items` is used.
+     */
+    debounce?: number
     onItemClick?: (value: string) => void
     /** Custom "empty" message */
     emptyText?: string
+    /** Custom "loading" message — shown in async mode while a query is in flight. */
+    loadingText?: string
 }
 
 /**
- * Search-as-you-type autocomplete powered by Radix Popover.
+ * Search-as-you-type autocomplete powered by Radix Popover. Supports two
+ * modes:
+ *
+ * - **Static**: pass `items` — the component substring-filters locally.
+ *   Best for small fixed lists (≤ 200 entries).
+ * - **Async**: pass `onSearch(term) => Promise<Item[]>` — the component
+ *   debounces input and drives the option list from the resolver. Shows
+ *   an `xs` LoadingSpinner while the query is in flight.
  *
  * The popover opens when the input is focused and closes when an item is
- * selected or the user clicks away. Radix handles portal-based z-stacking.
+ * selected or the user clicks away.
  *
- * @example
+ * @example Static (small fixed list)
+ * ```tsx
  * <AutoComplete
  *   label="Vessel"
- *   items={vessels.map(v => ({ key: v.imo, value: v.imo, label: v.name }))}
+ *   items={vessels.map((v) => ({ key: v.imo, value: v.imo, label: v.name }))}
  *   onItemClick={(imo) => setVessel(imo)}
  * />
+ * ```
+ *
+ * @example Async (server-backed)
+ * ```tsx
+ * <AutoComplete
+ *   label="Port"
+ *   debounce={300}
+ *   onSearch={async (term) => {
+ *     const res = await fetch(`/api/ports?q=${encodeURIComponent(term)}`)
+ *     const data = await res.json()
+ *     return data.map((p) => ({ key: p.unlocode, value: p.unlocode, label: p.name }))
+ *   }}
+ *   onItemClick={(unlocode) => setPort(unlocode)}
+ * />
+ * ```
  */
 export default function AutoComplete({
     disabled,
@@ -44,20 +87,68 @@ export default function AutoComplete({
     inputStyle,
     style,
     layout = 'vertical',
-    items = [],
+    items,
+    onSearch,
+    debounce = 250,
     onItemClick,
     emptyText = 'No results found',
+    loadingText = 'Searching…',
 }: AutoCompleteProps) {
     const [term, setTerm] = useState('')
     const [open, setOpen] = useState(false)
+    const [asyncItems, setAsyncItems] = useState<AutoCompleteItem[]>([])
+    const [loading, setLoading] = useState(false)
 
-    const foundItems = term.trim()
+    const isAsync = typeof onSearch === 'function'
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    // Track the most recent in-flight request so out-of-order responses
+    // don't overwrite fresher results.
+    const requestIdRef = useRef(0)
+
+    // Static filtering — only when not async
+    const staticFiltered = isAsync || !items
+        ? []
+        : term.trim()
         ? items.filter(
               ({ key, label }) =>
                   label.toLowerCase().includes(term.toLowerCase()) ||
-                  key.toLowerCase().includes(term.toLowerCase())
+                  key.toLowerCase().includes(term.toLowerCase()),
           )
         : []
+
+    // Async debounce + fetch
+    useEffect(() => {
+        if (!isAsync) return
+        if (debounceRef.current) clearTimeout(debounceRef.current)
+        if (!term.trim()) {
+            setAsyncItems([])
+            setLoading(false)
+            return
+        }
+        const myId = ++requestIdRef.current
+        setLoading(true)
+        debounceRef.current = setTimeout(async () => {
+            try {
+                const res = await onSearch!(term)
+                if (myId === requestIdRef.current) {
+                    setAsyncItems(res)
+                }
+            } catch {
+                if (myId === requestIdRef.current) {
+                    setAsyncItems([])
+                }
+            } finally {
+                if (myId === requestIdRef.current) {
+                    setLoading(false)
+                }
+            }
+        }, debounce)
+        return () => {
+            if (debounceRef.current) clearTimeout(debounceRef.current)
+        }
+    }, [term, isAsync, debounce, onSearch])
+
+    const foundItems = isAsync ? asyncItems : staticFiltered
 
     const handleSelect = (item: AutoCompleteItem) => {
         setTerm(`${item.label} (${item.value})`)
@@ -97,10 +188,17 @@ export default function AutoComplete({
                                 aria-haspopup="listbox"
                                 aria-expanded={open}
                                 aria-autocomplete="list"
+                                aria-busy={loading || undefined}
                             />
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 flex-shrink-0 text-foreground-muted" aria-hidden="true">
-                                <path fillRule="evenodd" d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z" clipRule="evenodd" />
-                            </svg>
+                            {loading ? (
+                                <span className="w-5 h-5 flex-shrink-0 flex items-center justify-center text-accent" aria-hidden="true">
+                                    <LoadingSpinner inline size="xs" spinnerColor="currentColor" />
+                                </span>
+                            ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 flex-shrink-0 text-foreground-muted" aria-hidden="true">
+                                    <path fillRule="evenodd" d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z" clipRule="evenodd" />
+                                </svg>
+                            )}
                         </div>
                     </Popover.Anchor>
 
@@ -111,17 +209,18 @@ export default function AutoComplete({
                             onOpenAutoFocus={(e) => e.preventDefault()}
                             className="w-64 bg-surface border border-border rounded-lg mt-1 shadow-md z-50 overflow-y-auto max-h-36 animate-in fade-in-0 zoom-in-95"
                         >
-                            {foundItems.length === 0 ? (
+                            {loading ? (
+                                <div className="h-full w-full flex items-center justify-center gap-2 py-4 text-sm text-foreground-secondary">
+                                    <LoadingSpinner inline size="xs" />
+                                    <span>{loadingText}</span>
+                                </div>
+                            ) : foundItems.length === 0 ? (
                                 <div className="h-full w-full flex flex-col items-center justify-center py-4 text-sm text-foreground-secondary">
                                     {emptyText}
                                 </div>
                             ) : (
                                 <div role="listbox">
                                     {foundItems.map((item) => (
-                                        // tabIndex + Enter/Space onKeyDown
-                                        // makes each option keyboard-activatable.
-                                        // Full roving-tabindex / arrow-key nav
-                                        // is deferred to the Phase-5 rewrite.
                                         <div
                                             key={item.key}
                                             role="option"
