@@ -1,3 +1,10 @@
+# [5.7.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.6.0...v5.7.0) (2026-05-30)
+
+
+### Features
+
+* **form:** zero-dependency Form API — useForm, <Form>, native validation, field arrays ([c42a8ad](https://github.com/G-MAKROGLOU/oxygen-ui/commit/c42a8ad0bdb197030677074532bd07e24ef096ae))
+
 # [5.6.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.5.3...v5.6.0) (2026-05-30)
 
 
