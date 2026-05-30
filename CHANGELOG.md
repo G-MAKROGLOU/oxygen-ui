@@ -1,3 +1,10 @@
+## [6.0.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.0.0...v6.0.1) (2026-05-30)
+
+
+### Bug Fixes
+
+* **tabs:** unopinionated count badge — slate pill, near-white text ([9455d54](https://github.com/G-MAKROGLOU/oxygen-ui/commit/9455d54658075c9494a6de2c3eff149aa73ec27f)), closes [#2e4057](https://github.com/G-MAKROGLOU/oxygen-ui/issues/2e4057)
+
 # [6.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.10.0...v6.0.0) (2026-05-30)
 
 
