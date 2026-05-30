@@ -1,3 +1,10 @@
+## [5.7.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.7.1...v5.7.2) (2026-05-30)
+
+
+### Bug Fixes
+
+* **inputs:** align Switch label, TreeSelect error placement; Checkbox descriptions ([708a54a](https://github.com/G-MAKROGLOU/oxygen-ui/commit/708a54a0c3df1cd24cbdc47a788b9b0413d4ea46))
+
 ## [5.7.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.7.0...v5.7.1) (2026-05-30)
 
 
