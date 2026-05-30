@@ -29,6 +29,8 @@ export interface ScalableContainerProps {
      * Default `'top-right'` — matches the OS-window convention.
      */
     togglePosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+    /** Extra classes merged onto the container root. */
+    className?: string
 }
 
 const TOGGLE_POSITION_CLASS: Record<NonNullable<ScalableContainerProps['togglePosition']>, string> = {
@@ -75,6 +77,7 @@ export default function ScalableContainer({
     expandIcon,
     collapseIcon,
     togglePosition = 'top-right',
+    className = '',
 }: ScalableContainerProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const [internalScaled, setInternalScaled] = useState(false)
@@ -118,7 +121,8 @@ export default function ScalableContainer({
                 // when expanded. No background colour change.
                 isScaled ? 'shadow-2xl' : 'shadow-md',
                 'transition-shadow duration-300',
-            ].join(' ')}
+                className,
+            ].filter(Boolean).join(' ')}
         >
             {/* Toggle button — floats over content, no background flash. */}
             <Tooltip placement="bottom" title={isScaled ? 'Collapse' : 'Expand'}>

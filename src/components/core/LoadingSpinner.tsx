@@ -34,6 +34,8 @@ export interface LoadingSpinnerProps {
      * previous state. Ignored when `inline` is true.
      */
     backdropOpacity?: number
+    /** Extra classes merged onto the spinner root. */
+    className?: string
 }
 
 // ── Size → dimensions table ─────────────────────────────────────────────────
@@ -143,6 +145,7 @@ export default function LoadingSpinner({
     spinnerColor,
     textColor,
     backdropOpacity = 0.8,
+    className = '',
 }: LoadingSpinnerProps) {
     const reduced = useReducedMotion()
     const letters = prompt ? Array.from(prompt) : []
@@ -182,7 +185,7 @@ export default function LoadingSpinner({
                 role="status"
                 aria-live="polite"
                 aria-label={prompt ?? 'Loading'}
-                className="flex flex-col items-center justify-center gap-3"
+                className={`flex flex-col items-center justify-center gap-3 ${className}`.trim()}
             >
                 {content}
             </div>
@@ -196,7 +199,7 @@ export default function LoadingSpinner({
                 role="status"
                 aria-live="polite"
                 aria-label={prompt ?? 'Loading'}
-                className="fixed inset-0 z-[8000000] flex flex-col items-center justify-center gap-6 bg-background backdrop-blur-sm"
+                className={`fixed inset-0 z-[8000000] flex flex-col items-center justify-center gap-6 bg-background backdrop-blur-sm ${className}`.trim()}
                 style={{ opacity: backdropOpacity }}
             >
                 {content}

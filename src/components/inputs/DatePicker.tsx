@@ -44,6 +44,8 @@ export interface DatePickerProps {
     clearable?: boolean
     /** Size preset. Default `'md'`. */
     size?: FieldSize
+    /** Extra classes merged onto the component root. */
+    className?: string
 }
 
 // Legacy alias — the previous component exported `TemporalPickerProps`. Keep
@@ -144,6 +146,7 @@ export default function DatePicker({
     weekStartsOn = 0,
     clearable = true,
     size = 'md',
+    className = '',
 }: DatePickerProps) {
     const errorId = useId()
     const hasError = errorMessage != null
@@ -226,7 +229,7 @@ export default function DatePicker({
     const displayValue = value ? format(value) : ''
 
     return (
-        <div className="flex flex-col gap-1">
+        <div className={`flex flex-col gap-1 ${className}`.trim()}>
             <div className={`flex ${layout === 'vertical' ? 'flex-col gap-1.5' : 'flex-row items-start gap-3'}`}>
                 <FieldLabel
                     label={label}

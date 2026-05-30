@@ -9,6 +9,8 @@ export interface CatalogProps {
     items?: GridCardItem[]
     buttonText?: string
     onOpen?: (item: GridCardItem) => void
+    /** Extra classes merged onto the catalog root. */
+    className?: string
 }
 
 /**
@@ -17,9 +19,9 @@ export interface CatalogProps {
  * @example
  * <Catalog display="carousel" items={apps} onOpen={({ to }) => navigate(to!)} />
  */
-export default function Catalog({ display = 'grid', items = [], buttonText, onOpen }: CatalogProps) {
+export default function Catalog({ display = 'grid', items = [], buttonText, onOpen, className = '' }: CatalogProps) {
     return (
-        <div className="w-full h-full">
+        <div className={`w-full h-full ${className}`.trim()}>
             {display === 'grid' ? (
                 <CatalogGrid items={items} buttonText={buttonText} onOpen={onOpen} />
             ) : (

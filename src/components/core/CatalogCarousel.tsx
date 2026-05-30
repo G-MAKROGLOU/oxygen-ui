@@ -7,6 +7,8 @@ export interface CatalogCarouselProps {
     items: GridCardItem[]
     buttonText?: string
     onOpen?: (item: GridCardItem) => void
+    /** Extra classes merged onto the carousel root. */
+    className?: string
 }
 
 /**
@@ -14,7 +16,7 @@ export interface CatalogCarouselProps {
  *
  * Decoupled from ThemeContext — uses CSS `dark:` classes.
  */
-export default function CatalogCarousel({ items, buttonText, onOpen }: CatalogCarouselProps) {
+export default function CatalogCarousel({ items, buttonText, onOpen, className = '' }: CatalogCarouselProps) {
     const [activeIndex, setActiveIndex] = useState(0)
     const [indexPool, setIndexPool] = useState<number[]>([])
     const cardRefs = useRef<{ cardIndex: number; ref: HTMLDivElement }[]>([])
@@ -60,7 +62,7 @@ export default function CatalogCarousel({ items, buttonText, onOpen }: CatalogCa
         setActiveIndex((prev) => (prev - 1 === -1 ? items.length - 1 : prev - 1))
 
     return (
-        <div className="flex items-center justify-center w-full h-full">
+        <div className={`flex items-center justify-center w-full h-full ${className}`.trim()}>
             <div className="flex items-center gap-10">
                 <button
                     type="button"

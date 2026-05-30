@@ -11,6 +11,8 @@ export interface TooltipProps {
     delayDuration?: number
     /** Offset from trigger in px (default 8) */
     sideOffset?: number
+    /** Extra classes merged onto the tooltip content bubble. */
+    className?: string
 }
 
 // Each placement animates in from the opposite edge (toward the trigger)
@@ -42,6 +44,7 @@ export default function Tooltip({
     placement = 'top',
     delayDuration = 300,
     sideOffset = 8,
+    className = '',
 }: TooltipProps) {
     return (
         <TooltipPrimitive.Provider delayDuration={delayDuration}>
@@ -66,7 +69,8 @@ export default function Tooltip({
                             'data-[state=closed]:animate-tooltip-out',
                             // In animation — direction-aware
                             ANIMATION[placement],
-                        ].join(' ')}
+                            className,
+                        ].filter(Boolean).join(' ')}
                     >
                         {title}
                         <TooltipPrimitive.Arrow

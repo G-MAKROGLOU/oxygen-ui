@@ -7,6 +7,8 @@ export interface OpaqueGridCardProps {
     isRight?: boolean
     buttonText?: string
     onOpen?: (item: GridCardItem) => void
+    /** Extra classes merged onto the card root. */
+    className?: string
 }
 
 /**
@@ -23,6 +25,7 @@ export default function OpaqueGridCard({
     isRight = false,
     buttonText = 'Open Application',
     onOpen,
+    className = '',
 }: OpaqueGridCardProps) {
     return (
         <div
@@ -30,7 +33,7 @@ export default function OpaqueGridCard({
                 !isRight
                     ? 'opaque-carousel-card-left dark:opaque-carousel-card-dark-left'
                     : 'opaque-carousel-card-right dark:opaque-carousel-card-dark-right'
-            }`}
+            } ${className}`.trim()}
         >
             <div
                 className={`${

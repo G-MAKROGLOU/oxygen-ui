@@ -31,6 +31,8 @@ export interface ContextMenuProps {
      * component / div / image — anything you can right-click on.
      */
     children: React.ReactNode
+    /** Extra classes merged onto the menu content panel. */
+    className?: string
 }
 
 /**
@@ -70,7 +72,7 @@ export interface ContextMenuProps {
  * </ContextMenu>
  * ```
  */
-export default function ContextMenu({ items, children }: ContextMenuProps) {
+export default function ContextMenu({ items, children, className = '' }: ContextMenuProps) {
     return (
         <ContextMenuPrimitive.Root>
             <ContextMenuPrimitive.Trigger asChild>
@@ -79,7 +81,7 @@ export default function ContextMenu({ items, children }: ContextMenuProps) {
 
             <ContextMenuPrimitive.Portal>
                 <ContextMenuPrimitive.Content
-                    className={CONTENT_CLASSNAME}
+                    className={`${CONTENT_CLASSNAME} ${className}`.trim()}
                     collisionPadding={8}
                 >
                     {items.map((item) => renderItem(item))}

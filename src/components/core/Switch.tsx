@@ -6,6 +6,8 @@ export interface ThemeSwitchProps {
     onChange: (e: { target: { checked: boolean } }) => void
     /** Optional accessible label (defaults to "Toggle dark mode") */
     label?: string
+    /** Extra classes merged onto the root label. */
+    className?: string
 }
 
 /**
@@ -18,11 +20,11 @@ export interface ThemeSwitchProps {
  * @example
  * <ThemeSwitch checked={isDark} onChange={({ target }) => setDark(target.checked)} />
  */
-export default function ThemeSwitch({ checked, onChange, label = 'Toggle dark mode' }: ThemeSwitchProps) {
+export default function ThemeSwitch({ checked, onChange, label = 'Toggle dark mode', className = '' }: ThemeSwitchProps) {
     const id = useId()
 
     return (
-        <label htmlFor={id} className="flex items-center gap-2 cursor-pointer select-none">
+        <label htmlFor={id} className={`flex items-center gap-2 cursor-pointer select-none ${className}`.trim()}>
             <SwitchPrimitive.Root
                 id={id}
                 checked={checked}

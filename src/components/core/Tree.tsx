@@ -22,6 +22,10 @@ export interface TreeProps {
     onNodeClick: (payload: TreeItemClickPayload) => void
     defaultExpandAll?: boolean
     defaultExpandedKeys?: string[]
+    /** Extra classes merged onto the tree root. */
+    className?: string
+    /** Inline style on the tree root. */
+    style?: React.CSSProperties
 }
 
 /** ─────────────────── helpers ─────────────────── */
@@ -158,9 +162,11 @@ export default function Tree({
     onNodeClick,
     defaultExpandAll = false,
     defaultExpandedKeys = [],
+    className = '',
+    style,
 }: TreeProps) {
     return (
-        <div className="p-1 w-full">
+        <div className={`p-1 w-full ${className}`.trim()} style={style}>
             {nodes.map((item) => (
                 <TreeNodeItem
                     key={item.key}
