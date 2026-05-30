@@ -1,3 +1,10 @@
+## [5.7.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.7.0...v5.7.1) (2026-05-30)
+
+
+### Bug Fixes
+
+* **radio:** clean label-left layout — dot beside label, description wraps under ([65dd906](https://github.com/G-MAKROGLOU/oxygen-ui/commit/65dd90636dfb6da0548c9266e8aac0ee580dcb22))
+
 # [5.7.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.6.0...v5.7.0) (2026-05-30)
 
 
