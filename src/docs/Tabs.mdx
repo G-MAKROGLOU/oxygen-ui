@@ -1,0 +1,239 @@
+{/* src/docs/Tabs.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/Tabs/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Tabs
+
+Switch between sibling content panes. The active tab is marked by a thin cobalt
+indicator that **slides** between tabs like a needle settling on a gauge, never a
+heavy full-fill pill. Built on Radix Tabs, so roving-tabindex keyboard nav,
+`role="tablist"`/`tab`/`tabpanel`, and reduced-motion all come for free.
+
+## Mental model
+
+`Tabs` is **compositional**: the root holds the active value + shared options
+(variant, size, orientation), and you assemble the parts yourself:
+
+- `Tabs.List` — the strip. Owns overflow (scroll + fade + chevrons + a "jump to
+  any tab" menu) and the sliding marker context.
+- `Tabs.Trigger value` — one tab button. Self-registers so the overflow menu can
+  list it.
+- `Tabs.Panel value` — the matching content pane. Lazy by default; mounts on
+  first activation.
+- `Tabs.Add` — an optional trailing "+" affordance for dynamic tabs.
+
+A `Trigger` and its `Panel` are paired by `value`. Provide `defaultValue`
+(uncontrolled) or `value` + `onValueChange` (controlled).
+
+## Quick start
+
+```tsx
+import { Tabs } from '@geomak/ui'
+
+<Tabs defaultValue="overview">
+  <Tabs.List aria-label="Sections">
+    <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+    <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+    <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+  </Tabs.List>
+
+  <Tabs.Panel value="overview">…</Tabs.Panel>
+  <Tabs.Panel value="activity">…</Tabs.Panel>
+  <Tabs.Panel value="settings">…</Tabs.Panel>
+</Tabs>
+```
+
+## Variants
+
+Set `variant` on the root. The marker animates (exponential ease-out, reduced
+motion → instant) in `underline` and `segmented`.
+
+```tsx
+// Underline (default, signature): sliding cobalt marker under the active tab.
+<Tabs defaultValue="a" variant="underline">…</Tabs>
+
+// Segmented: a lifted-pill track for 2–4 compact options; the pill slides.
+<Tabs defaultValue="day" variant="segmented">
+  <Tabs.List aria-label="Range">
+    <Tabs.Trigger value="day">Day</Tabs.Trigger>
+    <Tabs.Trigger value="week">Week</Tabs.Trigger>
+    <Tabs.Trigger value="month">Month</Tabs.Trigger>
+  </Tabs.List>
+  <Tabs.Panel value="day">…</Tabs.Panel>
+  {/* … */}
+</Tabs>
+
+// Enclosed: folder tabs. The active tab is a raised surface that joins the
+// panel — wrap the panels in a bordered, top-flush container.
+<Tabs defaultValue="editor" variant="enclosed">
+  <Tabs.List aria-label="Workspace">
+    <Tabs.Trigger value="editor">Editor</Tabs.Trigger>
+    <Tabs.Trigger value="preview">Preview</Tabs.Trigger>
+  </Tabs.List>
+  <div className="rounded-b-lg border border-t-0 border-border bg-surface p-5">
+    <Tabs.Panel value="editor">…</Tabs.Panel>
+    <Tabs.Panel value="preview">…</Tabs.Panel>
+  </div>
+</Tabs>
+```
+
+## Orientation & size
+
+```tsx
+// Vertical rail + panel beside it. Triggers left-align and fill the rail.
+<Tabs defaultValue="profile" orientation="vertical">
+  <Tabs.List aria-label="Account">
+    <Tabs.Trigger value="profile">Profile</Tabs.Trigger>
+    <Tabs.Trigger value="alerts">Alerts</Tabs.Trigger>
+  </Tabs.List>
+  <Tabs.Panel value="profile">…</Tabs.Panel>
+  <Tabs.Panel value="alerts">…</Tabs.Panel>
+</Tabs>
+
+// Sizes: sm | md (default) | lg.
+<Tabs defaultValue="a" size="lg">…</Tabs>
+```
+
+## Icons & count badges
+
+```tsx
+<Tabs.Trigger value="overview" icon={<HomeIcon />}>Overview</Tabs.Trigger>
+<Tabs.Trigger value="activity" badge={12}>Activity</Tabs.Trigger>
+<Tabs.Trigger value="archived" disabled>Archived</Tabs.Trigger>
+```
+
+The badge is a subtle, theme-relative chip (slate pill + near-white text) that
+self-inverts in dark mode.
+
+## Dynamic tabs (closeable + add)
+
+Compose the tab list from your own state; `Tabs.Trigger closeable` renders an ×,
+and `Tabs.Add` a trailing "+".
+
+```tsx
+function Workspace() {
+  const [tabs, setTabs] = useState([{ key: 't1', title: 'Aurora' }])
+  const [active, setActive] = useState('t1')
+  const [seq, setSeq] = useState(2)
+
+  const close = (key) => setTabs((p) => {
+    const next = p.filter((t) => t.key !== key)
+    if (key === active && next.length) setActive(next[next.length - 1].key)
+    return next
+  })
+  const add = () => {
+    const key = `t${seq}`
+    setTabs((p) => [...p, { key, title: `Vessel ${seq}` }])
+    setActive(key); setSeq((s) => s + 1)
+  }
+
+  return (
+    <Tabs value={active} onValueChange={setActive}>
+      <Tabs.List aria-label="Open vessels">
+        {tabs.map((t) => (
+          <Tabs.Trigger key={t.key} value={t.key} closeable onClose={() => close(t.key)}>
+            {t.title}
+          </Tabs.Trigger>
+        ))}
+        <Tabs.Add onClick={add} />
+      </Tabs.List>
+      {tabs.map((t) => <Tabs.Panel key={t.key} value={t.key}>…</Tabs.Panel>)}
+    </Tabs>
+  )
+}
+```
+
+## Overflow
+
+When the strip is too narrow for its tabs it scrolls (drag / wheel / swipe), the
+edges fade, and prev/next chevrons appear **only on the overflowing side**. A
+**"Show all tabs" (⋯) menu** also appears: hover or click it to jump straight to
+any tab. The picked (or keyboard-activated) tab scrolls into view automatically.
+No configuration needed.
+
+## Lazy vs. kept-mounted panels
+
+```tsx
+// Default: panels mount on first activation (lazy).
+<Tabs.Panel value="a">…</Tabs.Panel>
+
+// keepMounted: render even when inactive (preserves scroll / form state).
+<Tabs.Panel value="a" keepMounted>…</Tabs.Panel>
+```
+
+## Keyboard & accessibility
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Key</th><th style={th}>Action</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>← / →</td><td style={td(false)}>Move between tabs (horizontal). Activates on focus.</td></tr>
+    <tr><td style={td0}>↑ / ↓</td><td style={td(false)}>Move between tabs (vertical).</td></tr>
+    <tr><td style={td0}>Home / End</td><td style={td(false)}>First / last tab.</td></tr>
+    <tr><td style={td0}>Tab</td><td style={td(false)}>Move focus out of the list into the active panel.</td></tr>
+    <tr><td style={td0}>Esc</td><td style={td(false)}>Close the overflow "all tabs" menu.</td></tr>
+  </tbody>
+</table>
+
+Roles (`tablist` / `tab` / `tabpanel`) and focus management come from Radix. Give
+`Tabs.List` an `aria-label`. The close button and add button have accessible
+names. The marker honours `prefers-reduced-motion`.
+
+## API reference
+
+### `<Tabs>`
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Controlled active tab.</td></tr>
+    <tr><td style={td0}>defaultValue</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Uncontrolled initial active tab.</td></tr>
+    <tr><td style={td0}>onValueChange</td><td style={td(true)}>{'(value) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires with the next active value.</td></tr>
+    <tr><td style={td0}>variant</td><td style={td(true)}>'underline' | 'segmented' | 'enclosed'</td><td style={td(true)}>'underline'</td><td style={td(false)}>Visual style.</td></tr>
+    <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md' | 'lg'</td><td style={td(true)}>'md'</td><td style={td(false)}>Control height + type scale.</td></tr>
+    <tr><td style={td0}>orientation</td><td style={td(true)}>'horizontal' | 'vertical'</td><td style={td(true)}>'horizontal'</td><td style={td(false)}>Strip-above vs. rail-beside.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Merged onto the root.</td></tr>
+  </tbody>
+</table>
+
+### `<Tabs.Trigger>`
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value</td><td style={td(true)}>string</td><td style={td(false)}>Required. Pairs with a `Tabs.Panel`.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Leading icon.</td></tr>
+    <tr><td style={td0}>badge</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Trailing count chip.</td></tr>
+    <tr><td style={td0}>closeable / onClose</td><td style={td(true)}>boolean / {'() => void'}</td><td style={td(false)}>Render a × and handle close.</td></tr>
+    <tr><td style={td0}>disabled</td><td style={td(true)}>boolean</td><td style={td(false)}>Non-activatable, dimmed.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(false)}>Merged onto the trigger.</td></tr>
+  </tbody>
+</table>
+
+### `<Tabs.Panel>`
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value</td><td style={td(true)}>string</td><td style={td(false)}>Required. The owning tab.</td></tr>
+    <tr><td style={td0}>keepMounted</td><td style={td(true)}>boolean</td><td style={td(false)}>Keep mounted (hidden) when inactive. Default lazy.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(false)}>Merged onto the panel.</td></tr>
+  </tbody>
+</table>
+
+### `<Tabs.List>` / `<Tabs.Add>`
+
+`Tabs.List` takes `aria-label` (recommended) + `className`. `Tabs.Add` takes
+`onClick`, `aria-label` (default "Add tab"), and `className`.
+
+```ts
+import { Tabs } from '@geomak/ui'
+import type { TabsProps, TabsTriggerProps, TabsPanelProps, TabsListProps, TabsAddProps, TabsVariant, TabsSize, TabsOrientation } from '@geomak/ui'
+```
+
+See the **Data Display → Tabs** stories for every variant and state, live.
