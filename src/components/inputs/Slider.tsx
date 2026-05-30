@@ -14,14 +14,21 @@ export interface SliderMark {
 }
 
 export interface SliderProps {
+    /** Controlled value. */
     value?: SliderValue
+    /** Uncontrolled initial value. */
     defaultValue?: SliderValue
+    /** Fires when the value changes. */
     onChange?: (value: SliderValue) => void
     /** Fired once at the end of a drag/keyboard interaction. */
     onChangeEnd?: (value: SliderValue) => void
+    /** Minimum allowed value. */
     min?: number
+    /** Maximum allowed value. */
     max?: number
+    /** Step increment between values. */
     step?: number
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
     /** Show the current value(s) next to the label. */
     showValue?: boolean
@@ -31,14 +38,19 @@ export interface SliderProps {
     marks?: SliderMark[]
     /** Show a value tooltip above the thumb while dragging. */
     tooltip?: boolean
+    /** Size preset — controls height, padding, and font. Default 'md'. */
     size?: FieldSize
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
     /** Show a required asterisk after the label. */
     required?: boolean
+    /** Native form field name (used for FormData serialisation). */
     name?: string
+    /** The control id; the field label links to it for accessibility. */
     htmlFor?: string
 }
 

@@ -2,10 +2,15 @@ import React, { useId, useRef, useState } from 'react'
 import { Field } from './_field'
 
 export interface FileInputProps {
+    /** Allow selecting more than one file. */
     allowMultiple?: boolean
+    /** Fires when the value changes. */
     onChange?: (e: { target: { files: File[]; name?: string; id?: string; value?: string } }) => void
+    /** Native form field name (used for FormData serialisation). */
     name?: string
+    /** The control id; the field label links to it for accessibility. */
     htmlFor?: string
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
     /** Accepted MIME types / extensions, e.g. `'.xlsx,application/pdf'`. */
     accept?: string
@@ -15,10 +20,13 @@ export interface FileInputProps {
     hint?: React.ReactNode
     /** Maximum file size in bytes. Files above this are rejected with an error. */
     maxSize?: number
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Show a required asterisk after the label. */
     required?: boolean
     /** Override the upload glyph in the empty state. */
     icon?: React.ReactNode

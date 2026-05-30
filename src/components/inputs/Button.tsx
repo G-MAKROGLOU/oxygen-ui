@@ -1,6 +1,7 @@
 import React from 'react'
 
 export interface ButtonProps {
+    /** Button content (text or nodes). */
     content?: React.ReactNode
     /** Visual style variant */
     variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
@@ -8,12 +9,15 @@ export interface ButtonProps {
     size?: 'sm' | 'md' | 'lg'
     /** HTML button type */
     buttonType?: 'button' | 'submit' | 'reset'
+    /** Show a loading spinner and disable the control. */
     loading?: boolean
+    /** Disable interaction and dim the control. */
     disabled?: boolean
     /** Inline style overrides (width, etc.). Margins/layout belong in the parent. */
     style?: React.CSSProperties
     /** Leading icon — rendered before content */
     icon?: React.ReactNode
+    /** Click handler. */
     onClick?: React.MouseEventHandler<HTMLButtonElement>
     /**
      * @deprecated Pass `variant` instead. Kept for API compat — currently no-op.

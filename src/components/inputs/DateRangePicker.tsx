@@ -14,25 +14,39 @@ export interface DateRangePreset {
 }
 
 export interface DateRangePickerProps {
+    /** Controlled value. */
     value?: DateRange
+    /** Fires when the value changes. */
     onChange?: (range: DateRange) => void
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
+    /** The control id; the field label links to it for accessibility. */
     htmlFor?: string
+    /** Placeholder shown when the field is empty. */
     placeholder?: string
+    /** Label/control orientation: 'horizontal' or 'vertical'. */
     layout?: 'horizontal' | 'vertical'
+    /** Size preset — controls height, padding, and font. Default 'md'. */
     size?: FieldSize
+    /** Earliest selectable date. */
     min?: Date
+    /** Latest selectable date. */
     max?: Date
     /** 0 = Sunday, 1 = Monday. Default `0`. */
     weekStartsOn?: 0 | 1
     /** Quick-select presets shown in a rail beside the calendars. */
     presets?: DateRangePreset[]
+    /** Custom formatter for the displayed value. */
     format?: (d: Date) => string
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Show a required asterisk after the label. */
     required?: boolean
+    /** Inline style applied to the control shell. */
     style?: React.CSSProperties
 }
 

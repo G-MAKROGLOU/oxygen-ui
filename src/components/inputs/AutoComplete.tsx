@@ -11,11 +11,17 @@ export interface AutoCompleteItem {
 }
 
 export interface AutoCompleteProps {
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
+    /** Placeholder shown when the field is empty. */
     placeholder?: string
+    /** Native form field name (used for FormData serialisation). */
     name?: string
+    /** Inline style applied to the inner input element. */
     inputStyle?: React.CSSProperties
+    /** Inline style applied to the control shell. */
     style?: React.CSSProperties
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
@@ -37,6 +43,7 @@ export interface AutoCompleteProps {
      * typing. Default `250`. Ignored when `items` is used.
      */
     debounce?: number
+    /** Fires when a suggestion is selected, with its value. */
     onItemClick?: (value: string) => void
     /** Custom "empty" message */
     emptyText?: string
@@ -52,6 +59,7 @@ export interface AutoCompleteProps {
     helperText?: React.ReactNode
     /** Mark required (asterisk after the label). */
     required?: boolean
+    /** The control id; the field label links to it for accessibility. */
     htmlFor?: string
 }
 

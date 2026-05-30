@@ -2,23 +2,35 @@ import React, { useId, useState } from 'react'
 import { Field, fieldShell, FIELD_SIZE, type FieldSize } from './_field'
 
 export interface PasswordProps {
+    /** Controlled value. */
     value?: string
+    /** Fires when the value changes. */
     onChange?: React.ChangeEventHandler<HTMLInputElement>
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
+    /** The control id; the field label links to it for accessibility. */
     htmlFor?: string
+    /** Placeholder shown when the field is empty. */
     placeholder?: string
+    /** Native form field name (used for FormData serialisation). */
     name?: string
+    /** Inline style applied to the inner input element. */
     inputStyle?: React.CSSProperties
+    /** Inline style applied to the control shell. */
     style?: React.CSSProperties
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
     /** Size preset — controls height, padding, and font. Default `'md'`. */
     size?: FieldSize
+    /** Blur handler — useful for touched/validation timing. */
     onBlur?: React.FocusEventHandler<HTMLInputElement>
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Show a required asterisk after the label. */
     required?: boolean
     /** Override the "reveal" (password hidden) icon. */
     showIcon?: React.ReactNode

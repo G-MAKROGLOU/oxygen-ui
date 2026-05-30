@@ -23,24 +23,39 @@ export type DropdownKey = string | number
 export type DropdownValue = DropdownKey | DropdownKey[]
 
 export interface DropdownProps {
+    /** Enable multi-select (value becomes an array of keys). */
     isMultiselect?: boolean
+    /** Show a search box inside the dropdown panel. */
     hasSearch?: boolean
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
+    /** Native form field name (used for FormData serialisation). */
     name?: string
+    /** Controlled value. */
     value?: DropdownValue
+    /** Fires when the value changes. */
     onChange?: (e: { target: { value: DropdownValue; id?: string; name?: string } }) => void
+    /** Blur handler — useful for touched/validation timing. */
     onBlur?: React.FocusEventHandler
+    /** Disable interaction and dim the control. */
     disabled?: boolean
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Show a required asterisk after the label. */
     required?: boolean
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
+    /** Inline style applied to the control shell. */
     style?: React.CSSProperties
+    /** The control id; the field label links to it for accessibility. */
     htmlFor?: string
+    /** The selectable items. */
     items?: DropdownItem[]
+    /** Inline style applied to the label. */
     labelStyle?: React.CSSProperties
+    /** Placeholder shown when the field is empty. */
     placeholder?: string
     /** Size preset. Default `'md'`. */
     size?: import('./_field').FieldSize

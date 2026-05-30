@@ -8,24 +8,37 @@ export interface NumberInputProps {
     value?: number | ''
     /** Fires with the next number. Empty input resolves to `undefined`. */
     onChange?: (e: { target: { value: number | undefined; id?: string; name?: string } }) => void
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
+    /** The control id; the field label links to it for accessibility. */
     htmlFor?: string
+    /** Native form field name (used for FormData serialisation). */
     name?: string
+    /** Disable interaction and dim the control. */
     disabled?: boolean
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
     /** Size preset. Default `'md'`. */
     size?: FieldSize
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Show a required asterisk after the label. */
     required?: boolean
+    /** Inline style applied to the inner input element. */
     inputStyle?: React.CSSProperties
+    /** Inline style applied to the label. */
     labelStyle?: React.CSSProperties
+    /** Placeholder shown when the field is empty. */
     placeholder?: string
+    /** Inline style applied to the control shell. */
     style?: React.CSSProperties
+    /** Minimum allowed value. */
     min?: number
+    /** Maximum allowed value. */
     max?: number
+    /** Render read-only — visible but not editable. */
     readOnly?: boolean
     /** Optional precision for floating-point steps (number of decimal places to round to). */
     precision?: number

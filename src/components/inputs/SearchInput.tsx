@@ -2,14 +2,23 @@ import React from 'react'
 import { Field, fieldShell, type FieldSize } from './_field'
 
 export interface SearchInputProps {
+    /** Controlled value. */
     value?: string
+    /** Fires when the value changes. */
     onChange?: React.ChangeEventHandler<HTMLInputElement>
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
+    /** The control id; the field label links to it for accessibility. */
     htmlFor?: string
+    /** Placeholder shown when the field is empty. */
     placeholder?: string
+    /** Native form field name (used for FormData serialisation). */
     name?: string
+    /** Inline style applied to the inner input element. */
     inputStyle?: React.CSSProperties
+    /** Inline style applied to the control shell. */
     style?: React.CSSProperties
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'

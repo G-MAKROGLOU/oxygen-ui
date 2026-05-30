@@ -2,8 +2,11 @@ import React, { useId, useState } from 'react'
 import { Field, type FieldSize } from './_field'
 
 export interface RatingProps {
+    /** Controlled value. */
     value?: number
+    /** Uncontrolled initial value. */
     defaultValue?: number
+    /** Fires when the value changes. */
     onChange?: (value: number) => void
     /** Number of icons. Default `5`. */
     count?: number
@@ -13,12 +16,17 @@ export interface RatingProps {
     readOnly?: boolean
     /** Clicking the current value again clears to 0. Default `true`. */
     clearable?: boolean
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
+    /** Size preset — controls height, padding, and font. Default 'md'. */
     size?: FieldSize
+    /** Disable interaction and dim the control. */
     disabled?: boolean
     /** Override the icon. Receives a `filled` flag. Default is a star. */
     icon?: (filled: boolean) => React.ReactNode
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
+    /** Native form field name (used for FormData serialisation). */
     name?: string
     /** Label/control orientation. Default `'vertical'`. */
     layout?: 'horizontal' | 'vertical'

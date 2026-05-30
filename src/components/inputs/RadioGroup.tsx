@@ -14,13 +14,17 @@ export interface RadioOption {
 }
 
 export interface RadioGroupProps {
+    /** The selectable options. */
     options: RadioOption[]
     /** Controlled selected value. */
     value?: string
     /** Uncontrolled initial value. */
     defaultValue?: string
+    /** Fires when the value changes. */
     onChange?: (value: string) => void
+    /** Native form field name (used for FormData serialisation). */
     name?: string
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
     /**
      * Option arrangement. `'vertical'` (default) stacks options in a column;
@@ -35,10 +39,13 @@ export interface RadioGroupProps {
     labelPosition?: 'left' | 'right'
     /** Size preset — controls the dot + text size. Default `'md'`. */
     size?: FieldSize
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Show a required asterisk after the label. */
     required?: boolean
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
 }
 

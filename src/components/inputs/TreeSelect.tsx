@@ -19,10 +19,13 @@ export interface TreeSelectProps {
     value?: string | number | null
     /** Fires with the next selected key (and the corresponding event-like target). */
     onChange?: (e: { target: { value: string | number; id?: string; name?: string } }) => void
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
+    /** Placeholder shown when the field is empty. */
     placeholder?: string
     /** Form control id linkage. */
     htmlFor?: string
+    /** Native form field name (used for FormData serialisation). */
     name?: string
     /** Label/trigger orientation. Defaults to `'horizontal'`. */
     layout?: 'horizontal' | 'vertical'
@@ -30,8 +33,11 @@ export interface TreeSelectProps {
     helperText?: React.ReactNode
     /** Show a required asterisk after the label. */
     required?: boolean
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
+    /** Inline style applied to the control shell. */
     style?: React.CSSProperties
     /**
      * Whether parent (branch) nodes can be selected. When `false`, parents

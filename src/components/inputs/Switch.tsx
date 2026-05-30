@@ -7,6 +7,7 @@ export interface SwitchInputProps {
     checked?: boolean
     /** Uncontrolled initial state. */
     defaultChecked?: boolean
+    /** Fires when the value changes. */
     onChange?: (e: { target: { checked: boolean; name?: string } }) => void
     /** Thumb icon shown when on. */
     checkedIcon?: React.ReactNode
@@ -31,9 +32,13 @@ export interface SwitchInputProps {
     onLabel?: React.ReactNode
 
     // ── Form participation ──────────────────────────────────────────────────
+    /** Native form field name (used for FormData serialisation). */
     name?: string
+    /** Show a required asterisk after the label. */
     required?: boolean
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
 }
 

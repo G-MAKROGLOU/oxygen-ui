@@ -10,16 +10,19 @@ export interface SegmentedOption {
 }
 
 export interface SegmentedControlProps {
+    /** The selectable options. */
     options: SegmentedOption[]
     /** Controlled selected value. */
     value?: string
     /** Uncontrolled initial value. */
     defaultValue?: string
+    /** Fires when the value changes. */
     onChange?: (value: string) => void
     /** Size preset. Default `'md'`. */
     size?: FieldSize
     /** Stretch to fill the container, segments share the width equally. */
     fullWidth?: boolean
+    /** Disable interaction and dim the control. */
     disabled?: boolean
 
     // ── Field participation ─────────────────────────────────────────────────
@@ -31,8 +34,11 @@ export interface SegmentedControlProps {
     helperText?: React.ReactNode
     /** Native form field name (emits a hidden input carrying the value). */
     name?: string
+    /** Show a required asterisk after the label. */
     required?: boolean
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
+    /** Accessible label for the control. */
     'aria-label'?: string
 }
 

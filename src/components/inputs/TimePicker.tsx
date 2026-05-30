@@ -5,12 +5,19 @@ import { Field, fieldShell, type FieldSize } from './_field'
 export interface TimePickerProps {
     /** Value as `"HH:mm"` (24h) or `"HH:mm:ss"`. `null`/`undefined` = unset. */
     value?: string | null
+    /** Fires when the value changes. */
     onChange?: (value: string | null) => void
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
+    /** The control id; the field label links to it for accessibility. */
     htmlFor?: string
+    /** Native form field name (used for FormData serialisation). */
     name?: string
+    /** Placeholder shown when the field is empty. */
     placeholder?: string
+    /** Label/control orientation: 'horizontal' or 'vertical'. */
     layout?: 'horizontal' | 'vertical'
+    /** Size preset — controls height, padding, and font. Default 'md'. */
     size?: FieldSize
     /** Display in 12-hour format with AM/PM (value stays 24h `"HH:mm"`). */
     use12Hours?: boolean
@@ -18,11 +25,15 @@ export interface TimePickerProps {
     withSeconds?: boolean
     /** Minute step. Default `1`. Use `5` / `15` for coarse pickers. */
     minuteStep?: number
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Show a required asterisk after the label. */
     required?: boolean
+    /** Inline style applied to the control shell. */
     style?: React.CSSProperties
 }
 

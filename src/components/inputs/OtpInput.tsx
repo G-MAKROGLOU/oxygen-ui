@@ -4,20 +4,29 @@ import { Field, type FieldSize } from './_field'
 export interface OtpInputProps {
     /** Number of code boxes. Default `6`. */
     length?: number
+    /** Controlled value. */
     value?: string
+    /** Fires when the value changes. */
     onChange?: (code: string) => void
     /** Fired when every box is filled. */
     onComplete?: (code: string) => void
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
+    /** The control id; the field label links to it for accessibility. */
     htmlFor?: string
+    /** Native form field name (used for FormData serialisation). */
     name?: string
     /** `'numeric'` (default) restricts to digits; `'alphanumeric'` allows letters too. */
     mode?: 'numeric' | 'alphanumeric'
     /** Render boxes as masked dots (for PIN entry). */
     masked?: boolean
+    /** Size preset — controls height, padding, and font. Default 'md'. */
     size?: FieldSize
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
+    /** Show a required asterisk after the label. */
     required?: boolean
     /** Label/control orientation. Default `'vertical'`. */
     layout?: 'horizontal' | 'vertical'

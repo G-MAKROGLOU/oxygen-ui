@@ -9,10 +9,13 @@ export interface DatePickerProps {
     value?: Date | null
     /** Fires with the next date (or `null` if cleared via the clear button). */
     onChange?: (date: Date | null) => void
+    /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
     /** Text shown in the trigger when no date is selected. Default `"Select a date…"`. */
     placeholder?: string
+    /** The control id; the field label links to it for accessibility. */
     htmlFor?: string
+    /** Native form field name (used for FormData serialisation). */
     name?: string
     /** Label/trigger orientation. Defaults to `'horizontal'`. */
     layout?: 'horizontal' | 'vertical'
@@ -20,12 +23,15 @@ export interface DatePickerProps {
     helperText?: React.ReactNode
     /** Show a required asterisk after the label. */
     required?: boolean
+    /** Disable interaction and dim the control. */
     disabled?: boolean
+    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Earliest selectable date. Dates before this render disabled. */
     min?: Date
     /** Latest selectable date. Dates after this render disabled. */
     max?: Date
+    /** Inline style applied to the control shell. */
     style?: React.CSSProperties
     /**
      * Custom formatter for the trigger display. Defaults to
