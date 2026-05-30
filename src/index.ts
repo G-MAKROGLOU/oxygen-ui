@@ -86,7 +86,16 @@ export { default as Tooltip, TooltipProvider } from './components/core/Tooltip'
 export type { TooltipProps } from './components/core/Tooltip'
 
 export { default as Tabs } from './components/core/Tabs'
-export type { TabsProps, TabItem } from './components/core/Tabs'
+export type {
+    TabsProps,
+    TabsListProps,
+    TabsTriggerProps,
+    TabsPanelProps,
+    TabsAddProps,
+    TabsVariant,
+    TabsSize,
+    TabsOrientation,
+} from './components/core/Tabs'
 
 export { default as Tree } from './components/core/Tree'
 export type { TreeProps, TreeNode, TreeItemClickPayload } from './components/core/Tree'

@@ -59,6 +59,16 @@
     100% { transform: translateX(100%); }
 }
 
+// Cross-browser scrollbar hiding for internal scroll regions (tab strips,
+// time-picker columns). The region still scrolls; only the bar is hidden.
+.hidden-scrollbar {
+    scrollbar-width: none;        // Firefox
+    -ms-overflow-style: none;     // old Edge / IE
+}
+.hidden-scrollbar::-webkit-scrollbar {
+    display: none;                // Chrome / Safari
+}
+
 // Skeleton placeholder sweep. The moving band is mixed from `--color-foreground`
 // so it stays visible in BOTH themes (a translucent dark band on light
 // surfaces, a translucent light band on dark surfaces) — unlike a fixed white
