@@ -1,3 +1,10 @@
+# [5.10.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.9.0...v5.10.0) (2026-05-30)
+
+
+### Features
+
+* **config:** finish className passthrough — remaining components ([c8244c6](https://github.com/G-MAKROGLOU/oxygen-ui/commit/c8244c6c8743a89352cfd364951075d12416322a))
+
 # [5.9.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.8.0...v5.9.0) (2026-05-30)
 
 
