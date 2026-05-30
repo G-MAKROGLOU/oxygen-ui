@@ -306,7 +306,11 @@ function TabsTrigger({ value, icon, badge, closeable, onClose, disabled, classNa
                 {icon && <span className={`flex-shrink-0 inline-flex items-center justify-center ${sz.icon}`}>{icon}</span>}
                 <span className="truncate">{children}</span>
                 {badge != null && (
-                    <span className="ml-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-border px-1 text-[11px] font-semibold leading-none text-foreground-secondary group-data-[state=active]/trigger:bg-accent group-data-[state=active]/trigger:text-accent-foreground transition-colors">
+                    // Unopinionated count chip: a subtle blue-tinted slate pill
+                    // with near-white text, consistent across active/inactive.
+                    // Both tokens are theme-relative, so it self-inverts in dark
+                    // mode (light pill + dark text) and always stays legible.
+                    <span className="ml-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-foreground-secondary px-1.5 text-[11px] font-semibold leading-none text-background">
                         {badge}
                     </span>
                 )}
