@@ -7,6 +7,16 @@ const meta: Meta<typeof Switch> = {
     component: Switch,
     tags: ['autodocs'],
     parameters: { layout: 'centered' },
+    argTypes: {
+        layout: { control: 'inline-radio', options: ['horizontal', 'vertical'] },
+        label: { control: 'text' },
+        offLabel: { control: 'text' },
+        onLabel: { control: 'text' },
+        helperText: { control: 'text' },
+        disabled: { control: 'boolean' },
+        required: { control: 'boolean' },
+        errorMessage: { control: 'text' },
+    },
 }
 export default meta
 type Story = StoryObj<typeof Switch>
@@ -18,6 +28,25 @@ function Controlled(args: React.ComponentProps<typeof Switch>) {
 
 export const Off: Story = { render: (a) => <Controlled {...a} /> }
 export const On:  Story = { render: (a) => <Controlled {...a} />, args: { checked: true } }
+
+export const WithLabel: Story = {
+    render: (a) => <Controlled {...a} />,
+    args: { label: 'Email notifications', helperText: 'We will only email you about account activity.' },
+}
+
+export const PerStateLabels: Story = {
+    name: 'Per-state labels',
+    render: (a) => <Controlled {...a} />,
+    args: { offLabel: 'Monthly', onLabel: 'Yearly' },
+    parameters: {
+        docs: { description: { story: '`offLabel` / `onLabel` flank the track and emphasise the active state — the "Monthly ▮ Yearly" pattern.' } },
+    },
+}
+
+export const WithError: Story = {
+    render: (a) => <Controlled {...a} />,
+    args: { label: 'Accept terms', required: true, errorMessage: 'You must enable this to continue' },
+}
 
 const Check = (
     <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 text-foreground" aria-hidden="true">

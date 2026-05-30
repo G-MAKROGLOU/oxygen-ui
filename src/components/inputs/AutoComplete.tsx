@@ -48,6 +48,8 @@ export interface AutoCompleteProps {
     icon?: React.ReactNode
     /** Validation message — turns the field red and links via aria-describedby. */
     errorMessage?: React.ReactNode
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     /** Mark required (asterisk after the label). */
     required?: boolean
     htmlFor?: string
@@ -106,6 +108,7 @@ export default function AutoComplete({
     size = 'md',
     icon,
     errorMessage,
+    helperText,
     required,
     htmlFor,
 }: AutoCompleteProps) {
@@ -178,7 +181,7 @@ export default function AutoComplete({
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}
-            errorMessage={errorMessage}
+            errorMessage={errorMessage} helperText={helperText}
             layout={layout}
             required={required}
         >

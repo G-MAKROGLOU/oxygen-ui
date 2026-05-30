@@ -19,6 +19,10 @@ export interface OtpInputProps {
     disabled?: boolean
     errorMessage?: React.ReactNode
     required?: boolean
+    /** Label/control orientation. Default `'vertical'`. */
+    layout?: 'horizontal' | 'vertical'
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     /** Render a visual gap after this many boxes (e.g. `3` → `123 456`). */
     groupAfter?: number
 }
@@ -53,6 +57,8 @@ export default function OtpInput({
     disabled,
     errorMessage,
     required,
+    layout = 'vertical',
+    helperText,
     groupAfter,
 }: OtpInputProps) {
     const errorId = useId()
@@ -115,7 +121,7 @@ export default function OtpInput({
     }
 
     return (
-        <Field label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} required={required}>
+        <Field label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} required={required} layout={layout} helperText={helperText}>
             <div className="flex items-center gap-2" role="group" aria-label={typeof label === 'string' ? label : 'One-time code'}>
                 {chars.map((char, idx) => (
                     <React.Fragment key={idx}>

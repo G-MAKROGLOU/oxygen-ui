@@ -20,6 +20,12 @@ export interface RatingProps {
     icon?: (filled: boolean) => React.ReactNode
     errorMessage?: React.ReactNode
     name?: string
+    /** Label/control orientation. Default `'vertical'`. */
+    layout?: 'horizontal' | 'vertical'
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
+    /** Show a required asterisk after the label. */
+    required?: boolean
 }
 
 const ICON_SIZE: Record<FieldSize, string> = { sm: 'w-4 h-4', md: 'w-5 h-5', lg: 'w-7 h-7' }
@@ -59,6 +65,9 @@ export default function Rating({
     icon = Star,
     errorMessage,
     name,
+    layout = 'vertical',
+    helperText,
+    required,
 }: RatingProps) {
     const errorId = useId()
     const [internal, setInternal] = useState(defaultValue)
@@ -84,7 +93,7 @@ export default function Rating({
     }
 
     return (
-        <Field label={label} errorId={errorId} errorMessage={errorMessage}>
+        <Field label={label} errorId={errorId} errorMessage={errorMessage} layout={layout} required={required} helperText={helperText}>
             <div
                 role={interactive ? 'slider' : 'img'}
                 aria-label={typeof label === 'string' ? label : 'Rating'}

@@ -1,4 +1,5 @@
 import React from 'react'
+import Tooltip from '../core/Tooltip'
 
 /**
  * Shared field foundation for all oxygen-ui inputs.
@@ -102,6 +103,85 @@ export function fieldShell({
     ].filter(Boolean).join(' ')
 }
 
+// ── Help icon + shared label ──────────────────────────────────────────────────
+
+/**
+ * Small themed "info" affordance shown beside a field label. Hovering or
+ * focusing it reveals `helperText` in a tooltip. Rendered as a `type="button"`
+ * so it never submits an enclosing form, and coloured from semantic tokens so
+ * it follows the active theme.
+ */
+export function FieldHelpIcon({ text }: { text: React.ReactNode }) {
+    return (
+        <Tooltip title={text} placement="top">
+            <button
+                type="button"
+                aria-label="More information"
+                className="inline-flex items-center justify-center rounded-full text-foreground-muted transition-colors hover:text-foreground focus:outline-none focus-visible:text-accent"
+            >
+                <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+                    <circle cx="8" cy="8" r="6.25" />
+                    <path strokeLinecap="round" d="M8 7.4v3.4" />
+                    <circle cx="8" cy="5.1" r="0.65" fill="currentColor" stroke="none" />
+                </svg>
+            </button>
+        </Tooltip>
+    )
+}
+
+export interface FieldLabelProps {
+    label?: React.ReactNode
+    htmlFor?: string
+    required?: boolean
+    /** Reveals an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
+    /** Apply horizontal-layout spacing (top margin, no-wrap, shrink). */
+    horizontal?: boolean
+    style?: React.CSSProperties
+    /** Label column width in horizontal layout. */
+    width?: string | number
+    className?: string
+}
+
+/**
+ * The label row shared by every input — label text + required asterisk +
+ * optional `helperText` info icon. Components that render their own label
+ * outside `<Field>` (Dropdown, DatePicker, Switch, SegmentedControl) use this
+ * so the affordance is pixel-identical everywhere.
+ *
+ * Returns `null` when there's nothing to show (no label and no helperText).
+ */
+export function FieldLabel({
+    label,
+    htmlFor,
+    required,
+    helperText,
+    horizontal = false,
+    style,
+    width,
+    className = '',
+}: FieldLabelProps) {
+    if (label == null && helperText == null) return null
+    return (
+        <div
+            style={{ width: horizontal ? width : undefined, ...style }}
+            className={[
+                'flex items-center gap-1',
+                horizontal ? 'mt-2 flex-shrink-0 whitespace-nowrap' : '',
+                className,
+            ].filter(Boolean).join(' ')}
+        >
+            {label != null && (
+                <label htmlFor={htmlFor} className="text-sm font-medium text-foreground select-none">
+                    {label}
+                    {required && <span className="text-status-error ml-0.5" aria-hidden="true">*</span>}
+                </label>
+            )}
+            {helperText != null && <FieldHelpIcon text={helperText} />}
+        </div>
+    )
+}
+
 // ── Field wrapper ─────────────────────────────────────────────────────────────
 
 export interface FieldProps {
@@ -115,6 +195,8 @@ export interface FieldProps {
     layout?: 'horizontal' | 'vertical'
     /** Show a required asterisk after the label. */
     required?: boolean
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     labelStyle?: React.CSSProperties
     /** Width of the label column in horizontal layout (CSS length). */
     labelWidth?: string | number
@@ -145,6 +227,7 @@ export function Field({
     errorMessage,
     layout = 'vertical',
     required,
+    helperText,
     labelStyle,
     labelWidth,
     className = '',
@@ -160,21 +243,15 @@ export function Field({
                 className,
             ].filter(Boolean).join(' ')}
         >
-            {label && (
-                <label
-                    htmlFor={htmlFor}
-                    style={{ width: horizontal ? labelWidth : undefined, ...labelStyle }}
-                    className={[
-                        'text-sm font-medium text-foreground select-none',
-                        // In horizontal layout the label must not wrap onto
-                        // multiple lines (e.g. "Report date", "Select option").
-                        horizontal ? 'mt-2 flex-shrink-0 whitespace-nowrap' : '',
-                    ].filter(Boolean).join(' ')}
-                >
-                    {label}
-                    {required && <span className="text-status-error ml-0.5" aria-hidden="true">*</span>}
-                </label>
-            )}
+            <FieldLabel
+                label={label}
+                htmlFor={htmlFor}
+                required={required}
+                helperText={helperText}
+                horizontal={horizontal}
+                style={labelStyle}
+                width={labelWidth}
+            />
             <div className="flex flex-col min-w-0 flex-1">
                 {children}
                 {hasError && (

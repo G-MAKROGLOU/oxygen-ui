@@ -1,8 +1,8 @@
-import React, { useEffect, useId, useState } from 'react'
+import React, { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import SearchInput from './SearchInput'
 import Tag from './_tag'
-import { fieldShell } from './_field'
+import { fieldShell, FieldLabel } from './_field'
 
 export interface DropdownItem {
     key: string | number
@@ -33,6 +33,9 @@ export interface DropdownProps {
     disabled?: boolean
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
+    required?: boolean
     errorMessage?: React.ReactNode
     style?: React.CSSProperties
     htmlFor?: string
@@ -41,6 +44,117 @@ export interface DropdownProps {
     placeholder?: string
     /** Size preset. Default `'md'`. */
     size?: import('./_field').FieldSize
+}
+
+/**
+ * Single-line tag row for multi-select values. Shows as many removable tag
+ * chips as fit on one line, then collapses the remainder into a "+N more"
+ * chip — so the trigger never grows in width OR height as the selection
+ * changes.
+ *
+ * Sizing is measured off a hidden, off-layout copy of the full tag set (so the
+ * widths are always available even after we've collapsed the visible row), and
+ * recomputed via a ResizeObserver whenever the trigger width changes.
+ */
+function MultiTagRow({
+    values,
+    disabled,
+    labelFor,
+    onRemove,
+}: {
+    values: (string | number)[]
+    disabled?: boolean
+    labelFor: (key: string | number) => React.ReactNode
+    onRemove: (key: string | number) => void
+}) {
+    const wrapRef = useRef<HTMLDivElement>(null)
+    const measureRef = useRef<HTMLDivElement>(null)
+    const [visibleCount, setVisibleCount] = useState(values.length)
+
+    const key = values.map(String).join('|')
+
+    useLayoutEffect(() => {
+        const wrap = wrapRef.current
+        const measure = measureRef.current
+        if (!wrap || !measure) return
+
+        const GAP = 6 // gap-1.5 → 0.375rem
+
+        const recompute = () => {
+            const avail = wrap.clientWidth
+            const tagEls = Array.from(measure.querySelectorAll<HTMLElement>('[data-mt]'))
+            const moreEl = measure.querySelector<HTMLElement>('[data-mm]')
+            const widths = tagEls.map((e) => e.offsetWidth)
+            const moreW = moreEl ? moreEl.offsetWidth : 0
+            if (widths.length === 0) { setVisibleCount(0); return }
+
+            // How many tags fit with no "+N more" chip?
+            let used = 0
+            let count = 0
+            for (let i = 0; i < widths.length; i++) {
+                const w = widths[i] + (i > 0 ? GAP : 0)
+                if (used + w <= avail) { used += w; count++ } else break
+            }
+
+            // If some are hidden, reserve room for the "+N more" chip and
+            // shrink the visible count until tags + chip fit.
+            if (count < widths.length) {
+                while (count > 0) {
+                    let t = 0
+                    for (let i = 0; i < count; i++) t += widths[i] + (i > 0 ? GAP : 0)
+                    t += GAP + moreW
+                    if (t <= avail) break
+                    count--
+                }
+            }
+            setVisibleCount(count)
+        }
+
+        recompute()
+        const ro = new ResizeObserver(recompute)
+        ro.observe(wrap)
+        return () => ro.disconnect()
+    }, [key])
+
+    const hidden = values.length - visibleCount
+    const moreChip = (n: number) => (
+        <span className="inline-flex items-center flex-shrink-0 rounded-md border border-border bg-surface-raised text-foreground-secondary text-xs px-2 py-0.5">
+            +{n} more
+        </span>
+    )
+
+    return (
+        <div ref={wrapRef} className="relative flex-1 min-w-0 flex flex-nowrap items-center gap-1.5 overflow-hidden">
+            {/* Hidden measuring copy — full set + a sample more chip. Off-layout
+                so it never affects the trigger size, but measurable. */}
+            <div
+                ref={measureRef}
+                aria-hidden="true"
+                className="absolute invisible pointer-events-none flex flex-nowrap items-center gap-1.5"
+                style={{ left: -9999, top: -9999 }}
+            >
+                {values.map((val) => (
+                    <span data-mt key={`m-${val}`}>
+                        <Tag removeLabel="x" onRemove={() => {}}>{labelFor(val)}</Tag>
+                    </span>
+                ))}
+                <span data-mm>{moreChip(values.length)}</span>
+            </div>
+
+            {/* Visible row */}
+            {values.slice(0, visibleCount).map((val) => (
+                <Tag
+                    key={String(val)}
+                    disabled={disabled}
+                    removeLabel={`Remove ${labelFor(val)}`}
+                    onRemove={() => onRemove(val)}
+                >
+                    {labelFor(val)}
+                </Tag>
+            ))}
+            {hidden > 0 && moreChip(hidden)}
+        </div>
+    )
 }
 
 /**
@@ -67,6 +181,8 @@ export default function Dropdown({
     onChange,
     disabled,
     layout = 'horizontal',
+    helperText,
+    required,
     errorMessage,
     style = {},
     htmlFor,
@@ -143,15 +259,14 @@ export default function Dropdown({
             <div
                 className={`flex ${layout === 'vertical' ? 'flex-col gap-1.5' : 'flex-row items-start gap-3'}`}
             >
-                {label && (
-                    <label
-                        className={`text-sm font-medium select-none text-foreground ${layout === 'horizontal' ? 'mt-2 flex-shrink-0 whitespace-nowrap' : ''}`}
-                        htmlFor={htmlFor}
-                        style={labelStyle}
-                    >
-                        {label}
-                    </label>
-                )}
+                <FieldLabel
+                    label={label}
+                    htmlFor={htmlFor}
+                    required={required}
+                    helperText={helperText}
+                    horizontal={layout === 'horizontal'}
+                    style={labelStyle}
+                />
 
                 <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
                     <Popover.Trigger asChild>
@@ -162,8 +277,12 @@ export default function Dropdown({
                             aria-haspopup="listbox"
                             aria-invalid={hasError || undefined}
                             aria-describedby={hasError ? errorId : undefined}
-                            style={style}
-                            className={`flex items-center justify-between gap-2 cursor-pointer select-none min-h-[36px] px-3 py-1.5 ${!style?.width ? 'min-w-[200px]' : ''} ${fieldShell({ size, hasError, disabled, sized: false })}`}
+                            // A definite width keeps the trigger from shrink-
+                            // wrapping to its tags — the selection count changes
+                            // what's shown, never the box size. Override via
+                            // `style={{ width: '100%' }}` to fill a container.
+                            style={{ width: 240, ...style }}
+                            className={`flex items-center justify-between gap-2 cursor-pointer select-none min-h-[36px] px-3 py-1.5 ${fieldShell({ size, hasError, disabled, sized: false })}`}
                             tabIndex={disabled ? -1 : 0}
                             onKeyDown={(e) => {
                                 if (disabled) return
@@ -178,22 +297,19 @@ export default function Dropdown({
                             {/* Selected value(s) — rendered as removable tags.
                                 Clicking a tag's × deselects (multi) or clears
                                 (single). The × calls stopPropagation so it
-                                doesn't toggle the popover. */}
-                            <div className="flex-1 min-w-0 flex flex-wrap items-center gap-1.5">
-                                {!value || (Array.isArray(value) && value.length === 0) ? (
-                                    <span className="text-foreground-muted text-sm">{placeholder}</span>
-                                ) : Array.isArray(value) ? (
-                                    value.map((val) => (
-                                        <Tag
-                                            key={String(val)}
-                                            disabled={disabled}
-                                            removeLabel={`Remove ${labelFor(val)}`}
-                                            onRemove={() => removeSelected(val)}
-                                        >
-                                            {labelFor(val)}
-                                        </Tag>
-                                    ))
-                                ) : (
+                                doesn't toggle the popover. Multi-select collapses
+                                overflow into a "+N more" chip on a single line. */}
+                            {!value || (Array.isArray(value) && value.length === 0) ? (
+                                <span className="flex-1 min-w-0 truncate text-foreground-muted text-sm">{placeholder}</span>
+                            ) : Array.isArray(value) ? (
+                                <MultiTagRow
+                                    values={value}
+                                    disabled={disabled}
+                                    labelFor={labelFor}
+                                    onRemove={removeSelected}
+                                />
+                            ) : (
+                                <div className="flex-1 min-w-0 flex items-center overflow-hidden">
                                     <Tag
                                         disabled={disabled}
                                         removeLabel={`Remove ${labelFor(value)}`}
@@ -201,8 +317,8 @@ export default function Dropdown({
                                     >
                                         {labelFor(value)}
                                     </Tag>
-                                )}
-                            </div>
+                                </div>
+                            )}
 
                             {/* Chevron — currentColor follows trigger text */}
                             <div className={`flex-shrink-0 text-foreground-muted transition-transform duration-200 ${open ? 'rotate-180' : 'rotate-0'}`} aria-hidden="true">

@@ -1,6 +1,6 @@
 import React, { useId, useState } from 'react'
 import * as SliderPrimitive from '@radix-ui/react-slider'
-import { Field, type FieldSize } from './_field'
+import { Field, FieldHelpIcon, type FieldSize } from './_field'
 
 /**
  * Slider value. A single number for a one-thumb slider, or a `[min, max]`
@@ -34,6 +34,10 @@ export interface SliderProps {
     size?: FieldSize
     disabled?: boolean
     errorMessage?: React.ReactNode
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
+    /** Show a required asterisk after the label. */
+    required?: boolean
     name?: string
     htmlFor?: string
 }
@@ -81,6 +85,8 @@ export default function Slider({
     size = 'md',
     disabled,
     errorMessage,
+    helperText,
+    required,
     name,
     htmlFor,
 }: SliderProps) {
@@ -108,9 +114,13 @@ export default function Slider({
             {(label || showValue) && (
                 <div className="flex items-center justify-between mb-2">
                     {label && (
-                        <label htmlFor={htmlFor} className="text-sm font-medium text-foreground select-none">
-                            {label}
-                        </label>
+                        <span className="flex items-center gap-1">
+                            <label htmlFor={htmlFor} className="text-sm font-medium text-foreground select-none">
+                                {label}
+                                {required && <span className="text-status-error ml-0.5" aria-hidden="true">*</span>}
+                            </label>
+                            {helperText != null && <FieldHelpIcon text={helperText} />}
+                        </span>
                     )}
                     {showValue && (
                         <span className="text-sm text-foreground-secondary tabular-nums">{valueText}</span>

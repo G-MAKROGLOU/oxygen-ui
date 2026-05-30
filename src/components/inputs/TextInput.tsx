@@ -19,6 +19,8 @@ export interface TextInputProps {
     size?: FieldSize
     onBlur?: React.FocusEventHandler<HTMLInputElement>
     errorMessage?: React.ReactNode
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     /** Mark the field required (renders an asterisk after the label). */
     required?: boolean
     /** Optional leading adornment (icon / prefix). */
@@ -64,6 +66,7 @@ export default function TextInput({
     size = 'md',
     onBlur,
     errorMessage,
+    helperText,
     required,
     prefix,
     suffix,
@@ -102,9 +105,9 @@ export default function TextInput({
             htmlFor={htmlFor}
             errorId={errorId}
             errorMessage={errorMessage}
+            helperText={helperText}
             layout={layout}
             required={required}
-            className={style ? undefined : undefined}
         >
             {hasAdornment ? (
                 <div

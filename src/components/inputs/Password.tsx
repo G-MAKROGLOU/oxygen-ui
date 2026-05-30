@@ -17,6 +17,8 @@ export interface PasswordProps {
     size?: FieldSize
     onBlur?: React.FocusEventHandler<HTMLInputElement>
     errorMessage?: React.ReactNode
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     required?: boolean
     /** Override the "reveal" (password hidden) icon. */
     showIcon?: React.ReactNode
@@ -62,6 +64,7 @@ export default function Password({
     size = 'md',
     onBlur,
     errorMessage,
+    helperText,
     required,
     showIcon,
     hideIcon,
@@ -75,7 +78,7 @@ export default function Password({
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}
-            errorMessage={errorMessage}
+            errorMessage={errorMessage} helperText={helperText}
             layout={layout}
             required={required}
         >

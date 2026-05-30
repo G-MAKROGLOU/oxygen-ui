@@ -30,6 +30,8 @@ export interface DateRangePickerProps {
     format?: (d: Date) => string
     disabled?: boolean
     errorMessage?: React.ReactNode
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     required?: boolean
     style?: React.CSSProperties
 }
@@ -86,6 +88,7 @@ export default function DateRangePicker({
     format = defaultFmt,
     disabled,
     errorMessage,
+    helperText,
     required,
     style,
 }: DateRangePickerProps) {
@@ -183,7 +186,7 @@ export default function DateRangePicker({
     }
 
     return (
-        <Field label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} layout={layout} required={required}>
+        <Field label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} helperText={helperText} layout={layout} required={required}>
             <Popover.Root open={open && !disabled} onOpenChange={(o) => { if (!disabled) { setOpen(o); if (!o) { setPendingStart(null); setHoverDate(null) } } }}>
                 <Popover.Trigger asChild>
                     <button

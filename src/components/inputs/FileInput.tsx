@@ -16,6 +16,8 @@ export interface FileInputProps {
     /** Maximum file size in bytes. Files above this are rejected with an error. */
     maxSize?: number
     errorMessage?: React.ReactNode
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     disabled?: boolean
     required?: boolean
     /** Override the upload glyph in the empty state. */
@@ -72,6 +74,7 @@ export default function FileInput({
     hint,
     maxSize,
     errorMessage,
+    helperText,
     disabled,
     required,
     icon,
@@ -120,7 +123,7 @@ export default function FileInput({
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}
-            errorMessage={effectiveError}
+            errorMessage={effectiveError} helperText={helperText}
             required={required}
         >
             <div

@@ -30,6 +30,8 @@ export interface TextAreaProps {
     /** CSS `resize` behaviour. Default `'vertical'` (or `'none'` when autoGrow). */
     resize?: 'none' | 'vertical' | 'horizontal' | 'both'
     errorMessage?: React.ReactNode
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     required?: boolean
     style?: React.CSSProperties
     inputStyle?: React.CSSProperties
@@ -71,6 +73,7 @@ export default function TextArea({
     showCount = false,
     resize,
     errorMessage,
+    helperText,
     required,
     style,
     inputStyle,
@@ -102,7 +105,7 @@ export default function TextArea({
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}
-            errorMessage={errorMessage}
+            errorMessage={errorMessage} helperText={helperText}
             layout={layout}
             required={required}
         >

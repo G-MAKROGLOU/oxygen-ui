@@ -16,6 +16,8 @@ export interface TagsInputProps {
     size?: FieldSize
     disabled?: boolean
     errorMessage?: React.ReactNode
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     required?: boolean
     /** Maximum number of tags. Further input is ignored once reached. */
     maxTags?: number
@@ -54,6 +56,7 @@ export default function TagsInput({
     size = 'md',
     disabled,
     errorMessage,
+    helperText,
     required,
     maxTags,
     dedupe = true,
@@ -129,7 +132,7 @@ export default function TagsInput({
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}
-            errorMessage={errorText}
+            errorMessage={errorText} helperText={helperText}
             layout={layout}
             required={required}
         >

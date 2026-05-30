@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useId } from 'react'
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox'
+import { FieldHelpIcon } from './_field'
 
 export interface CheckboxProps {
     /** Controlled checked state */
@@ -23,6 +24,10 @@ export interface CheckboxProps {
      * - In vertical: `'right'` (default) → box then label below; `'left'` → label above then box.
      */
     labelPosition?: 'left' | 'right'
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
+    /** Show a required asterisk after the label. */
+    required?: boolean
     /** @deprecated Use `checked` */
     value?: boolean
 }
@@ -52,10 +57,14 @@ export default function Checkbox({
     disabled = false,
     layout = 'horizontal',
     labelPosition = 'right',
+    helperText,
+    required,
 }: CheckboxProps) {
     // Support legacy `value` prop transparently
     const isChecked = checked ?? value ?? false
     const labelFirst = labelPosition === 'left'
+    const errorId = useId()
+    const hasError = errorMessage != null
 
     const box = (
         <CheckboxPrimitive.Root
@@ -76,6 +85,8 @@ export default function Checkbox({
                 'disabled:cursor-not-allowed',
             ].join(' ')}
             aria-label={typeof label === 'string' ? label : undefined}
+            aria-invalid={hasError || undefined}
+            aria-describedby={hasError ? errorId : undefined}
         >
             <CheckboxPrimitive.Indicator className="flex items-center justify-center data-[state=checked]:animate-check-pop">
                 <svg width="11" height="9" viewBox="0 0 11 9" fill="none" aria-hidden="true">
@@ -88,24 +99,28 @@ export default function Checkbox({
     const labelEl = label && (
         <span className="text-sm text-foreground-secondary select-none leading-snug">
             {label}
+            {required && <span className="text-status-error ml-0.5" aria-hidden="true">*</span>}
         </span>
     )
 
     return (
         <div className="flex flex-col gap-1">
-            <label
-                htmlFor={htmlFor}
-                className={[
-                    'inline-flex',
-                    layout === 'vertical' ? 'flex-col items-start gap-1.5' : 'flex-row items-center gap-2.5',
-                    disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
-                ].join(' ')}
-            >
-                {labelFirst ? <>{labelEl}{box}</> : <>{box}{labelEl}</>}
-            </label>
+            <div className="flex items-center gap-1">
+                <label
+                    htmlFor={htmlFor}
+                    className={[
+                        'inline-flex',
+                        layout === 'vertical' ? 'flex-col items-start gap-1.5' : 'flex-row items-center gap-2.5',
+                        disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
+                    ].join(' ')}
+                >
+                    {labelFirst ? <>{labelEl}{box}</> : <>{box}{labelEl}</>}
+                </label>
+                {helperText != null && <FieldHelpIcon text={helperText} />}
+            </div>
 
             {errorMessage && (
-                <span className="text-xs text-status-error mt-0.5">{errorMessage}</span>
+                <span id={errorId} className="text-xs text-status-error mt-0.5">{errorMessage}</span>
             )}
         </div>
     )

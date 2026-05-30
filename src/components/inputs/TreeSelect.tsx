@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
-import { fieldShell, type FieldSize } from './_field'
+import { fieldShell, FieldLabel, type FieldSize } from './_field'
 
 export interface TreeSelectNode {
     key: string | number
@@ -26,6 +26,10 @@ export interface TreeSelectProps {
     name?: string
     /** Label/trigger orientation. Defaults to `'horizontal'`. */
     layout?: 'horizontal' | 'vertical'
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
+    /** Show a required asterisk after the label. */
+    required?: boolean
     disabled?: boolean
     errorMessage?: React.ReactNode
     style?: React.CSSProperties
@@ -117,6 +121,8 @@ export default function TreeSelect({
     onChange,
     disabled,
     layout = 'horizontal',
+    helperText,
+    required,
     errorMessage,
     style,
     htmlFor,
@@ -225,14 +231,13 @@ export default function TreeSelect({
     return (
         <div className="flex flex-col gap-1">
             <div className={`flex ${layout === 'vertical' ? 'flex-col gap-1' : 'flex-row items-center gap-2'}`}>
-                {label && (
-                    <label
-                        className="text-sm font-medium ml-1 max-content select-none text-foreground"
-                        htmlFor={htmlFor}
-                    >
-                        {label}
-                    </label>
-                )}
+                <FieldLabel
+                    label={label}
+                    htmlFor={htmlFor}
+                    required={required}
+                    helperText={helperText}
+                    horizontal={layout === 'horizontal'}
+                />
 
                 <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
                     <Popover.Trigger asChild>

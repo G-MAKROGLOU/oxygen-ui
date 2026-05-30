@@ -20,6 +20,8 @@ export interface TimePickerProps {
     minuteStep?: number
     disabled?: boolean
     errorMessage?: React.ReactNode
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     required?: boolean
     style?: React.CSSProperties
 }
@@ -68,6 +70,7 @@ export default function TimePicker({
     minuteStep = 1,
     disabled,
     errorMessage,
+    helperText,
     required,
     style,
 }: TimePickerProps) {
@@ -119,7 +122,7 @@ export default function TimePicker({
     )
 
     return (
-        <Field label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} layout={layout} required={required}>
+        <Field label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} helperText={helperText} layout={layout} required={required}>
             <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
                 <Popover.Trigger asChild>
                     <button

@@ -15,6 +15,16 @@ const meta: Meta<typeof SegmentedControl> = {
             },
         },
     },
+    argTypes: {
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+        layout: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
+        label: { control: 'text' },
+        helperText: { control: 'text' },
+        fullWidth: { control: 'boolean' },
+        disabled: { control: 'boolean' },
+        required: { control: 'boolean' },
+        errorMessage: { control: 'text' },
+    },
 }
 export default meta
 type Story = StoryObj<typeof SegmentedControl>
@@ -31,6 +41,11 @@ function Controlled(args: React.ComponentProps<typeof SegmentedControl>) {
 }
 
 export const Default: Story = { render: (a) => <Controlled {...a} />, args: { options: VIEWS } }
+
+export const WithLabel: Story = {
+    render: (a) => <Controlled {...a} />,
+    args: { options: VIEWS, label: 'Default view', helperText: 'Choose how records open by default.' },
+}
 
 export const Sizes: Story = {
     render: () => (

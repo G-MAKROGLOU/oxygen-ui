@@ -17,6 +17,8 @@ export interface ColorPickerProps {
     allowCustom?: boolean
     disabled?: boolean
     errorMessage?: React.ReactNode
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     required?: boolean
     placeholder?: string
 }
@@ -50,6 +52,7 @@ export default function ColorPicker({
     allowCustom = true,
     disabled,
     errorMessage,
+    helperText,
     required,
     placeholder = 'Pick a colour…',
 }: ColorPickerProps) {
@@ -72,7 +75,7 @@ export default function ColorPicker({
     }
 
     return (
-        <Field label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} layout={layout} required={required}>
+        <Field label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} helperText={helperText} layout={layout} required={required}>
             <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
                 <Popover.Trigger asChild>
                     <button

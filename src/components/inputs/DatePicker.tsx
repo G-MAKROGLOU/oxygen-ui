@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
-import { fieldShell, type FieldSize } from './_field'
+import { fieldShell, FieldLabel, type FieldSize } from './_field'
 
 // ── Public API ──────────────────────────────────────────────────────────────
 
@@ -16,6 +16,10 @@ export interface DatePickerProps {
     name?: string
     /** Label/trigger orientation. Defaults to `'horizontal'`. */
     layout?: 'horizontal' | 'vertical'
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
+    /** Show a required asterisk after the label. */
+    required?: boolean
     disabled?: boolean
     errorMessage?: React.ReactNode
     /** Earliest selectable date. Dates before this render disabled. */
@@ -123,6 +127,8 @@ export default function DatePicker({
     htmlFor,
     name: _name,
     layout = 'horizontal',
+    helperText,
+    required,
     disabled,
     errorMessage,
     min,
@@ -216,14 +222,13 @@ export default function DatePicker({
     return (
         <div className="flex flex-col gap-1">
             <div className={`flex ${layout === 'vertical' ? 'flex-col gap-1.5' : 'flex-row items-start gap-3'}`}>
-                {label && (
-                    <label
-                        className={`text-sm font-medium select-none text-foreground ${layout === 'horizontal' ? 'mt-2 flex-shrink-0 whitespace-nowrap' : ''}`}
-                        htmlFor={htmlFor}
-                    >
-                        {label}
-                    </label>
-                )}
+                <FieldLabel
+                    label={label}
+                    htmlFor={htmlFor}
+                    required={required}
+                    helperText={helperText}
+                    horizontal={layout === 'horizontal'}
+                />
 
                 <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
                     <Popover.Trigger asChild>

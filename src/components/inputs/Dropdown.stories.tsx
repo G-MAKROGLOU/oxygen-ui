@@ -68,28 +68,26 @@ export const Multiselect: Story = {
 }
 
 export const MultiselectPrefilled: Story = {
-    name: 'Multiselect with removable tags',
+    name: 'Multiselect with +N more overflow',
     parameters: {
         docs: {
             description: {
                 story:
-                    'Selected values render as removable tag chips (the same chip the TagsInput uses). Clicking a tag\'s × deselects that option; the trigger grows to fit wrapped tags.',
+                    'Selected values render as removable tag chips (the same chip TagsInput uses). The trigger keeps a fixed size: it shows as many tags as fit on one line, then collapses the rest into a "+N more" chip — never changing width or height as the selection grows. Clicking a tag\'s × deselects it.',
             },
         },
     },
     render: () => {
         function Demo() {
-            const [val, setVal] = useState<(number | string)[]>([1, 2, 3])
+            const [val, setVal] = useState<(number | string)[]>([1, 2, 3, 4])
             return (
-                <div style={{ width: 280 }}>
-                    <Dropdown
-                        items={ITEMS}
-                        value={val}
-                        label="Select options"
-                        isMultiselect
-                        onChange={(e) => setVal(e.target.value as any)}
-                    />
-                </div>
+                <Dropdown
+                    items={ITEMS}
+                    value={val}
+                    label="Select options"
+                    isMultiselect
+                    onChange={(e) => setVal(e.target.value as any)}
+                />
             )
         }
         return <Demo />

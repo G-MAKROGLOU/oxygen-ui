@@ -17,6 +17,8 @@ export interface NumberInputProps {
     /** Size preset. Default `'md'`. */
     size?: FieldSize
     errorMessage?: React.ReactNode
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     required?: boolean
     inputStyle?: React.CSSProperties
     labelStyle?: React.CSSProperties
@@ -72,6 +74,7 @@ export default function NumberInput({
     layout = 'vertical',
     size = 'md',
     errorMessage,
+    helperText,
     required,
     inputStyle,
     labelStyle,
@@ -132,7 +135,7 @@ export default function NumberInput({
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}
-            errorMessage={errorMessage}
+            errorMessage={errorMessage} helperText={helperText}
             layout={layout}
             required={required}
             labelStyle={labelStyle}

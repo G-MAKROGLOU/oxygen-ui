@@ -37,6 +37,8 @@ export interface RadioGroupProps {
     size?: FieldSize
     disabled?: boolean
     required?: boolean
+    /** Contextual help revealed via an info icon + tooltip beside the label. */
+    helperText?: React.ReactNode
     errorMessage?: React.ReactNode
 }
 
@@ -87,6 +89,7 @@ export default function RadioGroup({
     size = 'md',
     disabled,
     required,
+    helperText,
     errorMessage,
 }: RadioGroupProps) {
     const errorId = useId()
@@ -101,6 +104,7 @@ export default function RadioGroup({
             errorId={errorId}
             errorMessage={errorMessage}
             required={required}
+            helperText={helperText}
         >
             <RadioGroupPrimitive.Root
                 id={groupId}
@@ -155,8 +159,18 @@ export default function RadioGroup({
                             )}
                         </label>
                     )
+                    // Label-left in a vertical group uses a 2-column grid so
+                    // every label shares one column and the dots line up in a
+                    // single column on the right (settings-row style). A plain
+                    // flex row would let each dot sit right after its variable-
+                    // width label, leaving them ragged and wrapping long
+                    // descriptions awkwardly.
+                    const rowClass =
+                        labelFirst && layout === 'vertical'
+                            ? 'grid grid-cols-[1fr_auto] items-start gap-2.5'
+                            : 'flex items-start gap-2.5'
                     return (
-                        <div key={opt.value} className="flex items-start gap-2.5">
+                        <div key={opt.value} className={rowClass}>
                             {labelFirst ? <>{labelEl}{dot}</> : <>{dot}{labelEl}</>}
                         </div>
                     )
