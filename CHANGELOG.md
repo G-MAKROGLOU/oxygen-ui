@@ -1,3 +1,10 @@
+# [5.6.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.5.3...v5.6.0) (2026-05-30)
+
+
+### Features
+
+* **inputs:** unified form-prop surface — helperText, Switch/Segmented labels, Dropdown overflow ([ab94019](https://github.com/G-MAKROGLOU/oxygen-ui/commit/ab940199b7eeafa1fc4ed9c3db28a3191a742a85))
+
 ## [5.5.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.5.2...v5.5.3) (2026-05-29)
 
 
