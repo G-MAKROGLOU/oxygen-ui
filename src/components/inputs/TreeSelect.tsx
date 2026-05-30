@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
-import { fieldShell, FieldLabel, type FieldSize } from './_field'
+import { fieldShell, Field, type FieldSize } from './_field'
 
 export interface TreeSelectNode {
     key: string | number
@@ -229,16 +229,16 @@ export default function TreeSelect({
     // ── Render ─────────────────────────────────────────────────────────────
 
     return (
-        <div className="flex flex-col gap-1">
-            <div className={`flex ${layout === 'vertical' ? 'flex-col gap-1' : 'flex-row items-center gap-2'}`}>
-                <FieldLabel
-                    label={label}
-                    htmlFor={htmlFor}
-                    required={required}
-                    helperText={helperText}
-                    horizontal={layout === 'horizontal'}
-                />
-
+        <Field
+            label={label}
+            htmlFor={htmlFor}
+            errorId={errorId}
+            errorMessage={errorMessage}
+            layout={layout}
+            required={required}
+            helperText={helperText}
+        >
+            <div>
                 <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
                     <Popover.Trigger asChild>
                         <button
@@ -309,12 +309,7 @@ export default function TreeSelect({
                     </Popover.Portal>
                 </Popover.Root>
             </div>
-            {hasError && (
-                <div id={errorId} className="text-xs text-status-error ml-1">
-                    {errorMessage}
-                </div>
-            )}
-        </div>
+        </Field>
     )
 }
 

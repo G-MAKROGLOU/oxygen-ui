@@ -135,8 +135,15 @@ export interface FieldLabelProps {
     required?: boolean
     /** Reveals an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
-    /** Apply horizontal-layout spacing (top margin, no-wrap, shrink). */
+    /** Apply horizontal-layout spacing (no-wrap, shrink). */
     horizontal?: boolean
+    /**
+     * Vertical alignment of the label against the control in horizontal layout.
+     * `'start'` (default) nudges the label down to meet a standard ~36px input's
+     * first line; `'center'` removes that offset so the label centres against a
+     * short control (Switch, SegmentedControl).
+     */
+    align?: 'start' | 'center'
     style?: React.CSSProperties
     /** Label column width in horizontal layout. */
     width?: string | number
@@ -157,6 +164,7 @@ export function FieldLabel({
     required,
     helperText,
     horizontal = false,
+    align = 'start',
     style,
     width,
     className = '',
@@ -167,7 +175,10 @@ export function FieldLabel({
             style={{ width: horizontal ? width : undefined, ...style }}
             className={[
                 'flex items-center gap-1',
-                horizontal ? 'mt-2 flex-shrink-0 whitespace-nowrap' : '',
+                horizontal ? 'flex-shrink-0 whitespace-nowrap' : '',
+                // Only the 'start' alignment needs the top nudge; 'center' relies
+                // on the row's items-center to line up with a short control.
+                horizontal && align === 'start' ? 'mt-2' : '',
                 className,
             ].filter(Boolean).join(' ')}
         >
@@ -197,6 +208,12 @@ export interface FieldProps {
     required?: boolean
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /**
+     * Label alignment against the control in horizontal layout. `'start'`
+     * (default) for standard-height inputs; `'center'` for short controls
+     * (Switch) so the label lines up with the control's centre.
+     */
+    labelAlign?: 'start' | 'center'
     labelStyle?: React.CSSProperties
     /** Width of the label column in horizontal layout (CSS length). */
     labelWidth?: string | number
@@ -228,6 +245,7 @@ export function Field({
     layout = 'vertical',
     required,
     helperText,
+    labelAlign = 'start',
     labelStyle,
     labelWidth,
     className = '',
@@ -239,7 +257,9 @@ export function Field({
         <div
             className={[
                 'flex',
-                horizontal ? 'flex-row items-start gap-3' : 'flex-col gap-1.5',
+                horizontal
+                    ? `flex-row gap-3 ${labelAlign === 'center' ? 'items-center' : 'items-start'}`
+                    : 'flex-col gap-1.5',
                 className,
             ].filter(Boolean).join(' ')}
         >
@@ -249,6 +269,7 @@ export function Field({
                 required={required}
                 helperText={helperText}
                 horizontal={horizontal}
+                align={labelAlign}
                 style={labelStyle}
                 width={labelWidth}
             />

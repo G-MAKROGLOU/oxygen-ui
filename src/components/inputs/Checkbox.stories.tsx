@@ -7,6 +7,17 @@ const meta: Meta<typeof Checkbox> = {
     component: Checkbox,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],
+    argTypes: {
+        layout: { control: 'inline-radio', options: ['horizontal', 'vertical'] },
+        labelPosition: { control: 'inline-radio', options: ['right', 'left'] },
+        label: { control: 'text' },
+        description: { control: 'text' },
+        helperText: { control: 'text' },
+        errorMessage: { control: 'text' },
+        disabled: { control: 'boolean' },
+        required: { control: 'boolean' },
+        checked: { control: 'boolean' },
+    },
 }
 export default meta
 type Story = StoryObj<typeof Checkbox>
@@ -38,6 +49,25 @@ export const PreChecked: Story = {
         label: 'Already checked',
         htmlFor: 'pre',
         onChange: () => undefined,
+    },
+}
+
+export const WithDescription: Story = {
+    name: 'With description',
+    args: {
+        checked: true,
+        label: 'Email notifications',
+        description: 'Get notified about account activity and security alerts.',
+        htmlFor: 'desc',
+        helperText: 'You can change this any time in settings.',
+        onChange: () => undefined,
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: 'A secondary `description` wraps under the label — the same affordance RadioGroup options use. Works with `helperText` and either label side.',
+            },
+        },
     },
 }
 
@@ -106,6 +136,7 @@ export const LabelLeft: Story = {
     args: {
         checked: true,
         label: 'Enabled',
+        description: 'The box sits to the right; the description wraps under the label.',
         htmlFor: 'll',
         labelPosition: 'left',
         onChange: () => undefined,
@@ -113,7 +144,7 @@ export const LabelLeft: Story = {
     parameters: {
         docs: {
             description: {
-                story: 'In horizontal layout, `labelPosition="left"` renders the label before the box (useful in right-aligned settings rows).',
+                story: 'In horizontal layout, `labelPosition="left"` renders the label before the box (useful in right-aligned settings rows). A `description` wraps under the label, never pushing the box.',
             },
         },
     },

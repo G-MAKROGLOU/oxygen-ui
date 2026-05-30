@@ -101,6 +101,9 @@ export default function Switch({
             layout={layout}
             required={required}
             helperText={helperText}
+            // The switch track is short (24px); centre the label against it
+            // rather than nudging down to a 36px input's first line.
+            labelAlign="center"
         >
             <div className="flex items-center gap-2.5">
                 {offLabel != null && (
