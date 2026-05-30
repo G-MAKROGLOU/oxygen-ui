@@ -1,0 +1,453 @@
+{/* src/docs/FormApi.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Docs/Form API" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Form API
+
+A complete, **zero-dependency** form layer. No React Hook Form, no Formik, no Zod
+requirement — just React 18+ and native browser features (constraint-style
+validators, regexes, promises, `FormData`, `useSyncExternalStore`).
+
+It is built around three ideas:
+
+1. **State + validation live at the form level.** Inputs never validate
+   themselves — they only *receive* a value and an error. `useForm` owns
+   everything.
+2. **Spread-to-bind.** Connect any input by spreading one helper:
+   `<TextInput {...form.fieldNative('email')} />`. The binder injects the value,
+   a normalised `onChange`, the error, `name`/`id`, and the `required` flag.
+3. **SPA and SSR.** `onFinish(values)` for client apps; a native/`action`
+   function for server actions — both validate before they fire.
+
+---
+
+## Quick start
+
+```tsx
+import { useForm, Form, patterns } from '@geomak/ui'
+import { TextInput, Password, Button } from '@geomak/ui'
+
+function SignIn() {
+  const form = useForm({ initialValues: { email: '', password: '' } })
+
+  return (
+    <Form form={form} onFinish={(values) => api.signIn(values)}>
+      <TextInput
+        label="Email"
+        {...form.fieldNative('email', {
+          required: 'Email is required',
+          pattern: { value: patterns.email, message: 'Enter a valid email' },
+        })}
+      />
+      <Password
+        label="Password"
+        {...form.fieldNative('password', { required: true, minLength: 8 })}
+      />
+      <Button content="Sign in" buttonType="submit" variant="primary" />
+    </Form>
+  )
+}
+```
+
+That is the whole loop: declare initial values, attach rules while binding, and
+hand `onFinish` the validated values. Errors render under each input, the first
+invalid field is focused on a failed submit, and validation re-runs as the user
+types.
+
+---
+
+## Mental model
+
+`useForm` creates a **store** (held in a ref, stable for the component's life).
+The store holds `values`, `errors`, `touched`, and the `submitted` flag, and
+notifies React through `useSyncExternalStore`.
+
+- Reading bindings off `useForm()` re-renders the component on every change —
+  perfect for small/medium forms.
+- For large or dynamic forms, isolate a field's re-renders with
+  [`useFormField` / `<FormField>`](#isolating-re-renders-useformfield--formfield),
+  which subscribe to a **memoized per-field snapshot** so one field's keystroke
+  never re-renders its neighbours.
+
+Validation timing is **onChange (after a field is touched) + onBlur + onSubmit**
+by default. Errors stay hidden until a field is touched or the form is
+submitted, so the form never shouts before the user has typed.
+
+---
+
+## Binding inputs
+
+Every oxygen input reports changes in one of four shapes. Pick the matching
+binder — they all take `(name, rules?)` and return the same
+[bindings object](#field-bindings).
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Binder</th><th style={th}>Value prop</th><th style={th}>onChange shape</th><th style={th}>Use for</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>form.fieldNative</td><td style={td(true)}>value</td><td style={td(true)}>{'(e) => e.target.value'}</td><td style={td(false)}>TextInput, Password, SearchInput, TextArea</td></tr>
+    <tr><td style={td0}>form.fieldChecked</td><td style={td(true)}>checked</td><td style={td(true)}>{'(e) => e.target.checked'}</td><td style={td(false)}>Switch, Checkbox</td></tr>
+    <tr><td style={td0}>form.fieldTarget</td><td style={td(true)}>value</td><td style={td(true)}>{'(e) => e.target.value'}</td><td style={td(false)}>Dropdown, TreeSelect</td></tr>
+    <tr><td style={td0}>form.field</td><td style={td(true)}>value</td><td style={td(true)}>{'(value) => value'}</td><td style={td(false)}>RadioGroup, SegmentedControl, Slider, Rating, TagsInput, OtpInput, DatePicker, ColorPicker</td></tr>
+  </tbody>
+</table>
+
+Per-input cheat sheet (value type stored in the form):
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Input</th><th style={th}>Binder</th><th style={th}>Value type</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>TextInput / Password / SearchInput / TextArea</td><td style={td(true)}>fieldNative</td><td style={td(true)}>string</td></tr>
+    <tr><td style={td0}>NumberInput</td><td style={td(true)}>fieldTarget</td><td style={td(true)}>number | undefined</td></tr>
+    <tr><td style={td0}>Switch / Checkbox</td><td style={td(true)}>fieldChecked</td><td style={td(true)}>boolean</td></tr>
+    <tr><td style={td0}>Dropdown</td><td style={td(true)}>fieldTarget</td><td style={td(true)}>key | key[]</td></tr>
+    <tr><td style={td0}>TreeSelect</td><td style={td(true)}>fieldTarget</td><td style={td(true)}>key</td></tr>
+    <tr><td style={td0}>RadioGroup / SegmentedControl</td><td style={td(true)}>field</td><td style={td(true)}>string</td></tr>
+    <tr><td style={td0}>Slider</td><td style={td(true)}>field</td><td style={td(true)}>number | [number, number]</td></tr>
+    <tr><td style={td0}>Rating</td><td style={td(true)}>field</td><td style={td(true)}>number</td></tr>
+    <tr><td style={td0}>TagsInput</td><td style={td(true)}>field</td><td style={td(true)}>string[]</td></tr>
+    <tr><td style={td0}>OtpInput</td><td style={td(true)}>field</td><td style={td(true)}>string</td></tr>
+    <tr><td style={td0}>DatePicker</td><td style={td(true)}>field</td><td style={td(true)}>Date | null</td></tr>
+    <tr><td style={td0}>TimePicker</td><td style={td(true)}>field</td><td style={td(true)}>string | null</td></tr>
+    <tr><td style={td0}>DateRangePicker</td><td style={td(true)}>field</td><td style={td(true)}>DateRange</td></tr>
+    <tr><td style={td0}>ColorPicker</td><td style={td(true)}>field</td><td style={td(true)}>string (hex)</td></tr>
+  </tbody>
+</table>
+
+```tsx
+<TextInput label="Name"   {...form.fieldNative('name')} />
+<Switch    label="Notify" {...form.fieldChecked('notify')} />
+<Dropdown  label="Team"   items={teams} {...form.fieldTarget('team')} />
+<RadioGroup label="Role"  options={roles} {...form.field('role')} />
+<Slider    label="Volume" {...form.field('volume')} />
+```
+
+> **NumberInput** emits `{ target: { value: number } }`, so use `fieldTarget`.
+> **AutoComplete** is search-first: bind it manually with
+> `value={form.getValue('q')} onItemClick={(v) => form.setValue('q', v)}`.
+
+### Field bindings
+
+Every binder returns the same object — spread it onto the control:
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Key</th><th style={th}>Type</th><th style={th}>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value / checked</td><td style={td(true)}>unknown / boolean</td><td style={td(false)}>Current field value, under the right prop for the binder.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(arg) => void'}</td><td style={td(false)}>Normalises the control's change into a stored value + marks touched.</td></tr>
+    <tr><td style={td0}>onBlur</td><td style={td(true)}>{'() => void'}</td><td style={td(false)}>Marks the field touched (and revalidates if `onBlur` is in `validateOn`).</td></tr>
+    <tr><td style={td0}>errorMessage</td><td style={td(true)}>ReactNode | undefined</td><td style={td(false)}>The field's error, gated until touched / submitted.</td></tr>
+    <tr><td style={td0}>required</td><td style={td(true)}>boolean | undefined</td><td style={td(false)}>Derived from the field's rules — drives the `*` asterisk.</td></tr>
+    <tr><td style={td0}>name / id / htmlFor</td><td style={td(true)}>string</td><td style={td(false)}>All set to the field name for label linkage + `FormData` serialisation.</td></tr>
+  </tbody>
+</table>
+
+---
+
+## `useForm(options)`
+
+```ts
+const form = useForm({ initialValues, rules, validateOn })
+```
+
+**Options**
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Option</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>initialValues</td><td style={td(true)}>Record&lt;string, unknown&gt;</td><td style={td(true)}>{'{}'}</td><td style={td(false)}>Starting values. Deep-cloned; <code>reset()</code> returns here. Nested + arrays supported.</td></tr>
+    <tr><td style={td0}>rules</td><td style={td(true)}>RulesMap</td><td style={td(true)}>{'{}'}</td><td style={td(false)}>Static rules keyed by field name. You can also pass rules inline at bind time.</td></tr>
+    <tr><td style={td0}>validateOn</td><td style={td(true)}>{"('onChange'|'onBlur'|'onSubmit')[]"}</td><td style={td(true)}>all three</td><td style={td(false)}>When a field revalidates. <code>onSubmit</code> always runs regardless.</td></tr>
+  </tbody>
+</table>
+
+**Returns**
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Member</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>store</td><td style={td(true)}>FormStore</td><td style={td(false)}>The underlying store — pass to <code>&lt;Form form&gt;</code>; also for imperative/advanced use.</td></tr>
+    <tr><td style={td0}>values</td><td style={td(true)}>Record&lt;string, unknown&gt;</td><td style={td(false)}>Live values.</td></tr>
+    <tr><td style={td0}>errors</td><td style={td(true)}>Record&lt;string, string?&gt;</td><td style={td(false)}>Live errors by field name.</td></tr>
+    <tr><td style={td0}>touched</td><td style={td(true)}>Record&lt;string, boolean&gt;</td><td style={td(false)}>Which fields have been interacted with.</td></tr>
+    <tr><td style={td0}>submitted</td><td style={td(true)}>boolean</td><td style={td(false)}>Whether a submit has been attempted.</td></tr>
+    <tr><td style={td0}>isSubmitting</td><td style={td(true)}>boolean</td><td style={td(false)}>True while async submit validation runs.</td></tr>
+    <tr><td style={td0}>isValid</td><td style={td(true)}>boolean</td><td style={td(false)}>True when no field currently holds an error.</td></tr>
+    <tr><td style={td0}>field / fieldNative / fieldChecked / fieldTarget</td><td style={td(true)}>{'(name, rules?) => bindings'}</td><td style={td(false)}>The four binders (see above).</td></tr>
+    <tr><td style={td0}>getValue / getValues</td><td style={td(true)}>{'(name) => unknown / () => values'}</td><td style={td(false)}>Imperative reads.</td></tr>
+    <tr><td style={td0}>setValue / setValues</td><td style={td(true)}>{'(name, value) / (patch)'}</td><td style={td(false)}>Imperative writes (revalidate per <code>validateOn</code>).</td></tr>
+    <tr><td style={td0}>setError</td><td style={td(true)}>{'(name, message?) => void'}</td><td style={td(false)}>Set a server-side / manual error.</td></tr>
+    <tr><td style={td0}>validateField / validateAll</td><td style={td(true)}>{'=> Promise<...>'}</td><td style={td(false)}>Run rules for one field / the whole form.</td></tr>
+    <tr><td style={td0}>reset</td><td style={td(true)}>{'(values?) => void'}</td><td style={td(false)}>Restore initial (or given) values; clears errors/touched.</td></tr>
+  </tbody>
+</table>
+
+---
+
+## `<Form>`
+
+```tsx
+<Form form={form} onFinish={...} onFinishFailed={...} action={...} method="post">
+  …fields…
+</Form>
+```
+
+It renders a real `<form noValidate>` (so input `name`s serialise into
+`FormData` while we show our own messages) and owns submission:
+
+1. Marks the form submitted and runs **every** field's rules.
+2. If anything fails → calls `onFinishFailed(errors, values)` and focuses the
+   first invalid control. Nothing is dispatched.
+3. If valid →
+   - `onFinish(values)` when provided (SPA), **or**
+   - `action(formData)` when `action` is a function (server action), **or**
+   - a native submit to `action` when it is a URL string (async rules are
+     awaited first, then `requestSubmit()` proceeds).
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>form</td><td style={td(true)}>UseFormReturn</td><td style={td(false)}>Required. The instance from <code>useForm()</code>.</td></tr>
+    <tr><td style={td0}>onFinish</td><td style={td(true)}>{'(values) => void | Promise<void>'}</td><td style={td(false)}>SPA submit — called with validated values.</td></tr>
+    <tr><td style={td0}>onFinishFailed</td><td style={td(true)}>{'(errors, values) => void'}</td><td style={td(false)}>Called when a submit attempt fails validation.</td></tr>
+    <tr><td style={td0}>action</td><td style={td(true)}>{'string | ((fd: FormData) => void | Promise<void>)'}</td><td style={td(false)}>SSR / server action. Validates first, then dispatches.</td></tr>
+    <tr><td style={td0}>method</td><td style={td(true)}>'get' | 'post'</td><td style={td(false)}>Native method for a string <code>action</code>.</td></tr>
+  </tbody>
+</table>
+
+All other `<form>` attributes (`className`, `id`, …) pass straight through.
+
+---
+
+## Validation
+
+Attach rules where you bind, or in the `useForm({ rules })` map. A field takes
+one rule object or an array (rules run in order; first failure wins).
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Rule</th><th style={th}>Type</th><th style={th}>Fails when…</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>required</td><td style={td(true)}>boolean | string</td><td style={td(false)}>Value is empty (null / '' / [] / false). String = the message.</td></tr>
+    <tr><td style={td0}>pattern</td><td style={td(true)}>{'RegExp | { value, message? }'}</td><td style={td(false)}>A string value doesn't match.</td></tr>
+    <tr><td style={td0}>min / max</td><td style={td(true)}>{'number | { value, message? }'}</td><td style={td(false)}>A number value is below / above the bound.</td></tr>
+    <tr><td style={td0}>minLength / maxLength</td><td style={td(true)}>{'number | { value, message? }'}</td><td style={td(false)}>A string/array length is below / above the bound.</td></tr>
+    <tr><td style={td0}>validate</td><td style={td(true)}>{'(value, values) => string | falsy | Promise<...>'}</td><td style={td(false)}>It returns a (non-empty) string. Supports async + cross-field.</td></tr>
+    <tr><td style={td0}>message</td><td style={td(true)}>string</td><td style={td(false)}>Fallback message for required/pattern when they don't set their own.</td></tr>
+  </tbody>
+</table>
+
+```tsx
+// Single rule
+form.fieldNative('email', { required: true, pattern: patterns.email })
+
+// Multiple rules, ordered
+form.fieldNative('username', [
+  { required: 'Pick a username' },
+  { minLength: { value: 3, message: 'Too short' } },
+  { validate: async (v) => (await isTaken(v)) ? 'Already taken' : undefined },
+])
+
+// Cross-field (confirm password)
+form.fieldNative('confirm', {
+  validate: (v, values) => v === values.password ? undefined : 'Passwords do not match',
+})
+```
+
+Optional-and-empty fields short-circuit to valid — only `required` fires on an
+empty value, so non-required fields don't error until the user types something
+invalid.
+
+**Ready-made patterns** — `import { patterns } from '@geomak/ui'`:
+`patterns.email`, `patterns.url`, `patterns.phone`, `patterns.digits`.
+
+**Zod / Valibot** — no integration needed; wrap a schema in `validate`:
+
+```tsx
+import { z } from 'zod'
+const Email = z.string().email()
+form.fieldNative('email', {
+  validate: (v) => Email.safeParse(v).success ? undefined : 'Invalid email',
+})
+```
+
+### Validation timing
+
+`validateOn` (default `['onChange', 'onBlur', 'onSubmit']`) controls *when* a
+field revalidates. Errors are still **gated** — hidden until the field is
+touched or the form is submitted — so:
+
+- Type into a field → it validates on change, but the message only shows once
+  it's touched.
+- Submit → all fields validate and every error becomes visible at once.
+
+Want "validate only on submit, then live after the first attempt"? Use
+`validateOn: ['onSubmit', 'onChange']`.
+
+---
+
+## Isolating re-renders: `useFormField` / `<FormField>`
+
+Reading binders off `useForm()` re-renders the whole form on each change. For
+large forms — or any field inside a dynamic array — subscribe a single field
+instead. Both forms register their `rules` on the store and **clean them up on
+unmount** (essential for field arrays).
+
+```tsx
+// Hook
+function EmailField() {
+  const email = useFormField('email', { kind: 'native', rules: { required: true } })
+  return <TextInput label="Email" {...email} />
+}
+
+// Render-prop (same thing, inline)
+<FormField name="role" rules={{ required: 'Pick a role' }}>
+  {(field) => <RadioGroup label="Role" options={ROLES} {...field} />}
+</FormField>
+```
+
+`kind` is `'value' | 'native' | 'checked' | 'target'` (defaults to `'value'`),
+mirroring the four binders.
+
+---
+
+## Dynamic fields: `useFieldArray(name)`
+
+AntD-style repeating rows with stable keys.
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Member</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>fields</td><td style={td(true)}>{'{ key, name, index }[]'}</td><td style={td(false)}><code>key</code> is stable across reorders; <code>name</code> is the row's base path (e.g. <code>contacts.2</code>).</td></tr>
+    <tr><td style={td0}>append</td><td style={td(true)}>{'(item?) => void'}</td><td style={td(false)}>Add a row (optionally seeded).</td></tr>
+    <tr><td style={td0}>remove</td><td style={td(true)}>{'(index) => void'}</td><td style={td(false)}>Remove a row (clears its errors/touched).</td></tr>
+    <tr><td style={td0}>move</td><td style={td(true)}>{'(from, to) => void'}</td><td style={td(false)}>Reorder a row.</td></tr>
+    <tr><td style={td0}>replace</td><td style={td(true)}>{'(items) => void'}</td><td style={td(false)}>Replace the whole array.</td></tr>
+  </tbody>
+</table>
+
+```tsx
+function Contacts() {
+  const { fields, append, remove } = useFieldArray('contacts')
+  return (
+    <>
+      {fields.map((f, i) => (
+        <div key={f.key} className="flex gap-2">
+          <TextInput label="Name"  {...useFormField(`${f.name}.name`,  { kind: 'native', rules: { required: true } })} />
+          <TextInput label="Email" {...useFormField(`${f.name}.email`, { kind: 'native', rules: { required: true, pattern: patterns.email } })} />
+          <Button content="Remove" buttonType="button" variant="ghost" onClick={() => remove(i)} />
+        </div>
+      ))}
+      <Button content="Add contact" buttonType="button" onClick={() => append({ name: '', email: '' })} />
+    </>
+  )
+}
+```
+
+Initialise the array in `initialValues` (`{ contacts: [{ name: '', email: '' }] }`)
+and read it back as `values.contacts` — a real array of objects.
+
+> Build row field names from `f.name` (`` `${f.name}.email` ``). Because the
+> per-row `useFormField` registers and unregisters its rule, removing a row also
+> removes its validation — no stale errors.
+
+---
+
+## SSR & server actions
+
+The same `<Form>` works in server-rendered apps. Because inputs carry `name`s
+(and Switch / SegmentedControl emit hidden inputs), the browser can serialise
+the form natively.
+
+```tsx
+// React 19 server action
+'use server'
+async function saveProfile(formData: FormData) { /* … */ }
+
+// Client component
+<Form form={form} action={saveProfile}>…</Form>
+```
+
+- `action` is a **function** → it receives `FormData` after client validation
+  passes.
+- `action` is a **URL string** → after validation passes the form submits
+  natively (`method` honoured); async rules are awaited first.
+
+Either way, invalid submits are blocked client-side and your existing messages
+render — progressive enhancement without giving up the validation UX.
+
+---
+
+## Recipes
+
+**Server-set errors** (e.g. "email already registered"):
+
+```tsx
+const onFinish = async (values) => {
+  const res = await api.register(values)
+  if (res.error) form.setError('email', res.error)
+}
+```
+
+**Dependent fields** — read other values in a validator or `setValue` reaction:
+
+```tsx
+form.field('country', { /* … */ })
+form.field('state', {
+  validate: (v, values) => values.country === 'US' && !v ? 'State is required' : undefined,
+})
+```
+
+**Programmatic reset after success:**
+
+```tsx
+const onFinish = async (values) => { await save(values); form.reset() }
+```
+
+**Prefill from the server** then keep it as the reset baseline:
+
+```tsx
+useEffect(() => { if (data) form.reset(data) }, [data])
+```
+
+---
+
+## TypeScript
+
+`useForm` is intentionally loosely typed at the value layer (values are
+`Record<string, unknown>`) so heterogeneous controls bind without casts. Read
+typed values out at the edges:
+
+```tsx
+const onFinish = (values: Record<string, unknown>) => {
+  const email = values.email as string
+}
+```
+
+For a strongly-typed surface, narrow in `onFinish` or wrap `useForm` in your own
+typed helper per form.
+
+---
+
+## API surface (imports)
+
+```ts
+import {
+  useForm, Form, FormField, useFormField, useFieldArray,
+  useFormStore, FormContext, FormStore,
+  runFieldRules, isRequired, patterns,
+} from '@geomak/ui'
+
+import type {
+  UseFormReturn, FormProps, FormFieldProps, UseFormFieldOptions,
+  FieldArrayItem, UseFieldArrayReturn, FormStoreOptions, ValidateTrigger,
+  ErrorMap, FieldSnapshot, FieldBindings, FieldKind,
+  FieldRule, FieldRules, RulesMap, FormValues,
+} from '@geomak/ui'
+```
+
+See the **Forms → Form** stories for runnable examples of every pattern above.
