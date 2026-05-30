@@ -16,7 +16,7 @@ export interface UseFormReturn {
     // imperative helpers
     getValue: (name: string) => unknown
     getValues: () => FormValues
-    setValue: (name: string, value: unknown) => void
+    setValue: (name: string, value: unknown, opts?: { validate?: boolean; touch?: boolean }) => void
     setValues: (patch: FormValues) => void
     setError: (name: string, error: string | undefined) => void
     validateField: (name: string) => Promise<string | undefined>
@@ -82,7 +82,7 @@ export function useForm(options: FormStoreOptions = {}): UseFormReturn {
 
         getValue: store.getValue,
         getValues: store.getValues,
-        setValue: (name, value) => store.setValue(name, value),
+        setValue: (name, value, opts) => store.setValue(name, value, opts),
         setValues: (patch) => store.setValues(patch),
         setError: store.setError,
         validateField: (name) => store.validateField(name),

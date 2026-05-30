@@ -276,3 +276,19 @@ export type {
     RulesMap,
     FormValues,
 } from './form'
+
+// ── Composite form components ─────────────────────────────────────────────────
+export { default as CreditCardForm } from './components/forms/CreditCardForm'
+export type { CreditCardFormProps, CreditCardValue } from './components/forms/CreditCardForm'
+export {
+    CARD_BRANDS,
+    detectBrand,
+    luhnValid,
+    formatCardNumber,
+    formatExpiry,
+    onlyDigits,
+    cardNumberError,
+    expiryError,
+    cvvError,
+} from './components/forms/creditCard'
+export type { CardBrand } from './components/forms/creditCard'

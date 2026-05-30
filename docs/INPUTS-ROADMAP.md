@@ -100,5 +100,9 @@ label, layout, helperText, required, disabled, errorMessage).
 - **P0 — DONE:** TextArea, Slider (single + range), TagsInput, SegmentedControl.
 - **P1 — DONE:** TimePicker, DateRangePicker, OTP/PIN, Rating, ColorPicker.
 - **Form API — DONE:** useForm / Form / field binders / validation / field arrays.
-- **Next:** CreditCardForm (built on the Form API), then Calendar, Accordion,
-  Table expandable-row animation, marketing component suite.
+- **CreditCardForm — DONE:** unified component (brand detect + Luhn + expiry +
+  CVV) on the Form API; pure helpers exported.
+- **Next:** MegaMenu + Menu group, Tabs redesign, Table expandable-row
+  animation + async skeleton, ScalableContainer self-adjusting grid, global
+  className/style configurability sweep, copy-pasteable doc examples, Calendar,
+  Accordion, marketing component suite.

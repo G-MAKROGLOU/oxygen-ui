@@ -449,6 +449,27 @@ typed helper per form.
 
 ---
 
+## Credit-card form
+
+`<CreditCardForm>` is a ready-made composite built on this Form API — one
+component owning all four fields and their cross-field rules: card number
+(brand detection + grouping + Luhn), expiry (`MM/YY`, real month, not past), CVV
+(brand-aware length), and cardholder name. It is intentionally **not** four
+separate inputs — a CVV or expiry field has no meaning on its own.
+
+```tsx
+import { CreditCardForm } from '@geomak/ui'
+
+<CreditCardForm onSubmit={(card) => pay(card)} submitLabel="Pay $49" />
+// card → { number, name, expiry, cvv, brand }  (only fires when fully valid)
+```
+
+`onChange(card)` streams live updates (for a card preview), `defaultValue`
+seeds it, `hideSubmit` lets you drive submission from a larger form. The pure
+helpers are exported too: `detectBrand`, `luhnValid`, `formatCardNumber`,
+`formatExpiry`, `cardNumberError`, `expiryError`, `cvvError`, `CARD_BRANDS`.
+See **Forms → CreditCardForm** for runnable examples.
+
 ## API surface (imports)
 
 ```ts
