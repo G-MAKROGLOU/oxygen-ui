@@ -1,3 +1,32 @@
+# [6.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.10.0...v6.0.0) (2026-05-30)
+
+
+* feat(tabs)!: redesign — compositional API, sliding cobalt marker, 3 variants ([7d0bf17](https://github.com/G-MAKROGLOU/oxygen-ui/commit/7d0bf17f1059e8df3ab03b5c1ee2868cc6d3f293)), closes [#0466c8](https://github.com/G-MAKROGLOU/oxygen-ui/issues/0466c8) [#d3dde8](https://github.com/G-MAKROGLOU/oxygen-ui/issues/d3dde8)
+
+
+### BREAKING CHANGES
+
+* Tabs moves from the array `tabs={[]}` prop to a compositional
+API (`<Tabs><Tabs.List><Tabs.Trigger/></Tabs.List><Tabs.Panel/></Tabs>`).
+`TabItem` is removed.
+
+Redesigned per /impeccable against "The Calibrated Instrument" design system.
+The old heavy full-pill tabs with a solid-cobalt active fill violated the
+system's own rules (pills are for tags/avatars; the accent must stay rare).
+Now the active tab is marked by a thin cobalt indicator that *slides* between
+tabs (Framer layoutId, exponential ease-out, reduced-motion → instant).
+
+- Variants: `underline` (signature), `segmented` (lifted-pill track),
+  `enclosed` (folder tabs).
+- Horizontal + vertical orientation; sm/md/lg sizes.
+- Icons + count badges, closeable tabs (close is a sibling, never a nested
+  button) + trailing `Tabs.Add`.
+- Overflow: horizontal scroll with edge fade mask + prev/next chevrons that
+  appear ONLY on the overflowing side. Adds the real `.hidden-scrollbar`
+  utility (was referenced but never defined — also fixes TimePicker columns).
+- className/style passthrough; controlled/uncontrolled; lazy panels by default
+  with `keepMounted` to preserve state.
+
 # [5.10.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.9.0...v5.10.0) (2026-05-30)
 
 
