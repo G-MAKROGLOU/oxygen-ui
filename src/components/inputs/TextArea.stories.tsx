@@ -6,6 +6,16 @@ const meta: Meta<typeof TextArea> = {
     title: 'Inputs/TextArea',
     component: TextArea,
     tags: ['autodocs'],
+    argTypes: {
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+        layout: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
+        label: { control: 'text' },
+        placeholder: { control: 'text' },
+        helperText: { control: 'text' },
+        errorMessage: { control: 'text' },
+        disabled: { control: 'boolean' },
+        required: { control: 'boolean' },
+    },
     parameters: {
         layout: 'centered',
         docs: {

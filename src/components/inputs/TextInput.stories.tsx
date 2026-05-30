@@ -7,6 +7,16 @@ const meta: Meta<typeof TextInput> = {
     component: TextInput,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],
+    argTypes: {
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+        layout: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
+        label: { control: 'text' },
+        placeholder: { control: 'text' },
+        helperText: { control: 'text' },
+        errorMessage: { control: 'text' },
+        disabled: { control: 'boolean' },
+        required: { control: 'boolean' },
+    },
 }
 export default meta
 type Story = StoryObj<typeof TextInput>

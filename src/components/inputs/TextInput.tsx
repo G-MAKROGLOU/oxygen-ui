@@ -2,22 +2,33 @@ import React, { useId } from 'react'
 import { Field, fieldShell, type FieldSize } from './_field'
 
 export interface TextInputProps {
+    /** Controlled string value. */
     value?: string
+    /** Native change handler — read `e.target.value`. */
     onChange?: React.ChangeEventHandler<HTMLInputElement>
+    /** Disable interaction and dim the field. */
     disabled?: boolean
+    /** Field label rendered above (vertical) or beside (horizontal) the input. */
     label?: React.ReactNode
+    /** `id` for the input + the `<label htmlFor>` link. */
     htmlFor?: string
+    /** Placeholder shown when the field is empty. */
     placeholder?: string
+    /** Native form field name (used for `FormData` serialisation). */
     name?: string
     /** Native input type. Defaults to `'text'`. */
     type?: 'text' | 'email' | 'url' | 'tel'
+    /** Inline style applied to the `<input>` element. */
     inputStyle?: React.CSSProperties
+    /** Inline style applied to the field shell / adornment wrapper. */
     style?: React.CSSProperties
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
     /** Size preset — controls height, padding, and font. Default `'md'`. */
     size?: FieldSize
+    /** Native blur handler. */
     onBlur?: React.FocusEventHandler<HTMLInputElement>
+    /** Validation message — shown under the input; also flags it red + `aria-invalid`. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
@@ -27,6 +38,7 @@ export interface TextInputProps {
     prefix?: React.ReactNode
     /** Optional trailing adornment (icon / suffix / unit). */
     suffix?: React.ReactNode
+    /** @deprecated Use `htmlFor`. */
     id?: string
 }
 
