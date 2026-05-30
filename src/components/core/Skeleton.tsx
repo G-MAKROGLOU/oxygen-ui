@@ -8,25 +8,14 @@ interface SkeletonBaseProps {
     style?: React.CSSProperties
 }
 
-// Shared shimmer classes — a semi-transparent sheen sweeps across the
-// surface-raised base via a `::before` pseudo-element.
-//
-// Previously the shimmer used `bg-gradient-to-r from-border via-border-strong/40 to-border`
-// — Tailwind's `/40` opacity modifier does not produce a valid colour when the
-// underlying token is a hex-valued CSS var (the case for all our semantic
-// tokens), so the gradient resolved to a flat single colour and no movement
-// was visible. The pseudo-element approach uses `white/30` which Tailwind
-// handles correctly (white is a hex literal in the palette), and transforms
-// instead of background-position so it composites on the GPU.
-const SHIMMER = [
-    'relative overflow-hidden rounded-sm bg-surface-raised',
-    'before:absolute before:inset-0 before:content-[""]',
-    'before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent',
-    'before:animate-[shimmer_1.6s_linear_infinite]',
-    // Respect prefers-reduced-motion — the resting bg-surface-raised is still
-    // a perfectly legible placeholder for users who have animations off.
-    'motion-reduce:before:hidden',
-].join(' ')
+// Shared shimmer classes. The animated sweep lives in `.oxy-skeleton::after`
+// (src/styles/_animations.scss) where the band colour is `color-mix`-ed from
+// `--color-foreground`, so it stays visible in BOTH light and dark themes — a
+// fixed white sheen vanishes on a light `surface-raised` base. The element
+// keeps `bg-surface-raised` as a Tailwind utility so consumers can override the
+// resting colour via `className` / `style`. Reduced-motion hides the sweep but
+// the legible base placeholder remains.
+const SHIMMER = 'oxy-skeleton rounded-sm bg-surface-raised'
 
 /** ─────────────────── SkeletonBox ─────────────────── */
 

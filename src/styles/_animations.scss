@@ -59,6 +59,32 @@
     100% { transform: translateX(100%); }
 }
 
+// Skeleton placeholder sweep. The moving band is mixed from `--color-foreground`
+// so it stays visible in BOTH themes (a translucent dark band on light
+// surfaces, a translucent light band on dark surfaces) — unlike a fixed white
+// sheen, which vanishes on a light base. The element supplies its own
+// background utility (e.g. `bg-surface-raised`) so consumers can override it.
+.oxy-skeleton {
+    position: relative;
+    overflow: hidden;
+}
+.oxy-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in oklab, var(--color-foreground) 12%, transparent) 50%,
+        transparent 100%
+    );
+    animation: shimmer 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+    .oxy-skeleton::after { display: none; }
+}
+
 // ── Fade in ───────────────────────────────────────────────────────────────────
 @keyframes fade-in {
     from { opacity: 0; }

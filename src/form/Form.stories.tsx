@@ -86,6 +86,11 @@ export const MixedControls: Story = {
                             label="Team"
                             layout="vertical"
                             placeholder="Pick a team"
+                            // Pickers default to a fixed trigger width; pass
+                            // `style={{ width: '100%' }}` to fill the form column
+                            // so every field lines up (text inputs are full-width
+                            // by default).
+                            style={{ width: '100%' }}
                             items={[
                                 { key: 'eng', label: 'Engineering' },
                                 { key: 'design', label: 'Design' },
