@@ -1,3 +1,10 @@
+# [5.8.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.7.2...v5.8.0) (2026-05-30)
+
+
+### Features
+
+* **forms:** CreditCardForm — unified card form on the Form API ([76e267b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/76e267b91da822a9e41cb91b4c652ee05bb9cd92))
+
 ## [5.7.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.7.1...v5.7.2) (2026-05-30)
 
 
