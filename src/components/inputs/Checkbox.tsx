@@ -37,6 +37,8 @@ export interface CheckboxProps {
     labelPosition?: 'left' | 'right'
     /** @deprecated Use `checked`. Kept for API compatibility. */
     value?: boolean
+    /** Extra classes merged onto the component root. */
+    className?: string
 }
 
 /**
@@ -73,6 +75,7 @@ export default function Checkbox({
     required,
     layout = 'horizontal',
     labelPosition = 'right',
+    className = '',
 }: CheckboxProps) {
     const isChecked = checked ?? value ?? false
     const labelFirst = labelPosition === 'left'
@@ -152,7 +155,7 @@ export default function Checkbox({
     }
 
     return (
-        <div className="flex flex-col gap-1">
+        <div className={`flex flex-col gap-1 ${className}`.trim()}>
             <div className="flex items-start gap-1">
                 {content}
                 {helperText != null && <FieldHelpIcon text={helperText} />}

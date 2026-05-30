@@ -32,6 +32,8 @@ export interface SegmentedControlProps {
     layout?: 'horizontal' | 'vertical'
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Native form field name (emits a hidden input carrying the value). */
     name?: string
     /** Show a required asterisk after the label. */
@@ -86,6 +88,7 @@ export default function SegmentedControl({
     label,
     layout = 'vertical',
     helperText,
+    className,
     name,
     required,
     errorMessage,
@@ -109,7 +112,7 @@ export default function SegmentedControl({
     }
 
     return (
-        <Field
+        <Field className={className}
             label={label}
             htmlFor={groupId}
             errorId={errorId}

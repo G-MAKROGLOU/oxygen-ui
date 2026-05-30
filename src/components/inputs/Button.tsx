@@ -15,6 +15,8 @@ export interface ButtonProps {
     disabled?: boolean
     /** Inline style overrides (width, etc.). Margins/layout belong in the parent. */
     style?: React.CSSProperties
+    /** Extra classes appended to the button (override variant/size styles). */
+    className?: string
     /** Leading icon — rendered before content */
     icon?: React.ReactNode
     /** Click handler. */
@@ -89,6 +91,7 @@ export default function Button({
     style,
     icon,
     onClick,
+    className = '',
 }: ButtonProps) {
     return (
         <button
@@ -103,7 +106,8 @@ export default function Button({
                 'whitespace-nowrap',
                 SIZE_CLASSES[size],
                 VARIANT_CLASSES[variant],
-            ].join(' ')}
+                className,
+            ].filter(Boolean).join(' ')}
         >
             {loading ? (
                 <svg

@@ -45,6 +45,8 @@ export interface RadioGroupProps {
     required?: boolean
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
 }
@@ -97,6 +99,7 @@ export default function RadioGroup({
     disabled,
     required,
     helperText,
+    className,
     errorMessage,
 }: RadioGroupProps) {
     const errorId = useId()
@@ -105,7 +108,7 @@ export default function RadioGroup({
     const labelFirst = labelPosition === 'left'
 
     return (
-        <Field
+        <Field className={className}
             label={label}
             htmlFor={groupId}
             errorId={errorId}

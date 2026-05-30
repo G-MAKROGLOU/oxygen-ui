@@ -24,6 +24,8 @@ export interface SwitchInputProps {
     layout?: 'horizontal' | 'vertical'
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
 
     // ── Per-state labelling (mode 2) ────────────────────────────────────────
     /** Label rendered to the left of the track, emphasised while off. */
@@ -68,6 +70,7 @@ export default function Switch({
     label,
     layout = 'horizontal',
     helperText,
+    className,
     offLabel,
     onLabel,
     name,
@@ -98,7 +101,7 @@ export default function Switch({
         ].filter(Boolean).join(' ')
 
     return (
-        <Field
+        <Field className={className}
             label={label}
             htmlFor={id}
             errorId={errorId}

@@ -46,6 +46,8 @@ export interface SliderProps {
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Show a required asterisk after the label. */
     required?: boolean
     /** Native form field name (used for FormData serialisation). */
@@ -98,6 +100,7 @@ export default function Slider({
     disabled,
     errorMessage,
     helperText,
+    className,
     required,
     name,
     htmlFor,
@@ -122,7 +125,7 @@ export default function Slider({
     const valueText = current.map(formatValue).join(' – ')
 
     return (
-        <Field label={undefined} errorId={errorId} errorMessage={errorMessage}>
+        <Field className={className} label={undefined} errorId={errorId} errorMessage={errorMessage}>
             {(label || showValue) && (
                 <div className="flex items-center justify-between mb-2">
                     {label && (

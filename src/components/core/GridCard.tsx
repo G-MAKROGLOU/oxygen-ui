@@ -18,6 +18,10 @@ export interface GridCardProps {
     buttonText?: string
     /** Called when the button is clicked. Receives the full item. */
     onOpen?: (item: GridCardItem) => void
+    /** Extra classes merged onto the card root. */
+    className?: string
+    /** Inline style on the card root. */
+    style?: React.CSSProperties
 }
 
 /**
@@ -31,9 +35,9 @@ export interface GridCardProps {
  *   onOpen={({ to }) => navigate(to!)}
  * />
  */
-export default function GridCard({ item, buttonText = 'Open Application', onOpen }: GridCardProps) {
+export default function GridCard({ item, buttonText = 'Open Application', onOpen, className = '', style }: GridCardProps) {
     return (
-        <div className="flex flex-col w-[200px] h-[250px] rounded-lg bg-ice dark:bg-independence items-center justify-between p-2 shadow-2xl">
+        <div className={`flex flex-col w-[200px] h-[250px] rounded-lg bg-ice dark:bg-independence items-center justify-between p-2 shadow-2xl ${className}`.trim()} style={style}>
             <div className="text-prussian-blue dark:text-white text-lg font-bold text-center h-1/4">
                 <h2>{item.title}</h2>
             </div>

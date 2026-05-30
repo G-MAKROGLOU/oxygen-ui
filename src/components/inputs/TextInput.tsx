@@ -32,6 +32,8 @@ export interface TextInputProps {
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Mark the field required (renders an asterisk after the label). */
     required?: boolean
     /** Optional leading adornment (icon / prefix). */
@@ -79,6 +81,7 @@ export default function TextInput({
     onBlur,
     errorMessage,
     helperText,
+    className,
     required,
     prefix,
     suffix,
@@ -112,7 +115,7 @@ export default function TextInput({
     )
 
     return (
-        <Field
+        <Field className={className}
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}

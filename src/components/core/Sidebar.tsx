@@ -31,6 +31,8 @@ export interface SidebarProps {
     collapsedWidth?: number
     /** Slot rendered at the bottom of the sidebar (theme switch, user avatar…) */
     footer?: React.ReactNode
+    /** Extra classes merged onto the sidebar root (`<aside>`). */
+    className?: string
 }
 
 /** ─────────────────── sub-components ─────────────────── */
@@ -116,6 +118,7 @@ export default function Sidebar({
     expandedWidth  = 220,
     collapsedWidth = 52,
     footer,
+    className = '',
 }: SidebarProps) {
     return (
         <TooltipProvider delayDuration={200}>
@@ -123,7 +126,7 @@ export default function Sidebar({
                 initial={false}
                 animate={{ width: isExpanded ? expandedWidth : collapsedWidth }}
                 transition={{ type: 'tween', duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                className="relative flex h-full flex-col border-r border-border bg-surface overflow-hidden flex-shrink-0"
+                className={`relative flex h-full flex-col border-r border-border bg-surface overflow-hidden flex-shrink-0 ${className}`.trim()}
             >
                 {/* ── Toggle button ── */}
                 <div className={[

@@ -27,6 +27,10 @@ export interface ListProps {
      * `'comfortable'` (default) for typical UI, `'spacious'` for hero rows.
      */
     density?: 'compact' | 'comfortable' | 'spacious'
+    /** Extra classes merged onto the list root. */
+    className?: string
+    /** Inline style on the list root. */
+    style?: React.CSSProperties
 }
 
 const DENSITY_PADDING: Record<NonNullable<ListProps['density']>, string> = {
@@ -78,9 +82,11 @@ export default function List({
     onItemClick,
     activeKey,
     density = 'comfortable',
+    className = '',
+    style,
 }: ListProps) {
     return (
-        <div role="listbox" className="flex flex-col">
+        <div role="listbox" className={`flex flex-col ${className}`.trim()} style={style}>
             {items.map((item) => {
                 const isActive   = activeKey === item.key
                 const isDisabled = !!item.disabled

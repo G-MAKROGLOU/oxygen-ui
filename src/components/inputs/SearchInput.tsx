@@ -28,6 +28,8 @@ export interface SearchInputProps {
     icon?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
 }
 
 const SearchIcon = (
@@ -47,11 +49,11 @@ const SearchIcon = (
  * ```
  */
 const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput(
-    { value, onChange, disabled, label, htmlFor, placeholder, name, inputStyle, style, layout = 'vertical', size = 'md', icon, helperText },
+    { value, onChange, disabled, label, htmlFor, placeholder, name, inputStyle, style, layout = 'vertical', size = 'md', icon, helperText, className },
     ref,
 ) {
     return (
-        <Field label={label} htmlFor={htmlFor} layout={layout} helperText={helperText}>
+        <Field className={className} label={label} htmlFor={htmlFor} layout={layout} helperText={helperText}>
             <div
                 className={`flex items-center ${fieldShell({ size, disabled, focusWithin: true })}`}
                 style={style}

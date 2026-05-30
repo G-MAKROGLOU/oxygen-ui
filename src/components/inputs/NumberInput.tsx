@@ -24,6 +24,8 @@ export interface NumberInputProps {
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Show a required asterisk after the label. */
     required?: boolean
     /** Inline style applied to the inner input element. */
@@ -88,6 +90,7 @@ export default function NumberInput({
     size = 'md',
     errorMessage,
     helperText,
+    className,
     required,
     inputStyle,
     labelStyle,
@@ -144,7 +147,7 @@ export default function NumberInput({
     }
 
     return (
-        <Field
+        <Field className={className}
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}

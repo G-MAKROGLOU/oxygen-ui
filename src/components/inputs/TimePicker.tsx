@@ -31,6 +31,8 @@ export interface TimePickerProps {
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Show a required asterisk after the label. */
     required?: boolean
     /** Inline style applied to the control shell. */
@@ -82,6 +84,7 @@ export default function TimePicker({
     disabled,
     errorMessage,
     helperText,
+    className,
     required,
     style,
 }: TimePickerProps) {
@@ -133,7 +136,7 @@ export default function TimePicker({
     )
 
     return (
-        <Field label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} helperText={helperText} layout={layout} required={required}>
+        <Field className={className} label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} helperText={helperText} layout={layout} required={required}>
             <Popover.Root open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
                 <Popover.Trigger asChild>
                     <button

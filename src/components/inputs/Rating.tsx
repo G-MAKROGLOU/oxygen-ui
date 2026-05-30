@@ -32,6 +32,8 @@ export interface RatingProps {
     layout?: 'horizontal' | 'vertical'
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Show a required asterisk after the label. */
     required?: boolean
 }
@@ -75,6 +77,7 @@ export default function Rating({
     name,
     layout = 'vertical',
     helperText,
+    className,
     required,
 }: RatingProps) {
     const errorId = useId()
@@ -101,7 +104,7 @@ export default function Rating({
     }
 
     return (
-        <Field label={label} errorId={errorId} errorMessage={errorMessage} layout={layout} required={required} helperText={helperText}>
+        <Field className={className} label={label} errorId={errorId} errorMessage={errorMessage} layout={layout} required={required} helperText={helperText}>
             <div
                 role={interactive ? 'slider' : 'img'}
                 aria-label={typeof label === 'string' ? label : 'Rating'}

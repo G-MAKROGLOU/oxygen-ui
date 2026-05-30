@@ -27,6 +27,8 @@ export interface TagsInputProps {
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Show a required asterisk after the label. */
     required?: boolean
     /** Maximum number of tags. Further input is ignored once reached. */
@@ -67,6 +69,7 @@ export default function TagsInput({
     disabled,
     errorMessage,
     helperText,
+    className,
     required,
     maxTags,
     dedupe = true,
@@ -138,7 +141,7 @@ export default function TagsInput({
     const atMax = maxTags != null && tags.length >= maxTags
 
     return (
-        <Field
+        <Field className={className}
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}

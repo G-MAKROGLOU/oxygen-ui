@@ -31,6 +31,8 @@ export interface TreeSelectProps {
     layout?: 'horizontal' | 'vertical'
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Show a required asterisk after the label. */
     required?: boolean
     /** Disable interaction and dim the control. */
@@ -128,6 +130,7 @@ export default function TreeSelect({
     disabled,
     layout = 'horizontal',
     helperText,
+    className,
     required,
     errorMessage,
     style,
@@ -235,7 +238,7 @@ export default function TreeSelect({
     // ── Render ─────────────────────────────────────────────────────────────
 
     return (
-        <Field
+        <Field className={className}
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}

@@ -84,6 +84,10 @@ export interface TableProps<T extends Record<string, any> = Record<string, any>>
     loading?: boolean
     /** Number of skeleton rows to render when `loading` is true. Default `8`. */
     loadingRowCount?: number
+    /** Extra classes merged onto the table wrapper root. */
+    className?: string
+    /** Inline style on the table wrapper root. */
+    style?: React.CSSProperties
 }
 
 /** ─────────────────── defaults ─────────────────── */
@@ -394,6 +398,8 @@ export default function Table<T extends Record<string, any> = Record<string, any
     header = null,
     loading = false,
     loadingRowCount = 8,
+    className = '',
+    style,
 }: TableProps<T>) {
     const searchRef = useRef<HTMLInputElement>(null)
     const [searchTerm, setSearchTerm] = useState('')
@@ -475,7 +481,7 @@ export default function Table<T extends Record<string, any> = Record<string, any
     }
 
     return (
-        <div className="w-full h-max rounded-lg">
+        <div className={`w-full h-max rounded-lg ${className}`.trim()} style={style}>
             <div className="flex items-center justify-between mb-2">
                 {hasSearch && (
                     <SearchInput

@@ -44,6 +44,8 @@ export interface DateRangePickerProps {
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Show a required asterisk after the label. */
     required?: boolean
     /** Inline style applied to the control shell. */
@@ -103,6 +105,7 @@ export default function DateRangePicker({
     disabled,
     errorMessage,
     helperText,
+    className,
     required,
     style,
 }: DateRangePickerProps) {
@@ -200,7 +203,7 @@ export default function DateRangePicker({
     }
 
     return (
-        <Field label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} helperText={helperText} layout={layout} required={required}>
+        <Field className={className} label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} helperText={helperText} layout={layout} required={required}>
             <Popover.Root open={open && !disabled} onOpenChange={(o) => { if (!disabled) { setOpen(o); if (!o) { setPendingStart(null); setHoverDate(null) } } }}>
                 <Popover.Trigger asChild>
                     <button

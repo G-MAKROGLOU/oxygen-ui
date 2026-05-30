@@ -30,6 +30,8 @@ export interface PasswordProps {
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Show a required asterisk after the label. */
     required?: boolean
     /** Override the "reveal" (password hidden) icon. */
@@ -77,6 +79,7 @@ export default function Password({
     onBlur,
     errorMessage,
     helperText,
+    className,
     required,
     showIcon,
     hideIcon,
@@ -86,7 +89,7 @@ export default function Password({
     const hasError = errorMessage != null
 
     return (
-        <Field
+        <Field className={className}
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}

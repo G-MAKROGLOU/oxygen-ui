@@ -59,6 +59,8 @@ export interface DropdownProps {
     placeholder?: string
     /** Size preset. Default `'md'`. */
     size?: import('./_field').FieldSize
+    /** Extra classes merged onto the component root. */
+    className?: string
 }
 
 /**
@@ -205,6 +207,7 @@ export default function Dropdown({
     labelStyle = {},
     placeholder,
     size = 'md',
+    className = '',
 }: DropdownProps) {
     const [open, setOpen] = useState(false)
     const [selectedItems, setSelectedItems] = useState<(string | number)[]>([])
@@ -270,7 +273,7 @@ export default function Dropdown({
         Array.isArray(value) ? value.includes(key) : value === key
 
     return (
-        <div>
+        <div className={className || undefined}>
             <div
                 className={`flex ${layout === 'vertical' ? 'flex-col gap-1.5' : 'flex-row items-start gap-3'}`}
             >

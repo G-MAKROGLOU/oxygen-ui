@@ -25,6 +25,8 @@ export interface ModalProps {
     hasFooter?: boolean
     title?: React.ReactNode
     children?: React.ReactNode
+    /** Extra classes merged onto the modal panel. */
+    className?: string
 }
 
 /**
@@ -51,6 +53,7 @@ export default function Modal({
     hasFooter = true,
     title,
     children,
+    className = '',
 }: ModalProps) {
     const reduced = useReducedMotion()
     // Prefer the new `width` prop; fall back to the deprecated `size[0]`;
@@ -80,7 +83,7 @@ export default function Modal({
                     {isOpen && (
                         <Dialog.Content asChild>
                             <motion.div
-                                className="fixed left-1/2 top-1/2 z-modal flex flex-col w-[calc(100%-2rem)] max-h-[90dvh] bg-surface rounded-2xl shadow-xl overflow-hidden focus:outline-none"
+                                className={`fixed left-1/2 top-1/2 z-modal flex flex-col w-[calc(100%-2rem)] max-h-[90dvh] bg-surface rounded-2xl shadow-xl overflow-hidden focus:outline-none ${className}`.trim()}
                                 style={{
                                     maxWidth,
                                     x: '-50%',

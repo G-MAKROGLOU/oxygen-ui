@@ -24,6 +24,8 @@ export interface FileInputProps {
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Disable interaction and dim the control. */
     disabled?: boolean
     /** Show a required asterisk after the label. */
@@ -83,6 +85,7 @@ export default function FileInput({
     maxSize,
     errorMessage,
     helperText,
+    className,
     disabled,
     required,
     icon,
@@ -127,7 +130,7 @@ export default function FileInput({
     }
 
     return (
-        <Field
+        <Field className={className}
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}

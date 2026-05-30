@@ -57,6 +57,8 @@ export interface AutoCompleteProps {
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Mark required (asterisk after the label). */
     required?: boolean
     /** The control id; the field label links to it for accessibility. */
@@ -117,6 +119,7 @@ export default function AutoComplete({
     icon,
     errorMessage,
     helperText,
+    className,
     required,
     htmlFor,
 }: AutoCompleteProps) {
@@ -185,7 +188,7 @@ export default function AutoComplete({
     }
 
     return (
-        <Field
+        <Field className={className}
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}

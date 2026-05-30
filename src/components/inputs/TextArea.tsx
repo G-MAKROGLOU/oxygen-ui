@@ -41,6 +41,8 @@ export interface TextAreaProps {
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
+    /** Extra classes merged onto the field root element. */
+    className?: string
     /** Show a required asterisk after the label. */
     required?: boolean
     /** Inline style applied to the control shell. */
@@ -86,6 +88,7 @@ export default function TextArea({
     resize,
     errorMessage,
     helperText,
+    className,
     required,
     style,
     inputStyle,
@@ -113,7 +116,7 @@ export default function TextArea({
         : 'resize-y'
 
     return (
-        <Field
+        <Field className={className}
             label={label}
             htmlFor={htmlFor}
             errorId={errorId}

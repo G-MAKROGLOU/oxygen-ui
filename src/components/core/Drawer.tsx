@@ -16,6 +16,8 @@ export interface DrawerProps {
     onCancel?: () => void
     title?: React.ReactNode
     children?: React.ReactNode
+    /** Extra classes merged onto the drawer panel. */
+    className?: string
 }
 
 /**
@@ -42,6 +44,7 @@ export default function Drawer({
     onCancel,
     title,
     children,
+    className = '',
 }: DrawerProps) {
     const reduced = useReducedMotion()
     const isRight = placement === 'right'
@@ -70,7 +73,7 @@ export default function Drawer({
                     {isOpen && (
                         <Dialog.Content asChild>
                             <motion.div
-                                className={`fixed top-0 bottom-0 ${isRight ? 'right-0' : 'left-0'} z-modal flex flex-col bg-surface shadow-xl focus:outline-none`}
+                                className={`fixed top-0 bottom-0 ${isRight ? 'right-0' : 'left-0'} z-modal flex flex-col bg-surface shadow-xl focus:outline-none ${className}`.trim()}
                                 style={{ width: `min(calc(100vw - 1rem), ${width}px)` }}
                                 initial={{ x: reduced ? 0 : hiddenX, opacity: reduced ? 0 : 1 }}
                                 animate={{ x: 0, opacity: 1 }}

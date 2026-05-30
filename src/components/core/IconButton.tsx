@@ -13,6 +13,10 @@ export interface IconButtonProps {
     loading?: boolean
     loadingIcon?: React.ReactNode
     title?: string
+    /** Extra classes appended to the button. */
+    className?: string
+    /** Inline style on the button. */
+    style?: React.CSSProperties
 }
 
 /**
@@ -31,6 +35,8 @@ export default function IconButton({
     size = 'lg',
     loading = false,
     loadingIcon,
+    className = '',
+    style,
 }: IconButtonProps) {
     const colorScheme = useMemo(() => {
         if (type === 'primary') {
@@ -50,7 +56,8 @@ export default function IconButton({
             type={buttonType}
             disabled={disabled || loading}
             onClick={onClick}
-            className={`${size === 'sm' ? 'p-1' : 'p-2'} rounded-lg shadow-md transition-colors duration-150 ${colorScheme} disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
+            style={style}
+            className={`${size === 'sm' ? 'p-1' : 'p-2'} rounded-lg shadow-md transition-colors duration-150 ${colorScheme} disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${className}`.trim()}
         >
             {loading ? loadingIcon : icon}
         </button>
