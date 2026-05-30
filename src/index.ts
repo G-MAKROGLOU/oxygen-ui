@@ -193,8 +193,8 @@ export { default as RadioGroup } from './components/inputs/RadioGroup'
 export type { RadioGroupProps, RadioOption } from './components/inputs/RadioGroup'
 
 /** Shared input field foundation — exported for consumers building custom inputs. */
-export { Field, fieldShell } from './components/inputs/_field'
-export type { FieldProps, FieldShellOptions, FieldSize } from './components/inputs/_field'
+export { Field, fieldShell, FieldLabel, FieldHelpIcon } from './components/inputs/_field'
+export type { FieldProps, FieldShellOptions, FieldSize, FieldLabelProps } from './components/inputs/_field'
 
 /** Form variant of Switch (custom thumb icons) */
 export { default as Switch } from './components/inputs/Switch'
@@ -241,3 +241,38 @@ export type { DateRangePickerProps, DateRange, DateRangePreset } from './compone
 
 export { default as ColorPicker } from './components/inputs/ColorPicker'
 export type { ColorPickerProps } from './components/inputs/ColorPicker'
+
+// ── Form API ────────────────────────────────────────────────────────────────
+// Zero-dependency form layer: useForm + <Form> + native validation +
+// dynamic field arrays. See ./form for the full surface.
+export {
+    useForm,
+    Form,
+    FormField,
+    useFormField,
+    useFieldArray,
+    useFormStore,
+    FormContext,
+    FormStore,
+    runFieldRules,
+    isRequired,
+    patterns,
+} from './form'
+export type {
+    UseFormReturn,
+    FormProps,
+    FormFieldProps,
+    UseFormFieldOptions,
+    FieldArrayItem,
+    UseFieldArrayReturn,
+    FormStoreOptions,
+    ValidateTrigger,
+    ErrorMap,
+    FieldSnapshot,
+    FieldBindings,
+    FieldKind,
+    FieldRule,
+    FieldRules,
+    RulesMap,
+    FormValues,
+} from './form'

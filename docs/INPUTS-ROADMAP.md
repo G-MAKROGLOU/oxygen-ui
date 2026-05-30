@@ -71,7 +71,34 @@ exposed individually:
   (FormProvider / useForm / useFormField)** lands, so it gets cross-field
   validation and submission for free. Do not ship `<CvvInput>` and friends.
 
+## Form API — SHIPPED
+
+Zero-dependency form layer under `src/form` (exported from the package root):
+
+- `useForm({ initialValues, rules, validateOn })` → store + bindings.
+- `<Form form onFinish onFinishFailed action>` owns submission. `onFinish`
+  for SPA; `action` (server-action function or native URL) for SSR — both
+  validate first, native submits await async rules via `requestSubmit`.
+- Bind any control by spreading a kind-specific binder:
+  `fieldNative` (text inputs), `fieldChecked` (Switch/Checkbox),
+  `fieldTarget` (Dropdown/TreeSelect), `field` (value-onChange controls).
+- Validation is native + at the form level — inputs only *receive* their
+  error. Rules: `required`, `pattern`, `min`/`max`, `minLength`/`maxLength`,
+  and async/custom `validate` (Zod via `validate: v => schema.safeParse(v)…`).
+  Timing: onChange (once touched) + onBlur + onSubmit.
+- `useFieldArray(name)` → `{ fields, append, remove, move, replace }` with
+  stable keys for AntD-style dynamic add/remove rows; per-row rules register
+  and clean up via `useFormField`.
+- `useFormField` / `<FormField>` isolate re-renders for large/dynamic forms
+  (per-field memoized snapshots over `useSyncExternalStore`).
+
+Every input already exposes the unified form surface (value/onChange, name,
+label, layout, helperText, required, disabled, errorMessage).
+
 ## Status
 
 - **P0 — DONE:** TextArea, Slider (single + range), TagsInput, SegmentedControl.
-- **Next:** P1 — TimePicker, DateRangePicker, OTP/PIN, Rating, ColorPicker.
+- **P1 — DONE:** TimePicker, DateRangePicker, OTP/PIN, Rating, ColorPicker.
+- **Form API — DONE:** useForm / Form / field binders / validation / field arrays.
+- **Next:** CreditCardForm (built on the Form API), then Calendar, Accordion,
+  Table expandable-row animation, marketing component suite.
