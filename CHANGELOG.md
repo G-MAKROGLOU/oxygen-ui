@@ -1,3 +1,10 @@
+# [6.1.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.0.1...v6.1.0) (2026-05-30)
+
+
+### Features
+
+* **tabs:** left-align vertical tabs + overflow quick-select menu ([dfe8379](https://github.com/G-MAKROGLOU/oxygen-ui/commit/dfe8379484176ad878277a9336e1d9018861c455))
+
 ## [6.0.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.0.0...v6.0.1) (2026-05-30)
 
 
