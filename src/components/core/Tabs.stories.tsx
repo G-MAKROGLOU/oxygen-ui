@@ -200,5 +200,5 @@ export const Overflow: Story = {
             </Tabs>
         </div>
     ),
-    parameters: { docs: { description: { story: 'When the strip overflows, it scrolls (drag / wheel / swipe), the edges fade, and prev/next chevrons appear only on the overflowing side.' } } },
+    parameters: { docs: { description: { story: 'When the strip overflows, it scrolls (drag / wheel / swipe), the edges fade, and prev/next chevrons appear only on the overflowing side. A "Show all tabs" menu (⋯) also appears — hover or click it to jump straight to any tab; the picked tab scrolls into view.' } } },
 }
