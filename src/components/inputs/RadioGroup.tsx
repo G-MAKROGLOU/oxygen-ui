@@ -142,36 +142,47 @@ export default function RadioGroup({
                             </RadioGroupPrimitive.Indicator>
                         </RadioGroupPrimitive.Item>
                     )
-                    const labelEl = (
-                        <label
-                            htmlFor={itemId}
-                            className={[
-                                'select-none',
-                                opt.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
-                                labelFirst ? 'text-right' : '',
-                            ].filter(Boolean).join(' ')}
-                        >
+                    const labelClass = [
+                        'block select-none',
+                        opt.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
+                    ].join(' ')
+                    const labelTextEl = (
+                        <label htmlFor={itemId} className={labelClass}>
                             <span className={`block ${TEXT_SIZE[size]} text-foreground`}>{opt.label}</span>
-                            {opt.description && (
-                                <span className="block text-xs text-foreground-secondary mt-0.5">
-                                    {opt.description}
-                                </span>
-                            )}
                         </label>
                     )
-                    // Label-left in a vertical group uses a 2-column grid so
-                    // every label shares one column and the dots line up in a
-                    // single column on the right (settings-row style). A plain
-                    // flex row would let each dot sit right after its variable-
-                    // width label, leaving them ragged and wrapping long
-                    // descriptions awkwardly.
-                    const rowClass =
-                        labelFirst && layout === 'vertical'
-                            ? 'grid grid-cols-[1fr_auto] items-start gap-2.5'
-                            : 'flex items-start gap-2.5'
+                    const descriptionEl = opt.description ? (
+                        <label
+                            htmlFor={itemId}
+                            className={`block text-xs text-foreground-secondary mt-0.5 ${opt.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                        >
+                            {opt.description}
+                        </label>
+                    ) : null
+
+                    // Label-left: dot sits directly beside the label on the
+                    // first line, and any description wraps UNDER the label
+                    // (full width) — so the dot never gets pushed away by a long
+                    // description, and dots line up under each other.
+                    if (labelFirst) {
+                        return (
+                            <div key={opt.value} className="flex flex-col">
+                                <div className="flex items-start gap-2.5">
+                                    {labelTextEl}
+                                    {dot}
+                                </div>
+                                {descriptionEl}
+                            </div>
+                        )
+                    }
+                    // Label-right (default): dot first, then label + description.
                     return (
-                        <div key={opt.value} className={rowClass}>
-                            {labelFirst ? <>{labelEl}{dot}</> : <>{dot}{labelEl}</>}
+                        <div key={opt.value} className="flex items-start gap-2.5">
+                            {dot}
+                            <span className="flex flex-col">
+                                {labelTextEl}
+                                {descriptionEl}
+                            </span>
                         </div>
                     )
                 })}
