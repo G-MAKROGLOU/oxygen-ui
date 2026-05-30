@@ -1,3 +1,10 @@
+# [5.9.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.8.0...v5.9.0) (2026-05-30)
+
+
+### Features
+
+* **config:** className/style passthrough across components (on-the-spot config) ([8cc8816](https://github.com/G-MAKROGLOU/oxygen-ui/commit/8cc88166937bca2211ba56b3a4ac82b4485f28c2))
+
 # [5.8.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.7.2...v5.8.0) (2026-05-30)
 
 
