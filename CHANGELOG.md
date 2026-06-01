@@ -1,3 +1,10 @@
+# [6.3.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.2.3...v6.3.0) (2026-06-01)
+
+
+### Features
+
+* **accordion:** collapsible panel component ([3464fc9](https://github.com/G-MAKROGLOU/oxygen-ui/commit/3464fc9f9d18c9d8315610de3e8d1253472c88c6))
+
 ## [6.2.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.2.2...v6.2.3) (2026-06-01)
 
 
