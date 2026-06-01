@@ -1,3 +1,10 @@
+# [6.4.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.3.0...v6.4.0) (2026-06-01)
+
+
+### Features
+
+* **breadcrumbs:** navigation trail component ([f9aac52](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f9aac52b6a586b3669148a0f28a8110c1edb645b))
+
 # [6.3.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.2.3...v6.3.0) (2026-06-01)
 
 
