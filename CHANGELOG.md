@@ -1,3 +1,10 @@
+## [6.2.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.2.2...v6.2.3) (2026-06-01)
+
+
+### Bug Fixes
+
+* **table:** animate expandable-row open/close ([ba9eaa4](https://github.com/G-MAKROGLOU/oxygen-ui/commit/ba9eaa43759ffdfef2350e257e8eaec85b1e9243))
+
 ## [6.2.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.2.1...v6.2.2) (2026-06-01)
 
 
