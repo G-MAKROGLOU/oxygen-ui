@@ -1,0 +1,63 @@
+{/* src/docs/Rating.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/Rating/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Rating
+
+A row of star icons for capturing a score, with optional half-star precision and
+a read-only display mode.
+
+## Mental model
+
+Controlled with a `number`. `onChange` reports the next value. `count` sets the
+number of icons, `allowHalf` enables half-step precision, and `readOnly` renders a
+static score (no hover/click). With `clearable`, clicking the current value again
+resets to 0.
+
+## Quick start
+
+```tsx
+import { Rating } from '@geomak/ui'
+
+const [score, setScore] = useState(0)
+
+<Rating label="Quality" value={score} onChange={setScore} />
+```
+
+## With the Form API
+
+```tsx
+<Rating label="Rate it" {...form.field('score', { required: true })} />
+```
+
+## Half stars & read-only
+
+```tsx
+<Rating label="Score" allowHalf value={4.5} onChange={setScore} />
+<Rating label="Average" value={3.5} readOnly />            {/* display only */}
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value / defaultValue</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>Current score.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(value: number) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Next score.</td></tr>
+    <tr><td style={td0}>count</td><td style={td(true)}>number</td><td style={td(true)}>5</td><td style={td(false)}>Number of icons.</td></tr>
+    <tr><td style={td0}>allowHalf</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Half-icon precision.</td></tr>
+    <tr><td style={td0}>readOnly</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Static display, no interaction.</td></tr>
+    <tr><td style={td0}>clearable</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Re-click current value clears to 0.</td></tr>
+    <tr><td style={td0}>label / size</td><td style={td(true)}>ReactNode / union</td><td style={td(true)}>— / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>disabled / name / className</td><td style={td(true)}>various</td><td style={td(true)}>—</td><td style={td(false)}>Dimmed / form name / classes.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → Rating** stories.

@@ -1,0 +1,66 @@
+{/* src/docs/DatePicker.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/DatePicker/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# DatePicker
+
+A date field with a grid calendar popover, month/year quick-pick, and optional
+`min`/`max` bounds. Dependency-free date math.
+
+## Mental model
+
+Controlled with a `Date | null` (`null` = no date). `onChange` reports the next
+`Date` (or `null` when cleared). The trigger shows a formatted date; override
+the format with `format`.
+
+## Quick start
+
+```tsx
+import { Temporal as DatePicker } from '@geomak/ui'   // exported as `Temporal`
+
+const [date, setDate] = useState<Date | null>(null)
+
+<DatePicker label="Report date" value={date} onChange={setDate} />
+```
+
+## With the Form API
+
+Bind with `field` (its `onChange` takes the value directly):
+
+```tsx
+<DatePicker label="Date" {...form.field('date', { required: 'Pick a date' })} />
+```
+
+## Bounds, format & clearing
+
+```tsx
+<DatePicker label="Date" min={new Date()} max={maxDate} value={d} onChange={setD} />
+<DatePicker label="Date" format={(d) => d.toLocaleDateString('en-GB')} … />
+<DatePicker label="Date" weekStartsOn={1} clearable={false} … />   {/* Monday start, no clear */}
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value</td><td style={td(true)}>Date | null</td><td style={td(true)}>—</td><td style={td(false)}>Selected date.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(date: Date | null) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Next date, or null when cleared.</td></tr>
+    <tr><td style={td0}>min / max</td><td style={td(true)}>Date</td><td style={td(true)}>—</td><td style={td(false)}>Earliest / latest selectable date.</td></tr>
+    <tr><td style={td0}>format</td><td style={td(true)}>{'(date) => string'}</td><td style={td(true)}>YYYY-MM-DD</td><td style={td(false)}>Trigger display formatter.</td></tr>
+    <tr><td style={td0}>weekStartsOn</td><td style={td(true)}>0 | 1</td><td style={td(true)}>0</td><td style={td(false)}>0 Sunday, 1 Monday.</td></tr>
+    <tr><td style={td0}>clearable</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Show a clear button in the popover.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'horizontal' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>placeholder / name / htmlFor / style</td><td style={td(true)}>various</td><td style={td(true)}>—</td><td style={td(false)}>Placeholder / form name / id / trigger width.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → DatePicker** stories.

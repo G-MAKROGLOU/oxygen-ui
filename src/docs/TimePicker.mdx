@@ -1,0 +1,61 @@
+{/* src/docs/TimePicker.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/TimePicker/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# TimePicker
+
+A time field with scrollable hour / minute (/ second) columns in a popover.
+
+## Mental model
+
+Controlled with a `string | null` time value in 24-hour `"HH:mm"` (or
+`"HH:mm:ss"` with seconds). `onChange` reports the next string. `use12Hours`
+shows an AM/PM UI while the value stays 24-hour.
+
+## Quick start
+
+```tsx
+import { TimePicker } from '@geomak/ui'
+
+const [time, setTime] = useState<string | null>('09:30')
+
+<TimePicker label="Departure" value={time} onChange={setTime} />
+```
+
+## With the Form API
+
+```tsx
+<TimePicker label="Time" {...form.field('time', { required: true })} />
+```
+
+## Options
+
+```tsx
+<TimePicker label="Time" use12Hours value={t} onChange={setT} />          {/* AM/PM UI, 24h value */}
+<TimePicker label="Time" withSeconds minuteStep={5} value={t} onChange={setT} />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value</td><td style={td(true)}>string | null</td><td style={td(true)}>—</td><td style={td(false)}>24h "HH:mm" (or "HH:mm:ss").</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(value: string | null) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Next time string.</td></tr>
+    <tr><td style={td0}>use12Hours</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>AM/PM display (value stays 24h).</td></tr>
+    <tr><td style={td0}>withSeconds</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Add a seconds column.</td></tr>
+    <tr><td style={td0}>minuteStep</td><td style={td(true)}>number</td><td style={td(true)}>1</td><td style={td(false)}>Minute increment.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'horizontal' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>placeholder / name / htmlFor / className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Placeholder / form name / id / classes.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → TimePicker** stories.

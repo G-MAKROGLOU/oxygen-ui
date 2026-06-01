@@ -1,0 +1,53 @@
+{/* src/docs/TagsInput.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/TagsInput/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# TagsInput
+
+A free-text field that collects entries as removable chips. Type and press Enter
+(or comma) to add; Backspace on an empty field removes the last tag.
+
+## Mental model
+
+Controlled with a `string[]`. `onChange` reports the next array. Each committed
+entry becomes a chip with its own remove affordance. The text field itself is
+internal; you only manage the list.
+
+## Quick start
+
+```tsx
+import { TagsInput } from '@geomak/ui'
+
+const [tags, setTags] = useState<string[]>(['urgent'])
+
+<TagsInput label="Labels" placeholder="Add a label…" value={tags} onChange={setTags} />
+```
+
+## With the Form API
+
+```tsx
+<TagsInput label="Labels" {...form.field('labels', { required: 'Add at least one' })} />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value / defaultValue</td><td style={td(true)}>string[]</td><td style={td(true)}>—</td><td style={td(false)}>Current tags.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(tags: string[]) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Next list.</td></tr>
+    <tr><td style={td0}>placeholder</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Shown when empty.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'vertical' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>name / htmlFor / className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Form name / id / classes.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → TagsInput** stories.

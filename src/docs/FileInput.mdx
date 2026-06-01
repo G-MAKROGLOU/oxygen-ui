@@ -1,0 +1,68 @@
+{/* src/docs/FileInput.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/FileInput/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# FileInput
+
+A click-or-drag dropzone that collects files as a list, with `accept` filtering,
+a `maxSize` guard, and per-file remove.
+
+## Mental model
+
+`onChange` is **target-shaped**: it fires with `{ target: { files, name, id } }`,
+where `files` is a `File[]`. The component keeps the selected files internally and
+renders them as a list; you read the array off `e.target.files`. This shape exists
+so it slots straight into native-style form handlers.
+
+## Quick start
+
+```tsx
+import { FileInput } from '@geomak/ui'
+
+const [files, setFiles] = useState<File[]>([])
+
+<FileInput
+  label="Attachments"
+  allowMultiple
+  accept=".pdf,.xlsx"
+  hint="PDF or Excel, up to 10 MB"
+  maxSize={10 * 1024 * 1024}
+  onChange={(e) => setFiles(e.target.files)}
+/>
+```
+
+## With the Form API
+
+FileInput binds **manually** (its `onChange` is target-shaped, not value-shaped):
+
+```tsx
+<FileInput
+  label="Attachments"
+  onChange={(e) => form.setValue('attachments', e.target.files)}
+  errorMessage={form.errors.attachments}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { files: File[] } }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Read <code>e.target.files</code>.</td></tr>
+    <tr><td style={td0}>allowMultiple</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Allow selecting more than one file.</td></tr>
+    <tr><td style={td0}>accept</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Accepted MIME types / extensions.</td></tr>
+    <tr><td style={td0}>maxSize</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>Max bytes per file; larger are rejected.</td></tr>
+    <tr><td style={td0}>prompt / hint</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Primary CTA + secondary hint copy.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Field label.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>name / htmlFor / className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Form name / id / classes.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → FileInput** stories.

@@ -1,0 +1,77 @@
+{/* src/docs/Slider.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/Slider/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Slider
+
+A draggable track for picking a number, or a range when given two values. Tick
+marks, a value tooltip, and a live readout.
+
+## Mental model
+
+Single mode is a `number`; range mode is a `[number, number]` tuple. The shape of
+`value` (or `defaultValue`) decides the mode. `onChange` fires on every move;
+`onChangeEnd` fires once when the drag/keyboard interaction settles, which is the
+one to use for expensive work.
+
+## Quick start
+
+```tsx
+import { Slider } from '@geomak/ui'
+
+const [volume, setVolume] = useState(40)
+
+<Slider label="Volume" showValue min={0} max={100} value={volume} onChange={setVolume} />
+```
+
+## Range mode
+
+```tsx
+const [price, setPrice] = useState<[number, number]>([20, 80])
+
+<Slider label="Price" showValue value={price} onChange={setPrice} />
+```
+
+## With the Form API
+
+```tsx
+<Slider label="Budget" {...form.field('budget')} />
+```
+
+## Marks & formatting
+
+```tsx
+<Slider
+  label="Level"
+  marks={[{ value: 0, label: 'Low' }, { value: 50, label: 'Mid' }, { value: 100, label: 'High' }]}
+  formatValue={(n) => `${n}%`}
+  step={5}
+  onChangeEnd={save}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value / defaultValue</td><td style={td(true)}>number | [number, number]</td><td style={td(true)}>—</td><td style={td(false)}>Tuple → range mode.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(v: SliderValue) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires on every move.</td></tr>
+    <tr><td style={td0}>onChangeEnd</td><td style={td(true)}>{'(v: SliderValue) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires once when interaction ends.</td></tr>
+    <tr><td style={td0}>min / max / step</td><td style={td(true)}>number</td><td style={td(true)}>0 / 100 / 1</td><td style={td(false)}>Bounds + increment.</td></tr>
+    <tr><td style={td0}>showValue</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Show readout beside the label.</td></tr>
+    <tr><td style={td0}>formatValue</td><td style={td(true)}>{'(n) => string'}</td><td style={td(true)}>—</td><td style={td(false)}>Format tooltip + readout.</td></tr>
+    <tr><td style={td0}>marks</td><td style={td(true)}>{'{ value, label }[]'}</td><td style={td(true)}>—</td><td style={td(false)}>Tick marks under the track.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'vertical' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>disabled / name / className</td><td style={td(true)}>various</td><td style={td(true)}>—</td><td style={td(false)}>Dimmed / form name / classes.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → Slider** stories for single + range.

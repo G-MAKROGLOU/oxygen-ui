@@ -1,0 +1,68 @@
+{/* src/docs/OtpInput.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/OtpInput/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# OtpInput
+
+A row of single-character boxes for one-time codes and PINs. Auto-advances on
+type, supports paste of a full code, and Backspace moves back.
+
+## Mental model
+
+Controlled with a `string` of the concatenated characters. `onChange` reports the
+next string; `onComplete` fires once every box is filled, which is the right hook
+for auto-submit. `length` sets the box count, `mode` restricts the charset, and
+`masked` hides characters for PIN entry.
+
+## Quick start
+
+```tsx
+import { OtpInput } from '@geomak/ui'
+
+const [code, setCode] = useState('')
+
+<OtpInput
+  label="Verification code"
+  length={6}
+  value={code}
+  onChange={setCode}
+  onComplete={(full) => verify(full)}
+/>
+```
+
+## With the Form API
+
+```tsx
+<OtpInput label="Code" length={6} {...form.field('code', { required: true })} />
+```
+
+## PIN entry
+
+```tsx
+<OtpInput label="PIN" length={4} mode="numeric" masked value={pin} onChange={setPin} />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Concatenated characters.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(code: string) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Next value.</td></tr>
+    <tr><td style={td0}>onComplete</td><td style={td(true)}>{'(code: string) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires when all boxes are filled.</td></tr>
+    <tr><td style={td0}>length</td><td style={td(true)}>number</td><td style={td(true)}>6</td><td style={td(false)}>Number of boxes.</td></tr>
+    <tr><td style={td0}>mode</td><td style={td(true)}>'numeric' | 'alphanumeric'</td><td style={td(true)}>'numeric'</td><td style={td(false)}>Allowed characters.</td></tr>
+    <tr><td style={td0}>masked</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Render dots for PIN entry.</td></tr>
+    <tr><td style={td0}>label / size</td><td style={td(true)}>ReactNode / union</td><td style={td(true)}>— / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>disabled / name / htmlFor</td><td style={td(true)}>various</td><td style={td(true)}>—</td><td style={td(false)}>Dimmed / form name / id.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → OtpInput** stories.

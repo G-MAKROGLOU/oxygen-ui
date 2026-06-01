@@ -1,0 +1,72 @@
+{/* src/docs/DateRangePicker.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/DateRangePicker/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# DateRangePicker
+
+A start-to-end date range picker with a two-click calendar and optional
+quick-select presets (Today, Last 7 days, This month, …).
+
+## Mental model
+
+Controlled with a `DateRange` (`{ start: Date | null, end: Date | null }`).
+`onChange` reports the next range. Clicking the calendar sets the start, then the
+end. Provide `presets` for one-click ranges.
+
+## Quick start
+
+```tsx
+import { DateRangePicker } from '@geomak/ui'
+
+const [range, setRange] = useState({ start: null, end: null })
+
+<DateRangePicker label="Period" value={range} onChange={setRange} />
+```
+
+## With the Form API
+
+```tsx
+<DateRangePicker label="Period" {...form.field('period', { required: true })} />
+```
+
+## Presets & bounds
+
+```tsx
+<DateRangePicker
+  label="Period"
+  presets={[
+    { label: 'Last 7 days', range: () => ({ start: addDays(new Date(), -6), end: new Date() }) },
+    { label: 'This month',  range: () => ({ start: startOfMonth(new Date()), end: new Date() }) },
+  ]}
+  min={minDate}
+  max={maxDate}
+  weekStartsOn={1}
+  value={range}
+  onChange={setRange}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value</td><td style={td(true)}>{'{ start: Date | null, end: Date | null }'}</td><td style={td(true)}>—</td><td style={td(false)}>Selected range.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(range) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Next range.</td></tr>
+    <tr><td style={td0}>presets</td><td style={td(true)}>{'{ label, range: () => DateRange }[]'}</td><td style={td(true)}>—</td><td style={td(false)}>Quick-select ranges.</td></tr>
+    <tr><td style={td0}>min / max</td><td style={td(true)}>Date</td><td style={td(true)}>—</td><td style={td(false)}>Selectable bounds.</td></tr>
+    <tr><td style={td0}>weekStartsOn / format</td><td style={td(true)}>0|1 / {'(d) => string'}</td><td style={td(true)}>0 / —</td><td style={td(false)}>Week start + trigger formatter.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'horizontal' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>placeholder / name / style</td><td style={td(true)}>various</td><td style={td(true)}>—</td><td style={td(false)}>Placeholder / form name / trigger width.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → DateRangePicker** stories.
