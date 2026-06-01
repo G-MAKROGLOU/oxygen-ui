@@ -1,3 +1,10 @@
+# [6.12.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.11.0...v6.12.0) (2026-06-01)
+
+
+### Features
+
+* **cart:** shopping-cart panel ([859e9ce](https://github.com/G-MAKROGLOU/oxygen-ui/commit/859e9ceca99930eb71e441daca87d3e98e77541e))
+
 # [6.11.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.10.0...v6.11.0) (2026-06-01)
 
 
