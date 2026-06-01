@@ -1,0 +1,67 @@
+{/* src/docs/PopConfirm.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Feedback/PopConfirm/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# PopConfirm
+
+A lightweight "are you sure?" prompt anchored to its trigger — for in-place
+confirmation without a full Modal.
+
+## Mental model
+
+Wrap the trigger element (it's cloned as the popover anchor). Clicking the trigger
+opens a small popover with your `title`, optional `description`, and Confirm /
+Cancel buttons. `onConfirm` runs on confirm; if it returns a promise, the confirm
+button stays in a loading state until it settles, then closes. `tone="danger"`
+colours the confirm button red for destructive actions. Reach for this over Modal
+when the decision is small and local (delete a row, archive an item).
+
+## Quick start
+
+```tsx
+import { PopConfirm, Button } from '@geomak/ui'
+
+<PopConfirm
+  title="Delete this vessel?"
+  description="This permanently removes the record."
+  tone="danger"
+  confirmText="Delete"
+  onConfirm={remove}
+>
+  <Button content="Delete" variant="danger" />
+</PopConfirm>
+```
+
+## Async confirm
+
+```tsx
+<PopConfirm title="Archive this item?" confirmText="Archive" onConfirm={async () => { await archive(id) }}>
+  <Button content="Archive" variant="secondary" />
+</PopConfirm>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactElement</td><td style={td(true)}>—</td><td style={td(false)}>Trigger element (cloned as anchor).</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Confirmation heading.</td></tr>
+    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Secondary line.</td></tr>
+    <tr><td style={td0}>onConfirm</td><td style={td(true)}>{'() => void | Promise<void>'}</td><td style={td(true)}>—</td><td style={td(false)}>Async → confirm button shows loading.</td></tr>
+    <tr><td style={td0}>onCancel</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Cancel / dismiss handler.</td></tr>
+    <tr><td style={td0}>confirmText / cancelText</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Confirm' / 'Cancel'</td><td style={td(false)}>Button labels.</td></tr>
+    <tr><td style={td0}>tone</td><td style={td(true)}>'default' | 'danger'</td><td style={td(true)}>'default'</td><td style={td(false)}>Danger reddens the confirm button.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Leading icon beside the title.</td></tr>
+    <tr><td style={td0}>side</td><td style={td(true)}>'top'|'right'|'bottom'|'left'</td><td style={td(true)}>'top'</td><td style={td(false)}>Open side.</td></tr>
+    <tr><td style={td0}>open / onOpenChange</td><td style={td(true)}>boolean / fn</td><td style={td(true)}>—</td><td style={td(false)}>Optional controlled open state.</td></tr>
+  </tbody>
+</table>
+
+See the **Feedback → PopConfirm** stories.

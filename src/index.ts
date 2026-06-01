@@ -124,6 +124,9 @@ export type { StatisticProps, StatisticDelta, StatisticSize, DeltaDirection } fr
 export { default as FAB } from './components/core/FAB'
 export type { FABProps, FABAction, FABPosition, FABSize, FABTone } from './components/core/FAB'
 
+export { default as PopConfirm } from './components/core/PopConfirm'
+export type { PopConfirmProps, PopConfirmTone } from './components/core/PopConfirm'
+
 export {
     NotificationProvider,
     useNotification,
