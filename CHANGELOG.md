@@ -1,3 +1,10 @@
+# [6.6.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.5.0...v6.6.0) (2026-06-01)
+
+
+### Features
+
+* **kbd:** keyboard key cap component ([7b7ee40](https://github.com/G-MAKROGLOU/oxygen-ui/commit/7b7ee4092f57eee05a1924d2f6cc4136b0f24836))
+
 # [6.5.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.4.0...v6.5.0) (2026-06-01)
 
 
