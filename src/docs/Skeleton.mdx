@@ -1,0 +1,64 @@
+{/* src/docs/Skeleton.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Progress/Skeleton/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Skeleton
+
+Shimmering placeholders that hold layout while content loads. Four shapes —
+`SkeletonBox`, `SkeletonText`, `SkeletonCircle`, `SkeletonCard` — compose into any
+loading view.
+
+## Mental model
+
+Each primitive is a themed placeholder. The animated sweep is `color-mix`-ed from
+the foreground token, so it stays visible in both light and dark; the resting
+color is `surface-raised` and overridable via `className`/`style`. Reduced-motion
+hides the sweep but keeps the legible base. Mirror your real content's shape so
+nothing jumps when data arrives.
+
+## Quick start
+
+```tsx
+import { SkeletonBox, SkeletonText, SkeletonCircle, SkeletonCard } from '@geomak/ui'
+
+{loading ? (
+  <SkeletonCard hasAvatar lines={3} />
+) : (
+  <ProfileCard user={user} />
+)}
+```
+
+## Composing a custom placeholder
+
+```tsx
+<div className="flex gap-3">
+  <SkeletonCircle size={48} />
+  <div className="flex-1">
+    <SkeletonText lines={2} />
+    <SkeletonBox width="60%" height={12} />
+  </div>
+</div>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Component</th><th style={th}>Props</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>SkeletonBox</td><td style={td(true)}>width?, height=16, radius?</td><td style={td(false)}>Generic rectangle (image, header, block).</td></tr>
+    <tr><td style={td0}>SkeletonText</td><td style={td(true)}>lines?, …base</td><td style={td(false)}>Stacked text lines (last is shorter).</td></tr>
+    <tr><td style={td0}>SkeletonCircle</td><td style={td(true)}>size=40</td><td style={td(false)}>Round placeholder (avatar).</td></tr>
+    <tr><td style={td0}>SkeletonCard</td><td style={td(true)}>hasAvatar=true, lines=3</td><td style={td(false)}>Avatar + title + text-line card.</td></tr>
+  </tbody>
+</table>
+
+All four also accept `className` and `style` for resting-color / size overrides.
+The Table component renders these internally when `loading` is set.
+
+See the **Progress → Skeleton** stories.

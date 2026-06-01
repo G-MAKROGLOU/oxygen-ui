@@ -1,0 +1,84 @@
+{/* src/docs/ThemeProvider.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Themes/ThemeProvider/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# ThemeProvider
+
+The root that injects design tokens as CSS variables and manages light/dark mode.
+Wrap your app once.
+
+## Mental model
+
+ThemeProvider writes the design tokens (colors, radius, shadows, typography,
+density, motion) as CSS custom properties on its wrapper, so every component reads
+them at runtime. `theme` overrides tokens in both modes; `darkTheme` layers
+dark-only overrides via a scoped `<style>` on the `.dark` class. `colorScheme`
+controls how that class is applied:
+
+- `'light'` / `'dark'` — force the mode
+- `'system'` — follow `prefers-color-scheme`
+- `'auto'` (default) — inherit from an ancestor (you toggle `.dark` yourself, e.g. via ThemeSwitch)
+
+## Quick start
+
+```tsx
+import { ThemeProvider } from '@geomak/ui'
+
+<ThemeProvider colorScheme="system">
+  <App />
+</ThemeProvider>
+```
+
+## Brand token overrides
+
+```tsx
+<ThemeProvider
+  theme={{
+    colors: { accent: '#0466c8' },
+    radius: { md: 10 },
+  }}
+  darkTheme={{
+    colors: { background: '#0b1220', surface: '#121a2b' },
+  }}
+  colorScheme="auto"
+>
+  <App />
+</ThemeProvider>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>theme</td><td style={td(true)}>ThemeConfig</td><td style={td(true)}>—</td><td style={td(false)}>Token overrides for both modes.</td></tr>
+    <tr><td style={td0}>darkTheme</td><td style={td(true)}>ThemeConfig</td><td style={td(true)}>—</td><td style={td(false)}>Dark-only token overrides.</td></tr>
+    <tr><td style={td0}>colorScheme</td><td style={td(true)}>'light'|'dark'|'system'|'auto'</td><td style={td(true)}>'auto'</td><td style={td(false)}>How the .dark class is managed.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Your app subtree.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Wrapper overrides.</td></tr>
+  </tbody>
+</table>
+
+### ThemeConfig sections
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Key</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>colors</td><td style={td(true)}>ThemeColors</td><td style={td(false)}>accent, background, surface, foreground, status…</td></tr>
+    <tr><td style={td0}>radius</td><td style={td(true)}>ThemeRadius</td><td style={td(false)}>Corner radii scale.</td></tr>
+    <tr><td style={td0}>shadows</td><td style={td(true)}>ThemeShadows</td><td style={td(false)}>Elevation shadows.</td></tr>
+    <tr><td style={td0}>typography</td><td style={td(true)}>ThemeTypography</td><td style={td(false)}>Font family / scale.</td></tr>
+    <tr><td style={td0}>density</td><td style={td(true)}>ThemeDensity</td><td style={td(false)}>Spacing density.</td></tr>
+    <tr><td style={td0}>motion</td><td style={td(true)}>ThemeMotion</td><td style={td(false)}>Duration / easing.</td></tr>
+  </tbody>
+</table>
+
+Pair with **ThemeSwitch** to let users toggle `.dark` under `colorScheme="auto"`.
+
+See the **Themes → ThemeProvider** stories.

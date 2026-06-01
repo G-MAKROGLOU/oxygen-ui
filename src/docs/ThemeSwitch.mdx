@@ -1,0 +1,62 @@
+{/* src/docs/ThemeSwitch.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Themes/ThemeSwitch/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# ThemeSwitch
+
+A dark-mode toggle built on Radix Switch. The thumb color signals the mode: green
+in light, slate in dark.
+
+## Mental model
+
+A controlled switch: you own `checked` (true = dark) and react to `onChange`,
+which is **target-shaped** — `{ target: { checked } }` — so it drops into native
+form handlers. The switch itself only reports intent; you decide what to do with
+it, typically toggling `.dark` on a `ThemeProvider` running `colorScheme="auto"`.
+It renders inline with no external margins; layout is the parent's job.
+
+## Quick start
+
+```tsx
+import { ThemeSwitch } from '@geomak/ui'
+
+const [dark, setDark] = useState(false)
+
+<ThemeSwitch checked={dark} onChange={({ target }) => setDark(target.checked)} />
+```
+
+## Driving the theme
+
+```tsx
+function Shell() {
+  const [dark, setDark] = useState(false)
+  return (
+    <ThemeProvider colorScheme={dark ? 'dark' : 'light'}>
+      <TopBar actions={<ThemeSwitch checked={dark} onChange={({ target }) => setDark(target.checked)} />} />
+      <App />
+    </ThemeProvider>
+  )
+}
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>checked</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>true = dark mode.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { checked } }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Read e.target.checked.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>string</td><td style={td(true)}>'Toggle dark mode'</td><td style={td(false)}>Accessible label.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the root label.</td></tr>
+  </tbody>
+</table>
+
+For a general-purpose on/off control with labels and layout, see **Inputs → Switch**.
+
+See the **Themes → ThemeSwitch** stories.
