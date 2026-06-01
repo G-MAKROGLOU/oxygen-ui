@@ -1,0 +1,51 @@
+{/* src/docs/Kbd.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/Kbd/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Kbd
+
+Renders keyboard keys as styled caps — for documenting shortcuts and hints.
+
+## Mental model
+
+Pass a single key as `children`, or a combination as `keys` (each entry becomes
+its own `<kbd>` cap, joined by `separator`). The single form renders one `<kbd>`;
+the combo form wraps caps in a `<span>`. Inline-friendly — drop it straight into
+sentences.
+
+## Quick start
+
+```tsx
+import { Kbd } from '@geomak/ui'
+
+<Kbd>Esc</Kbd>
+<Kbd keys={['Ctrl', 'K']} />
+<Kbd keys={['⌘', '⇧', 'P']} size="sm" />
+```
+
+## In running text
+
+```tsx
+<p>Press <Kbd keys={['Ctrl', 'K']} size="sm" /> to open the command palette.</p>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Single key label.</td></tr>
+    <tr><td style={td0}>keys</td><td style={td(true)}>string[]</td><td style={td(true)}>—</td><td style={td(false)}>Combo — one cap per entry.</td></tr>
+    <tr><td style={td0}>separator</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'+'</td><td style={td(false)}>Joiner between caps.</td></tr>
+    <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md'</td><td style={td(true)}>'md'</td><td style={td(false)}>Cap size.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Overrides.</td></tr>
+  </tbody>
+</table>
+
+See the **Data Display → Kbd** stories.

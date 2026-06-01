@@ -109,6 +109,9 @@ export type { BreadcrumbsProps, BreadcrumbItem } from './components/core/Breadcr
 export { default as Badge } from './components/core/Badge'
 export type { BadgeProps, BadgeTone, BadgeVariant, BadgeSize } from './components/core/Badge'
 
+export { default as Kbd } from './components/core/Kbd'
+export type { KbdProps, KbdSize } from './components/core/Kbd'
+
 export {
     NotificationProvider,
     useNotification,
