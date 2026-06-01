@@ -13,7 +13,9 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 A horizontal navigation bar whose top-level items open wide "mega" dropdown
 panels of grouped links. Built on `@radix-ui/react-navigation-menu`, so
 hover-intent opening, arrow-key navigation, and focus management all come for
-free. Each panel positions itself under the bar and sizes to its own content.
+free. Each panel positions itself under the bar and its sections spread across a
+content-sized grid. Below the `md` breakpoint the whole bar collapses into a
+tap-friendly hamburger accordion.
 
 ## Mental model
 
@@ -84,6 +86,34 @@ anything (heading, copy, a CTA).
 </MegaMenu.Item>
 ```
 
+## Panel width
+
+Each panel lays its sections out on a grid with a *definite* width, so sections
+spread to fill rather than shrink-wrapping to their text. By default a panel is
+`min(92vw, 760px)` wide and auto-fits its sections into equal columns. Set
+`columns` (1–4) to pin the column count and width — useful when you want a tidy
+two-up or three-up layout:
+
+```tsx
+<MegaMenu.Panel columns={2}>…</MegaMenu.Panel>   {/* two equal columns */}
+<MegaMenu.Panel>…</MegaMenu.Panel>               {/* auto-fit, spreads wide */}
+```
+
+## Responsive (mobile fallback)
+
+Hover-driven mega panels don't work on touch, so below the `md` breakpoint
+`MegaMenu` automatically swaps the bar for a hamburger **disclosure** — a vertical
+accordion built from the very same items (panel items expand in place; plain
+links navigate directly). No extra markup: it reads your compound children and
+re-renders them as plain anchors.
+
+```tsx
+<MegaMenu aria-label="Main" mobileLabel="Browse">…</MegaMenu>
+
+{/* opt out — keep the desktop bar at every width (you provide your own mobile nav) */}
+<MegaMenu responsive={false}>…</MegaMenu>
+```
+
 ## Alignment
 
 Where panels align under the bar: `align="start"` (default), `"center"`, or
@@ -110,6 +140,8 @@ selected. The panel honours `prefers-reduced-motion`.
   <tbody>
     <tr><td style={td0}>align</td><td style={td(true)}>'start' | 'center' | 'end'</td><td style={td(true)}>'start'</td><td style={td(false)}>Where panels align under the bar.</td></tr>
     <tr><td style={td0}>delayDuration</td><td style={td(true)}>number</td><td style={td(true)}>200</td><td style={td(false)}>Hover delay (ms) before an item opens.</td></tr>
+    <tr><td style={td0}>responsive</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Collapse to a hamburger accordion below `md`.</td></tr>
+    <tr><td style={td0}>mobileLabel</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Menu'</td><td style={td(false)}>Label for the mobile disclosure toggle.</td></tr>
     <tr><td style={td0}>aria-label</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Accessible name for the nav landmark.</td></tr>
     <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Merged onto the bar root.</td></tr>
   </tbody>
@@ -132,7 +164,7 @@ selected. The panel honours `prefers-reduced-motion`.
 <table style={tbl}>
   <thead><tr><th style={th}>Component</th><th style={th}>Key props</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>Panel</td><td style={td(false)}><code>columns</code> (1–4; caps the width so sections wrap into rows — default single row), <code>className</code>, <code>style</code>.</td></tr>
+    <tr><td style={td0}>Panel</td><td style={td(false)}><code>columns</code> (1–4; pins the column count + width — default auto-fit at <code>min(92vw, 760px)</code>), <code>className</code>, <code>style</code>.</td></tr>
     <tr><td style={td0}>Section</td><td style={td(false)}><code>title</code> (eyebrow heading), <code>className</code>.</td></tr>
     <tr><td style={td0}>Link</td><td style={td(false)}><code>href</code>, <code>onClick</code>, <code>icon</code>, <code>description</code>, <code>active</code>, <code>className</code>.</td></tr>
     <tr><td style={td0}>Featured</td><td style={td(false)}>Free-form children (heading, copy, CTA), <code>className</code>.</td></tr>

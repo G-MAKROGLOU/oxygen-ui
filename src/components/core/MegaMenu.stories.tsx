@@ -17,6 +17,8 @@ const meta: Meta<typeof MegaMenu> = {
     argTypes: {
         align: { control: 'inline-radio', options: ['start', 'center', 'end'] },
         delayDuration: { control: { type: 'number' } },
+        responsive: { control: 'boolean' },
+        mobileLabel: { control: 'text' },
     },
     decorators: [
         (Story) => (
@@ -94,6 +96,37 @@ export const SingleColumn: Story = {
                 </MegaMenu.Panel>
             </MegaMenu.Item>
             <MegaMenu.Item label="Company" href="#" />
+        </MegaMenu>
+    ),
+}
+
+export const Responsive: Story = {
+    name: 'Responsive (mobile fallback)',
+    parameters: {
+        viewport: { defaultViewport: 'mobile1' },
+        docs: {
+            description: {
+                story:
+                    'Below the `md` breakpoint the hover bar collapses into a tap-friendly hamburger disclosure — a vertical accordion built from the same items. Use the Storybook viewport toolbar (or narrow the window) to see it. Set `responsive={false}` to keep the desktop bar at every width.',
+            },
+        },
+    },
+    render: () => (
+        <MegaMenu aria-label="Main" mobileLabel="Menu">
+            <MegaMenu.Item label="Products">
+                <MegaMenu.Panel columns={2}>
+                    <MegaMenu.Section title="Platform">
+                        <MegaMenu.Link href="#" icon={Ic.chart} description="Dashboards, reports, and live metrics">Analytics</MegaMenu.Link>
+                        <MegaMenu.Link href="#" icon={Ic.bolt} description="Real-time event pipeline">Streams</MegaMenu.Link>
+                    </MegaMenu.Section>
+                    <MegaMenu.Section title="Operations">
+                        <MegaMenu.Link href="#" icon={Ic.shield} description="Policies, audit, and access">Security</MegaMenu.Link>
+                        <MegaMenu.Link href="#" icon={Ic.life} description="Incidents and on-call">Support desk</MegaMenu.Link>
+                    </MegaMenu.Section>
+                </MegaMenu.Panel>
+            </MegaMenu.Item>
+            <MegaMenu.Item label="Docs" href="#" icon={Ic.book} />
+            <MegaMenu.Item label="Pricing" href="#" />
         </MegaMenu>
     ),
 }
