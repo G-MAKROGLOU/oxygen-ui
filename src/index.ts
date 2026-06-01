@@ -161,6 +161,16 @@ export type { TopBarProps } from './components/core/TopBar'
 export { default as Sidebar } from './components/core/Sidebar'
 export type { SidebarProps, SidebarItem, SidebarSection } from './components/core/Sidebar'
 
+export { default as MegaMenu } from './components/core/MegaMenu'
+export type {
+    MegaMenuProps,
+    MegaMenuItemProps,
+    MegaMenuPanelProps,
+    MegaMenuSectionProps,
+    MegaMenuLinkProps,
+    MegaMenuFeaturedProps,
+} from './components/core/MegaMenu'
+
 export { default as AppShell } from './components/core/AppShell'
 export type { AppShellProps } from './components/core/AppShell'
 

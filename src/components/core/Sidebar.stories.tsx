@@ -5,7 +5,7 @@ import type { SidebarSection } from './Sidebar'
 import ThemeSwitch from './Switch'
 
 const meta: Meta<typeof Sidebar> = {
-    title: 'Layout/Sidebar',
+    title: 'Menu/Sidebar',
     component: Sidebar,
     parameters: { layout: 'fullscreen' },
     tags: ['autodocs'],

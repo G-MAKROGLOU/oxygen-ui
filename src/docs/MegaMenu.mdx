@@ -1,0 +1,149 @@
+{/* src/docs/MegaMenu.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Menu/MegaMenu/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# MegaMenu
+
+A horizontal navigation bar whose top-level items open wide "mega" dropdown
+panels of grouped links. Built on `@radix-ui/react-navigation-menu`, so
+hover-intent opening, arrow-key navigation, focus management, and a shared
+animated viewport (the panel box resizes smoothly between items) all come for
+free.
+
+## Mental model
+
+`MegaMenu` is **compositional**. The bar holds top-level items; each item is
+either a **panel item** (opens a dropdown) or a **plain link**.
+
+- `MegaMenu.Item label` — a top-level entry. With children → opens a panel.
+  With only `href` → a plain top-level link.
+- `MegaMenu.Panel` — the dropdown layout (a grid of sections + an optional
+  featured column).
+- `MegaMenu.Section title` — a titled column of links.
+- `MegaMenu.Link` — a rich link: icon (in a tinted square) + title +
+  description.
+- `MegaMenu.Featured` — a highlighted promo column (raised surface).
+
+The library is **router-agnostic**: links take `href` and/or `onClick`. Wire
+them to your router (e.g. wrap with your `<Link>` or call `navigate` in
+`onClick`).
+
+## Quick start
+
+```tsx
+import { MegaMenu } from '@geomak/ui'
+
+<MegaMenu aria-label="Main">
+  <MegaMenu.Item label="Products">
+    <MegaMenu.Panel columns={2}>
+      <MegaMenu.Section title="Platform">
+        <MegaMenu.Link href="/analytics" icon={<ChartIcon />} description="Dashboards & reports">
+          Analytics
+        </MegaMenu.Link>
+        <MegaMenu.Link href="/streams" icon={<BoltIcon />} description="Real-time events">
+          Streams
+        </MegaMenu.Link>
+      </MegaMenu.Section>
+      <MegaMenu.Section title="Operations">
+        <MegaMenu.Link href="/security" icon={<ShieldIcon />} description="Policies & audit" active>
+          Security
+        </MegaMenu.Link>
+      </MegaMenu.Section>
+    </MegaMenu.Panel>
+  </MegaMenu.Item>
+
+  <MegaMenu.Item label="Docs" href="/docs" icon={<BookIcon />} />
+  <MegaMenu.Item label="Pricing" href="/pricing" />
+</MegaMenu>
+```
+
+## A featured (promo) column
+
+`MegaMenu.Featured` sits beside the sections as a raised callout. Fill it with
+anything (heading, copy, a CTA).
+
+```tsx
+<MegaMenu.Item label="Solutions">
+  <MegaMenu.Panel>
+    <MegaMenu.Section title="By industry">
+      <MegaMenu.Link href="/maritime" icon={<CubeIcon />} description="Vessel tracking">Maritime</MegaMenu.Link>
+      <MegaMenu.Link href="/energy" icon={<BoltIcon />} description="Grid monitoring">Energy</MegaMenu.Link>
+    </MegaMenu.Section>
+    <MegaMenu.Featured>
+      <span className="text-[11px] font-semibold uppercase tracking-widest text-accent">New</span>
+      <h4 className="mt-1 text-sm font-semibold text-foreground">Fleet Intelligence</h4>
+      <p className="mt-1 text-xs text-foreground-secondary flex-1">Predictive maintenance in one console.</p>
+      <a href="/fleet" className="mt-3 text-sm font-medium text-accent hover:text-accent-hover">Explore →</a>
+    </MegaMenu.Featured>
+  </MegaMenu.Panel>
+</MegaMenu.Item>
+```
+
+## Alignment
+
+Where panels align under the bar: `align="start"` (default), `"center"`, or
+`"end"`. Tune the hover-open delay with `delayDuration` (ms).
+
+```tsx
+<MegaMenu align="center" delayDuration={120}>…</MegaMenu>
+```
+
+## Keyboard & accessibility
+
+Give `MegaMenu` an `aria-label`. Radix provides: Tab to focus the bar, ← / →
+between top-level items, Enter / Space or ↓ to open a panel, arrow keys within
+the panel, and Esc to close. Mark the current route with `active` on the
+relevant `MegaMenu.Link` (and `MegaMenu.Item` for a plain link) so it reads as
+selected. The panel honours `prefers-reduced-motion`.
+
+## API reference
+
+### `<MegaMenu>`
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>align</td><td style={td(true)}>'start' | 'center' | 'end'</td><td style={td(true)}>'start'</td><td style={td(false)}>Where panels align under the bar.</td></tr>
+    <tr><td style={td0}>delayDuration</td><td style={td(true)}>number</td><td style={td(true)}>200</td><td style={td(false)}>Hover delay (ms) before an item opens.</td></tr>
+    <tr><td style={td0}>aria-label</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Accessible name for the nav landmark.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Merged onto the bar root.</td></tr>
+  </tbody>
+</table>
+
+### `<MegaMenu.Item>`
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Top-level text in the bar.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Optional leading icon.</td></tr>
+    <tr><td style={td0}>href</td><td style={td(true)}>string</td><td style={td(false)}>Makes the item a plain link (when no children).</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(false)}>A `MegaMenu.Panel` to open. Omit for a link.</td></tr>
+  </tbody>
+</table>
+
+### `<MegaMenu.Panel>` / `<MegaMenu.Section>` / `<MegaMenu.Link>` / `<MegaMenu.Featured>`
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Component</th><th style={th}>Key props</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>Panel</td><td style={td(false)}><code>columns</code> (1–4; default auto), <code>className</code>, <code>style</code>.</td></tr>
+    <tr><td style={td0}>Section</td><td style={td(false)}><code>title</code> (eyebrow heading), <code>className</code>.</td></tr>
+    <tr><td style={td0}>Link</td><td style={td(false)}><code>href</code>, <code>onClick</code>, <code>icon</code>, <code>description</code>, <code>active</code>, <code>className</code>.</td></tr>
+    <tr><td style={td0}>Featured</td><td style={td(false)}>Free-form children (heading, copy, CTA), <code>className</code>.</td></tr>
+  </tbody>
+</table>
+
+```ts
+import { MegaMenu } from '@geomak/ui'
+import type { MegaMenuProps, MegaMenuItemProps, MegaMenuPanelProps, MegaMenuSectionProps, MegaMenuLinkProps, MegaMenuFeaturedProps } from '@geomak/ui'
+```
+
+See the **Menu → MegaMenu** stories for live panels, a featured column, and
+plain links.

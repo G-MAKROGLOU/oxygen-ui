@@ -4,7 +4,7 @@ import ContextMenu from './ContextMenu'
 import type { ContextMenuActionItem } from './ContextMenu'
 
 const meta: Meta<typeof ContextMenu> = {
-    title: 'Layout/ContextMenu',
+    title: 'Menu/ContextMenu',
     component: ContextMenu,
     tags: ['autodocs'],
     parameters: {
