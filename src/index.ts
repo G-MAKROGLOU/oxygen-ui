@@ -121,6 +121,9 @@ export type { CardCarouselProps } from './components/core/CardCarousel'
 export { default as Statistic } from './components/core/Statistic'
 export type { StatisticProps, StatisticDelta, StatisticSize, DeltaDirection } from './components/core/Statistic'
 
+export { default as FAB } from './components/core/FAB'
+export type { FABProps, FABAction, FABPosition, FABSize, FABTone } from './components/core/FAB'
+
 export {
     NotificationProvider,
     useNotification,

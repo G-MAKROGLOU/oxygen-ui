@@ -1,0 +1,74 @@
+{/* src/docs/FAB.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Buttons/FAB/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# FAB
+
+A floating action button — a single round action, or a speed dial that expands a
+labelled stack of sub-actions.
+
+## Mental model
+
+On its own, FAB is one round icon button anchored to a corner — pass `onClick`.
+Give it `actions` and it becomes a **speed dial**: the main button toggles a
+labelled, staggered stack instead of firing `onClick`. It positions `fixed` to
+the viewport by default; pass `fixed={false}` to anchor inside a `relative`
+container. It's icon-only, so `label` (the accessible name) is required.
+
+## Quick start
+
+```tsx
+import { FAB } from '@geomak/ui'
+
+<FAB icon={<PlusIcon />} label="New record" onClick={create} />
+```
+
+## Speed dial
+
+```tsx
+<FAB
+  icon={<PlusIcon />}
+  label="Create"
+  actions={[
+    { icon: <FileIcon />, label: 'Document', onClick: newDoc },
+    { icon: <FolderIcon />, label: 'Folder', onClick: newFolder },
+    { icon: <UploadIcon />, label: 'Upload', onClick: upload },
+  ]}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Main button glyph.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Accessible name (required).</td></tr>
+    <tr><td style={td0}>onClick</td><td style={td(true)}>MouseEventHandler</td><td style={td(true)}>—</td><td style={td(false)}>Single-mode handler (ignored with actions).</td></tr>
+    <tr><td style={td0}>actions</td><td style={td(true)}>FABAction[]</td><td style={td(true)}>—</td><td style={td(false)}>Speed-dial sub-actions.</td></tr>
+    <tr><td style={td0}>position</td><td style={td(true)}>'bottom-right'|'bottom-left'|'top-right'|'top-left'</td><td style={td(true)}>'bottom-right'</td><td style={td(false)}>Corner placement.</td></tr>
+    <tr><td style={td0}>size</td><td style={td(true)}>'md' | 'lg'</td><td style={td(true)}>'lg'</td><td style={td(false)}>Main button size.</td></tr>
+    <tr><td style={td0}>tone</td><td style={td(true)}>'accent' | 'neutral'</td><td style={td(true)}>'accent'</td><td style={td(false)}>Colour.</td></tr>
+    <tr><td style={td0}>fixed</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Viewport-fixed vs absolute.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Overrides.</td></tr>
+  </tbody>
+</table>
+
+### FABAction
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Action glyph.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>string</td><td style={td(false)}>Accessible name + pill text.</td></tr>
+    <tr><td style={td0}>onClick</td><td style={td(true)}>MouseEventHandler</td><td style={td(false)}>Runs, then closes the dial.</td></tr>
+  </tbody>
+</table>
+
+See the **Buttons → FAB** stories.
