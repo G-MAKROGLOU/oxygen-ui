@@ -1,0 +1,110 @@
+{/* src/docs/Table.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/Table/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Table
+
+A typed data table with column renderers, client/server pagination, expandable
+rows, search, and a built-in skeleton loading state.
+
+## Mental model
+
+`Table<T>` is generic over your row type. Describe the shape with `columns` — each
+column reads a property via `keyBind` and may render a custom cell with
+`component(value, row)`. Pass `rows` for the data. Pagination, expand, search, and
+loading are opt-in feature blocks, so a plain table is just `columns` + `rows`.
+
+Use a Table when comparing rows across multiple columns matters more than picking
+one (otherwise prefer **List**).
+
+## Quick start
+
+```tsx
+import { Table } from '@geomak/ui'
+import type { TableColumn } from '@geomak/ui'
+
+interface Vessel { id: string; name: string; flag: string; dwt: number }
+
+const columns: TableColumn<Vessel>[] = [
+  { key: 'name', label: 'Name', keyBind: 'name', align: 'left' },
+  { key: 'flag', label: 'Flag', keyBind: 'flag' },
+  { key: 'dwt',  label: 'DWT',  keyBind: 'dwt', align: 'right',
+    component: (v) => v.toLocaleString() },
+]
+
+<Table columns={columns} rows={vessels} getRowKey={(r) => r.id} />
+```
+
+## Pagination, search, expand
+
+```tsx
+<Table
+  columns={columns}
+  rows={vessels}
+  getRowKey={(r) => r.id}
+  hasSearch
+  pagination={{ enabled: true, perPage: 15, withPicker: true }}
+  expandRow={{
+    enabled: true,
+    expandComponent: (row) => <VesselDetails vessel={row} />,
+  }}
+/>
+```
+
+## Server-side pagination + loading
+
+```tsx
+<Table
+  columns={columns}
+  rows={page}
+  loading={isFetching}
+  loadingRowCount={10}
+  pagination={{
+    enabled: true,
+    serverSide: true,
+    page,
+    totalCount,
+    onPageChange: setPage,
+    onPerPageChange: setPerPage,
+  }}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>columns</td><td style={td(true)}>TableColumn&lt;T&gt;[]</td><td style={td(true)}>—</td><td style={td(false)}>Column definitions.</td></tr>
+    <tr><td style={td0}>rows</td><td style={td(true)}>T[]</td><td style={td(true)}>—</td><td style={td(false)}>Row data.</td></tr>
+    <tr><td style={td0}>getRowKey</td><td style={td(true)}>{'(row, i) => React.Key'}</td><td style={td(true)}>index</td><td style={td(false)}>Stable key; pass for mutable lists.</td></tr>
+    <tr><td style={td0}>pagination</td><td style={td(true)}>PaginationOptions</td><td style={td(true)}>—</td><td style={td(false)}>Client or server pagination.</td></tr>
+    <tr><td style={td0}>expandRow</td><td style={td(true)}>ExpandRowOptions&lt;T&gt;</td><td style={td(true)}>—</td><td style={td(false)}>Per-row expand panel.</td></tr>
+    <tr><td style={td0}>hasSearch</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Built-in search field.</td></tr>
+    <tr><td style={td0}>loading / loadingRowCount</td><td style={td(true)}>boolean / number</td><td style={td(true)}>false / 8</td><td style={td(false)}>Skeleton rows during fetch.</td></tr>
+    <tr><td style={td0}>header / footer</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Slots above / below the table.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Wrapper overrides.</td></tr>
+  </tbody>
+</table>
+
+### TableColumn&lt;T&gt;
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>key</td><td style={td(true)}>React.Key</td><td style={td(false)}>Column reconciliation key.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Header text.</td></tr>
+    <tr><td style={td0}>keyBind</td><td style={td(true)}>keyof T</td><td style={td(false)}>Row property to read.</td></tr>
+    <tr><td style={td0}>component</td><td style={td(true)}>{'(value, row) => ReactNode'}</td><td style={td(false)}>Custom cell renderer.</td></tr>
+    <tr><td style={td0}>width</td><td style={td(true)}>string | number</td><td style={td(false)}>Explicit column width.</td></tr>
+    <tr><td style={td0}>align</td><td style={td(true)}>'left'|'center'|'right'</td><td style={td(false)}>Header + cell alignment (default center).</td></tr>
+  </tbody>
+</table>
+
+See the **Data Display → Table** stories for pagination, expand, and async loading.

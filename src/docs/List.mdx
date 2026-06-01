@@ -1,0 +1,84 @@
+{/* src/docs/List.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/List/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# List
+
+A vertical, clickable list with optional avatar, description, and trailing slots
+per item. Rendered as a `listbox`/`option` for screen readers; activates on Enter
+and Space.
+
+## Mental model
+
+Data-driven from `items` (each a `{ key, label, description?, avatar?, trailing? }`).
+You control selection via `activeKey` and react with `onItemClick`. `density`
+tunes vertical rhythm.
+
+**When to use over a Table:** when the dataset is a simple sequence the user
+browses and picks one of (nav, contact list, vessel chooser), and each row's
+signal is a 1–2-line summary rather than a multi-column breakdown.
+
+## Quick start
+
+```tsx
+import { List } from '@geomak/ui'
+
+<List
+  items={[{ key: 1, label: 'Aurora' }, { key: 2, label: 'Beacon' }]}
+  activeKey={2}
+  onItemClick={(it) => setSelected(it.key)}
+/>
+```
+
+## With avatars + descriptions
+
+```tsx
+<List
+  density="comfortable"
+  items={crew.map((c) => ({
+    key: c.id,
+    label: c.name,
+    description: c.rank,
+    avatar: <Avatar src={c.photo} alt={c.name} status={c.status} />,
+    trailing: <Badge count={c.unread} />,
+    disabled: c.archived,
+  }))}
+  activeKey={selectedId}
+  onItemClick={(it) => setSelectedId(it.key)}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>items</td><td style={td(true)}>ListItem[]</td><td style={td(true)}>—</td><td style={td(false)}>List rows.</td></tr>
+    <tr><td style={td0}>onItemClick</td><td style={td(true)}>{'(item: ListItem) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires on click / Enter / Space.</td></tr>
+    <tr><td style={td0}>activeKey</td><td style={td(true)}>string | number</td><td style={td(true)}>—</td><td style={td(false)}>Currently selected key.</td></tr>
+    <tr><td style={td0}>density</td><td style={td(true)}>'compact'|'comfortable'|'spacious'</td><td style={td(true)}>'comfortable'</td><td style={td(false)}>Row padding.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+  </tbody>
+</table>
+
+### ListItem
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>key</td><td style={td(true)}>string | number</td><td style={td(false)}>Stable key + active-match.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Main text (required).</td></tr>
+    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Secondary line below the label.</td></tr>
+    <tr><td style={td0}>avatar</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Leading slot (typically an Avatar).</td></tr>
+    <tr><td style={td0}>trailing</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Trailing slot (badge, count, icon).</td></tr>
+    <tr><td style={td0}>disabled</td><td style={td(true)}>boolean</td><td style={td(false)}>Non-interactive for this row.</td></tr>
+  </tbody>
+</table>
+
+See the **Data Display → List** stories.

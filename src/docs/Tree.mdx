@@ -1,0 +1,84 @@
+{/* src/docs/Tree.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/Tree/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Tree
+
+A collapsible hierarchical tree built on Radix Accordion. Branches expand and
+collapse; every node (branch or leaf) is clickable.
+
+## Mental model
+
+Data-driven from a nested `nodes` array (`{ key, label, children?, nodeData? }`).
+A node with `children` is a branch. `onNodeClick` fires for any node with a
+payload that tells you whether it was a branch (`isParent`), plus its `key`,
+`label`, `parentLabel`, and any attached `data`. Control the initial open state
+with `defaultExpandAll` or `defaultExpandedKeys`.
+
+This is a **display/navigation** tree — for picking a single value inside a form,
+use **TreeSelect** instead.
+
+## Quick start
+
+```tsx
+import { Tree } from '@geomak/ui'
+
+<Tree
+  nodes={[
+    { key: 'eu', label: 'Europe', children: [
+      { key: 'no',  label: 'North Sea' },
+      { key: 'med', label: 'Mediterranean' },
+    ]},
+    { key: 'as', label: 'Asia', children: [{ key: 'sg', label: 'Singapore Strait' }] },
+  ]}
+  defaultExpandedKeys={['eu']}
+  onNodeClick={(p) => {
+    if (!p.isParent) selectRegion(p.key)
+  }}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>nodes</td><td style={td(true)}>TreeNode[]</td><td style={td(true)}>—</td><td style={td(false)}>Nested tree data.</td></tr>
+    <tr><td style={td0}>onNodeClick</td><td style={td(true)}>{'(p: TreeItemClickPayload) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires for any node.</td></tr>
+    <tr><td style={td0}>defaultExpandAll</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Open every branch initially.</td></tr>
+    <tr><td style={td0}>defaultExpandedKeys</td><td style={td(true)}>string[]</td><td style={td(true)}>[]</td><td style={td(false)}>Branches open on first render.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+  </tbody>
+</table>
+
+### TreeNode
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>key</td><td style={td(true)}>string</td><td style={td(false)}>Stable key.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>string</td><td style={td(false)}>Display text.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>TreeNode[]</td><td style={td(false)}>Present → this node is a branch.</td></tr>
+    <tr><td style={td0}>nodeData</td><td style={td(true)}>any</td><td style={td(false)}>Arbitrary payload echoed on click.</td></tr>
+  </tbody>
+</table>
+
+### TreeItemClickPayload
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>isParent</td><td style={td(true)}>boolean</td><td style={td(false)}>Branch vs leaf.</td></tr>
+    <tr><td style={td0}>key / label</td><td style={td(true)}>string</td><td style={td(false)}>The clicked node.</td></tr>
+    <tr><td style={td0}>parentLabel</td><td style={td(true)}>string</td><td style={td(false)}>Label of the parent branch.</td></tr>
+    <tr><td style={td0}>data</td><td style={td(true)}>any</td><td style={td(false)}>The node's nodeData.</td></tr>
+  </tbody>
+</table>
+
+See the **Data Display → Tree** stories.

@@ -1,0 +1,64 @@
+{/* src/docs/TypographyGuide.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/Typography/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Typography
+
+One component for every text style in the system. A `variant` sets the visual
+scale; the rendered element defaults sensibly per variant and can be overridden
+with `as`.
+
+## Mental model
+
+Pick a `variant` for the look (display, h1–h4, subtitle, body, caption, overline,
+code). The DOM element follows the variant (h1 → `<h1>`, body → `<p>`, code →
+`<code>`), but visual style and semantics are decoupled: use `as` when you want
+one without the other (an h1-styled card title rendered as a `<div>`). `color`,
+`weight`, `align`, `truncate`, and `muted` are orthogonal modifiers.
+
+## Quick start
+
+```tsx
+import { Typography } from '@geomak/ui'
+
+<Typography variant="h1">Fleet overview</Typography>
+<Typography variant="body" color="foreground-secondary">
+  Live status for all vessels.
+</Typography>
+<Typography variant="overline" color="accent">Status</Typography>
+<Typography variant="code">npm i @geomak/ui</Typography>
+```
+
+## Decoupling style from element
+
+```tsx
+{/* Looks like an h2, but is a <div> (no document outline impact) */}
+<Typography variant="h2" as="div">Card heading</Typography>
+
+{/* Truncated, muted secondary text */}
+<Typography variant="body" truncate muted>{longPath}</Typography>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>variant</td><td style={td(true)}>'display'|'h1'…'h4'|'subtitle'|'body'|'caption'|'overline'|'code'</td><td style={td(true)}>'body'</td><td style={td(false)}>Visual scale.</td></tr>
+    <tr><td style={td0}>as</td><td style={td(true)}>keyof JSX.IntrinsicElements</td><td style={td(true)}>per variant</td><td style={td(false)}>Override the rendered element.</td></tr>
+    <tr><td style={td0}>color</td><td style={td(true)}>TypographyColor</td><td style={td(true)}>'foreground'</td><td style={td(false)}>Token color or 'inherit'.</td></tr>
+    <tr><td style={td0}>weight</td><td style={td(true)}>'normal'|'medium'|'semibold'|'bold'</td><td style={td(true)}>per variant</td><td style={td(false)}>Override weight.</td></tr>
+    <tr><td style={td0}>align</td><td style={td(true)}>'left'|'center'|'right'|'justify'</td><td style={td(true)}>—</td><td style={td(false)}>Text alignment.</td></tr>
+    <tr><td style={td0}>truncate</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>One line + ellipsis.</td></tr>
+    <tr><td style={td0}>muted</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Reduced opacity.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+  </tbody>
+</table>
+
+See the **Data Display → Typography** stories and the **Docs → Typography** type scale.
