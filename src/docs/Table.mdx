@@ -85,7 +85,7 @@ const columns: TableColumn<Vessel>[] = [
     <tr><td style={td0}>rows</td><td style={td(true)}>T[]</td><td style={td(true)}>—</td><td style={td(false)}>Row data.</td></tr>
     <tr><td style={td0}>getRowKey</td><td style={td(true)}>{'(row, i) => React.Key'}</td><td style={td(true)}>index</td><td style={td(false)}>Stable key; pass for mutable lists.</td></tr>
     <tr><td style={td0}>pagination</td><td style={td(true)}>PaginationOptions</td><td style={td(true)}>—</td><td style={td(false)}>Client or server pagination.</td></tr>
-    <tr><td style={td0}>expandRow</td><td style={td(true)}>ExpandRowOptions&lt;T&gt;</td><td style={td(true)}>—</td><td style={td(false)}>Per-row expand panel.</td></tr>
+    <tr><td style={td0}>expandRow</td><td style={td(true)}>ExpandRowOptions&lt;T&gt;</td><td style={td(true)}>—</td><td style={td(false)}>Per-row expand panel (animated height + fade, reduced-motion aware).</td></tr>
     <tr><td style={td0}>hasSearch</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Built-in search field.</td></tr>
     <tr><td style={td0}>loading / loadingRowCount</td><td style={td(true)}>boolean / number</td><td style={td(true)}>false / 8</td><td style={td(false)}>Skeleton rows during fetch.</td></tr>
     <tr><td style={td0}>header / footer</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Slots above / below the table.</td></tr>

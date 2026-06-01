@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import SearchInput from '../inputs/SearchInput'
 import Dropdown from '../inputs/Dropdown'
 import IconButton from './IconButton'
@@ -187,6 +188,7 @@ function TableBody<T extends Record<string, any>>({
     // Expand state is keyed by the row's stable key — survives reorder/filter
     // as long as `getRowKey` returns the same value for the same row.
     const [expanded, setExpanded] = useState<Set<React.Key>>(() => new Set())
+    const reduced = useReducedMotion()
 
     const toggleRow = (rowKey: React.Key) => {
         setExpanded((prev) => {
@@ -239,10 +241,33 @@ function TableBody<T extends Record<string, any>>({
                             ))}
                         </tr>
 
-                        {hasExpand && isExpanded && (
+                        {/* Expansion row is always present; the panel animates
+                            its height + fade via AnimatePresence so the content
+                            mounts only while open (and during the collapse
+                            transition). The border lives on the panel so a
+                            collapsed row leaves no stray divider. */}
+                        {hasExpand && (
                             <tr className="bg-surface">
-                                <td colSpan={expandColCount} className="p-0 border-b border-border">
-                                    <div className="p-3">{expandRow.expandComponent?.(row)}</div>
+                                <td colSpan={expandColCount} className="p-0">
+                                    <AnimatePresence initial={false}>
+                                        {isExpanded && (
+                                            <motion.div
+                                                key="expand"
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={
+                                                    reduced
+                                                        ? { duration: 0 }
+                                                        : { height: { duration: 0.28, ease: [0.16, 1, 0.3, 1] }, opacity: { duration: 0.2 } }
+                                                }
+                                                style={{ overflow: 'hidden' }}
+                                                className="border-b border-border"
+                                            >
+                                                <div className="p-3">{expandRow.expandComponent?.(row)}</div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </td>
                             </tr>
                         )}
