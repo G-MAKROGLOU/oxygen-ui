@@ -127,6 +127,9 @@ export type { FABProps, FABAction, FABPosition, FABSize, FABTone } from './compo
 export { default as PopConfirm } from './components/core/PopConfirm'
 export type { PopConfirmProps, PopConfirmTone } from './components/core/PopConfirm'
 
+export { default as Calendar } from './components/core/Calendar'
+export type { CalendarProps, CalendarEvent } from './components/core/Calendar'
+
 export {
     NotificationProvider,
     useNotification,
