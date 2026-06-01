@@ -1,0 +1,66 @@
+{/* src/docs/Modal.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Feedback/Modal/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Modal
+
+A centred dialog powered by Radix Dialog + Framer Motion: focus-trapped,
+escape-to-close, scale + fade animation, reduced-motion aware.
+
+## Mental model
+
+Fully **controlled** — you own `isOpen` and close it via `onClose`. The panel is
+content-driven in height (max 90 dvh) and capped in width by `width`. The optional
+built-in footer renders OK / Cancel buttons wired to `onOk` / `onCancel`; omit it
+with `hasFooter={false}` to supply your own actions in `children`.
+
+## Quick start
+
+```tsx
+import { Modal } from '@geomak/ui'
+
+const [open, setOpen] = useState(false)
+
+<Modal
+  isOpen={open}
+  onClose={() => setOpen(false)}
+  title="Confirm deletion"
+  okText="Delete"
+  cancelText="Keep"
+  onOk={handleDelete}
+>
+  This permanently removes the vessel record. This cannot be undone.
+</Modal>
+```
+
+## Custom footer
+
+```tsx
+<Modal isOpen={open} onClose={close} title="Edit profile" hasFooter={false} width={720}>
+  <ProfileForm onSaved={close} />
+</Modal>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>isOpen</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Controlled open state.</td></tr>
+    <tr><td style={td0}>onClose</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Esc / overlay / close button.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Header content.</td></tr>
+    <tr><td style={td0}>width</td><td style={td(true)}>number</td><td style={td(true)}>600</td><td style={td(false)}>Max panel width in px.</td></tr>
+    <tr><td style={td0}>hasFooter</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Built-in OK/Cancel footer.</td></tr>
+    <tr><td style={td0}>onOk / onCancel</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Footer button handlers.</td></tr>
+    <tr><td style={td0}>okText / cancelText</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Footer button labels.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the panel.</td></tr>
+  </tbody>
+</table>
+
+See the **Feedback → Modal** stories.

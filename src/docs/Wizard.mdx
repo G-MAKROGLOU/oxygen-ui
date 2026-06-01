@@ -1,0 +1,81 @@
+{/* src/docs/Wizard.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Feedback/Wizard/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Wizard
+
+A guided product tour. It spotlights real elements on the page one at a time and
+floats a tooltip beside each, with Next / Back / Done controls.
+
+## Mental model
+
+Wrap the subtree you want to tour in `<Wizard>` and pass an ordered `steps` array.
+Each step points at a live element via a `stepRef` (a React ref into that subtree)
+and supplies the tooltip `description`, optional `title`, and `placement`. The
+component highlights `steps[i].stepRef`, dims the rest, and advances on Next.
+
+Completion is remembered in `localStorage` under `storageKey` so the tour won't
+reopen — pass `storageKey={null}` to always run it (tests, replayable tours).
+
+## Quick start
+
+```tsx
+import { Wizard } from '@geomak/ui'
+
+const headerRef  = useRef<HTMLElement>(null)
+const sidebarRef = useRef<HTMLElement>(null)
+const dashRef    = useRef<HTMLElement>(null)
+
+<Wizard
+  steps={[
+    { stepRef: headerRef,  title: 'Welcome',    description: 'This is the app header.',          placement: 'bottom' },
+    { stepRef: sidebarRef, title: 'Navigation', description: 'Jump between sections here.',      placement: 'right'  },
+    { stepRef: dashRef,    title: 'Workspace',  description: 'Your dashboard lives here.',       placement: 'left'   },
+  ]}
+  onComplete={() => markOnboarded()}
+>
+  <AppShell headerRef={headerRef} sidebarRef={sidebarRef} dashRef={dashRef} />
+</Wizard>
+```
+
+## Always-run / non-dismissible tours
+
+```tsx
+<Wizard steps={steps} storageKey={null} dismissible={false}>
+  <Flow />
+</Wizard>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Subtree the step refs point into.</td></tr>
+    <tr><td style={td0}>steps</td><td style={td(true)}>WizardStep[]</td><td style={td(true)}>—</td><td style={td(false)}>Ordered tour steps.</td></tr>
+    <tr><td style={td0}>storageKey</td><td style={td(true)}>string | null</td><td style={td(true)}>'oxygen.wizard.completed'</td><td style={td(false)}>localStorage dismissal key; null disables.</td></tr>
+    <tr><td style={td0}>dismissible</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Show Skip + allow Esc.</td></tr>
+    <tr><td style={td0}>onComplete</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Reached the final Done.</td></tr>
+    <tr><td style={td0}>onSkip</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Skipped / Esc before completing.</td></tr>
+  </tbody>
+</table>
+
+### WizardStep
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>stepRef</td><td style={td(true)}>{'RefObject<HTMLElement | null>'}</td><td style={td(false)}>Element to spotlight.</td></tr>
+    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Tooltip body.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Tooltip heading.</td></tr>
+    <tr><td style={td0}>placement</td><td style={td(true)}>'right'|'left'|'top'|'bottom'</td><td style={td(false)}>Tooltip side (default 'right').</td></tr>
+  </tbody>
+</table>
+
+See the **Feedback → Wizard** stories.

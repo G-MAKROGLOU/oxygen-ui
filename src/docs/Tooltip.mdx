@@ -1,0 +1,59 @@
+{/* src/docs/Tooltip.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Feedback/Tooltip/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Tooltip
+
+A hover/focus tooltip on Radix Tooltip, animating in from the correct edge per
+placement. Keyboard and pointer accessible out of the box.
+
+## Mental model
+
+Wrap the trigger element; the tooltip's content is `title`. Radix manages
+show/hide, Escape, pointer + focus triggers, and ARIA. For an app with many
+tooltips, wrap once in `TooltipProvider` (re-exported) so they share one provider
+and a single open-delay timing instead of nesting one each.
+
+## Quick start
+
+```tsx
+import { Tooltip, TooltipProvider } from '@geomak/ui'
+
+<TooltipProvider>
+  <Tooltip title="Delete record" placement="top">
+    <IconButton icon={<TrashIcon />} />
+  </Tooltip>
+</TooltipProvider>
+```
+
+## Placement & timing
+
+```tsx
+<Tooltip title="Appears to the right" placement="right" delayDuration={150} sideOffset={10}>
+  <span>Hover me</span>
+</Tooltip>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>The trigger element.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip content.</td></tr>
+    <tr><td style={td0}>placement</td><td style={td(true)}>'top'|'right'|'bottom'|'left'</td><td style={td(true)}>'top'</td><td style={td(false)}>Side of the trigger.</td></tr>
+    <tr><td style={td0}>delayDuration</td><td style={td(true)}>number</td><td style={td(true)}>300</td><td style={td(false)}>Show delay in ms.</td></tr>
+    <tr><td style={td0}>sideOffset</td><td style={td(true)}>number</td><td style={td(true)}>8</td><td style={td(false)}>Gap from the trigger in px.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the bubble.</td></tr>
+  </tbody>
+</table>
+
+`TooltipProvider` is a re-export of Radix's provider — wrap it high in the tree.
+
+See the **Feedback → Tooltip** stories.

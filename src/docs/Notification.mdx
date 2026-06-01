@@ -1,0 +1,81 @@
+{/* src/docs/Notification.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Feedback/Notification/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Notification
+
+Toast notifications: a provider holds the queue and portals the stack to a fixed
+viewport corner; a hook fires type-specific toasts from anywhere.
+
+## Mental model
+
+Two pieces. Wrap your app once in `NotificationProvider` (it owns the stack,
+animations, auto-dismiss, and viewport `position`). Then call `useNotification()`
+inside any descendant to get four show functions — `info`, `success`, `warning`,
+`danger` — each taking `{ title, description?, duration? }`. Toasts auto-dismiss
+after `duration` ms (default 4000); pass `Infinity` to make one sticky.
+
+## Setup
+
+```tsx
+import { NotificationProvider } from '@geomak/ui'
+
+<NotificationProvider position="top-right">
+  <App />
+</NotificationProvider>
+```
+
+## Firing toasts
+
+```tsx
+import { useNotification } from '@geomak/ui'
+
+function SaveButton() {
+  const { success, danger } = useNotification()
+
+  const onSave = async () => {
+    try {
+      await save()
+      success({ title: 'Saved', description: 'Changes were stored.' })
+    } catch {
+      danger({ title: 'Save failed', description: 'Could not reach the server.', duration: Infinity })
+    }
+  }
+
+  return <Button content="Save" onClick={onSave} />
+}
+```
+
+## API reference
+
+### NotificationProvider
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>position</td><td style={td(true)}>'top-right'|'top-left'|'top-center'|'bottom-right'|'bottom-left'|'bottom-center'</td><td style={td(true)}>'top-right'</td><td style={td(false)}>Viewport corner for the stack.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Your app subtree.</td></tr>
+  </tbody>
+</table>
+
+### useNotification() payload
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Toast heading (required).</td></tr>
+    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Secondary line.</td></tr>
+    <tr><td style={td0}>duration</td><td style={td(true)}>number</td><td style={td(true)}>4000</td><td style={td(false)}>Auto-dismiss ms; Infinity = sticky.</td></tr>
+  </tbody>
+</table>
+
+The four functions (`info` / `success` / `warning` / `danger`) set the `type`
+for you — you never pass it yourself.
+
+See the **Feedback → Notification** stories.
