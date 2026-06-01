@@ -1,3 +1,10 @@
+# [6.8.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.7.0...v6.8.0) (2026-06-01)
+
+
+### Features
+
+* **statistic:** single-metric display with trend delta ([11947fd](https://github.com/G-MAKROGLOU/oxygen-ui/commit/11947fdf6bed5cb92269da8b65fc8d1cfdd79f09))
+
 # [6.7.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.6.0...v6.7.0) (2026-06-01)
 
 
