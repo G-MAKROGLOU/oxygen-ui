@@ -1,0 +1,68 @@
+{/* src/docs/Portal.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Layout/Portal/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Portal
+
+An SSR-safe DOM relocator. Renders children at a detached node (by default
+`document.body`) so a `position: fixed` descendant resolves against the real
+viewport.
+
+## Mental model
+
+Per the CSS spec, any ancestor with `transform`, `filter`, `perspective`,
+`will-change`, or `contain` becomes the containing block for fixed descendants —
+silently breaking overlays, toasts, and drawers. Portal escapes that by mounting
+its children on `document.body` (or a target you choose), making them immune to
+ancestor styling. It renders `null` during SSR and the first client render, then
+mounts post-effect.
+
+## When to use
+
+- Full-screen overlays, toast viewports, drawers, loading screens, command palettes, lightboxes.
+- Not for inline content that flows naturally, or accessibility-critical content that depends on DOM proximity.
+- If you already use a Radix primitive, prefer its built-in `*.Portal`.
+
+## Quick start
+
+```tsx
+import { Portal } from '@geomak/ui'
+
+<Portal>
+  <div className="fixed inset-0 z-overlay flex items-center justify-center bg-black/40">
+    <Spinner />
+  </div>
+</Portal>
+```
+
+## Targeting & disabling
+
+```tsx
+{/* mount into a specific node */}
+<Portal target={() => document.getElementById('app-root')}>
+  <Drawer />
+</Portal>
+
+{/* conditionally render inline (no portal) */}
+<Portal target={shouldPortal ? undefined : null}>
+  <Banner />
+</Portal>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Content to relocate.</td></tr>
+    <tr><td style={td0}>target</td><td style={td(true)}>HTMLElement | {'(() => HTMLElement | null)'} | null</td><td style={td(true)}>document.body</td><td style={td(false)}>Mount node. null disables (renders nothing).</td></tr>
+  </tbody>
+</table>
+
+See the **Layout → Portal** stories.

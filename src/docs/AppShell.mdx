@@ -1,0 +1,56 @@
+{/* src/docs/AppShell.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Layout/AppShell/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# AppShell
+
+A full-page layout skeleton: sticky TopBar + collapsible Sidebar + scrollable
+content area, wired together with responsive behaviour.
+
+## Mental model
+
+Compose the chrome by passing slots: a `topBar` node and `sidebarSections` data.
+AppShell owns the sidebar's collapse state and the content offset, so you don't
+shift content yourself. Responsive: at ≥768px the sidebar is inline and
+collapsible; below that it becomes a fixed overlay drawer with an auto-injected
+hamburger button beside the TopBar.
+
+## Quick start
+
+```tsx
+import { AppShell, TopBar } from '@geomak/ui'
+
+<AppShell
+  topBar={<TopBar brand={<Logo />} actions={<ThemeSwitch checked={dark} onChange={onToggle} />} />}
+  sidebarSections={NAV_SECTIONS}
+  sidebarDefaultExpanded
+  sidebarFooter={<UserMenu />}
+>
+  <PageContent />
+</AppShell>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>topBar</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Top bar slot (usually a TopBar).</td></tr>
+    <tr><td style={td0}>sidebarSections</td><td style={td(true)}>SidebarSection[]</td><td style={td(true)}>[]</td><td style={td(false)}>Sidebar nav data.</td></tr>
+    <tr><td style={td0}>sidebarExpandedWidth / sidebarCollapsedWidth</td><td style={td(true)}>number</td><td style={td(true)}>220 / 52</td><td style={td(false)}>Sidebar widths.</td></tr>
+    <tr><td style={td0}>sidebarDefaultExpanded</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Start expanded.</td></tr>
+    <tr><td style={td0}>sidebarFooter</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Sidebar bottom slot.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Main page content.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Root className.</td></tr>
+  </tbody>
+</table>
+
+Pairs with **Menu → Sidebar** and **Menu → TopBar** — AppShell wires them together.
+
+See the **Layout → AppShell** stories.

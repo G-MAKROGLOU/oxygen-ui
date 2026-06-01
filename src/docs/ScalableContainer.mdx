@@ -1,0 +1,67 @@
+{/* src/docs/ScalableContainer.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Layout/ScalableContainer/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# ScalableContainer
+
+A container that smoothly expands to fill its parent on click and collapses back,
+with an OS-window aesthetic — a subtle elevation lift, no color flash.
+
+## Mental model
+
+It animates both width and height between a resting size and an expanded size.
+Expansion can be **uncontrolled** (click the toggle) or **controlled** via
+`expanded` + `onExpandedChange`. The container is transparent by default, so it
+overlays whatever surface sits behind it; the shadow lifts on expand like a window
+being raised. The floating toggle is absolutely positioned (configurable corner)
+so it never pushes layout.
+
+## Quick start
+
+```tsx
+import { ScalableContainer } from '@geomak/ui'
+
+<ScalableContainer width={320} height={200} expandedHeight={480}>
+  <ChartPanel />
+</ScalableContainer>
+```
+
+## Controlled
+
+```tsx
+const [open, setOpen] = useState(false)
+
+<ScalableContainer
+  expanded={open}
+  onExpandedChange={setOpen}
+  expandedWidth="100%"
+  expandedHeight={420}
+  togglePosition="top-right"
+>
+  <DetailView />
+</ScalableContainer>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>width / height</td><td style={td(true)}>CSS length</td><td style={td(true)}>'100%' / 'auto'</td><td style={td(false)}>Resting size.</td></tr>
+    <tr><td style={td0}>expandedWidth / expandedHeight</td><td style={td(true)}>CSS length</td><td style={td(true)}>'100%' / '100%'</td><td style={td(false)}>Expanded size (set concrete height to push siblings).</td></tr>
+    <tr><td style={td0}>expanded</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Controlled expanded state.</td></tr>
+    <tr><td style={td0}>onExpandedChange</td><td style={td(true)}>{'(expanded: boolean) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Toggle callback.</td></tr>
+    <tr><td style={td0}>togglePosition</td><td style={td(true)}>'top-left'|'top-right'|'bottom-left'|'bottom-right'</td><td style={td(true)}>'top-right'</td><td style={td(false)}>Toggle-button corner.</td></tr>
+    <tr><td style={td0}>expandIcon / collapseIcon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Override toggle icons.</td></tr>
+    <tr><td style={td0}>assignClassOnClick</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Class added to children wrapper when expanded.</td></tr>
+    <tr><td style={td0}>children / className</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>—</td><td style={td(false)}>Content + root overrides.</td></tr>
+  </tbody>
+</table>
+
+See the **Layout → ScalableContainer** stories.

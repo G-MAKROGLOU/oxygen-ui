@@ -1,0 +1,57 @@
+{/* src/docs/Box.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Layout/Box/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Box
+
+The polymorphic layout primitive. A token-styled `<div>` (or any element via
+`as`) that replaces ad-hoc `className="p-4 bg-surface border rounded-lg"`.
+
+## Mental model
+
+Box maps prop shortcuts to the design system's token scales — spacing (padding /
+margin), background, border, radius, shadow — emitting Tailwind classes so there's
+no runtime style cost. Spacing props take the shared scale (`none`→`2xl`). Use
+`as` when the semantic element should differ from a `div`.
+
+## Quick start
+
+```tsx
+import { Box } from '@geomak/ui'
+
+<Box p="lg" background="surface" border="border" radius="lg" shadow="sm">
+  <Typography variant="h3">Card title</Typography>
+</Box>
+
+<Box as="section" px="md" py="lg" background="background">
+  <PageContent />
+</Box>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>as</td><td style={td(true)}>keyof JSX.IntrinsicElements</td><td style={td(true)}>'div'</td><td style={td(false)}>Rendered element.</td></tr>
+    <tr><td style={td0}>p / px / py / pt / pr / pb / pl</td><td style={td(true)}>Spacing</td><td style={td(true)}>—</td><td style={td(false)}>Padding (token scale).</td></tr>
+    <tr><td style={td0}>m / mx / my / mt / mr / mb / ml</td><td style={td(true)}>Spacing</td><td style={td(true)}>—</td><td style={td(false)}>Margin (token scale).</td></tr>
+    <tr><td style={td0}>background</td><td style={td(true)}>'none'|'background'|'surface'|'surface-raised'|'accent'</td><td style={td(true)}>'none'</td><td style={td(false)}>Surface token.</td></tr>
+    <tr><td style={td0}>border</td><td style={td(true)}>'none'|'border'|'border-strong'|'accent'|'status-error'</td><td style={td(true)}>'none'</td><td style={td(false)}>Border token.</td></tr>
+    <tr><td style={td0}>radius</td><td style={td(true)}>'none'|'sm'|'md'|'lg'|'xl'|'2xl'|'full'</td><td style={td(true)}>—</td><td style={td(false)}>Corner radius.</td></tr>
+    <tr><td style={td0}>shadow</td><td style={td(true)}>'none'|'sm'|'md'|'lg'|'xl'</td><td style={td(true)}>'none'</td><td style={td(false)}>Elevation.</td></tr>
+    <tr><td style={td0}>width / height</td><td style={td(true)}>string | number</td><td style={td(true)}>—</td><td style={td(false)}>Dimensions (number → px).</td></tr>
+    <tr><td style={td0}>onClick / className / style</td><td style={td(true)}>various</td><td style={td(true)}>—</td><td style={td(false)}>Handler + overrides.</td></tr>
+  </tbody>
+</table>
+
+`Spacing` = `'none'|'xs'|'sm'|'md'|'lg'|'xl'|'2xl'`. **Flex** and **Grid** extend
+Box with their respective display modes.
+
+See the **Layout → Box** stories.

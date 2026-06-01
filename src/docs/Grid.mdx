@@ -1,0 +1,53 @@
+{/* src/docs/Grid.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Layout/Grid/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Grid
+
+`Box` with `display: grid` baked in. Use `cols`/`rows` as numbers for the common
+"N equal tracks" case, or pass any CSS `grid-template-*` string for arbitrary
+layouts.
+
+## Mental model
+
+Pass `cols={3}` for three equal columns, or `cols="200px 1fr"` /
+`cols="repeat(auto-fit, minmax(220px, 1fr))"` for explicit tracks. `gap` (or
+`gapX`/`gapY`) uses the token spacing scale. Inherits every Box prop, so the
+container's surface and padding live on the same element.
+
+## Quick start
+
+```tsx
+import { Grid } from '@geomak/ui'
+
+<Grid cols={3} gap="md">
+  <Card /><Card /><Card />
+</Grid>
+
+{/* responsive auto-fit */}
+<Grid cols="repeat(auto-fit, minmax(220px, 1fr))" gap="lg">
+  {items.map((it) => <Card key={it.id} {...it} />)}
+</Grid>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>cols</td><td style={td(true)}>number | string</td><td style={td(true)}>—</td><td style={td(false)}>N equal columns, or a grid-template-columns string.</td></tr>
+    <tr><td style={td0}>rows</td><td style={td(true)}>number | string</td><td style={td(true)}>—</td><td style={td(false)}>Same, for rows.</td></tr>
+    <tr><td style={td0}>gap / gapX / gapY</td><td style={td(true)}>Spacing</td><td style={td(true)}>—</td><td style={td(false)}>Uniform / axis-specific gap.</td></tr>
+    <tr><td style={td0}>align</td><td style={td(true)}>'start'|'center'|'end'|'stretch'</td><td style={td(true)}>—</td><td style={td(false)}>align-items within cells.</td></tr>
+    <tr><td style={td0}>justify</td><td style={td(true)}>'start'|'center'|'end'|'stretch'</td><td style={td(true)}>—</td><td style={td(false)}>justify-items within cells.</td></tr>
+    <tr><td style={td0}>…BoxProps</td><td style={td(true)}>—</td><td style={td(true)}>—</td><td style={td(false)}>All Box props (p, m, background, border, radius, shadow, as…).</td></tr>
+  </tbody>
+</table>
+
+See the **Layout → Grid** stories, and **Layout → Box** for the inherited props.

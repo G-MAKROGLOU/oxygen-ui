@@ -1,0 +1,82 @@
+{/* src/docs/CreditCardForm.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Forms/CreditCardForm/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# CreditCardForm
+
+A complete, validated card-entry form: number with brand detection + auto-format,
+cardholder name, expiry (`MM/YY`), and CVV. Built on the library's Form API.
+
+## Mental model
+
+A self-contained form that manages its own fields and validation internally. You
+receive a normalised `CreditCardValue` — `onChange` on every keystroke (possibly
+invalid) and `onSubmit` once all fields pass. The card number is auto-formatted
+and its brand detected live (`brand` is the detected id or `null`; digits are
+returned without spaces). Embed it in a larger checkout by hiding the built-in
+submit (`hideSubmit`) and driving submission from outside.
+
+## Quick start
+
+```tsx
+import { CreditCardForm } from '@geomak/ui'
+
+<CreditCardForm
+  submitLabel="Pay $49"
+  onSubmit={async (card) => {
+    await charge({ number: card.number, expiry: card.expiry, cvv: card.cvv, brand: card.brand })
+  }}
+/>
+```
+
+## Embedded in a larger checkout
+
+```tsx
+<CreditCardForm
+  hideSubmit
+  requireName={false}
+  onChange={setCard}
+  defaultValue={{ name: user.fullName }}
+/>
+{/* your own submit elsewhere, using the latest `card` */}
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>onSubmit</td><td style={td(true)}>{'(card: CreditCardValue) => void | Promise<void>'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires when all fields validate.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(card: CreditCardValue) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Every keystroke (may be invalid).</td></tr>
+    <tr><td style={td0}>defaultValue</td><td style={td(true)}>Partial&lt;CreditCardValue&gt;</td><td style={td(true)}>—</td><td style={td(false)}>Seed fields (uncontrolled).</td></tr>
+    <tr><td style={td0}>size</td><td style={td(true)}>FieldSize</td><td style={td(true)}>'md'</td><td style={td(false)}>Inner field size.</td></tr>
+    <tr><td style={td0}>disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Disable all fields + submit.</td></tr>
+    <tr><td style={td0}>requireName</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Require cardholder name.</td></tr>
+    <tr><td style={td0}>hideSubmit</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Hide built-in submit (embed mode).</td></tr>
+    <tr><td style={td0}>submitLabel</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Pay'</td><td style={td(false)}>Submit button label.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root form overrides.</td></tr>
+  </tbody>
+</table>
+
+### CreditCardValue
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>number</td><td style={td(true)}>string</td><td style={td(false)}>Digits only (no spaces).</td></tr>
+    <tr><td style={td0}>name</td><td style={td(true)}>string</td><td style={td(false)}>Cardholder name.</td></tr>
+    <tr><td style={td0}>expiry</td><td style={td(true)}>string</td><td style={td(false)}>MM/YY.</td></tr>
+    <tr><td style={td0}>cvv</td><td style={td(true)}>string</td><td style={td(false)}>Digits only.</td></tr>
+    <tr><td style={td0}>brand</td><td style={td(true)}>string | null</td><td style={td(false)}>Detected brand id ('visa', 'amex'…) or null.</td></tr>
+  </tbody>
+</table>
+
+For building your own forms, see the **Forms → Form API** guide (useForm + binders).
+
+See the **Forms → CreditCardForm** stories.

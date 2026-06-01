@@ -1,0 +1,55 @@
+{/* src/docs/FadingBase.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Layout/FadingBase/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# FadingBase
+
+A fade-in / fade-out container. Mounts when `isMounted` becomes true and unmounts
+after a 300ms fade-out when it goes false.
+
+## Mental model
+
+Drive it with a boolean `isMounted`. On true it renders and fades in on the next
+frame; on false it fades out, then unmounts after the transition completes (so the
+exit animation actually plays). A pure CSS opacity transition, no
+`react-transition-group`, no theme-context dependency.
+
+## Quick start
+
+```tsx
+import { FadingBase } from '@geomak/ui'
+
+<FadingBase isMounted={isPageVisible}>
+  <PageContent />
+</FadingBase>
+```
+
+## Route transition
+
+```tsx
+const [show, setShow] = useState(false)
+useEffect(() => { setShow(true); return () => setShow(false) }, [route])
+
+<FadingBase isMounted={show}>
+  <RouteView />
+</FadingBase>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>isMounted</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>true fades in; false fades out then unmounts.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Content to fade.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the container.</td></tr>
+  </tbody>
+</table>
+
+See the **Layout → FadingBase** stories.
