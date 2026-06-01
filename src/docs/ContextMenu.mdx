@@ -1,0 +1,84 @@
+{/* src/docs/ContextMenu.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Menu/ContextMenu/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# ContextMenu
+
+A right-click menu built on Radix Context Menu, with nested sub-menus, full
+keyboard support, and viewport-edge-aware positioning.
+
+## Mental model
+
+Wrap the element that should respond to right-click; its entire subtree becomes
+the trigger area. The menu itself is **data-driven** from `items` — each is a
+`{ key, value, icon?, onClick? }`, and any item may carry `children` to become a
+sub-menu (its own `onClick` is then ignored). Radix owns positioning, focus,
+portalling, and keyboard nav (↑↓ move, → opens sub-menu, ← closes, Enter
+activates, Esc dismisses).
+
+## Quick start
+
+```tsx
+import { ContextMenu } from '@geomak/ui'
+import { Pencil, Trash } from 'lucide-react'
+
+<ContextMenu
+  items={[
+    { key: 'edit',   value: 'Edit',   icon: <Pencil />, onClick: () => openEditor() },
+    { key: 'delete', value: 'Delete', icon: <Trash />,  onClick: () => askDelete(), disabled: locked },
+  ]}
+>
+  <VesselCard vessel={vessel} />
+</ContextMenu>
+```
+
+## Nested sub-menus
+
+```tsx
+<ContextMenu
+  items={[
+    {
+      key: 'export', value: 'Export',
+      children: [
+        { key: 'csv',  value: 'as CSV',   onClick: exportCsv },
+        { key: 'xlsx', value: 'as Excel', onClick: exportXlsx },
+      ],
+    },
+  ]}
+>
+  <Table rows={rows} />
+</ContextMenu>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>items</td><td style={td(true)}>ContextMenuActionItem[]</td><td style={td(true)}>—</td><td style={td(false)}>Top-level items; nest via children.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>The right-clickable trigger subtree.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the menu panel.</td></tr>
+  </tbody>
+</table>
+
+### ContextMenuActionItem
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>key</td><td style={td(true)}>React.Key</td><td style={td(false)}>Stable key.</td></tr>
+    <tr><td style={td0}>value</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Item label (text or node).</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Leading icon.</td></tr>
+    <tr><td style={td0}>onClick</td><td style={td(true)}>{'() => void'}</td><td style={td(false)}>Activation handler (ignored when children set).</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ContextMenuActionItem[]</td><td style={td(false)}>Sub-menu items.</td></tr>
+    <tr><td style={td0}>disabled</td><td style={td(true)}>boolean</td><td style={td(false)}>Visible but not activatable.</td></tr>
+  </tbody>
+</table>
+
+See the **Menu → ContextMenu** stories.

@@ -1,0 +1,64 @@
+{/* src/docs/TopBar.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Menu/TopBar/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# TopBar
+
+The app-shell top navigation bar: three named slots, sticky by default, height
+exposed as a CSS variable for layout children.
+
+## Mental model
+
+A pure layout shell with three optional slots, `brand` (leading), `center`, and
+`actions` (trailing). It has no opinion about what goes in them, you compose
+links, breadcrumbs, a theme switch, an avatar, whatever. It is `sticky top-0`
+with `z-[100]` and publishes its height as the `--topbar-height` CSS variable so
+sticky/scroll-offset children can reference it. On narrow screens the `center`
+slot drops below the brand row.
+
+## Quick start
+
+```tsx
+import { TopBar } from '@geomak/ui'
+
+<TopBar
+  brand={<Logo />}
+  center={<NavLinks />}
+  actions={
+    <>
+      <ThemeSwitch checked={isDark} onChange={toggleDark} />
+      <UserAvatar />
+    </>
+  }
+/>
+```
+
+## Consuming the height variable
+
+```tsx
+<TopBar brand={<Logo />} height={64} />
+
+{/* a child that should stick just below the bar */}
+<aside style={{ position: 'sticky', top: 'var(--topbar-height)' }}>…</aside>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>brand</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Leading slot — logo / wordmark / app name.</td></tr>
+    <tr><td style={td0}>center</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Center slot — nav, breadcrumb, title. Drops below brand on mobile.</td></tr>
+    <tr><td style={td0}>actions</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Trailing slot — theme toggle, avatar, bell.</td></tr>
+    <tr><td style={td0}>height</td><td style={td(true)}>number</td><td style={td(true)}>56</td><td style={td(false)}>Bar height in px; also sets --topbar-height.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the root.</td></tr>
+  </tbody>
+</table>
+
+See the **Menu → TopBar** stories.

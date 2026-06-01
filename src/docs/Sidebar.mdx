@@ -1,0 +1,105 @@
+{/* src/docs/Sidebar.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Menu/Sidebar/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Sidebar
+
+A collapsible application sidebar: icon-only with tooltips when collapsed, icon +
+label when expanded. The width animates with an ease-out-expo curve.
+
+## Mental model
+
+Data-driven from `sections` (each a titled group of `items`). The expand state is
+**controlled** by you via `isExpanded` + `onToggle`, so the parent shell can shift
+the main content by the sidebar width. Each item carries its own `icon`, `label`,
+`isActive` flag, optional `badge`, and `onClick`. The component owns presentation
+and animation; you own navigation and active state.
+
+## Quick start
+
+```tsx
+import { Sidebar } from '@geomak/ui'
+import { Home, Ship, Settings } from 'lucide-react'
+
+const [open, setOpen] = useState(true)
+
+const sections = [
+  {
+    key: 'main',
+    title: 'Operations',
+    items: [
+      { key: 'home',     icon: <Home />,     label: 'Dashboard', isActive: true, onClick: goHome },
+      { key: 'vessels',  icon: <Ship />,     label: 'Vessels',   badge: 3,       onClick: goVessels },
+    ],
+  },
+  {
+    key: 'system',
+    items: [{ key: 'settings', icon: <Settings />, label: 'Settings', onClick: goSettings }],
+  },
+]
+
+<Sidebar
+  sections={sections}
+  isExpanded={open}
+  onToggle={() => setOpen((o) => !o)}
+  footer={<ThemeSwitch checked={isDark} onChange={toggleDark} />}
+/>
+```
+
+## App-shell layout
+
+The sidebar reports its width through `expandedWidth` / `collapsedWidth`; the
+parent is responsible for shifting content:
+
+```tsx
+<div style={{ marginLeft: open ? 220 : 52, transition: 'margin 240ms cubic-bezier(0.16,1,0.3,1)' }}>
+  <main>…</main>
+</div>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>sections</td><td style={td(true)}>SidebarSection[]</td><td style={td(true)}>—</td><td style={td(false)}>Groups of nav items.</td></tr>
+    <tr><td style={td0}>isExpanded</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Controlled expand state.</td></tr>
+    <tr><td style={td0}>onToggle</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires on the collapse/expand control.</td></tr>
+    <tr><td style={td0}>expandedWidth / collapsedWidth</td><td style={td(true)}>number</td><td style={td(true)}>220 / 52</td><td style={td(false)}>Width in px per state.</td></tr>
+    <tr><td style={td0}>footer</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Bottom slot (theme switch, avatar…).</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the {'<aside>'}.</td></tr>
+  </tbody>
+</table>
+
+### SidebarSection
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>key</td><td style={td(true)}>string</td><td style={td(false)}>Stable React key.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>string</td><td style={td(false)}>Group heading — shown only when expanded.</td></tr>
+    <tr><td style={td0}>items</td><td style={td(true)}>SidebarItem[]</td><td style={td(false)}>Nav items in the group.</td></tr>
+  </tbody>
+</table>
+
+### SidebarItem
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>key</td><td style={td(true)}>string</td><td style={td(false)}>Stable React key.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Always visible; the only thing shown when collapsed.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>string</td><td style={td(false)}>Shown when expanded; tooltip when collapsed.</td></tr>
+    <tr><td style={td0}>isActive</td><td style={td(true)}>boolean</td><td style={td(false)}>Highlights + shows the accent rail.</td></tr>
+    <tr><td style={td0}>badge</td><td style={td(true)}>number</td><td style={td(false)}>Count bubble on the icon (99+ caps).</td></tr>
+    <tr><td style={td0}>onClick</td><td style={td(true)}>{'() => void'}</td><td style={td(false)}>Activation handler.</td></tr>
+  </tbody>
+</table>
+
+See the **Menu → Sidebar** stories.
