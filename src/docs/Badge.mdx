@@ -1,0 +1,71 @@
+{/* src/docs/Badge.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/Badge/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Badge
+
+A small status / count indicator with three uses: a label pill, an inline
+counter, or an overlay anchored to another element.
+
+## Mental model
+
+The presence of `count` or `dot` switches Badge from **label mode** to
+**indicator mode**:
+
+- **Label pill** — `children` only: `<Badge tone="success">Active</Badge>`.
+- **Inline count** — `count` (or `dot`) without children: `<Badge count={5} />`.
+- **Overlay** — `count`/`dot` *with* children: the indicator anchors to the
+  child's top-right corner.
+
+`tone` sets the semantic colour; `variant` (solid / soft / outline) the fill.
+A zero count hides itself unless `showZero`; large counts cap at `max` (`99+`).
+
+## Quick start
+
+```tsx
+import { Badge } from '@geomak/ui'
+
+<Badge tone="success">Active</Badge>
+<Badge tone="accent" variant="outline">Beta</Badge>
+
+<Badge count={5} tone="error" />            {/* inline counter */}
+<Badge count={1280} max={99} tone="accent" /> {/* shows 99+ */}
+```
+
+## Overlay on an element
+
+```tsx
+<Badge count={3} tone="error">
+  <IconButton icon={<BellIcon />} title="Notifications" />
+</Badge>
+
+<Badge dot tone="success">
+  <Avatar src={user.photo} alt={user.name} />
+</Badge>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Pill label, or the element to overlay.</td></tr>
+    <tr><td style={td0}>tone</td><td style={td(true)}>'neutral'|'accent'|'success'|'warning'|'error'|'info'</td><td style={td(true)}>'neutral'</td><td style={td(false)}>Semantic colour.</td></tr>
+    <tr><td style={td0}>variant</td><td style={td(true)}>'solid'|'soft'|'outline'</td><td style={td(true)}>'soft'</td><td style={td(false)}>Fill style (label mode).</td></tr>
+    <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md'</td><td style={td(true)}>'md'</td><td style={td(false)}>Size preset.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Leading icon (label mode).</td></tr>
+    <tr><td style={td0}>count</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>Switches to counter indicator.</td></tr>
+    <tr><td style={td0}>max</td><td style={td(true)}>number</td><td style={td(true)}>99</td><td style={td(false)}>Cap before showing N+.</td></tr>
+    <tr><td style={td0}>dot</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Bare dot indicator (no number).</td></tr>
+    <tr><td style={td0}>showZero</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Render even when count is 0.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Overrides.</td></tr>
+  </tbody>
+</table>
+
+See the **Data Display → Badge** stories.

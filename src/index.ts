@@ -106,6 +106,9 @@ export type { AccordionProps, AccordionItemProps } from './components/core/Accor
 export { default as Breadcrumbs } from './components/core/Breadcrumbs'
 export type { BreadcrumbsProps, BreadcrumbItem } from './components/core/Breadcrumbs'
 
+export { default as Badge } from './components/core/Badge'
+export type { BadgeProps, BadgeTone, BadgeVariant, BadgeSize } from './components/core/Badge'
+
 export {
     NotificationProvider,
     useNotification,
