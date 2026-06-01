@@ -103,6 +103,9 @@ export type { TreeProps, TreeNode, TreeItemClickPayload } from './components/cor
 export { default as Accordion } from './components/core/Accordion'
 export type { AccordionProps, AccordionItemProps } from './components/core/Accordion'
 
+export { default as Breadcrumbs } from './components/core/Breadcrumbs'
+export type { BreadcrumbsProps, BreadcrumbItem } from './components/core/Breadcrumbs'
+
 export {
     NotificationProvider,
     useNotification,

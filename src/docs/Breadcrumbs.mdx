@@ -1,0 +1,71 @@
+{/* src/docs/Breadcrumbs.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Menu/Breadcrumbs/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Breadcrumbs
+
+A navigation trail from root to the current page, with an optional collapse for
+long paths.
+
+## Mental model
+
+Data-driven from an ordered `items` array (root → current). Each item is a
+`{ label, href?, icon?, onClick? }`. The **last** item is treated as the current
+page: it renders as static text with `aria-current="page"`, never a link. Set
+`maxItems` to collapse the middle of a long trail into a clickable ellipsis that
+expands inline. Router-agnostic — wire `href`/`onClick` to your router.
+
+## Quick start
+
+```tsx
+import { Breadcrumbs } from '@geomak/ui'
+
+<Breadcrumbs
+  items={[
+    { label: 'Home', href: '/', icon: <HomeIcon /> },
+    { label: 'Fleet', href: '/fleet' },
+    { label: 'Aurora' },          {/* current page */}
+  ]}
+/>
+```
+
+## Custom separator & collapsing
+
+```tsx
+<Breadcrumbs separator={<span>/</span>} items={trail} />
+
+<Breadcrumbs maxItems={3} items={longTrail} />   {/* first … last-two, ellipsis expands */}
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>items</td><td style={td(true)}>BreadcrumbItem[]</td><td style={td(true)}>—</td><td style={td(false)}>Trail, root → current.</td></tr>
+    <tr><td style={td0}>separator</td><td style={td(true)}>ReactNode</td><td style={td(true)}>chevron</td><td style={td(false)}>Divider between crumbs.</td></tr>
+    <tr><td style={td0}>maxItems</td><td style={td(true)}>number</td><td style={td(true)}>0</td><td style={td(false)}>Collapse middle past this count (0 = never).</td></tr>
+    <tr><td style={td0}>aria-label</td><td style={td(true)}>string</td><td style={td(true)}>'Breadcrumb'</td><td style={td(false)}>Nav landmark name.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+  </tbody>
+</table>
+
+### BreadcrumbItem
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Crumb text.</td></tr>
+    <tr><td style={td0}>href</td><td style={td(true)}>string</td><td style={td(false)}>Link target (omit on the current crumb).</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Leading icon.</td></tr>
+    <tr><td style={td0}>onClick</td><td style={td(true)}>MouseEventHandler</td><td style={td(false)}>Click handler for router nav.</td></tr>
+  </tbody>
+</table>
+
+See the **Menu → Breadcrumbs** stories.
