@@ -1,3 +1,10 @@
+# [6.9.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.8.0...v6.9.0) (2026-06-01)
+
+
+### Features
+
+* **fab:** floating action button + speed dial ([c37c10f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/c37c10feb10db5b446b11d87ecc96ae6139bc482))
+
 # [6.8.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.7.0...v6.8.0) (2026-06-01)
 
 
