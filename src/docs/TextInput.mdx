@@ -1,0 +1,95 @@
+{/* src/docs/TextInput.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/TextInput/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# TextInput
+
+A single-line text field. Full-width by default, with the shared field
+foundation: label + error region + horizontal/vertical layout, the **Halo
+Focus** (1px accent border + soft halo), and optional leading `prefix` /
+trailing `suffix` adornments.
+
+## Mental model
+
+`TextInput` is controlled: you own the value via `value` + `onChange`. It wraps
+the native `<input>` in the shared `<Field>` so the label, `helperText` tooltip,
+required asterisk, and error message all render and align identically to every
+other input. Constrain width with the parent or `style={{ maxWidth }}`.
+
+## Quick start
+
+```tsx
+import { TextInput } from '@geomak/ui'
+
+const [name, setName] = useState('')
+
+<TextInput
+  label="Vessel name"
+  placeholder="e.g. Aurora"
+  value={name}
+  onChange={(e) => setName(e.target.value)}
+/>
+```
+
+## With the Form API
+
+Bind it with `fieldNative` (it reports `e.target.value`):
+
+```tsx
+<TextInput
+  label="Email"
+  {...form.fieldNative('email', { required: true, pattern: patterns.email })}
+/>
+```
+
+See **Forms → Form API** for the full form layer.
+
+## Adornments & type
+
+```tsx
+// Leading icon / trailing unit
+<TextInput label="IMO" prefix={<HashIcon />} value={imo} onChange={onChange} />
+<TextInput label="Speed" suffix="kn" value={speed} onChange={onChange} />
+
+// Semantic types (keyboard + validation hints)
+<TextInput type="email" label="Email" … />   // 'text' | 'email' | 'url' | 'tel'
+```
+
+## States
+
+```tsx
+<TextInput label="Name" errorMessage="Name is required" value="" onChange={…} />
+<TextInput label="Name" disabled value="Locked" onChange={…} />
+<TextInput label="Name" size="sm" … />            {/* sm | md | lg */}
+<TextInput label="Name" layout="horizontal" … />  {/* label beside the field */}
+<TextInput label="Name" helperText="Shown in a tooltip beside the label." … />
+<TextInput label="Name" required … />             {/* asterisk + aria-required */}
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Controlled value.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>ChangeEventHandler</td><td style={td(true)}>—</td><td style={td(false)}>Read <code>e.target.value</code>.</td></tr>
+    <tr><td style={td0}>type</td><td style={td(true)}>'text' | 'email' | 'url' | 'tel'</td><td style={td(true)}>'text'</td><td style={td(false)}>Native input type.</td></tr>
+    <tr><td style={td0}>prefix / suffix</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Leading / trailing adornment.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Field label.</td></tr>
+    <tr><td style={td0}>layout</td><td style={td(true)}>'vertical' | 'horizontal'</td><td style={td(true)}>'vertical'</td><td style={td(false)}>Label placement.</td></tr>
+    <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md' | 'lg'</td><td style={td(true)}>'md'</td><td style={td(false)}>Control height + type.</td></tr>
+    <tr><td style={td0}>helperText</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Info-icon tooltip beside the label.</td></tr>
+    <tr><td style={td0}>errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Error under the control + red border + aria-invalid.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed + not-allowed.</td></tr>
+    <tr><td style={td0}>name / htmlFor</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Form name / id + label link.</td></tr>
+    <tr><td style={td0}>className / style / inputStyle</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Field root / shell / inner input.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → TextInput** stories for every state, live.

@@ -1,0 +1,77 @@
+{/* src/docs/NumberInput.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/NumberInput/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# NumberInput
+
+A numeric field with keyboard-driven stepper buttons, `min`/`max` clamping,
+`step` increments, and floating-point-safe `precision` rounding.
+
+## Mental model
+
+Controlled with a **numeric** value. Unlike the text inputs, `onChange` reports
+an **event-like object** carrying a number:
+`onChange={(e) => set(e.target.value)}` where `e.target.value` is `number |
+undefined` (empty field → `undefined`). The steppers and arrow keys respect
+`min`/`max`/`step`; `precision` rounds to a fixed number of decimals to avoid
+`0.1 + 0.2` drift.
+
+## Quick start
+
+```tsx
+import { NumberInput } from '@geomak/ui'
+
+const [qty, setQty] = useState<number | undefined>(1)
+
+<NumberInput
+  label="Quantity"
+  min={0}
+  max={99}
+  step={1}
+  value={qty}
+  onChange={(e) => setQty(e.target.value)}
+/>
+```
+
+## With the Form API
+
+Bind with `fieldTarget` (it emits `{ target: { value: number } }`):
+
+```tsx
+<NumberInput label="Price" min={0} precision={2} step={0.01}
+  {...form.fieldTarget('price', { required: true, min: { value: 1, message: 'Must be at least 1' } })} />
+```
+
+## Precision & clamping
+
+```tsx
+<NumberInput label="Rate" value={rate} onChange={…} step={0.01} precision={2} />  {/* 2.305 → 2.31 */}
+<NumberInput label="Level" value={lvl} onChange={…} min={0} max={10} />            {/* clamps to 0–10 */}
+<NumberInput label="Read-only" value={42} onChange={…} readOnly />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value</td><td style={td(true)}>number | ''</td><td style={td(true)}>—</td><td style={td(false)}>Controlled numeric value.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { value: number | undefined } }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Number reported on <code>e.target.value</code>.</td></tr>
+    <tr><td style={td0}>min / max / step</td><td style={td(true)}>number</td><td style={td(true)}>— / — / 1</td><td style={td(false)}>Clamp bounds + increment.</td></tr>
+    <tr><td style={td0}>precision</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>Decimal places (FP-safe rounding).</td></tr>
+    <tr><td style={td0}>readOnly</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Visible, not editable.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'vertical' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>name / htmlFor / placeholder</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Form name / id link / placeholder.</td></tr>
+    <tr><td style={td0}>className / style / inputStyle</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Field root / shell / inner input.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → NumberInput** stories.

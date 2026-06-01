@@ -1,0 +1,71 @@
+{/* src/docs/TextArea.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/TextArea/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# TextArea
+
+A multi-line text field on the shared field foundation, with optional
+auto-grow, a character counter, and a configurable resize handle.
+
+## Mental model
+
+Controlled like `TextInput` (`value` + `onChange`, `e.target.value`). By default
+it's a fixed `rows`-tall box you can resize. Turn on `autoGrow` to make it
+expand with content up to `maxRows`, and `showCount` to display a
+`current / maxLength` counter under the field.
+
+## Quick start
+
+```tsx
+import { TextArea } from '@geomak/ui'
+
+const [notes, setNotes] = useState('')
+
+<TextArea
+  label="Notes"
+  rows={4}
+  placeholder="Anything worth recording…"
+  value={notes}
+  onChange={(e) => setNotes(e.target.value)}
+/>
+```
+
+## With the Form API
+
+```tsx
+<TextArea label="Bio" {...form.fieldNative('bio', { maxLength: { value: 280, message: 'Keep it under 280' } })} />
+```
+
+## Auto-grow + counter
+
+```tsx
+<TextArea label="Message" autoGrow maxRows={8} value={msg} onChange={…} />
+<TextArea label="Tweet" maxLength={280} showCount value={txt} onChange={…} />
+<TextArea label="Fixed" resize="none" rows={3} value={txt} onChange={…} />  {/* none | vertical | horizontal | both */}
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value / onChange</td><td style={td(true)}>string / ChangeEventHandler</td><td style={td(true)}>—</td><td style={td(false)}>Controlled value; read <code>e.target.value</code>.</td></tr>
+    <tr><td style={td0}>rows</td><td style={td(true)}>number</td><td style={td(true)}>3</td><td style={td(false)}>Initial visible rows.</td></tr>
+    <tr><td style={td0}>autoGrow / maxRows</td><td style={td(true)}>boolean / number</td><td style={td(true)}>false / —</td><td style={td(false)}>Grow with content, capped at maxRows.</td></tr>
+    <tr><td style={td0}>maxLength / showCount</td><td style={td(true)}>number / boolean</td><td style={td(true)}>—</td><td style={td(false)}>Length cap + a live counter.</td></tr>
+    <tr><td style={td0}>resize</td><td style={td(true)}>'none' | 'vertical' | 'horizontal' | 'both'</td><td style={td(true)}>'vertical'</td><td style={td(false)}>Resize handle behaviour.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'vertical' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>name / htmlFor / placeholder</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Form name / id link / placeholder.</td></tr>
+    <tr><td style={td0}>className / style / inputStyle</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Field root / shell / textarea.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → TextArea** stories for auto-grow + counter.
