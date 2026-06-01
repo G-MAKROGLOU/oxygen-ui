@@ -1,3 +1,10 @@
+## [6.2.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.2.0...v6.2.1) (2026-06-01)
+
+
+### Bug Fixes
+
+* **megamenu:** panel no longer shrinks — drop shared viewport, self-size panels ([2871974](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2871974a20826a17a4e3a11746cd0f37b968bce0))
+
 # [6.2.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.1.0...v6.2.0) (2026-06-01)
 
 
