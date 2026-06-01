@@ -118,6 +118,9 @@ export type { CardProps, CardMediaProps, CardHeaderProps, CardBodyProps, CardFoo
 export { default as CardCarousel } from './components/core/CardCarousel'
 export type { CardCarouselProps } from './components/core/CardCarousel'
 
+export { default as Statistic } from './components/core/Statistic'
+export type { StatisticProps, StatisticDelta, StatisticSize, DeltaDirection } from './components/core/Statistic'
+
 export {
     NotificationProvider,
     useNotification,

@@ -1,0 +1,77 @@
+{/* src/docs/Statistic.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/Statistic/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Statistic
+
+A single metric: caption, value (with optional prefix/suffix and icon), and an
+optional trend delta.
+
+## Mental model
+
+Give it a `label` and a `value`. `prefix`/`suffix` frame the value (currency,
+unit, %). The optional `delta` shows a trend with an arrow; its colour follows
+`direction`, but you can invert the good/bad mapping with `positiveIsGood: false`
+for metrics where a rise is bad (churn, latency, error rate). Compose several
+inside `Card`s for a metrics row.
+
+## Quick start
+
+```tsx
+import { Statistic } from '@geomak/ui'
+
+<Statistic
+  label="Revenue"
+  value="48,210"
+  prefix="$"
+  delta={{ value: '12%', direction: 'up', label: 'vs last month' }}
+/>
+```
+
+## Inverted trend (a rise is bad)
+
+```tsx
+<Statistic
+  label="Churn rate"
+  value="3.1"
+  suffix="%"
+  delta={{ value: '0.4pt', direction: 'up', positiveIsGood: false }}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Caption above the value.</td></tr>
+    <tr><td style={td0}>value</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>The metric.</td></tr>
+    <tr><td style={td0}>prefix / suffix</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Around the value.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Leading tinted icon (left align).</td></tr>
+    <tr><td style={td0}>delta</td><td style={td(true)}>StatisticDelta</td><td style={td(true)}>—</td><td style={td(false)}>Trend indicator.</td></tr>
+    <tr><td style={td0}>helpText</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Secondary line.</td></tr>
+    <tr><td style={td0}>size</td><td style={td(true)}>'sm'|'md'|'lg'</td><td style={td(true)}>'md'</td><td style={td(false)}>Value scale.</td></tr>
+    <tr><td style={td0}>align</td><td style={td(true)}>'left' | 'center'</td><td style={td(true)}>'left'</td><td style={td(false)}>Alignment.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Overrides.</td></tr>
+  </tbody>
+</table>
+
+### StatisticDelta
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>The change shown by the arrow.</td></tr>
+    <tr><td style={td0}>direction</td><td style={td(true)}>'up' | 'down' | 'neutral'</td><td style={td(true)}>'neutral'</td><td style={td(false)}>Arrow + colour.</td></tr>
+    <tr><td style={td0}>positiveIsGood</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>false → a rise reads red.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Trailing context.</td></tr>
+  </tbody>
+</table>
+
+See the **Data Display → Statistic** stories.
