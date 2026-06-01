@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { createContext, useContext } from 'react'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
+
+type Align = 'start' | 'center' | 'end'
+const MegaMenuContext = createContext<{ align: Align }>({ align: 'start' })
 
 // ── Root ──────────────────────────────────────────────────────────────────────
 
@@ -24,7 +27,8 @@ export interface MegaMenuProps {
  * Compose top-level items with `MegaMenu.Item`. An item with children opens a
  * panel (`MegaMenu.Panel` → `MegaMenu.Section` → `MegaMenu.Link`, plus an
  * optional `MegaMenu.Featured` promo column); an item with just `href` is a
- * plain top-level link.
+ * plain top-level link. Each panel positions itself under the bar and sizes to
+ * its content.
  *
  * @example
  * ```tsx
@@ -43,30 +47,19 @@ export interface MegaMenuProps {
  * ```
  */
 function MegaMenu({ children, align = 'start', delayDuration = 200, className = '', style, 'aria-label': ariaLabel }: MegaMenuProps) {
-    const justify = align === 'center' ? 'justify-center' : align === 'end' ? 'justify-end' : 'justify-start'
     return (
-        <NavigationMenu.Root
-            delayDuration={delayDuration}
-            aria-label={ariaLabel}
-            className={['relative z-10 flex', className].filter(Boolean).join(' ')}
-            style={style}
-        >
-            <NavigationMenu.List className="flex items-center gap-1">
-                {children}
-            </NavigationMenu.List>
-
-            {/* Shared viewport — the active panel renders here and the box
-                animates its size between panels. */}
-            <div className={`absolute left-0 top-full flex w-full ${justify} pt-2`}>
-                <NavigationMenu.Viewport
-                    className="relative origin-top overflow-hidden rounded-lg border border-border bg-surface shadow-lg
-                        h-[var(--radix-navigation-menu-viewport-height)] w-[var(--radix-navigation-menu-viewport-width)]
-                        transition-[width,height] duration-200 ease-out
-                        data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95
-                        data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
-                />
-            </div>
-        </NavigationMenu.Root>
+        <MegaMenuContext.Provider value={{ align }}>
+            <NavigationMenu.Root
+                delayDuration={delayDuration}
+                aria-label={ariaLabel}
+                className={['relative z-10 flex w-full', className].filter(Boolean).join(' ')}
+                style={style}
+            >
+                <NavigationMenu.List className="flex items-center gap-1">
+                    {children}
+                </NavigationMenu.List>
+            </NavigationMenu.Root>
+        </MegaMenuContext.Provider>
     )
 }
 
@@ -91,6 +84,8 @@ const TOP_ITEM =
     'transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent'
 
 function MegaMenuItem({ label, icon, href, children, className = '' }: MegaMenuItemProps) {
+    const { align } = useContext(MegaMenuContext)
+    const pos = align === 'center' ? 'left-1/2 -translate-x-1/2' : align === 'end' ? 'right-0' : 'left-0'
     if (!children) {
         return (
             <NavigationMenu.Item>
@@ -111,7 +106,15 @@ function MegaMenuItem({ label, icon, href, children, className = '' }: MegaMenuI
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
             </NavigationMenu.Trigger>
-            <NavigationMenu.Content className="data-[motion=from-start]:animate-in data-[motion=to-end]:animate-out">
+            {/* The panel is a self-positioning absolute dropdown (no shared
+                Radix Viewport). It sizes to its own content, so there's no
+                viewport-width feedback loop. Positioned under the bar (the
+                Root is `relative`) per the `align` prop. */}
+            <NavigationMenu.Content
+                className={`absolute top-full mt-2 ${pos} z-20 overflow-hidden rounded-lg border border-border bg-surface shadow-lg
+                    data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95
+                    data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95`}
+            >
                 {children}
             </NavigationMenu.Content>
         </NavigationMenu.Item>
@@ -122,19 +125,21 @@ function MegaMenuItem({ label, icon, href, children, className = '' }: MegaMenuI
 
 export interface MegaMenuPanelProps {
     children: React.ReactNode
-    /** Number of section columns (the featured column sits outside this grid). Default auto. */
+    /** Cap the panel to roughly this many side-by-side columns before wrapping. Default: single row. */
     columns?: 1 | 2 | 3 | 4
     className?: string
     style?: React.CSSProperties
 }
 
-const COLS: Record<number, string> = { 1: 'grid-cols-1', 2: 'grid-cols-2', 3: 'grid-cols-3', 4: 'grid-cols-4' }
-
 function MegaMenuPanel({ children, columns, className = '', style }: MegaMenuPanelProps) {
+    // Flex, not grid: an absolutely-positioned dropdown shrink-wraps to its
+    // content here (sections size to their min-width), so the panel width is
+    // stable. `columns` just caps the width so sections wrap into rows.
+    const maxWidth = columns ? `${columns * 248}px` : 'min(92vw, 880px)'
     return (
         <div
-            className={['grid gap-6 p-6', columns ? COLS[columns] : 'auto-cols-fr grid-flow-col', 'w-max max-w-[min(92vw,860px)]', className].filter(Boolean).join(' ')}
-            style={style}
+            className={['flex flex-wrap gap-6 p-6', className].filter(Boolean).join(' ')}
+            style={{ maxWidth, ...style }}
         >
             {children}
         </div>

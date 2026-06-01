@@ -12,9 +12,8 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 A horizontal navigation bar whose top-level items open wide "mega" dropdown
 panels of grouped links. Built on `@radix-ui/react-navigation-menu`, so
-hover-intent opening, arrow-key navigation, focus management, and a shared
-animated viewport (the panel box resizes smoothly between items) all come for
-free.
+hover-intent opening, arrow-key navigation, and focus management all come for
+free. Each panel positions itself under the bar and sizes to its own content.
 
 ## Mental model
 
@@ -133,7 +132,7 @@ selected. The panel honours `prefers-reduced-motion`.
 <table style={tbl}>
   <thead><tr><th style={th}>Component</th><th style={th}>Key props</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>Panel</td><td style={td(false)}><code>columns</code> (1–4; default auto), <code>className</code>, <code>style</code>.</td></tr>
+    <tr><td style={td0}>Panel</td><td style={td(false)}><code>columns</code> (1–4; caps the width so sections wrap into rows — default single row), <code>className</code>, <code>style</code>.</td></tr>
     <tr><td style={td0}>Section</td><td style={td(false)}><code>title</code> (eyebrow heading), <code>className</code>.</td></tr>
     <tr><td style={td0}>Link</td><td style={td(false)}><code>href</code>, <code>onClick</code>, <code>icon</code>, <code>description</code>, <code>active</code>, <code>className</code>.</td></tr>
     <tr><td style={td0}>Featured</td><td style={td(false)}>Free-form children (heading, copy, CTA), <code>className</code>.</td></tr>
