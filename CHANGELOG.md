@@ -1,3 +1,10 @@
+# [6.7.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.6.0...v6.7.0) (2026-06-01)
+
+
+### Features
+
+* **card:** Card sections + CardCarousel ([a32f948](https://github.com/G-MAKROGLOU/oxygen-ui/commit/a32f94838c5e2e3e3bf30fa7f03536ae9e522391))
+
 # [6.6.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.5.0...v6.6.0) (2026-06-01)
 
 
