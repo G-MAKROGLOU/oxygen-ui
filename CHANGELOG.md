@@ -1,3 +1,10 @@
+## [6.2.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.2.1...v6.2.2) (2026-06-01)
+
+
+### Bug Fixes
+
+* **megamenu:** responsive mobile fallback + wider self-spreading panels ([fc5f57c](https://github.com/G-MAKROGLOU/oxygen-ui/commit/fc5f57c37dc278f7109fb1389ef69278167399ee))
+
 ## [6.2.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.2.0...v6.2.1) (2026-06-01)
 
 
