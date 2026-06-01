@@ -130,6 +130,9 @@ export type { PopConfirmProps, PopConfirmTone } from './components/core/PopConfi
 export { default as Calendar } from './components/core/Calendar'
 export type { CalendarProps, CalendarEvent } from './components/core/Calendar'
 
+export { default as Cart } from './components/core/Cart'
+export type { CartProps, CartLineItem, CartSummaryRow } from './components/core/Cart'
+
 export {
     NotificationProvider,
     useNotification,
