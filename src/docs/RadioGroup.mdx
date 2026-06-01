@@ -1,0 +1,78 @@
+{/* src/docs/RadioGroup.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/RadioGroup/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# RadioGroup
+
+A single-select radio group on Radix RadioGroup: arrow-key roving focus,
+`role="radiogroup"`, and the shared field foundation. Options support a
+secondary `description` and per-option `disabled`.
+
+## Mental model
+
+Driven by an `options` array; the value is the selected option's `value`
+(a string). `onChange` reports the value directly. Use `value` + `onChange`
+(controlled) or `defaultValue` (uncontrolled). Lay options out vertically
+(default) or horizontally, with the label on either side of the dot.
+
+## Quick start
+
+```tsx
+import { RadioGroup } from '@geomak/ui'
+
+const [freq, setFreq] = useState('daily')
+
+<RadioGroup
+  label="Notification frequency"
+  name="freq"
+  value={freq}
+  onChange={setFreq}
+  options={[
+    { value: 'realtime', label: 'Real-time', description: 'Notify me immediately' },
+    { value: 'daily',    label: 'Daily digest' },
+    { value: 'off',      label: 'Off', disabled: true },
+  ]}
+/>
+```
+
+## With the Form API
+
+Bind with `field` (its `onChange` takes the value directly):
+
+```tsx
+<RadioGroup label="Plan" options={PLANS} {...form.field('plan', { required: 'Pick a plan' })} />
+```
+
+## Layout & label side
+
+```tsx
+<RadioGroup layout="horizontal" options={DENSITY} … />          {/* options in a row */}
+<RadioGroup labelPosition="left" options={OPTS} … />            {/* label left of the dot */}
+<RadioGroup size="lg" options={OPTS} … />                       {/* sm | md | lg */}
+<RadioGroup required errorMessage="Please choose" value={undefined} options={OPTS} … />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>options</td><td style={td(true)}>{'{ value, label, description?, disabled? }[]'}</td><td style={td(true)}>—</td><td style={td(false)}>The radio options.</td></tr>
+    <tr><td style={td0}>value / defaultValue</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Controlled / uncontrolled selection.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(value) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires with the selected value.</td></tr>
+    <tr><td style={td0}>layout</td><td style={td(true)}>'vertical' | 'horizontal'</td><td style={td(true)}>'vertical'</td><td style={td(false)}>Stack or row.</td></tr>
+    <tr><td style={td0}>labelPosition</td><td style={td(true)}>'right' | 'left'</td><td style={td(true)}>'right'</td><td style={td(false)}>Label side of each dot.</td></tr>
+    <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md' | 'lg'</td><td style={td(true)}>'md'</td><td style={td(false)}>Dot + text size.</td></tr>
+    <tr><td style={td0}>label / helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Group label / tooltip / validation.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dim the whole group.</td></tr>
+    <tr><td style={td0}>name / className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Native form name / root classes.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → RadioGroup** stories.

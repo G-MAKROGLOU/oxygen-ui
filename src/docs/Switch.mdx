@@ -1,0 +1,71 @@
+{/* src/docs/Switch.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/Switch/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Switch
+
+An on/off toggle on Radix Switch. Two labelling modes (use either or both): a
+**central `label`** positioned by `layout`, and **per-state `offLabel` /
+`onLabel`** flanking the track, each emphasised when its state is active.
+
+## Mental model
+
+Works controlled (`checked` + `onChange`) or uncontrolled (`defaultChecked`).
+`onChange` reports `{ target: { checked, name } }`. Set `name` for native form
+serialisation (Radix emits a hidden input).
+
+## Quick start
+
+```tsx
+import { Switch } from '@geomak/ui'
+
+const [on, setOn] = useState(false)
+
+<Switch label="Email notifications" checked={on} onChange={({ target }) => setOn(target.checked)} />
+```
+
+## With the Form API
+
+Bind with `fieldChecked`:
+
+```tsx
+<Switch label="Subscribe" {...form.fieldChecked('subscribe')} />
+```
+
+## Per-state labels & icons
+
+```tsx
+{/* "Monthly ▮ Yearly" pattern — each side highlights when active */}
+<Switch offLabel="Monthly" onLabel="Yearly" checked={yearly} onChange={…} />
+
+{/* Thumb icons for the two states */}
+<Switch checkedIcon={<Check />} uncheckedIcon={<Cross />} checked={on} onChange={…} />
+
+{/* Validation */}
+<Switch label="Accept terms" required errorMessage="You must enable this" … />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>checked / defaultChecked</td><td style={td(true)}>boolean</td><td style={td(true)}>—/false</td><td style={td(false)}>Controlled / uncontrolled state.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { checked, name } }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Read <code>target.checked</code>.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Central field label (positioned by layout).</td></tr>
+    <tr><td style={td0}>offLabel / onLabel</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Labels flanking the track, active-state emphasised.</td></tr>
+    <tr><td style={td0}>checkedIcon / uncheckedIcon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Thumb icons per state.</td></tr>
+    <tr><td style={td0}>layout</td><td style={td(true)}>'horizontal' | 'vertical'</td><td style={td(true)}>'horizontal'</td><td style={td(false)}>Label placement.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>name</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Native form field (hidden input).</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → Switch** stories.

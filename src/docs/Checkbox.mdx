@@ -1,0 +1,76 @@
+{/* src/docs/Checkbox.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/Checkbox/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Checkbox
+
+An accessible checkbox on Radix Checkbox: keyboard activation, `role="checkbox"`,
+and a check mark that pops in with a spring. Supports a secondary `description`,
+a `helperText` tooltip, left/right label placement, and the shared error
+treatment.
+
+## Mental model
+
+Controlled with a **boolean**. `onChange` reports an event-like object:
+`onChange={({ target }) => set(target.checked)}`. The label, optional
+`description` (a second line, like RadioGroup options), and error all render
+inside the shared field shell.
+
+## Quick start
+
+```tsx
+import { Checkbox } from '@geomak/ui'
+
+const [agree, setAgree] = useState(false)
+
+<Checkbox
+  htmlFor="agree"
+  label="I agree to the terms"
+  description="You can revoke consent any time in settings."
+  checked={agree}
+  onChange={({ target }) => setAgree(target.checked)}
+/>
+```
+
+## With the Form API
+
+Bind with `fieldChecked` (it reads `target.checked`):
+
+```tsx
+<Checkbox label="Accept terms" {...form.fieldChecked('accept', { required: 'You must accept' })} />
+```
+
+## Label placement & states
+
+```tsx
+<Checkbox label="Enabled" labelPosition="left" description="Box sits to the right." … />
+<Checkbox label="Stacked" layout="vertical" … />          {/* box + label stacked */}
+<Checkbox label="Accept" errorMessage="Required" checked={false} … />
+<Checkbox label="Locked" disabled checked … />
+<Checkbox label="Notify" helperText="We email about account activity." … />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>checked</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Controlled checked state.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { checked } }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Read <code>target.checked</code>.</td></tr>
+    <tr><td style={td0}>label / description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Primary label + optional secondary line.</td></tr>
+    <tr><td style={td0}>layout</td><td style={td(true)}>'horizontal' | 'vertical'</td><td style={td(true)}>'horizontal'</td><td style={td(false)}>Box + label on a row or stacked.</td></tr>
+    <tr><td style={td0}>labelPosition</td><td style={td(true)}>'right' | 'left'</td><td style={td(true)}>'right'</td><td style={td(false)}>Which side of the box the label sits.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation (red box + aria-invalid).</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>name / htmlFor</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Form name / id + label link.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Merged onto the root.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → Checkbox** stories.
