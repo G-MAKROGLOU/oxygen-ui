@@ -1,0 +1,76 @@
+{/* src/docs/Card.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/Card/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Card
+
+A surface container with optional header, media, body, and footer sections.
+
+## Mental model
+
+`Card` is **compositional**. The root is a bordered surface; compose the inside
+with `Card.Media` (full-bleed visual), `Card.Header` (title / subtitle / avatar /
+trailing action), `Card.Body`, and `Card.Footer` (divided action row). Those
+sections bring their own padding, so leave the root `padding="none"` (default)
+when using them — set `padding` only for a quick flat card. `interactive` turns
+the whole surface into a hover-lifting button (with `onClick`, it's
+keyboard-activatable); `flush` drops the border + shadow.
+
+## Composed
+
+```tsx
+import { Card } from '@geomak/ui'
+
+<Card>
+  <Card.Media><img src={cover} alt="" /></Card.Media>
+  <Card.Header title="Aurora" subtitle="Bulk carrier" action={<Badge tone="success">At sea</Badge>} />
+  <Card.Body>Off the North Sea, en route to Rotterdam.</Card.Body>
+  <Card.Footer>
+    <Button content="Track" size="sm" />
+  </Card.Footer>
+</Card>
+```
+
+## Interactive & flat
+
+```tsx
+<Card interactive onClick={open} padding="md">Whole-surface button</Card>
+<Card flush padding="md">Borderless surface</Card>
+```
+
+## API reference
+
+### `<Card>`
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>interactive</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Hover lift + button semantics.</td></tr>
+    <tr><td style={td0}>onClick</td><td style={td(true)}>MouseEventHandler</td><td style={td(true)}>—</td><td style={td(false)}>Activates on click / Enter / Space when interactive.</td></tr>
+    <tr><td style={td0}>padding</td><td style={td(true)}>'none'|'sm'|'md'|'lg'</td><td style={td(true)}>'none'</td><td style={td(false)}>Root padding (leave none with sections).</td></tr>
+    <tr><td style={td0}>flush</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Drop border + shadow.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+  </tbody>
+</table>
+
+### Sections
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Component</th><th style={th}>Key props</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>Card.Media</td><td style={td(false)}>Full-bleed visual; child {'<img>'} is sized to fill.</td></tr>
+    <tr><td style={td0}>Card.Header</td><td style={td(false)}><code>title</code>, <code>subtitle</code>, <code>avatar</code> (leading), <code>action</code> (trailing), <code>children</code>.</td></tr>
+    <tr><td style={td0}>Card.Body</td><td style={td(false)}>Padded content region.</td></tr>
+    <tr><td style={td0}>Card.Footer</td><td style={td(false)}>Action row; <code>noDivider</code> drops the top border.</td></tr>
+  </tbody>
+</table>
+
+For a horizontal row of cards, see **Data Display → CardCarousel**.
+
+See the **Data Display → Card** stories.

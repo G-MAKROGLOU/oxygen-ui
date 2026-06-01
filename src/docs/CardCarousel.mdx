@@ -1,0 +1,53 @@
+{/* src/docs/CardCarousel.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/CardCarousel/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# CardCarousel
+
+A horizontal, scroll-snap carousel for cards — native scrolling with optional
+arrows and position dots.
+
+## Mental model
+
+Native CSS scroll-snap drives it: trackpad, touch, and wheel all work out of the
+box. Each child becomes a snap target sized to `itemWidth`. Arrows scroll by one
+slide and auto-disable at the ends; dots reflect and jump to the active slide.
+The scrollbar is hidden but scrolling stays fully functional.
+
+## Quick start
+
+```tsx
+import { CardCarousel, Card } from '@geomak/ui'
+
+<CardCarousel itemWidth={280} showDots>
+  {vessels.map((v) => (
+    <Card key={v.id}>
+      <Card.Header title={v.name} subtitle={v.type} />
+      <Card.Body>{v.summary}</Card.Body>
+    </Card>
+  ))}
+</CardCarousel>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Slides (typically Cards).</td></tr>
+    <tr><td style={td0}>itemWidth</td><td style={td(true)}>number | string</td><td style={td(true)}>280</td><td style={td(false)}>Slide width (number → px).</td></tr>
+    <tr><td style={td0}>gap</td><td style={td(true)}>number</td><td style={td(true)}>16</td><td style={td(false)}>Gap between slides (px).</td></tr>
+    <tr><td style={td0}>showArrows</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Prev / next buttons.</td></tr>
+    <tr><td style={td0}>showDots</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Position dots.</td></tr>
+    <tr><td style={td0}>aria-label</td><td style={td(true)}>string</td><td style={td(true)}>'Carousel'</td><td style={td(false)}>Region landmark name.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+  </tbody>
+</table>
+
+See the **Data Display → CardCarousel** stories.

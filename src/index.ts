@@ -112,6 +112,12 @@ export type { BadgeProps, BadgeTone, BadgeVariant, BadgeSize } from './component
 export { default as Kbd } from './components/core/Kbd'
 export type { KbdProps, KbdSize } from './components/core/Kbd'
 
+export { default as Card } from './components/core/Card'
+export type { CardProps, CardMediaProps, CardHeaderProps, CardBodyProps, CardFooterProps } from './components/core/Card'
+
+export { default as CardCarousel } from './components/core/CardCarousel'
+export type { CardCarouselProps } from './components/core/CardCarousel'
+
 export {
     NotificationProvider,
     useNotification,
