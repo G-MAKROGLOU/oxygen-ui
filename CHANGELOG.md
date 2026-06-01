@@ -1,3 +1,10 @@
+# [6.11.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.10.0...v6.11.0) (2026-06-01)
+
+
+### Features
+
+* **calendar:** month-grid calendar component ([ae2fdd6](https://github.com/G-MAKROGLOU/oxygen-ui/commit/ae2fdd655f2bf60658f22e7056c388cc6321042d))
+
 # [6.10.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.9.0...v6.10.0) (2026-06-01)
 
 
