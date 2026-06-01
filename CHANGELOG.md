@@ -1,3 +1,10 @@
+# [6.10.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.9.0...v6.10.0) (2026-06-01)
+
+
+### Features
+
+* **popconfirm:** inline confirmation popover ([7c7a703](https://github.com/G-MAKROGLOU/oxygen-ui/commit/7c7a7032fe3a8dbc9f7be5e129dcc0b19f666605))
+
 # [6.9.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.8.0...v6.9.0) (2026-06-01)
 
 
