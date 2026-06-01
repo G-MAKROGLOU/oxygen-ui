@@ -1,3 +1,10 @@
+# [6.5.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.4.0...v6.5.0) (2026-06-01)
+
+
+### Features
+
+* **badge:** status / count / overlay indicator ([ff98738](https://github.com/G-MAKROGLOU/oxygen-ui/commit/ff98738e874785336e07fce83a4f7ada840bcebc))
+
 # [6.4.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.3.0...v6.4.0) (2026-06-01)
 
 
