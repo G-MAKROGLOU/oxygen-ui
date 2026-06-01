@@ -1,0 +1,81 @@
+{/* src/docs/AutoComplete.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/AutoComplete/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# AutoComplete
+
+A text input with a suggestions list. Works in two modes: **static** (filters a
+provided `items` array as the user types) or **async** (resolves suggestions via
+`onSearch`, debounced, with a loading state).
+
+## Mental model
+
+The input manages its own text internally; you react to a chosen suggestion via
+`onItemClick(value)`. Items are `{ key, value, label, icon? }`. Provide `items`
+for client-side filtering, **or** `onSearch` for a server lookup (the two are
+mutually exclusive). It is not a controlled text field, so there's no
+`value`/`onChange` pair.
+
+## Static (client-side filter)
+
+```tsx
+import { AutoComplete } from '@geomak/ui'
+
+<AutoComplete
+  label="Vessel"
+  placeholder="Search vessels…"
+  items={vessels.map((v) => ({ key: v.imo, value: v.imo, label: v.name }))}
+  onItemClick={(imo) => selectVessel(imo)}
+/>
+```
+
+## Async (server lookup)
+
+```tsx
+<AutoComplete
+  label="Port"
+  debounce={300}
+  onSearch={async (term) => {
+    const res = await fetch(`/api/ports?q=${term}`)
+    const data = await res.json()
+    return data.map((p) => ({ key: p.unlocode, value: p.unlocode, label: p.name }))
+  }}
+  onItemClick={(code) => setPort(code)}
+  loadingText="Searching…"
+  emptyText="No matching ports"
+/>
+```
+
+## With the Form API
+
+Store the picked value yourself via `onItemClick`:
+
+```tsx
+<AutoComplete items={items} onItemClick={(v) => form.setValue('vessel', v)} errorMessage={form.errors.vessel} />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>items</td><td style={td(true)}>{'{ key, value, label, icon? }[]'}</td><td style={td(true)}>—</td><td style={td(false)}>Static list (filtered on type). Mutually exclusive with onSearch.</td></tr>
+    <tr><td style={td0}>onSearch</td><td style={td(true)}>{'(term) => Promise<Item[]>'}</td><td style={td(true)}>—</td><td style={td(false)}>Async resolver. Replaces items.</td></tr>
+    <tr><td style={td0}>debounce</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>ms before onSearch fires.</td></tr>
+    <tr><td style={td0}>onItemClick</td><td style={td(true)}>{'(value) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires with the selected item's value.</td></tr>
+    <tr><td style={td0}>emptyText / loadingText</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Empty + loading messages.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Leading icon.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'vertical' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>placeholder / name / htmlFor / className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Placeholder / form name / id / classes.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → AutoComplete** stories for static + async.

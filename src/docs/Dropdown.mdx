@@ -1,0 +1,79 @@
+{/* src/docs/Dropdown.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/Dropdown/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Dropdown
+
+Single- or multi-select dropdown on Radix Popover, with an optional in-panel
+search. Selected values render as removable tag chips; in multi-select the
+trigger stays a fixed size and collapses overflow into a "+N more" chip.
+
+## Mental model
+
+Driven by an `items` array (`{ key, label, icon? }`). The value is the selected
+`key` in single mode, or an **array of keys** in multi mode (`isMultiselect`).
+`onChange` reports `{ target: { value, id, name } }` (form-handler shaped), so
+read `e.target.value`. Pickers default to a fixed trigger width: pass
+`style={{ width: '100%' }}` to fill a form column.
+
+## Quick start
+
+```tsx
+import { Dropdown } from '@geomak/ui'
+
+const [team, setTeam] = useState('')
+
+<Dropdown
+  label="Team"
+  placeholder="Pick a team"
+  items={[{ key: 'eng', label: 'Engineering' }, { key: 'design', label: 'Design' }]}
+  value={team}
+  onChange={(e) => setTeam(e.target.value)}
+/>
+```
+
+## With the Form API
+
+Bind with `fieldTarget`:
+
+```tsx
+<Dropdown label="Team" items={teams} style={{ width: '100%' }}
+  {...form.fieldTarget('team', { required: 'Choose a team' })} />
+```
+
+## Multi-select & search
+
+```tsx
+{/* value is an array of keys; tags overflow into "+N more" */}
+<Dropdown isMultiselect label="Fuels" items={fuels} value={selected} onChange={(e) => setSelected(e.target.value)} />
+
+<Dropdown hasSearch={false} … />          {/* hide the in-panel search box */}
+<Dropdown layout="horizontal" … />        {/* label beside the trigger */}
+<Dropdown errorMessage="Required" required … />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>items</td><td style={td(true)}>{'{ key, label, icon? }[]'}</td><td style={td(true)}>—</td><td style={td(false)}>The selectable items.</td></tr>
+    <tr><td style={td0}>value</td><td style={td(true)}>key | key[]</td><td style={td(true)}>—</td><td style={td(false)}>Selected key (single) or keys (multi).</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { value } }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Read <code>e.target.value</code>.</td></tr>
+    <tr><td style={td0}>isMultiselect</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Multi-select (value becomes an array).</td></tr>
+    <tr><td style={td0}>hasSearch</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Show the in-panel search box.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'vertical' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>placeholder / name / htmlFor</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Placeholder / form name / id link.</td></tr>
+    <tr><td style={td0}>style / className</td><td style={td(true)}>CSSProperties / string</td><td style={td(true)}>—</td><td style={td(false)}>Trigger width (<code>{'{ width }'}</code>) / root classes.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → Dropdown** stories for multi-select + overflow.

@@ -1,0 +1,78 @@
+{/* src/docs/TreeSelect.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Inputs/TreeSelect/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# TreeSelect
+
+A hierarchical single-select on Radix Popover: pick one node from a nested tree,
+with full keyboard navigation (arrows expand/collapse + move, Enter selects).
+
+## Mental model
+
+Driven by a nested `items` array (`{ key, label, icon?, disabled?, children? }`).
+A node with `children` is a branch; leaves are selectable. The value is the
+selected `key`. `onChange` reports `{ target: { value, id, name } }` (form-handler
+shaped). `parentsSelectable` controls whether branches can be picked or only
+expand/collapse.
+
+## Quick start
+
+```tsx
+import { TreeSelect } from '@geomak/ui'
+
+const [region, setRegion] = useState(null)
+
+<TreeSelect
+  label="Region"
+  items={[
+    { key: 'eu', label: 'Europe', children: [
+      { key: 'no', label: 'North Sea' },
+      { key: 'med', label: 'Mediterranean' },
+    ]},
+    { key: 'as', label: 'Asia', children: [{ key: 'sg', label: 'Singapore Strait' }] },
+  ]}
+  value={region}
+  onChange={(e) => setRegion(e.target.value)}
+/>
+```
+
+## With the Form API
+
+Bind with `fieldTarget`:
+
+```tsx
+<TreeSelect label="Region" items={tree} {...form.fieldTarget('region', { required: true })} />
+```
+
+## Options
+
+```tsx
+<TreeSelect parentsSelectable={false} … />       {/* branches only expand, leaves select */}
+<TreeSelect defaultExpandedKeys={['eu']} … />    {/* open these branches initially */}
+<TreeSelect layout="horizontal" required errorMessage="Required" … />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>items</td><td style={td(true)}>{'{ key, label, icon?, disabled?, children? }[]'}</td><td style={td(true)}>—</td><td style={td(false)}>Nested tree data.</td></tr>
+    <tr><td style={td0}>value</td><td style={td(true)}>key | null</td><td style={td(true)}>—</td><td style={td(false)}>Selected node key.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { value } }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Read <code>e.target.value</code>.</td></tr>
+    <tr><td style={td0}>parentsSelectable</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Can branch nodes be selected.</td></tr>
+    <tr><td style={td0}>defaultExpandedKeys</td><td style={td(true)}>(string | number)[]</td><td style={td(true)}>[]</td><td style={td(false)}>Branches expanded on first render.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'horizontal' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>placeholder / name / htmlFor / style</td><td style={td(true)}>various</td><td style={td(true)}>—</td><td style={td(false)}>Placeholder / form name / id / trigger width.</td></tr>
+  </tbody>
+</table>
+
+See the **Inputs → TreeSelect** stories.
