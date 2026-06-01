@@ -1,0 +1,91 @@
+{/* src/docs/Accordion.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/Accordion/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Accordion
+
+Vertically stacked, collapsible panels on Radix Accordion, with animated height
+and full keyboard support.
+
+## Mental model
+
+`Accordion` is **compositional**: the root holds `Accordion.Item` children, each
+with a unique `value` and a `title` (the always-visible trigger). `type="single"`
+(default) keeps one panel open at a time — `collapsible` lets that one close;
+`type="multiple"` allows any number open. Open state is uncontrolled via
+`defaultValue` or controlled via `value` + `onValueChange`. Radix supplies the
+height var that the `accordion-down` / `accordion-up` keyframes animate.
+
+## Quick start
+
+```tsx
+import { Accordion } from '@geomak/ui'
+
+<Accordion type="single" defaultValue="a" collapsible>
+  <Accordion.Item value="a" title="What is included?">
+    Everything in Starter, plus unlimited projects and priority support.
+  </Accordion.Item>
+  <Accordion.Item value="b" title="Can I cancel anytime?">
+    Yes — cancel from billing settings, no questions asked.
+  </Accordion.Item>
+</Accordion>
+```
+
+## Variants & multiple
+
+```tsx
+<Accordion variant="contained">…</Accordion>          {/* one card, divider lines */}
+
+<Accordion type="multiple" defaultValue={['a', 'c']}>  {/* many open at once */}
+  <Accordion.Item value="a" icon={<BoltIcon />} title="Performance">…</Accordion.Item>
+  <Accordion.Item value="b" title="Security">…</Accordion.Item>
+  <Accordion.Item value="c" title="Support" disabled>…</Accordion.Item>
+</Accordion>
+```
+
+## Controlled
+
+```tsx
+const [open, setOpen] = useState('a')
+<Accordion type="single" value={open} onValueChange={setOpen}>…</Accordion>
+```
+
+## API reference
+
+### `<Accordion>`
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>type</td><td style={td(true)}>'single' | 'multiple'</td><td style={td(true)}>'single'</td><td style={td(false)}>One open panel vs many.</td></tr>
+    <tr><td style={td0}>defaultValue / value</td><td style={td(true)}>string | string[]</td><td style={td(true)}>—</td><td style={td(false)}>Uncontrolled / controlled open set.</td></tr>
+    <tr><td style={td0}>onValueChange</td><td style={td(true)}>{'(v: string | string[]) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Open-set change handler.</td></tr>
+    <tr><td style={td0}>collapsible</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>(single) Allow the open item to close.</td></tr>
+    <tr><td style={td0}>variant</td><td style={td(true)}>'separated' | 'contained'</td><td style={td(true)}>'separated'</td><td style={td(false)}>Bordered cards vs one divided surface.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+  </tbody>
+</table>
+
+### `<Accordion.Item>`
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>value</td><td style={td(true)}>string</td><td style={td(false)}>Unique id for open state (required).</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Trigger label.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Optional leading icon.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Panel body.</td></tr>
+    <tr><td style={td0}>disabled</td><td style={td(true)}>boolean</td><td style={td(false)}>Non-interactive, dimmed.</td></tr>
+  </tbody>
+</table>
+
+Keyboard: ↑/↓ move between headers, Home/End jump to first/last, Enter/Space
+toggles. Honours `prefers-reduced-motion`.
+
+See the **Data Display → Accordion** stories.

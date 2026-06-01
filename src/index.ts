@@ -100,6 +100,9 @@ export type {
 export { default as Tree } from './components/core/Tree'
 export type { TreeProps, TreeNode, TreeItemClickPayload } from './components/core/Tree'
 
+export { default as Accordion } from './components/core/Accordion'
+export type { AccordionProps, AccordionItemProps } from './components/core/Accordion'
+
 export {
     NotificationProvider,
     useNotification,
