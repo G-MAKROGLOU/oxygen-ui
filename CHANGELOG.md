@@ -1,3 +1,10 @@
+## [6.21.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.21.0...v6.21.1) (2026-06-02)
+
+
+### Bug Fixes
+
+* **stepper:** connector before the last step no longer has a leading gap ([84095a0](https://github.com/G-MAKROGLOU/oxygen-ui/commit/84095a0f28b7fc119d1d765b46cd6bc5671e8280))
+
 # [6.21.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.20.0...v6.21.0) (2026-06-02)
 
 
