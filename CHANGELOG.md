@@ -1,3 +1,10 @@
+## [6.17.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.17.1...v6.17.2) (2026-06-02)
+
+
+### Bug Fixes
+
+* **textinput:** honor deprecated `id` prop instead of dropping it ([cdf49df](https://github.com/G-MAKROGLOU/oxygen-ui/commit/cdf49df9fb481f55ac6e12a106f768ba6831c663))
+
 ## [6.17.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.17.0...v6.17.1) (2026-06-02)
 
 
