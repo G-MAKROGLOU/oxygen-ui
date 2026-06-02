@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Avatar from './Avatar'
 import IconButton from './IconButton'
 import { fieldShell } from '../inputs/_field'
@@ -137,7 +137,6 @@ export default function Chat({
     const atBottomRef = useRef(true)
     const [showJump, setShowJump] = useState(false)
     const [draft, setDraft] = useState('')
-    const taRef = useRef<HTMLTextAreaElement>(null)
 
     const hasHeader = title != null || subtitle != null || avatar != null || headerActions != null
     const isTyping = typingNames.length > 0
@@ -165,14 +164,6 @@ export default function Chat({
     }, [messages.length, isTyping])
 
     useEffect(() => { scrollToBottom(false) }, [scrollToBottom]) // start at the latest
-
-    // Auto-grow the composer between 1 and ~5 rows.
-    useLayoutEffect(() => {
-        const ta = taRef.current
-        if (!ta) return
-        ta.style.height = 'auto'
-        ta.style.height = `${Math.min(ta.scrollHeight, 120)}px`
-    }, [draft])
 
     const send = () => {
         const text = draft.trim()
@@ -285,15 +276,16 @@ export default function Chat({
             {!hideComposer && (
                 <div className="flex flex-shrink-0 items-end gap-2 border-t border-border p-3">
                     <textarea
-                        ref={taRef}
-                        rows={1}
+                        rows={2}
                         value={draft}
                         disabled={disabled}
                         placeholder={placeholder}
                         onChange={(e) => setDraft(e.target.value)}
                         onKeyDown={onKeyDown}
                         aria-label="Message"
-                        className={`${fieldShell({ size: 'md', hasError: false, disabled, sized: false })} max-h-[120px] flex-1 resize-none px-3 py-2 leading-snug`}
+                        // Fixed height (no auto-grow); long messages scroll with the
+                        // global styled scrollbar.
+                        className={`${fieldShell({ size: 'md', hasError: false, disabled, sized: false })} h-[4.5rem] flex-1 resize-none px-3 py-2 leading-snug`}
                     />
                     <IconButton
                         type="primary"

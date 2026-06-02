@@ -1,0 +1,44 @@
+// ── Scrollbars ────────────────────────────────────────────────────────────────
+// One consistent scrollbar across the whole design system: thin, token-tinted,
+// rounded, no OS increment/decrement buttons. Tinted from the semantic border
+// token so it adapts to light / dark automatically.
+//
+// Opt OUT on a specific element with the `.hidden-scrollbar` utility
+// (defined in _animations.scss), which wins on specificity.
+
+@layer base {
+    * {
+        // Firefox
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-border-strong) transparent;
+    }
+
+    // WebKit / Chromium / Safari
+    *::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+    *::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    *::-webkit-scrollbar-thumb {
+        background-color: var(--color-border-strong);
+        // The transparent border + padding-box clip makes the visible thumb
+        // read as a slim ~6px pill inset from the track edge.
+        border: 2px solid transparent;
+        background-clip: padding-box;
+        border-radius: 9999px;
+    }
+    *::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-foreground-muted);
+    }
+    // Kill the up/down (and left/right) buttons — the dated OS look.
+    *::-webkit-scrollbar-button {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+    *::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+}

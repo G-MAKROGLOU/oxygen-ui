@@ -16,6 +16,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 @use 'tokens';
 @use 'animations';
+@use 'scrollbar';
 
 // Tailwind — processed by PostCSS after Sass compilation
 @tailwind base;
