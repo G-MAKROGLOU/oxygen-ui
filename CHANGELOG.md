@@ -1,3 +1,10 @@
+## [6.24.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.24.0...v6.24.1) (2026-06-02)
+
+
+### Bug Fixes
+
+* **secure-layout:** run canAccess once, not on every parent render ([568484a](https://github.com/G-MAKROGLOU/oxygen-ui/commit/568484a62760951eff42d85c71b6912927d8249c))
+
 # [6.24.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.23.0...v6.24.0) (2026-06-02)
 
 
