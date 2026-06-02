@@ -1,0 +1,48 @@
+import React from 'react'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
+import Scheduler, { type SchedulerEvent } from './Scheduler'
+
+const monthEvents: SchedulerEvent[] = [
+    { id: 1, title: 'Kickoff', start: new Date(2026, 5, 10, 9, 0), end: new Date(2026, 5, 10, 10, 0) },
+    { id: 2, title: 'Review', start: new Date(2026, 5, 10, 14, 0), end: new Date(2026, 5, 10, 15, 0) },
+]
+
+describe('Scheduler', () => {
+    it('renders the month view with weekday headers and the title', () => {
+        render(<Scheduler events={monthEvents} defaultDate={new Date(2026, 5, 15)} />)
+        expect(screen.getByText('June 2026')).toBeInTheDocument()
+        expect(screen.getByText('Sun')).toBeInTheDocument()
+        expect(screen.getByText('Sat')).toBeInTheDocument()
+        expect(screen.getByText('Kickoff')).toBeInTheDocument()
+    })
+
+    it('pages to the next month when Next is clicked', () => {
+        render(<Scheduler events={[]} defaultDate={new Date(2026, 5, 15)} />)
+        fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+        expect(screen.getByText('July 2026')).toBeInTheDocument()
+    })
+
+    it('switches to the week view', () => {
+        render(<Scheduler events={monthEvents} defaultDate={new Date(2026, 5, 10)} />)
+        fireEvent.click(screen.getByText('Week'))
+        // week label uses an en-dash range, not "June 2026"
+        expect(screen.queryByText('June 2026')).toBeNull()
+        expect(screen.getByText(/Jun/)).toBeInTheDocument()
+    })
+
+    it('fires onSelectEvent when an event chip is clicked', () => {
+        const onSelectEvent = vi.fn()
+        render(<Scheduler events={monthEvents} defaultDate={new Date(2026, 5, 15)} onSelectEvent={onSelectEvent} />)
+        fireEvent.click(screen.getByText('Kickoff'))
+        expect(onSelectEvent).toHaveBeenCalledTimes(1)
+        expect(onSelectEvent).toHaveBeenCalledWith(expect.objectContaining({ title: 'Kickoff' }))
+    })
+
+    it('shows the New event button only when onNewEvent is given', () => {
+        const { rerender } = render(<Scheduler events={[]} defaultDate={new Date(2026, 5, 15)} />)
+        expect(screen.queryByRole('button', { name: /New event/ })).toBeNull()
+        rerender(<Scheduler events={[]} defaultDate={new Date(2026, 5, 15)} onNewEvent={() => {}} />)
+        expect(screen.getByRole('button', { name: /New event/ })).toBeInTheDocument()
+    })
+})

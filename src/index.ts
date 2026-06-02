@@ -142,6 +142,9 @@ export type { LogoutTimerProps } from './components/core/LogoutTimer'
 export { default as Calendar } from './components/core/Calendar'
 export type { CalendarProps, CalendarEvent } from './components/core/Calendar'
 
+export { default as Scheduler } from './components/core/Scheduler'
+export type { SchedulerProps, SchedulerEvent, SchedulerView, SchedulerRange } from './components/core/Scheduler'
+
 export { default as Cart } from './components/core/Cart'
 export type { CartProps, CartLineItem, CartSummaryRow } from './components/core/Cart'
 
