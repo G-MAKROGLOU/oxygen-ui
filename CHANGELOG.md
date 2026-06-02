@@ -1,3 +1,10 @@
+## [6.29.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.29.0...v6.29.1) (2026-06-02)
+
+
+### Bug Fixes
+
+* **table:** soften pagination focus to a halo, not a solid blue band ([6648c41](https://github.com/G-MAKROGLOU/oxygen-ui/commit/6648c4104babe8399f33f24e740bda242f7fcb36))
+
 # [6.29.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.28.0...v6.29.0) (2026-06-02)
 
 
