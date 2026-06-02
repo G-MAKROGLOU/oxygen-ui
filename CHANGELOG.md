@@ -1,3 +1,10 @@
+# [6.17.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.16.0...v6.17.0) (2026-06-02)
+
+
+### Features
+
+* **ecommerce:** cart context API, badge button, empty state, checkout page ([a3a4b70](https://github.com/G-MAKROGLOU/oxygen-ui/commit/a3a4b7087715855a6b59cb8c756c81ebd8640456))
+
 # [6.16.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.15.0...v6.16.0) (2026-06-02)
 
 
