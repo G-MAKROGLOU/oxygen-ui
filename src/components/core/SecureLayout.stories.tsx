@@ -46,6 +46,34 @@ export const AsyncCheck: Story = {
     ),
 }
 
+export const TokenLoginBootstrap: Story = {
+    name: 'JWT bootstrap (VesOPS-style)',
+    render: () => {
+        const [log, setLog] = useState<string[]>([])
+        const add = (m: string) => setLog((l) => [...l, m])
+        return (
+            <div className="flex flex-col gap-3">
+                <SecureLayout
+                    // The "dumb" path: a JWT-only gate that bootstraps app state.
+                    canAccess={async () => {
+                        add('checking jwt → calling /token-login…')
+                        await new Promise((r) => setTimeout(r, 1100))
+                        add('token-login ok → hydrated app state')
+                        return true
+                    }}
+                    onGranted={() => add('onGranted → navigate(/dashboard)')}
+                    onDeny={() => add('onDeny → navigate(/logout)')}
+                >
+                    {Protected}
+                </SecureLayout>
+                <pre className="rounded-lg border border-border bg-surface-raised p-3 text-[11px] leading-relaxed text-foreground-secondary">
+                    {log.map((l, i) => `${i + 1}. ${l}`).join('\n') || 'waiting…'}
+                </pre>
+            </div>
+        )
+    },
+}
+
 export const ToggleAccess: Story = {
     name: 'Live role toggle',
     render: () => {

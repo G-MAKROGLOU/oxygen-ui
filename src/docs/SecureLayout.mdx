@@ -31,11 +31,45 @@ are evaluated in order and **all** must pass:
 3. **Permissions (PBAC)** — `requiredPermissions` against `permissions` (any, or all with `requireAllPermissions`).
 4. **`canAccess()`** — the final say; may be async.
 
-## Quick start
+Every prop except `children` is optional — use as much or as little as you need.
+The two ends of the spectrum:
+
+## Simple — JWT-only bootstrap (no roles/permissions)
+
+The common case: on load, validate the JWT, hydrate app state from the server,
+then land the user. Everything custom goes in `canAccess`; `onGranted` /
+`onDeny` handle the navigation. Synchronous gates resolve on the first render
+(no spinner flash); `fallback={null}` avoids a panel flashing while you redirect.
 
 ```tsx
 import { SecureLayout } from '@geomak/ui'
 
+<SecureLayout
+  canAccess={async () => {
+    const jwt = localStorage.getItem('jwt')
+    if (!jwt) return false
+    await tokenLogin(jwt)              // validate + hydrate app state
+    return true
+  }}
+  onGranted={() => navigate('/dashboard')}
+  onDeny={() => navigate('/logout')}
+  fallback={null}
+>
+  <AppRoutes />
+</SecureLayout>
+```
+
+Even simpler — gate purely on a token's validity:
+
+```tsx
+<SecureLayout token={jwt} onDeny={() => navigate('/login')}>
+  <App />
+</SecureLayout>
+```
+
+## Full — RBAC + PBAC gate
+
+```tsx
 <SecureLayout
   token={jwt}
   roles={user.roles}            requiredRoles={['admin']}
@@ -58,10 +92,11 @@ import { SecureLayout } from '@geomak/ui'
     <tr><td style={td0}>requireAllRoles</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Require all roles, not just one.</td></tr>
     <tr><td style={td0}>permissions / requiredPermissions</td><td style={td(true)}>string[]</td><td style={td(true)}>—</td><td style={td(false)}>User perms vs. required (PBAC).</td></tr>
     <tr><td style={td0}>requireAllPermissions</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Require all permissions.</td></tr>
-    <tr><td style={td0}>canAccess</td><td style={td(true)}>{'() => boolean | Promise<boolean>'}</td><td style={td(true)}>—</td><td style={td(false)}>Final predicate (may be async).</td></tr>
-    <tr><td style={td0}>loadingFallback</td><td style={td(true)}>ReactNode</td><td style={td(true)}>spinner</td><td style={td(false)}>Shown while checking.</td></tr>
-    <tr><td style={td0}>fallback</td><td style={td(true)}>ReactNode</td><td style={td(true)}>"Access denied" panel</td><td style={td(false)}>Shown when denied.</td></tr>
-    <tr><td style={td0}>onDeny</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired once on denial (e.g. redirect).</td></tr>
+    <tr><td style={td0}>canAccess</td><td style={td(true)}>{'() => boolean | Promise<boolean>'}</td><td style={td(true)}>—</td><td style={td(false)}>Final predicate (may be async). The hook for custom / token-login logic.</td></tr>
+    <tr><td style={td0}>loadingFallback</td><td style={td(true)}>ReactNode</td><td style={td(true)}>spinner</td><td style={td(false)}>Shown while checking. <code>null</code> → render nothing.</td></tr>
+    <tr><td style={td0}>fallback</td><td style={td(true)}>ReactNode</td><td style={td(true)}>"Access denied" panel</td><td style={td(false)}>Shown when denied. <code>null</code> → render nothing (redirect flows).</td></tr>
+    <tr><td style={td0}>onGranted</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired once on grant (e.g. hydrate state, redirect to a landing route).</td></tr>
+    <tr><td style={td0}>onDeny</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired once on denial (e.g. redirect to login/logout).</td></tr>
   </tbody>
 </table>
 
