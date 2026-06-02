@@ -1,4 +1,5 @@
 import React from 'react'
+import { cx } from '../../utils/cx'
 
 export type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning' | 'error' | 'info'
 export type BadgeVariant = 'solid' | 'soft' | 'outline'
@@ -108,12 +109,12 @@ export default function Badge({
     if (!isIndicator) {
         return (
             <span
-                className={[
+                className={cx(
                     'inline-flex items-center font-medium select-none whitespace-nowrap leading-none',
                     SIZE[size],
                     TONE[tone][variant],
                     className,
-                ].filter(Boolean).join(' ')}
+                )}
                 style={style}
             >
                 {icon && <span className="flex h-3.5 w-3.5 items-center justify-center">{icon}</span>}
@@ -125,18 +126,18 @@ export default function Badge({
     // ── Indicator (dot or count) ─────────────────────────────────────────────
     const indicator = dot ? (
         <span
-            className={['inline-block rounded-full', size === 'sm' ? 'h-2 w-2' : 'h-2.5 w-2.5', TONE[tone].dot, className].filter(Boolean).join(' ')}
+            className={cx('inline-block rounded-full', size === 'sm' ? 'h-2 w-2' : 'h-2.5 w-2.5', TONE[tone].dot, className)}
             style={children ? undefined : style}
             aria-hidden={children ? true : undefined}
         />
     ) : (
         <span
-            className={[
+            className={cx(
                 'inline-flex items-center justify-center rounded-full font-semibold leading-none tabular-nums',
                 size === 'sm' ? 'h-4 min-w-4 px-1 text-[10px]' : 'h-[18px] min-w-[18px] px-1.5 text-[11px]',
                 TONE[tone].solid,
                 className,
-            ].filter(Boolean).join(' ')}
+            )}
             style={children ? undefined : style}
         >
             {display}

@@ -9,6 +9,7 @@ import React, {
 } from 'react'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
 import { motion, useReducedMotion } from 'framer-motion'
+import { cx } from '../../utils/cx'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -149,11 +150,11 @@ function Tabs({
                 value={current}
                 onValueChange={select}
                 orientation={orientation}
-                className={[
+                className={cx(
                     'flex min-w-0',
                     orientation === 'vertical' ? 'flex-row gap-4' : 'flex-col gap-3',
                     className,
-                ].filter(Boolean).join(' ')}
+                )}
                 style={style}
             >
                 {children}
@@ -257,7 +258,7 @@ function TabsList({ children, 'aria-label': ariaLabel, className = '' }: TabsLis
     const overflowing = scrollable && (edges.start || edges.end)
 
     return (
-        <div className={['relative flex min-w-0 gap-1', horizontal ? 'flex-row items-stretch' : 'flex-col items-stretch', className].filter(Boolean).join(' ')}>
+        <div className={cx('relative flex min-w-0 gap-1', horizontal ? 'flex-row items-stretch' : 'flex-col items-stretch', className)}>
             {scrollable && edges.start && (
                 <Chevron side="start" orientation={orientation} onClick={() => nudge(-1)} />
             )}
@@ -265,7 +266,7 @@ function TabsList({ children, 'aria-label': ariaLabel, className = '' }: TabsLis
             <TabsPrimitive.List
                 ref={scrollRef}
                 aria-label={ariaLabel}
-                className={[scrollClass, trackClass, 'min-w-0 flex-1'].filter(Boolean).join(' ')}
+                className={cx(scrollClass, trackClass, 'min-w-0 flex-1')}
                 style={maskStyle}
             >
                 {children}
@@ -429,7 +430,7 @@ function TabsTrigger({ value, icon, badge, closeable, onClose, disabled, classNa
         <TabsPrimitive.Trigger
             value={value}
             disabled={disabled}
-            className={[base, sz.trigger, layoutCls, closeable ? 'pr-8' : '', variantCls, className].filter(Boolean).join(' ')}
+            className={cx(base, sz.trigger, layoutCls, closeable ? 'pr-8' : '', variantCls, className)}
         >
             {/* Segmented lifted pill — slides between tabs. */}
             {variant === 'segmented' && isActive && (
@@ -534,7 +535,7 @@ function TabsPanel({ value, keepMounted, className = '', style, children }: Tabs
         <TabsPrimitive.Content
             value={value}
             forceMount={keepMounted || undefined}
-            className={['min-w-0 flex-1 focus:outline-none data-[state=inactive]:hidden', className].filter(Boolean).join(' ')}
+            className={cx('min-w-0 flex-1 focus:outline-none data-[state=inactive]:hidden', className)}
             style={style}
         >
             {children}

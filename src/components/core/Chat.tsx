@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Avatar from './Avatar'
 import IconButton from './IconButton'
 import { fieldShell } from '../inputs/_field'
+import { cx } from '../../utils/cx'
 
 export interface ChatMessage {
     id: string | number
@@ -88,7 +89,7 @@ function ChatSkeleton() {
     return (
         <div className="flex flex-col gap-2" aria-hidden="true">
             {SKELETON_ROWS.map((r, i) => (
-                <div key={i} className={['flex items-end gap-2', r.own ? 'flex-row-reverse' : ''].filter(Boolean).join(' ')}>
+                <div key={i} className={cx('flex items-end gap-2', r.own ? 'flex-row-reverse' : '')}>
                     {!r.own && <span className="h-6 w-6 flex-shrink-0 animate-pulse rounded-full bg-surface" />}
                     <span className="h-8 animate-pulse rounded-2xl bg-surface" style={{ width: r.w }} />
                 </div>
@@ -181,7 +182,7 @@ export default function Chat({
 
     return (
         <div
-            className={['flex flex-col overflow-hidden rounded-xl border border-border bg-surface', className].filter(Boolean).join(' ')}
+            className={cx('flex flex-col overflow-hidden rounded-xl border border-border bg-surface', className)}
             style={{ height, ...style }}
         >
             {hasHeader && (
@@ -213,7 +214,7 @@ export default function Chat({
                             const lastOfGroup = !next || next.authorId !== m.authorId
                             const ts = m.timestamp ? toDate(m.timestamp) : null
                             return (
-                                <div key={m.id} className={['flex items-end gap-2', own ? 'flex-row-reverse' : '', firstOfGroup ? 'mt-2 first:mt-0' : ''].filter(Boolean).join(' ')}>
+                                <div key={m.id} className={cx('flex items-end gap-2', own ? 'flex-row-reverse' : '', firstOfGroup ? 'mt-2 first:mt-0' : '')}>
                                     {/* Avatar gutter (incoming only; one per group, bottom-aligned) */}
                                     {!own && (
                                         <div className="w-7 flex-shrink-0">
@@ -225,13 +226,13 @@ export default function Chat({
                                             <span className="mb-0.5 px-1 text-[11px] font-medium text-foreground-muted">{m.authorName}</span>
                                         )}
                                         <div
-                                            className={[
+                                            className={cx(
                                                 'whitespace-pre-wrap break-words px-3 py-1.5 text-sm leading-snug',
                                                 own
                                                     ? 'rounded-2xl bg-accent text-accent-fg'
                                                     : 'rounded-2xl border border-border bg-surface text-foreground',
                                                 lastOfGroup ? (own ? 'rounded-br-md' : 'rounded-bl-md') : '',
-                                            ].filter(Boolean).join(' ')}
+                                            )}
                                         >
                                             {m.text}
                                         </div>

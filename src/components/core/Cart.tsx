@@ -1,5 +1,6 @@
 import React from 'react'
 import EmptyCart from './EmptyCart'
+import { cx } from '../../utils/cx'
 
 export interface CartLineItem {
     id: string | number
@@ -106,7 +107,7 @@ export default function Cart({
     const total = subtotal + summaryRows.reduce((sum, r) => sum + r.value, 0)
 
     return (
-        <div className={['flex flex-col rounded-xl border border-border bg-surface', className].filter(Boolean).join(' ')} style={style}>
+        <div className={cx('flex flex-col rounded-xl border border-border bg-surface', className)} style={style}>
             {items.length === 0 ? (
                 emptyState ?? <EmptyCart />
             ) : (

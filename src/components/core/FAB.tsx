@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { cx } from '../../utils/cx'
 
 export type FABPosition = 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
 export type FABSize = 'md' | 'lg'
@@ -125,7 +126,7 @@ export default function FAB({
 
     return (
         <div
-            className={[fixed ? 'fixed' : 'absolute', 'z-40 flex flex-col', POS[position], className].filter(Boolean).join(' ')}
+            className={cx(fixed ? 'fixed' : 'absolute', 'z-40 flex flex-col', POS[position], className)}
             style={style}
         >
             {bottom && dial}
@@ -134,13 +135,13 @@ export default function FAB({
                 aria-label={label}
                 aria-expanded={hasDial ? open : undefined}
                 onClick={(e) => (hasDial ? setOpen((o) => !o) : onClick?.(e))}
-                className={[
+                className={cx(
                     'flex items-center justify-center rounded-full shadow-lg transition-[background-color,transform] duration-200',
                     'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
                     SIZE[size],
                     TONE[tone],
                     hasDial && open ? 'rotate-45' : '',
-                ].filter(Boolean).join(' ')}
+                )}
             >
                 <span className="h-6 w-6 inline-flex items-center justify-center">{icon}</span>
             </button>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import { cx } from '../../utils/cx'
 
 export type StepperActiveStatus = 'active' | 'loading' | 'error'
 type StepState = 'pending' | 'active' | 'completed' | 'error' | 'loading'
@@ -161,7 +162,7 @@ export default function Stepper({
 
     if (vertical) {
         return (
-            <ol className={['flex flex-col', className].filter(Boolean).join(' ')}>
+            <ol className={cx('flex flex-col', className)}>
                 {steps.map((step, i) => {
                     const state = stateOf(i)
                     const last = i === steps.length - 1
@@ -180,7 +181,7 @@ export default function Stepper({
     }
 
     return (
-        <ol className={['flex items-start', className].filter(Boolean).join(' ')}>
+        <ol className={cx('flex items-start', className)}>
             {steps.map((step, i) => {
                 const state = stateOf(i)
                 return (

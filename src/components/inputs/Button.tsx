@@ -1,4 +1,5 @@
 import React from 'react'
+import { cx } from '../../utils/cx'
 
 export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'content'> {
     /** Button content (text or nodes). */
@@ -135,14 +136,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
             disabled={disabled || loading}
             type={buttonType}
             style={style}
-            className={[
+            className={cx(
                 'inline-flex items-center justify-center font-medium',
                 'outline-none transition-colors duration-150 select-none',
                 'whitespace-nowrap',
                 SIZE_CLASSES[size],
                 VARIANT_CLASSES[variant],
                 className,
-            ].filter(Boolean).join(' ')}
+            )}
         >
             {loading ? (
                 <svg

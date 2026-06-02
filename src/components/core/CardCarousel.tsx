@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import { cx } from '../../utils/cx'
 
 export type CardCarouselVariant = 'flat' | 'rotating'
 
@@ -136,7 +137,7 @@ function FlatCarousel({
     }
 
     return (
-        <section aria-label={ariaLabel} aria-roledescription="carousel" className={['relative', className].filter(Boolean).join(' ')} style={style}>
+        <section aria-label={ariaLabel} aria-roledescription="carousel" className={cx('relative', className)} style={style}>
             {showArrows && (
                 <button type="button" aria-label="Previous" onClick={() => slideStep(-1)} disabled={atStart} className={`${arrowBtn} left-1`}>
                     <Arrow dir="left" />
@@ -206,7 +207,7 @@ function RotatingCarousel({
         <section
             aria-label={ariaLabel}
             aria-roledescription="carousel"
-            className={['relative', className].filter(Boolean).join(' ')}
+            className={cx('relative', className)}
             style={style}
             onKeyDown={onKeyDown}
         >

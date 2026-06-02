@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import { cx } from '../../utils/cx'
 
 export interface SecureLayoutProps {
     /** Protected content, rendered only once access is granted. */
@@ -233,7 +234,7 @@ export default function SecureLayout({
         // `loadingFallback={null}` → render nothing while checking.
         if (loadingFallback === null) return null
         return (
-            <div className={['flex min-h-[8rem] items-center justify-center', className].filter(Boolean).join(' ')}>
+            <div className={cx('flex min-h-[8rem] items-center justify-center', className)}>
                 {loadingFallback !== undefined ? loadingFallback : <Spinner />}
             </div>
         )

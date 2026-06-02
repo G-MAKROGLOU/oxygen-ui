@@ -2,6 +2,7 @@ import React from 'react'
 import Cart, { type CartSummaryRow } from './Cart'
 import CreditCardForm, { type CreditCardValue } from '../forms/CreditCardForm'
 import { useCart } from './CartProvider'
+import { cx } from '../../utils/cx'
 
 export interface CheckoutProps {
     /** Page heading. Default `'Checkout'`. */
@@ -54,7 +55,7 @@ export default function Checkout({
     const isEmpty = items.length === 0
 
     return (
-        <div className={['mx-auto w-full max-w-5xl', className].filter(Boolean).join(' ')}>
+        <div className={cx('mx-auto w-full max-w-5xl', className)}>
             {title && <h1 className="mb-6 text-2xl font-semibold tracking-tight text-foreground">{title}</h1>}
 
             <div className="grid gap-6 lg:grid-cols-2">

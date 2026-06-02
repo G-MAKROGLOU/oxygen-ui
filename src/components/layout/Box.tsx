@@ -1,4 +1,5 @@
 import React from 'react'
+import { cx } from '../../utils/cx'
 
 // ── Token scales ───────────────────────────────────────────────────────────
 
@@ -138,7 +139,7 @@ export default function Box({
     return (
         <Element
             onClick={onClick}
-            className={[
+            className={cx(
                 padding(p, 'p'), padding(px, 'px'), padding(py, 'py'),
                 padding(pt, 'pt'), padding(pr, 'pr'), padding(pb, 'pb'), padding(pl, 'pl'),
                 margin(m, 'm'), margin(mx, 'mx'), margin(my, 'my'),
@@ -148,7 +149,7 @@ export default function Box({
                 radius ? RADIUS_MAP[radius] : '',
                 SHADOW_MAP[shadow],
                 className,
-            ].filter(Boolean).join(' ')}
+            )}
             style={{
                 width: typeof width === 'number' ? `${width}px` : width,
                 height: typeof height === 'number' ? `${height}px` : height,

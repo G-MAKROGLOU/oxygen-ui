@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from 'react'
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
+import { cx } from '../../utils/cx'
 
 // ── Context (carries the chevron preference down to each item) ──────────────────
 
@@ -67,12 +68,12 @@ function Accordion({
     // Radix types `single` and `multiple` roots differently; this component
     // exposes one ergonomic surface and forwards the right props per mode.
     const common = {
-        className: [
+        className: cx(
             variant === 'contained'
                 ? 'rounded-lg border border-border bg-surface overflow-hidden divide-y divide-border'
                 : 'flex flex-col gap-2',
             className,
-        ].filter(Boolean).join(' '),
+        ),
         style,
     }
 
@@ -135,11 +136,11 @@ function AccordionItem({ value, title, icon, children, disabled, className = '' 
         <AccordionPrimitive.Item
             value={value}
             disabled={disabled}
-            className={[
+            className={cx(
                 variant === 'separated' ? 'rounded-lg border border-border bg-surface overflow-hidden' : '',
                 'data-[disabled]:opacity-60',
                 className,
-            ].filter(Boolean).join(' ')}
+            )}
         >
             <AccordionPrimitive.Header className="m-0">
                 <AccordionPrimitive.Trigger

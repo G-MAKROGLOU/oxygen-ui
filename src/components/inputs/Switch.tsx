@@ -1,6 +1,7 @@
 import React, { useId, useState } from 'react'
 import * as SwitchPrimitive from '@radix-ui/react-switch'
 import { Field } from './_field'
+import { cx } from '../../utils/cx'
 
 export interface SwitchInputProps {
     /** Controlled on/off state. */
@@ -94,11 +95,11 @@ export default function Switch({
     }
 
     const stateLabel = (active: boolean) =>
-        [
+        cx(
             'text-sm select-none transition-colors',
             active ? 'text-foreground font-medium' : 'text-foreground-muted',
             disabled ? 'opacity-50' : 'cursor-pointer',
-        ].filter(Boolean).join(' ')
+        )
 
     return (
         <Field className={className}

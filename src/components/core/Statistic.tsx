@@ -1,4 +1,5 @@
 import React from 'react'
+import { cx } from '../../utils/cx'
 
 export type StatisticSize = 'sm' | 'md' | 'lg'
 export type DeltaDirection = 'up' | 'down' | 'neutral'
@@ -93,7 +94,7 @@ export default function Statistic({
 
     return (
         <div
-            className={['flex gap-3', align === 'center' ? 'flex-col items-center text-center' : 'items-start', className].filter(Boolean).join(' ')}
+            className={cx('flex gap-3', align === 'center' ? 'flex-col items-center text-center' : 'items-start', className)}
             style={style}
         >
             {icon && align === 'left' && (

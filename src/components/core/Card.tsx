@@ -1,4 +1,5 @@
 import React from 'react'
+import { cx } from '../../utils/cx'
 
 type Pad = 'none' | 'sm' | 'md' | 'lg'
 const PAD: Record<Pad, string> = { none: '', sm: 'p-3', md: 'p-5', lg: 'p-6' }
@@ -46,7 +47,7 @@ export interface CardProps {
  * ```
  */
 function Card({ children, interactive, onClick, padding = 'none', flush, className = '', style }: CardProps) {
-    const base = [
+    const base = cx(
         'rounded-xl overflow-hidden bg-surface',
         flush ? '' : 'border border-border shadow-sm',
         PAD[padding],
@@ -55,7 +56,7 @@ function Card({ children, interactive, onClick, padding = 'none', flush, classNa
               'cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent'
             : '',
         className,
-    ].filter(Boolean).join(' ')
+    )
 
     if (interactive && onClick) {
         return (
@@ -91,7 +92,7 @@ export interface CardMediaProps {
     className?: string
 }
 function CardMedia({ children, className = '' }: CardMediaProps) {
-    return <div className={['[&>img]:block [&>img]:w-full [&>img]:object-cover', className].filter(Boolean).join(' ')}>{children}</div>
+    return <div className={cx('[&>img]:block [&>img]:w-full [&>img]:object-cover', className)}>{children}</div>
 }
 
 // ── Header (title + subtitle + trailing action) ─────────────────────────────────
@@ -108,7 +109,7 @@ export interface CardHeaderProps {
 }
 function CardHeader({ title, subtitle, action, avatar, children, className = '' }: CardHeaderProps) {
     return (
-        <div className={['flex items-start gap-3 px-5 pt-5', children ? 'pb-0' : 'pb-3', className].filter(Boolean).join(' ')}>
+        <div className={cx('flex items-start gap-3 px-5 pt-5', children ? 'pb-0' : 'pb-3', className)}>
             {avatar && <div className="flex-shrink-0">{avatar}</div>}
             <div className="min-w-0 flex-1">
                 {title && <div className="text-sm font-semibold text-foreground leading-snug">{title}</div>}
@@ -127,7 +128,7 @@ export interface CardBodyProps {
     className?: string
 }
 function CardBody({ children, className = '' }: CardBodyProps) {
-    return <div className={['px-5 py-4 text-sm text-foreground-secondary leading-relaxed', className].filter(Boolean).join(' ')}>{children}</div>
+    return <div className={cx('px-5 py-4 text-sm text-foreground-secondary leading-relaxed', className)}>{children}</div>
 }
 
 // ── Footer ──────────────────────────────────────────────────────────────────────
@@ -140,7 +141,7 @@ export interface CardFooterProps {
 }
 function CardFooter({ children, noDivider, className = '' }: CardFooterProps) {
     return (
-        <div className={['flex items-center gap-2 px-5 py-3', noDivider ? '' : 'border-t border-border', className].filter(Boolean).join(' ')}>
+        <div className={cx('flex items-center gap-2 px-5 py-3', noDivider ? '' : 'border-t border-border', className)}>
             {children}
         </div>
     )

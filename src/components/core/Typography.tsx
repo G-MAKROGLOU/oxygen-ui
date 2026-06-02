@@ -1,4 +1,5 @@
 import React from 'react'
+import { cx } from '../../utils/cx'
 
 export type TypographyVariant =
     | 'display'
@@ -149,7 +150,7 @@ export default function Typography({
     const Element = (as ?? DEFAULT_ELEMENT[variant]) as React.ElementType
     return (
         <Element
-            className={[
+            className={cx(
                 VARIANT_CLASS[variant],
                 COLOR_CLASS[color],
                 weight ? WEIGHT_CLASS[weight] : '',
@@ -157,7 +158,7 @@ export default function Typography({
                 truncate ? 'truncate' : '',
                 muted    ? 'opacity-60' : '',
                 className,
-            ].filter(Boolean).join(' ')}
+            )}
             style={style}
         >
             {children}

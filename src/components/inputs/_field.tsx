@@ -1,5 +1,6 @@
 import React from 'react'
 import Tooltip from '../core/Tooltip'
+import { cx } from '../../utils/cx'
 
 /**
  * Shared field foundation for all oxygen-ui inputs.
@@ -84,7 +85,7 @@ export function fieldShell({
     sized = true,
 }: FieldShellOptions = {}): string {
     const s = FIELD_SIZE[size]
-    return [
+    return cx(
         'w-full rounded-lg border bg-surface text-foreground',
         'transition-[color,box-shadow,border-color] duration-150',
         s.text,
@@ -100,7 +101,7 @@ export function fieldShell({
         hasError ? (focusWithin ? FOCUS_WITHIN_ERROR : FOCUS_ELEMENT_ERROR) : '',
         // placeholder colour for native inputs
         'placeholder:text-foreground-muted',
-    ].filter(Boolean).join(' ')
+    )
 }
 
 // ── Help icon + shared label ──────────────────────────────────────────────────
@@ -173,14 +174,14 @@ export function FieldLabel({
     return (
         <div
             style={{ width: horizontal ? width : undefined, ...style }}
-            className={[
+            className={cx(
                 'flex items-center gap-1',
                 horizontal ? 'flex-shrink-0 whitespace-nowrap' : '',
                 // Only the 'start' alignment needs the top nudge; 'center' relies
                 // on the row's items-center to line up with a short control.
                 horizontal && align === 'start' ? 'mt-2' : '',
                 className,
-            ].filter(Boolean).join(' ')}
+            )}
         >
             {label != null && (
                 <label htmlFor={htmlFor} className="text-sm font-medium text-foreground select-none">
@@ -255,13 +256,13 @@ export function Field({
     const horizontal = layout === 'horizontal'
     return (
         <div
-            className={[
+            className={cx(
                 'flex',
                 horizontal
                     ? `flex-row gap-3 ${labelAlign === 'center' ? 'items-center' : 'items-start'}`
                     : 'flex-col gap-1.5',
                 className,
-            ].filter(Boolean).join(' ')}
+            )}
         >
             <FieldLabel
                 label={label}

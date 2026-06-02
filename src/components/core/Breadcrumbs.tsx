@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { cx } from '../../utils/cx'
 
 export interface BreadcrumbItem {
     /** Visible label. */
@@ -100,7 +101,7 @@ export default function Breadcrumbs({
     }
 
     return (
-        <nav aria-label={ariaLabel} className={['min-w-0', className].filter(Boolean).join(' ')} style={style}>
+        <nav aria-label={ariaLabel} className={cx('min-w-0', className)} style={style}>
             <ol className="flex items-center gap-1.5 flex-nowrap min-w-0">
                 {visible.map((entry, i) => {
                     const isLast = i === visible.length - 1

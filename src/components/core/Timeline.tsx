@@ -1,4 +1,5 @@
 import React from 'react'
+import { cx } from '../../utils/cx'
 
 export type TimelineStatus = 'complete' | 'current' | 'upcoming' | 'error'
 
@@ -71,7 +72,7 @@ export default function Timeline({ events, current, className = '' }: TimelinePr
     }
 
     return (
-        <ol className={['flex flex-col', className].filter(Boolean).join(' ')}>
+        <ol className={cx('flex flex-col', className)}>
             {events.map((event, i) => {
                 const status = statusOf(event, i)
                 const last = i === events.length - 1

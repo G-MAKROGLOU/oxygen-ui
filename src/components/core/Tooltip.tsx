@@ -1,5 +1,6 @@
 import React from 'react'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
+import { cx } from '../../utils/cx'
 
 export interface TooltipProps {
     children: React.ReactNode
@@ -57,7 +58,7 @@ export default function Tooltip({
                     <TooltipPrimitive.Content
                         side={placement}
                         sideOffset={sideOffset}
-                        className={[
+                        className={cx(
                             // Layout + typography
                             'pointer-events-none z-[500000] max-w-[220px] px-2.5 py-1.5',
                             // Inverted surface: dark on light, light on dark — both readable
@@ -70,7 +71,7 @@ export default function Tooltip({
                             // In animation — direction-aware
                             ANIMATION[placement],
                             className,
-                        ].filter(Boolean).join(' ')}
+                        )}
                     >
                         {title}
                         <TooltipPrimitive.Arrow

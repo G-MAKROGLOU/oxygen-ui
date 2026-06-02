@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
+import { cx } from '../../utils/cx'
 
 type Align = 'start' | 'center' | 'end'
 const MegaMenuContext = createContext<{ align: Align }>({ align: 'start' })
@@ -72,11 +73,11 @@ function MegaMenu({
             <NavigationMenu.Root
                 delayDuration={delayDuration}
                 aria-label={ariaLabel}
-                className={[
+                className={cx(
                     'relative z-10 w-full',
                     responsive ? 'hidden md:flex' : 'flex',
                     className,
-                ].filter(Boolean).join(' ')}
+                )}
                 style={style}
             >
                 <NavigationMenu.List className="flex items-center gap-1">
@@ -120,7 +121,7 @@ function MegaMenuItem({ label, icon, href, children, className = '' }: MegaMenuI
     if (!children) {
         return (
             <NavigationMenu.Item>
-                <NavigationMenu.Link href={href} className={[TOP_ITEM, className].filter(Boolean).join(' ')}>
+                <NavigationMenu.Link href={href} className={cx(TOP_ITEM, className)}>
                     {icon && <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center">{icon}</span>}
                     {label}
                 </NavigationMenu.Link>
@@ -129,7 +130,7 @@ function MegaMenuItem({ label, icon, href, children, className = '' }: MegaMenuI
     }
     return (
         <NavigationMenu.Item>
-            <NavigationMenu.Trigger className={[TOP_ITEM, className].filter(Boolean).join(' ')}>
+            <NavigationMenu.Trigger className={cx(TOP_ITEM, className)}>
                 {icon && <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center">{icon}</span>}
                 {label}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true"
@@ -179,7 +180,7 @@ function MegaMenuPanel({ children, columns, className = '', style }: MegaMenuPan
           }
     return (
         <div
-            className={['grid gap-6 p-6', className].filter(Boolean).join(' ')}
+            className={cx('grid gap-6 p-6', className)}
             style={{ ...layout, maxWidth: 'min(92vw, 960px)', ...style }}
         >
             {children}
@@ -198,7 +199,7 @@ export interface MegaMenuSectionProps {
 
 function MegaMenuSection({ title, children, className = '' }: MegaMenuSectionProps) {
     return (
-        <div className={['min-w-0 flex flex-col', className].filter(Boolean).join(' ')}>
+        <div className={cx('min-w-0 flex flex-col', className)}>
             {title && (
                 <p className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-widest text-foreground-muted select-none">
                     {title}
@@ -230,12 +231,12 @@ function MegaMenuLink({ href, icon, description, active, onClick, children, clas
             active={active}
             href={href}
             onClick={onClick}
-            className={[
+            className={cx(
                 'group/link flex items-start gap-3 rounded-md p-3 transition-colors select-none',
                 'hover:bg-surface-raised focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
                 'data-[active]:bg-surface-raised',
                 className,
-            ].filter(Boolean).join(' ')}
+            )}
         >
             {icon && (
                 <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md bg-surface-raised text-accent group-hover/link:bg-surface group-data-[active]/link:bg-surface transition-colors">
@@ -259,7 +260,7 @@ export interface MegaMenuFeaturedProps {
 
 function MegaMenuFeatured({ children, className = '' }: MegaMenuFeaturedProps) {
     return (
-        <div className={['min-w-0 rounded-lg bg-surface-raised border border-border p-4 flex flex-col', className].filter(Boolean).join(' ')}>
+        <div className={cx('min-w-0 rounded-lg bg-surface-raised border border-border p-4 flex flex-col', className)}>
             {children}
         </div>
     )
@@ -398,7 +399,7 @@ function MegaMenuMobile({
                                     key={i}
                                     href={href}
                                     onClick={() => setOpen(false)}
-                                    className={[rowBase, divider].filter(Boolean).join(' ')}
+                                    className={cx(rowBase, divider)}
                                 >
                                     {icon && <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center">{icon}</span>}
                                     {itemLabel}
@@ -412,7 +413,7 @@ function MegaMenuMobile({
                                     type="button"
                                     onClick={() => setExpanded(isOpen ? null : i)}
                                     aria-expanded={isOpen}
-                                    className={[rowBase, isOpen ? 'text-accent' : ''].filter(Boolean).join(' ')}
+                                    className={cx(rowBase, isOpen ? 'text-accent' : '')}
                                 >
                                     {icon && <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center">{icon}</span>}
                                     <span className="flex-1 text-left">{itemLabel}</span>

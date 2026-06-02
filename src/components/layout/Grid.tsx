@@ -1,5 +1,6 @@
 import React from 'react'
 import Box, { type BoxProps, type Spacing } from './Box'
+import { cx } from '../../utils/cx'
 
 const GAP_MAP: Record<Spacing, string> = {
     'none': 'gap-0',
@@ -93,7 +94,7 @@ export default function Grid({
     return (
         <Box
             {...boxProps}
-            className={[
+            className={cx(
                 'grid',
                 colClass,
                 rowClass,
@@ -103,7 +104,7 @@ export default function Grid({
                 align   ? ALIGN_CLASS[align]     : '',
                 justify ? JUSTIFY_CLASS[justify] : '',
                 className,
-            ].filter(Boolean).join(' ')}
+            )}
             style={{
                 gridTemplateColumns: inlineCols,
                 gridTemplateRows:    inlineRows,

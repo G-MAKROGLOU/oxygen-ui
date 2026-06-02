@@ -1,6 +1,7 @@
 import React, { useId, useState } from 'react'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
 import { Field, type FieldSize } from './_field'
+import { cx } from '../../utils/cx'
 
 export interface SegmentedOption {
     value: string
@@ -131,20 +132,20 @@ export default function SegmentedControl({
                 aria-label={ariaLabel ?? (typeof label === 'string' ? label : undefined)}
                 aria-invalid={hasError || undefined}
                 aria-describedby={hasError ? errorId : undefined}
-                className={[
+                className={cx(
                     'inline-flex items-center gap-1 rounded-lg border bg-surface-raised p-1',
                     hasError ? 'border-status-error' : 'border-border',
                     sz.h,
                     fullWidth ? 'flex w-full' : 'w-fit',
                     disabled ? 'opacity-60 cursor-not-allowed' : '',
-                ].filter(Boolean).join(' ')}
+                )}
             >
                 {options.map((opt) => (
                     <ToggleGroup.Item
                         key={opt.value}
                         value={opt.value}
                         disabled={opt.disabled}
-                        className={[
+                        className={cx(
                             'inline-flex items-center justify-center gap-1.5 rounded-md select-none whitespace-nowrap',
                             'transition-colors duration-150 h-full',
                             sz.text,
@@ -156,7 +157,7 @@ export default function SegmentedControl({
                             'data-[state=on]:bg-surface data-[state=on]:text-accent data-[state=on]:shadow-sm',
                             'focus:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring',
                             'disabled:opacity-40 disabled:cursor-not-allowed',
-                        ].filter(Boolean).join(' ')}
+                        )}
                     >
                         {opt.icon && <span className="flex-shrink-0">{opt.icon}</span>}
                         {opt.label}

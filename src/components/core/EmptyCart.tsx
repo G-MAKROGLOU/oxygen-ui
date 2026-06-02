@@ -1,4 +1,5 @@
 import React from 'react'
+import { cx } from '../../utils/cx'
 
 export interface EmptyCartProps {
     /**
@@ -87,7 +88,7 @@ export default function EmptyCart({
 
     return (
         <div
-            className={['flex flex-col items-center justify-center px-6 py-10 text-center', className].filter(Boolean).join(' ')}
+            className={cx('flex flex-col items-center justify-center px-6 py-10 text-center', className)}
             style={style}
         >
             {art && <div className="mb-4">{art}</div>}

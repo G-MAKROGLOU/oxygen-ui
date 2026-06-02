@@ -46,6 +46,18 @@ export default [
             'no-undef': 'off',
             'no-unused-vars': 'off',
             'no-console': ['warn', { allow: ['warn', 'error'] }],
+
+            // ── Design-system conventions ─────────────────────────────────
+            // Prefer the `cx()` helper over the [a, b].filter(Boolean).join(' ')
+            // idiom for joining class names — clearer and allocation-light.
+            'no-restricted-syntax': [
+                'error',
+                {
+                    selector:
+                        "CallExpression[callee.property.name='join'][arguments.0.value=' '][callee.object.callee.property.name='filter'][callee.object.arguments.0.name='Boolean']",
+                    message: "Use cx(...) from '@/utils/cx' instead of [..].filter(Boolean).join(' ').",
+                },
+            ],
         },
         settings: {
             react: { version: 'detect' },

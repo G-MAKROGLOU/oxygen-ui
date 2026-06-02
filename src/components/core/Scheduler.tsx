@@ -4,6 +4,7 @@ import * as Popover from '@radix-ui/react-popover'
 import IconButton from './IconButton'
 import Button from '../inputs/Button'
 import SegmentedControl from '../inputs/SegmentedControl'
+import { cx } from '../../utils/cx'
 import {
     type WeekStart,
     toDate,
@@ -190,7 +191,7 @@ export default function Scheduler({
 
     return (
         <div
-            className={['flex flex-col overflow-hidden rounded-xl border border-border bg-surface', className].filter(Boolean).join(' ')}
+            className={cx('flex flex-col overflow-hidden rounded-xl border border-border bg-surface', className)}
             style={style}
         >
             {/* ── Toolbar ── */}

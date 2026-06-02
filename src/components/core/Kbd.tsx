@@ -1,4 +1,5 @@
 import React from 'react'
+import { cx } from '../../utils/cx'
 
 export type KbdSize = 'sm' | 'md'
 
@@ -47,7 +48,7 @@ export default function Kbd({
 }: KbdProps) {
     if (keys && keys.length > 0) {
         return (
-            <span className={['inline-flex items-center gap-1', className].filter(Boolean).join(' ')} style={style}>
+            <span className={cx('inline-flex items-center gap-1', className)} style={style}>
                 {keys.map((k, i) => (
                     <React.Fragment key={`${k}-${i}`}>
                         {i > 0 && <span className="text-foreground-muted text-xs select-none">{separator}</span>}
@@ -59,7 +60,7 @@ export default function Kbd({
     }
 
     return (
-        <kbd className={[cap, SIZE[size], className].filter(Boolean).join(' ')} style={style}>
+        <kbd className={cx(cap, SIZE[size], className)} style={style}>
             {children}
         </kbd>
     )

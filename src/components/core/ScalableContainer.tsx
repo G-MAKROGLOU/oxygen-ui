@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import Tooltip from './Tooltip'
+import { cx } from '../../utils/cx'
 
 export interface ScalableContainerProps {
     /** Resting width. Any CSS length / percent. Default `'100%'`. */
@@ -115,14 +116,14 @@ export default function ScalableContainer({
                           height: { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] },
                       }
             }
-            className={[
+            className={cx(
                 'relative rounded-lg overflow-hidden',
                 // OS-window aesthetic: subtle elevation at rest, lifted shadow
                 // when expanded. No background colour change.
                 isScaled ? 'shadow-2xl' : 'shadow-md',
                 'transition-shadow duration-300',
                 className,
-            ].filter(Boolean).join(' ')}
+            )}
         >
             {/* Toggle button — floats over content, no background flash. */}
             <Tooltip placement="bottom" title={isScaled ? 'Collapse' : 'Expand'}>

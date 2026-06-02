@@ -1,5 +1,6 @@
 import React from 'react'
 import Box, { type BoxProps, type Spacing } from './Box'
+import { cx } from '../../utils/cx'
 
 export type FlexDirection = 'row' | 'row-reverse' | 'col' | 'col-reverse'
 export type FlexAlign     = 'start' | 'center' | 'end' | 'stretch' | 'baseline'
@@ -86,7 +87,7 @@ export default function Flex({
     return (
         <Box
             {...boxProps}
-            className={[
+            className={cx(
                 inline ? 'inline-flex' : 'flex',
                 DIRECTION_CLASS[direction],
                 align    ? ALIGN_CLASS[align]      : '',
@@ -94,7 +95,7 @@ export default function Flex({
                 wrap     ? WRAP_CLASS[wrap]        : '',
                 gap      ? GAP_MAP[gap]            : '',
                 className,
-            ].filter(Boolean).join(' ')}
+            )}
         />
     )
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import * as Popover from '@radix-ui/react-popover'
 import Button, { ButtonProps } from '../inputs/Button'
+import { cx } from '../../utils/cx'
 
 export type PopConfirmTone = 'default' | 'info' | 'warning' | 'error' | 'danger' | 'success'
 
@@ -110,7 +111,7 @@ export default function PopConfirm({
                     side={side}
                     sideOffset={8}
                     collisionPadding={12}
-                    className={['z-[400] focus:outline-none', className].filter(Boolean).join(' ')}
+                    className={cx('z-[400] focus:outline-none', className)}
                 >
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
