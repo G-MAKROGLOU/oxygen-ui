@@ -1,3 +1,15 @@
+# [6.14.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.13.0...v6.14.0) (2026-06-02)
+
+
+### Bug Fixes
+
+* **popconfirm:** repair trigger interaction + animations ([39239f0](https://github.com/G-MAKROGLOU/oxygen-ui/commit/39239f078572da20b9e60a7b04a4f9c5e5944ed7))
+
+
+### Features
+
+* **popconfirm:** full tone set + framer-motion animations ([7a2d676](https://github.com/G-MAKROGLOU/oxygen-ui/commit/7a2d67651b97c815cd6ac934a35523f7493471a6))
+
 # [6.13.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.12.0...v6.13.0) (2026-06-02)
 
 
