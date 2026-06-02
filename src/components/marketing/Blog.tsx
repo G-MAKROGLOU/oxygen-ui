@@ -1,5 +1,6 @@
 import React from 'react'
 import Badge from '../core/Badge'
+import { cx } from '../../utils/cx'
 
 export interface BlogPost {
     key?: string | number
@@ -58,7 +59,7 @@ export default function Blog({
     const hasHeader = eyebrow != null || title != null || description != null
 
     return (
-        <section className={['w-full', className].filter(Boolean).join(' ')} style={style}>
+        <section className={cx('w-full', className)} style={style}>
             {hasHeader && (
                 <header className={['mb-10 flex flex-col gap-3', centeredHeader ? 'items-center text-center' : 'items-start text-left'].join(' ')}>
                     {eyebrow != null && <div className="text-xs font-semibold uppercase tracking-wide text-accent">{eyebrow}</div>}

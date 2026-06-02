@@ -2,6 +2,7 @@ import React from 'react'
 import Portal from '../layout/Portal'
 import Button from '../inputs/Button'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { cx } from '../../utils/cx'
 
 export type ConsentChoice = 'accepted' | 'declined'
 
@@ -83,7 +84,7 @@ export default function CookieConsent({
                 role="dialog"
                 aria-label="Cookie consent"
                 aria-live="polite"
-                className={['fixed z-[60]', POS[position], className].filter(Boolean).join(' ')}
+                className={cx('fixed z-[60]', POS[position], className)}
             >
                 <div className="flex flex-col gap-4 border-t border-border bg-surface p-5 shadow-lg sm:flex-row sm:items-center sm:rounded-xl sm:border">
                     <div className="flex-1 text-sm leading-relaxed text-foreground-secondary">

@@ -1,5 +1,6 @@
 import React from 'react'
 import Button from '../inputs/Button'
+import { cx } from '../../utils/cx'
 
 export interface PricingPlan {
     key?: string | number
@@ -51,7 +52,7 @@ const Check = () => (
 export default function PricingPlans({ plans, eyebrow, title, description, className = '', style }: PricingPlansProps) {
     const hasHeader = eyebrow != null || title != null || description != null
     return (
-        <section className={['px-2', className].filter(Boolean).join(' ')} style={style}>
+        <section className={cx('px-2', className)} style={style}>
             {hasHeader && (
                 <header className="mb-10 flex flex-col items-center gap-3 text-center">
                     {eyebrow != null && <div className="text-xs font-semibold uppercase tracking-wide text-accent">{eyebrow}</div>}

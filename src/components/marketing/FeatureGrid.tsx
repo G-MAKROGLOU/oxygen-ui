@@ -1,4 +1,5 @@
 import React from 'react'
+import { cx } from '../../utils/cx'
 
 export interface Feature {
     /** Stable key. */
@@ -55,7 +56,7 @@ export default function FeatureGrid({
 }: FeatureGridProps) {
     const hasHeader = eyebrow != null || title != null || description != null
     return (
-        <section className={['px-2', className].filter(Boolean).join(' ')} style={style}>
+        <section className={cx('px-2', className)} style={style}>
             {hasHeader && (
                 <header className={['mb-10 flex flex-col gap-3', centeredHeader ? 'items-center text-center' : 'items-start text-left'].join(' ')}>
                     {eyebrow != null && <div className="text-xs font-semibold uppercase tracking-wide text-accent">{eyebrow}</div>}

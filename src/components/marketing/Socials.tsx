@@ -1,4 +1,5 @@
 import React from 'react'
+import { cx } from '../../utils/cx'
 
 export type SocialPlatform =
     | 'x' | 'twitter' | 'github' | 'linkedin' | 'youtube'
@@ -74,7 +75,7 @@ export default function Socials({
     style,
 }: SocialsProps) {
     return (
-        <nav aria-label={ariaLabel} className={['flex flex-wrap items-center gap-2', className].filter(Boolean).join(' ')} style={style}>
+        <nav aria-label={ariaLabel} className={cx('flex flex-wrap items-center gap-2', className)} style={style}>
             {links.map((link, i) => {
                 const label = link.label ?? (link.platform ? link.platform[0].toUpperCase() + link.platform.slice(1) : 'Link')
                 const icon = link.icon ?? (link.platform ? ICONS[link.platform] : null)

@@ -92,7 +92,7 @@ export interface TableProps<T extends Record<string, any> = Record<string, any>>
 }
 
 /** ─────────────────── defaults ─────────────────── */
-const DEFAULT_PICKER: PaginationOptions['pickerOptions'] = [
+const DEFAULT_PICKER: NonNullable<PaginationOptions['pickerOptions']> = [
     { key: 1, value: 5,  label: 5  },
     { key: 2, value: 10, label: 10 },
     { key: 3, value: 15, label: 15 },

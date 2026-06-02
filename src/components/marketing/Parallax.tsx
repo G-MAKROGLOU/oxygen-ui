@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
+import { cx } from '../../utils/cx'
 
 export interface ParallaxProps {
     /** Background image URL, or any node (e.g. an illustration) to park behind the content. */
@@ -49,7 +50,7 @@ export default function Parallax({
     return (
         <div
             ref={ref}
-            className={['relative overflow-hidden rounded-2xl', className].filter(Boolean).join(' ')}
+            className={cx('relative overflow-hidden rounded-2xl', className)}
             style={{ height, ...style }}
         >
             <motion.div

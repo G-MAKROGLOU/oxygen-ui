@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { cx } from '../../utils/cx'
 
 export interface Slide {
     key?: string | number
@@ -84,7 +85,7 @@ export default function SlideShow({
         <section
             aria-label={ariaLabel}
             aria-roledescription="carousel"
-            className={['relative overflow-hidden rounded-2xl', className].filter(Boolean).join(' ')}
+            className={cx('relative overflow-hidden rounded-2xl', className)}
             style={{ height, ...style }}
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}

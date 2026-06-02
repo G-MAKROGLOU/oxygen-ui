@@ -1,5 +1,6 @@
 import React from 'react'
 import Avatar from '../core/Avatar'
+import { cx } from '../../utils/cx'
 
 export interface Testimonial {
     key?: string | number
@@ -62,7 +63,7 @@ function Stars({ value }: { value: number }) {
 export default function Testimonials({ testimonials, eyebrow, title, description, columns = 3, className = '', style }: TestimonialsProps) {
     const hasHeader = eyebrow != null || title != null || description != null
     return (
-        <section className={['px-2', className].filter(Boolean).join(' ')} style={style}>
+        <section className={cx('px-2', className)} style={style}>
             {hasHeader && (
                 <header className="mb-10 flex flex-col items-center gap-3 text-center">
                     {eyebrow != null && <div className="text-xs font-semibold uppercase tracking-wide text-accent">{eyebrow}</div>}

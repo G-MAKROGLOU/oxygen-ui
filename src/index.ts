@@ -19,6 +19,10 @@ export { default as Icon } from './icons/icons'
 export { createIcon } from './icons/createIcon'
 export type { IconProps, CreateIconOptions, IconComponent } from './icons/createIcon'
 
+// ─── Utilities ────────────────────────────────────────────────────────────────
+export { cx } from './utils/cx'
+export type { ClassValue } from './utils/cx'
+
 // ─── Layout components ───────────────────────────────────────────────────────
 // Structural primitives that re-anchor or compose rendering.
 //

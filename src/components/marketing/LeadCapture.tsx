@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Button from '../inputs/Button'
 import { fieldShell } from '../inputs/_field'
+import { cx } from '../../utils/cx'
 
 export interface LeadCaptureProps {
     title: React.ReactNode
@@ -67,7 +68,7 @@ export default function LeadCapture({
 
     return (
         <section
-            className={['w-full overflow-hidden rounded-2xl border border-border bg-surface px-6 py-12 sm:px-12 sm:py-16', className].filter(Boolean).join(' ')}
+            className={cx('w-full overflow-hidden rounded-2xl border border-border bg-surface px-6 py-12 sm:px-12 sm:py-16', className)}
             style={{ ...(isGradient ? { backgroundImage: GRADIENT } : {}), ...style }}
         >
             <div className={['mx-auto flex max-w-2xl flex-col gap-4', centered ? 'items-center text-center' : 'items-start text-left'].join(' ')}>

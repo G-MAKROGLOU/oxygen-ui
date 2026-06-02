@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { cx } from '../../utils/cx'
 
 export interface VideoProps {
     /** A video file URL (rendered as a native `<video>`). */
@@ -52,7 +53,7 @@ export default function Video({
     style,
 }: VideoProps) {
     const [playing, setPlaying] = useState(autoPlay)
-    const frame = ['relative w-full overflow-hidden bg-backdrop', framed ? 'rounded-2xl border border-border shadow-sm' : '', className].filter(Boolean).join(' ')
+    const frame = cx('relative w-full overflow-hidden bg-backdrop', framed ? 'rounded-2xl border border-border shadow-sm' : '', className)
     const ratio = aspect.replace('/', ' / ')
 
     return (
