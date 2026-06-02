@@ -1,7 +1,7 @@
 {/* src/docs/Cart.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
-<Meta title="Data Display/Cart/Guide" />
+<Meta title="E-Commerce/Cart/Guide" />
 
 export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
 export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
@@ -69,4 +69,25 @@ const [items, setItems] = useState(initialItems)
   </tbody>
 </table>
 
-See the **Data Display → Cart** stories.
+## Cart API (context)
+
+For an app-wide cart you can drive from anywhere, wrap your tree in
+`CartProvider` and call `useCart()` — no prop-drilling of the items array:
+
+```tsx
+import { CartProvider, useCart, CartButton, Checkout } from '@geomak/ui'
+
+<CartProvider initialItems={[]}>
+  <App />
+</CartProvider>
+
+// anywhere inside:
+const { items, addToCart, removeFromCart, updateQuantity, clearCart,
+        isInCart, getItemCount, getCartTotal } = useCart()
+```
+
+- `CartButton` — a TopBar cart trigger with a live item-count badge.
+- `Checkout` — a two-column checkout page (cart + credit-card form).
+- `EmptyCart` — the configurable empty-state illustration used by `Cart`.
+
+See the **E-Commerce** stories (Cart, Cart in AppShell, Checkout).

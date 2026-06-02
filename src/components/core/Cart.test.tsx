@@ -41,8 +41,13 @@ describe('Cart', () => {
         expect(onRemove).toHaveBeenCalledWith(2)
     })
 
-    it('shows an empty state', () => {
+    it('shows the default empty state', () => {
         render(<Cart items={[]} />)
-        expect(screen.getByText('Your cart is empty.')).toBeInTheDocument()
+        expect(screen.getByText('Your cart is empty')).toBeInTheDocument()
+    })
+
+    it('renders a custom empty state when provided', () => {
+        render(<Cart items={[]} emptyState={<div>Nothing to see</div>} />)
+        expect(screen.getByText('Nothing to see')).toBeInTheDocument()
     })
 })

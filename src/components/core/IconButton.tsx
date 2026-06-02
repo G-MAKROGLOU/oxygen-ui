@@ -35,6 +35,7 @@ export default function IconButton({
     size = 'lg',
     loading = false,
     loadingIcon,
+    title,
     className = '',
     style,
 }: IconButtonProps) {
@@ -56,6 +57,8 @@ export default function IconButton({
             type={buttonType}
             disabled={disabled || loading}
             onClick={onClick}
+            title={title}
+            aria-label={title}
             style={style}
             className={`${size === 'sm' ? 'p-1' : 'p-2'} rounded-lg shadow-md transition-colors duration-150 ${colorScheme} disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${className}`.trim()}
         >

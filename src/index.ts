@@ -133,6 +133,18 @@ export type { CalendarProps, CalendarEvent } from './components/core/Calendar'
 export { default as Cart } from './components/core/Cart'
 export type { CartProps, CartLineItem, CartSummaryRow } from './components/core/Cart'
 
+export { CartProvider, useCart } from './components/core/CartProvider'
+export type { CartProviderProps, CartContextValue, CartItemInput } from './components/core/CartProvider'
+
+export { default as CartButton } from './components/core/CartButton'
+export type { CartButtonProps } from './components/core/CartButton'
+
+export { default as EmptyCart } from './components/core/EmptyCart'
+export type { EmptyCartProps } from './components/core/EmptyCart'
+
+export { default as Checkout } from './components/core/Checkout'
+export type { CheckoutProps } from './components/core/Checkout'
+
 export {
     NotificationProvider,
     useNotification,

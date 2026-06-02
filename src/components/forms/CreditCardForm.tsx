@@ -40,6 +40,13 @@ export interface CreditCardFormProps {
     size?: FieldSize
     /** Disable every field + the submit button. */
     disabled?: boolean
+    /**
+     * Disable only the submit button, leaving the fields editable. Useful to
+     * gate payment on an external condition (e.g. an empty cart) while still
+     * letting the user fill in their card. Combined with `disabled` (either
+     * disables the button).
+     */
+    submitDisabled?: boolean
     /** Require the cardholder name. Default `true`. */
     requireName?: boolean
     /** Hide the built-in submit button (when embedding in a larger form). */
@@ -102,6 +109,7 @@ export default function CreditCardForm({
     defaultValue,
     size = 'md',
     disabled,
+    submitDisabled,
     requireName = true,
     hideSubmit = false,
     submitLabel = 'Pay',
@@ -199,7 +207,7 @@ export default function CreditCardForm({
             </div>
 
             {!hideSubmit && (
-                <Button content={submitLabel} buttonType="submit" variant="primary" disabled={disabled} />
+                <Button content={submitLabel} buttonType="submit" variant="primary" disabled={disabled || submitDisabled} />
             )}
         </Form>
     )

@@ -151,7 +151,7 @@ export default function AppShell({
                         <AnimatePresence>
                             {mobileOpen && (
                                 <motion.div
-                                    className="fixed inset-0 bg-black/40 z-overlay md:hidden"
+                                    className="fixed inset-0 bg-backdrop z-overlay md:hidden"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}

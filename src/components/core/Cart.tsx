@@ -1,4 +1,5 @@
 import React from 'react'
+import EmptyCart from './EmptyCart'
 
 export interface CartLineItem {
     id: string | number
@@ -107,9 +108,7 @@ export default function Cart({
     return (
         <div className={['flex flex-col rounded-xl border border-border bg-surface', className].filter(Boolean).join(' ')} style={style}>
             {items.length === 0 ? (
-                <div className="p-8 text-center text-sm text-foreground-muted">
-                    {emptyState ?? 'Your cart is empty.'}
-                </div>
+                emptyState ?? <EmptyCart />
             ) : (
                 <ul className="divide-y divide-border">
                     {items.map((it) => (
