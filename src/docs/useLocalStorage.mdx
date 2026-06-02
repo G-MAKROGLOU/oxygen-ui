@@ -1,0 +1,49 @@
+{/* src/docs/useLocalStorage.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Hooks/useLocalStorage/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# useLocalStorage
+
+Persist React state to `localStorage`, JSON-serialised, with a `useState`-like API.
+
+## Mental model
+
+`const [value, setValue, remove] = useLocalStorage(key, initialValue)`. `setValue`
+takes a value or an updater, exactly like `useState`; `remove` deletes the key and
+resets to `initialValue`. It's **SSR-safe** (returns `initialValue` when `window`
+is absent) and stays in sync **across browser tabs** (the native `storage` event)
+and **across hook instances in the same tab** (a custom event), so two components
+sharing a key never drift.
+
+## Quick start
+
+```tsx
+import { useLocalStorage } from '@geomak/ui'
+
+const [theme, setTheme, clearTheme] = useLocalStorage('theme', 'system')
+
+setTheme('dark')
+setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
+clearTheme() // removes the key, resets to 'system'
+```
+
+## Signature
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Param / return</th><th style={th}>Type</th><th style={th}>Notes</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>key</td><td style={td(true)}>string</td><td style={td(false)}>Storage key.</td></tr>
+    <tr><td style={td0}>initialValue</td><td style={td(true)}>T</td><td style={td(false)}>Used when nothing is stored / on SSR / on parse error.</td></tr>
+    <tr><td style={td0}>→ [0] value</td><td style={td(true)}>T</td><td style={td(false)}>Current value.</td></tr>
+    <tr><td style={td0}>→ [1] setValue</td><td style={td(true)}>{'(v: T | (prev: T) => T) => void'}</td><td style={td(false)}>Persists + updates state.</td></tr>
+    <tr><td style={td0}>→ [2] remove</td><td style={td(true)}>{'() => void'}</td><td style={td(false)}>Deletes the key, resets to initial.</td></tr>
+  </tbody>
+</table>
+
+See the **Hooks → useLocalStorage** story.

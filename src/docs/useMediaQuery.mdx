@@ -1,0 +1,46 @@
+{/* src/docs/useMediaQuery.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Hooks/useMediaQuery/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# useMediaQuery
+
+Track a CSS media query reactively — for responsive logic that lives in JS, not
+just CSS.
+
+## Mental model
+
+`useMediaQuery(query)` returns a boolean that updates as the match changes. It's
+**SSR-safe**: it returns `false` until mounted (and when `matchMedia` is
+unavailable), then syncs on the first effect. `useBreakpoint()` is a convenience
+built on top, exposing the library's responsive breakpoints (matching the
+Tailwind `screens`) as min-width flags plus the largest matched one.
+
+## Quick start
+
+```tsx
+import { useMediaQuery, useBreakpoint } from '@geomak/ui'
+
+const isWide  = useMediaQuery('(min-width: 1024px)')
+const reduced = useMediaQuery('(prefers-reduced-motion: reduce)')
+
+const { md, active } = useBreakpoint()
+if (!md) return <MobileNav />   // below 768px
+```
+
+## API
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Export</th><th style={th}>Type</th><th style={th}>Notes</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>useMediaQuery</td><td style={td(true)}>{'(query: string) => boolean'}</td><td style={td(false)}>Live match for any media query.</td></tr>
+    <tr><td style={td0}>useBreakpoint</td><td style={td(true)}>{'() => { sm, md, lg, xl, active }'}</td><td style={td(false)}>Min-width flags (sm 480 · md 768 · lg 976 · xl 1440) + the largest matched (`'base'` below sm).</td></tr>
+  </tbody>
+</table>
+
+See the **Hooks → useMediaQuery** story.

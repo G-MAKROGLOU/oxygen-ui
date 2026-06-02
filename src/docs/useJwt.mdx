@@ -1,0 +1,51 @@
+{/* src/docs/useJwt.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Hooks/useJwt/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# useJwt
+
+Decode a JWT client-side and track its expiry reactively.
+
+> **Decode only — never verification.** The hook reads the token's claims; it
+> does not (and cannot) verify the signature. Treat the result as a UI hint;
+> real authorization belongs on the server. Pairs naturally with
+> [SecureLayout](/docs/layout-securelayout-guide--docs).
+
+## Mental model
+
+`useJwt(token)` decodes the header and payload and derives expiry from the `exp`
+claim. It re-renders **exactly when the token crosses its `exp`**, so `isExpired`
+/ `isValid` flip on their own without polling. Pass `null` / `undefined` for a
+logged-out state and everything reads empty.
+
+## Quick start
+
+```tsx
+import { useJwt } from '@geomak/ui'
+
+const { payload, isValid, isExpired, expiresAt } = useJwt<{ sub: string; role: string }>(token)
+
+if (!isValid) redirectToLogin()
+```
+
+## Returns
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Notes</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>payload</td><td style={td(true)}>T | null</td><td style={td(false)}>Decoded claims (generic). `null` if absent / unparseable.</td></tr>
+    <tr><td style={td0}>header</td><td style={td(true)}>object | null</td><td style={td(false)}>Decoded header.</td></tr>
+    <tr><td style={td0}>expiresAt</td><td style={td(true)}>Date | null</td><td style={td(false)}>From `exp`, or `null` if none.</td></tr>
+    <tr><td style={td0}>isExpired</td><td style={td(true)}>boolean</td><td style={td(false)}>True once `exp` passes; `false` when there's no `exp`.</td></tr>
+    <tr><td style={td0}>isValid</td><td style={td(true)}>boolean</td><td style={td(false)}>Parseable payload AND not expired.</td></tr>
+    <tr><td style={td0}>raw</td><td style={td(true)}>string | null</td><td style={td(false)}>The original token.</td></tr>
+  </tbody>
+</table>
+
+See the **Hooks → useJwt** story.

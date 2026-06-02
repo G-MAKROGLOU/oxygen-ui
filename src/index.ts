@@ -359,6 +359,13 @@ export type {
     FormValues,
 } from './form'
 
+// ── Hooks ─────────────────────────────────────────────────────────────────────
+export { useLocalStorage } from './hooks/useLocalStorage'
+export { useMediaQuery, useBreakpoint } from './hooks/useMediaQuery'
+export type { Breakpoint, BreakpointState } from './hooks/useMediaQuery'
+export { useJwt } from './hooks/useJwt'
+export type { JwtResult } from './hooks/useJwt'
+
 // ── Composite form components ─────────────────────────────────────────────────
 export { default as CreditCardForm } from './components/forms/CreditCardForm'
 export type { CreditCardFormProps, CreditCardValue } from './components/forms/CreditCardForm'
