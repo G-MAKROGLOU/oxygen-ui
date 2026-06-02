@@ -1,0 +1,70 @@
+{/* src/docs/MenuButton.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Buttons/MenuButton/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# MenuButton
+
+A button that opens a dropdown menu of actions, built on Radix DropdownMenu —
+full keyboard navigation, focus management, typeahead, and ARIA come for free.
+
+## Mental model
+
+Pass the rows as `items`; each has a `label`, optional `icon`, an `onSelect`
+handler, and flags for `disabled`, `danger` (destructive/red), and
+`separatorBefore` (a divider above the row). The trigger is a regular
+[Button](/docs/buttons-button--docs) — its `variant` / `size` / leading `icon`
+pass straight through — with a trailing chevron that flips while the menu is open.
+
+## Quick start
+
+```tsx
+import { MenuButton } from '@geomak/ui'
+
+<MenuButton
+  label="Actions"
+  items={[
+    { key: 'edit', label: 'Edit', icon: <EditIcon />, onSelect: edit },
+    { key: 'dup',  label: 'Duplicate', onSelect: duplicate },
+    { key: 'del',  label: 'Delete', danger: true, separatorBefore: true, onSelect: remove },
+  ]}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>items</td><td style={td(true)}>MenuButtonItem[]</td><td style={td(true)}>—</td><td style={td(false)}>The menu rows.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Trigger label.</td></tr>
+    <tr><td style={td0}>variant</td><td style={td(true)}>Button variant</td><td style={td(true)}>'secondary'</td><td style={td(false)}>Trigger button style.</td></tr>
+    <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md' | 'lg'</td><td style={td(true)}>'md'</td><td style={td(false)}>Trigger size.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Leading icon on the trigger.</td></tr>
+    <tr><td style={td0}>hideChevron</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Hide the trailing chevron.</td></tr>
+    <tr><td style={td0}>align</td><td style={td(true)}>'start' | 'center' | 'end'</td><td style={td(true)}>'start'</td><td style={td(false)}>Menu alignment.</td></tr>
+    <tr><td style={td0}>side</td><td style={td(true)}>'top' | 'right' | 'bottom' | 'left'</td><td style={td(true)}>'bottom'</td><td style={td(false)}>Side to open on.</td></tr>
+    <tr><td style={td0}>disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Disable the trigger.</td></tr>
+  </tbody>
+</table>
+
+### MenuButtonItem
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>key</td><td style={td(true)}>string | number</td><td style={td(false)}>Stable key.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Row label.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Leading icon.</td></tr>
+    <tr><td style={td0}>onSelect</td><td style={td(true)}>{'() => void'}</td><td style={td(false)}>Fired on select.</td></tr>
+    <tr><td style={td0}>disabled / danger</td><td style={td(true)}>boolean</td><td style={td(false)}>Non-interactive / destructive (red).</td></tr>
+    <tr><td style={td0}>separatorBefore</td><td style={td(true)}>boolean</td><td style={td(false)}>Divider above this row.</td></tr>
+  </tbody>
+</table>
+
+See the **Buttons → MenuButton** stories.

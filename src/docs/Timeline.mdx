@@ -1,0 +1,74 @@
+{/* src/docs/Timeline.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/Timeline/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Timeline
+
+A vertical timeline of ordered events — order tracking (Order placed → Packed →
+Shipped → Out for delivery → Delivered), audit trails, activity feeds: anything
+sequential.
+
+## Mental model
+
+Each event has a `title`, optional `description`, `timestamp`, and `icon`. Drive
+statuses one of two ways: set each event's `status` explicitly
+(`complete | current | upcoming | error`), or pass `current` and let them
+derive — events before it are `complete`, the one at it is `current` (a pulsing
+node), and later ones are `upcoming` (muted). The connecting rail fills through
+completed events.
+
+## Quick start
+
+```tsx
+import { Timeline } from '@geomak/ui'
+
+<Timeline current={2} events={[
+  { key: 1, title: 'Order placed',     timestamp: 'Mon 09:24' },
+  { key: 2, title: 'Gathering products', timestamp: 'Mon 11:02' },
+  { key: 3, title: 'Out for shipping', timestamp: 'Tue 08:15' },
+  { key: 4, title: 'Out for delivery' },
+  { key: 5, title: 'Delivered' },
+]} />
+```
+
+## Explicit statuses (e.g. a failure)
+
+```tsx
+<Timeline events={[
+  { key: 1, title: 'Payment authorized', status: 'complete' },
+  { key: 2, title: 'Payment captured',   status: 'error', description: 'Card declined.' },
+  { key: 3, title: 'Fulfilment',         status: 'upcoming' },
+]} />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>events</td><td style={td(true)}>TimelineEvent[]</td><td style={td(true)}>—</td><td style={td(false)}>The ordered events.</td></tr>
+    <tr><td style={td0}>current</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>In-progress index; derives statuses when an event has none.</td></tr>
+  </tbody>
+</table>
+
+### TimelineEvent
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>key</td><td style={td(true)}>string | number</td><td style={td(false)}>Stable key.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Event title.</td></tr>
+    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Detail line.</td></tr>
+    <tr><td style={td0}>timestamp</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Muted meta (time/date).</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Custom node icon.</td></tr>
+    <tr><td style={td0}>status</td><td style={td(true)}>'complete' | 'current' | 'upcoming' | 'error'</td><td style={td(false)}>Explicit status (else derived from <code>current</code>).</td></tr>
+  </tbody>
+</table>
+
+See the **Data Display → Timeline** stories.

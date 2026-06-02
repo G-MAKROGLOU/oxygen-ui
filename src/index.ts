@@ -76,6 +76,9 @@ export type {
 export { default as IconButton } from './components/core/IconButton'
 export type { IconButtonProps } from './components/core/IconButton'
 
+export { default as MenuButton } from './components/core/MenuButton'
+export type { MenuButtonProps, MenuButtonItem } from './components/core/MenuButton'
+
 export { default as Modal } from './components/core/Modal'
 export type { ModalProps, ModalSize } from './components/core/Modal'
 
@@ -108,6 +111,12 @@ export type { BreadcrumbsProps, BreadcrumbItem } from './components/core/Breadcr
 
 export { default as Badge } from './components/core/Badge'
 export type { BadgeProps, BadgeTone, BadgeVariant, BadgeSize } from './components/core/Badge'
+
+export { default as Stepper } from './components/core/Stepper'
+export type { StepperProps, StepperStep, StepperActiveStatus } from './components/core/Stepper'
+
+export { default as Timeline } from './components/core/Timeline'
+export type { TimelineProps, TimelineEvent, TimelineStatus } from './components/core/Timeline'
 
 export { default as Kbd } from './components/core/Kbd'
 export type { KbdProps, KbdSize } from './components/core/Kbd'
@@ -218,6 +227,9 @@ export type {
 
 export { default as AppShell } from './components/core/AppShell'
 export type { AppShellProps } from './components/core/AppShell'
+
+export { default as SecureLayout } from './components/core/SecureLayout'
+export type { SecureLayoutProps } from './components/core/SecureLayout'
 
 export { default as ThemeProvider } from './components/core/ThemeProvider'
 export type {

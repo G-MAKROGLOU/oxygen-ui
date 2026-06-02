@@ -1,0 +1,68 @@
+{/* src/docs/SecureLayout.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Layout/SecureLayout/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# SecureLayout
+
+A layout wrapper that gates its children behind an access check —
+authentication, RBAC (roles), PBAC (permissions), JWT expiry, and/or a custom
+(optionally async) predicate.
+
+> **This is a UI guard, not a security boundary.** It controls what renders.
+> Real authorization must be enforced by your API/server — never trust a
+> client-side check. The JWT is only inspected for expiry; its signature is
+> **not** verified here.
+
+## Mental model
+
+The check runs in an effect (so async predicates are supported). While it
+resolves, the `loadingFallback` shows; on success the children fade in; on
+failure the `fallback` renders and `onDeny` fires (e.g. to redirect). The gates
+are evaluated in order and **all** must pass:
+
+1. **Authenticated** — `isAuthenticated`, or inferred from `token` validity, or assumed true if neither is given.
+2. **Roles (RBAC)** — `requiredRoles` against `roles` (any, or all with `requireAllRoles`).
+3. **Permissions (PBAC)** — `requiredPermissions` against `permissions` (any, or all with `requireAllPermissions`).
+4. **`canAccess()`** — the final say; may be async.
+
+## Quick start
+
+```tsx
+import { SecureLayout } from '@geomak/ui'
+
+<SecureLayout
+  token={jwt}
+  roles={user.roles}            requiredRoles={['admin']}
+  permissions={user.perms}      requiredPermissions={['reports:read']}
+  onDeny={() => navigate('/login')}
+>
+  <AdminDashboard />
+</SecureLayout>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Protected content.</td></tr>
+    <tr><td style={td0}>isAuthenticated</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Auth flag; inferred from <code>token</code> if omitted, else assumed true.</td></tr>
+    <tr><td style={td0}>token</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>JWT — checked for expiry (<code>exp</code>) only.</td></tr>
+    <tr><td style={td0}>roles / requiredRoles</td><td style={td(true)}>string[]</td><td style={td(true)}>—</td><td style={td(false)}>User roles vs. required (RBAC).</td></tr>
+    <tr><td style={td0}>requireAllRoles</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Require all roles, not just one.</td></tr>
+    <tr><td style={td0}>permissions / requiredPermissions</td><td style={td(true)}>string[]</td><td style={td(true)}>—</td><td style={td(false)}>User perms vs. required (PBAC).</td></tr>
+    <tr><td style={td0}>requireAllPermissions</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Require all permissions.</td></tr>
+    <tr><td style={td0}>canAccess</td><td style={td(true)}>{'() => boolean | Promise<boolean>'}</td><td style={td(true)}>—</td><td style={td(false)}>Final predicate (may be async).</td></tr>
+    <tr><td style={td0}>loadingFallback</td><td style={td(true)}>ReactNode</td><td style={td(true)}>spinner</td><td style={td(false)}>Shown while checking.</td></tr>
+    <tr><td style={td0}>fallback</td><td style={td(true)}>ReactNode</td><td style={td(true)}>"Access denied" panel</td><td style={td(false)}>Shown when denied.</td></tr>
+    <tr><td style={td0}>onDeny</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired once on denial (e.g. redirect).</td></tr>
+  </tbody>
+</table>
+
+See the **Layout → SecureLayout** stories.
