@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import * as Popover from '@radix-ui/react-popover'
 import IconButton from './IconButton'
 import Button from '../inputs/Button'
 import SegmentedControl from '../inputs/SegmentedControl'
@@ -21,6 +22,7 @@ import {
     minutesIntoDay,
     hourLabel,
     timeLabel,
+    MONTHS_SHORT,
 } from './scheduler.utils'
 
 export type SchedulerView = 'month' | 'week'
@@ -188,10 +190,12 @@ export default function Scheduler({
                     <IconButton type="bordered" size="sm" icon={<Chevron dir="left" />} title="Previous" onClick={() => go(-1)} />
                     <IconButton type="bordered" size="sm" icon={<Chevron dir="right" />} title="Next" onClick={() => go(1)} />
                     <Button variant="ghost" size="sm" content="Today" onClick={goToday} />
-                    <h2 className="ml-1 flex min-w-[9rem] items-center gap-2 text-lg font-semibold tracking-tight text-foreground">
-                        {title}
-                        {loading && <Spinner />}
-                    </h2>
+                    <MonthYearPicker
+                        label={title}
+                        cursor={cursor}
+                        onPick={(d) => { setDir(0); setCursor(d) }}
+                    />
+                    {loading && <Spinner />}
                 </div>
                 <div className="flex items-center gap-2">
                     <SegmentedControl
@@ -239,6 +243,66 @@ export default function Scheduler({
                     </motion.div>
             </div>
         </div>
+    )
+}
+
+// ── Month / year jump picker ──────────────────────────────────────────────────
+
+function MonthYearPicker({ label, cursor, onPick }: { label: string; cursor: Date; onPick: (d: Date) => void }) {
+    const [open, setOpen] = useState(false)
+    const [viewYear, setViewYear] = useState(cursor.getFullYear())
+    // Re-sync the browsing year to the cursor each time the popover opens.
+    useEffect(() => { if (open) setViewYear(cursor.getFullYear()) }, [open, cursor])
+
+    return (
+        <Popover.Root open={open} onOpenChange={setOpen}>
+            <Popover.Trigger asChild>
+                <button
+                    type="button"
+                    className="group ml-1 inline-flex items-center gap-1.5 rounded-md px-1.5 py-0.5 text-lg font-semibold tracking-tight text-foreground transition-colors hover:bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                >
+                    {label}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true" className="h-4 w-4 text-foreground-muted transition-transform duration-150 group-data-[state=open]:rotate-180">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
+                    </svg>
+                </button>
+            </Popover.Trigger>
+            <Popover.Portal>
+                <Popover.Content
+                    align="start"
+                    sideOffset={8}
+                    className={[
+                        'z-[400] w-64 rounded-lg border border-border bg-surface p-3 shadow-lg',
+                        'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
+                        'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+                    ].join(' ')}
+                >
+                    <div className="mb-2 flex items-center justify-between">
+                        <IconButton size="sm" type="bordered" icon={<Chevron dir="left" />} title="Previous year" onClick={() => setViewYear((y) => y - 1)} />
+                        <span className="text-sm font-semibold tabular-nums text-foreground">{viewYear}</span>
+                        <IconButton size="sm" type="bordered" icon={<Chevron dir="right" />} title="Next year" onClick={() => setViewYear((y) => y + 1)} />
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                        {MONTHS_SHORT.map((m, i) => {
+                            const current = i === cursor.getMonth() && viewYear === cursor.getFullYear()
+                            return (
+                                <button
+                                    key={m}
+                                    type="button"
+                                    onClick={() => { onPick(new Date(viewYear, i, 1)); setOpen(false) }}
+                                    className={[
+                                        'rounded-md px-2 py-1.5 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                                        current ? 'bg-accent font-semibold text-accent-fg' : 'text-foreground hover:bg-background',
+                                    ].join(' ')}
+                                >
+                                    {m}
+                                </button>
+                            )
+                        })}
+                    </div>
+                </Popover.Content>
+            </Popover.Portal>
+        </Popover.Root>
     )
 }
 

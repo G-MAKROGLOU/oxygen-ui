@@ -9,6 +9,8 @@ const MONTHS = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December',
 ]
+/** Three-letter month labels (Jan–Dec), index 0–11. */
+export const MONTHS_SHORT = MONTHS.map((m) => m.slice(0, 3))
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 export const MINUTES_PER_DAY = 1440

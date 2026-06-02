@@ -17,7 +17,9 @@ for dashboards and ops tools. For single-date selection use
 ## Mental model
 
 The Scheduler owns the view (`month` / `week`) and the focused date; the toolbar
-pages and toggles them. Feed it data one of two ways:
+pages and toggles them. Click the month/year title to open a quick jump picker
+(month grid + year stepper) for moving across the calendar fast, rather than
+paging one step at a time. Feed it data one of two ways:
 
 - **Controlled** — pass `events` directly (you fetch / manage them).
 - **Async** — pass `loadEvents(range, view)`; it's called whenever the visible

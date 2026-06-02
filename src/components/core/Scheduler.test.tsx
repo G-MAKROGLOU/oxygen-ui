@@ -39,6 +39,16 @@ describe('Scheduler', () => {
         expect(onSelectEvent).toHaveBeenCalledWith(expect.objectContaining({ title: 'Kickoff' }))
     })
 
+    it('jumps to a month and year via the picker', () => {
+        render(<Scheduler events={[]} defaultDate={new Date(2026, 5, 15)} />)
+        // open the picker from the title
+        fireEvent.click(screen.getByText('June 2026'))
+        // step back a year, then pick March
+        fireEvent.click(screen.getByRole('button', { name: 'Previous year' }))
+        fireEvent.click(screen.getByText('Mar'))
+        expect(screen.getByText('March 2025')).toBeInTheDocument()
+    })
+
     it('shows the New event button only when onNewEvent is given', () => {
         const { rerender } = render(<Scheduler events={[]} defaultDate={new Date(2026, 5, 15)} />)
         expect(screen.queryByRole('button', { name: /New event/ })).toBeNull()
