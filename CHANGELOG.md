@@ -1,3 +1,10 @@
+# [6.20.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.19.0...v6.20.0) (2026-06-02)
+
+
+### Features
+
+* **card-carousel:** make 'rotating' variant circular (loop + balanced start) ([85616ee](https://github.com/G-MAKROGLOU/oxygen-ui/commit/85616ee95545979e7a3a4fc906c9ba83ff107f70))
+
 # [6.19.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.18.0...v6.19.0) (2026-06-02)
 
 
