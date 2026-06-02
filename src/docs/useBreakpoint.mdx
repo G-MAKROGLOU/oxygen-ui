@@ -1,0 +1,52 @@
+{/* src/docs/useBreakpoint.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Hooks/useBreakpoint/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# useBreakpoint
+
+A reactive view of the library's responsive breakpoints — for layout decisions
+that live in JavaScript (which component to render, how many columns, etc.).
+
+## Mental model
+
+`useBreakpoint()` is built on [useMediaQuery](/docs/hooks-usemediaquery-guide--docs)
+and exposes the same breakpoints as the Tailwind `screens` config. Each flag is a
+**min-width** match (mobile-first): `md` is `true` at ≥ 768px. `active` is the
+largest breakpoint currently met, or `'base'` below `sm`. It's SSR-safe — every
+flag is `false` until mounted, then syncs.
+
+## Breakpoints
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Flag</th><th style={th}>Min width</th><th style={th}>True when</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>sm</td><td style={td(false)}>480px</td><td style={td(false)}>viewport ≥ 480</td></tr>
+    <tr><td style={td0}>md</td><td style={td(false)}>768px</td><td style={td(false)}>viewport ≥ 768</td></tr>
+    <tr><td style={td0}>lg</td><td style={td(false)}>976px</td><td style={td(false)}>viewport ≥ 976</td></tr>
+    <tr><td style={td0}>xl</td><td style={td(false)}>1440px</td><td style={td(false)}>viewport ≥ 1440</td></tr>
+    <tr><td style={td0}>active</td><td style={td(false)}>—</td><td style={td(false)}>The largest matched flag, or <code>'base'</code> below sm.</td></tr>
+  </tbody>
+</table>
+
+## Quick start
+
+```tsx
+import { useBreakpoint } from '@geomak/ui'
+
+function Nav() {
+  const { md, active } = useBreakpoint()
+  if (!md) return <MobileNav />          // below 768px
+  return <DesktopNav dense={active === 'sm'} />
+}
+```
+
+For an arbitrary one-off query (orientation, reduced-motion, print, a custom
+width) reach for `useMediaQuery(query)` directly.
+
+See the **Hooks → useBreakpoint** story (resize the viewport to watch it update).
