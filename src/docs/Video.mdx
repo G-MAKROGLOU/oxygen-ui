@@ -1,0 +1,45 @@
+{/* src/docs/Video.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Marketing/Video/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Video
+
+A responsive video frame that keeps its aspect ratio at any width.
+
+## Mental model
+
+Give it a file `src` for a native `<video>` (with an optional click-to-play
+poster overlay) or an `embedUrl` for an `<iframe>` (YouTube, Vimeo, …). The
+frame holds its `aspect` ratio fluidly, so it scales cleanly in any column.
+
+## Quick start
+
+```tsx
+import { Video } from '@geomak/ui'
+
+<Video src="/clips/tour.mp4" poster="/clips/tour.jpg" title="Product tour" />
+<Video embedUrl="https://www.youtube.com/embed/abc123" title="Webinar" aspect="16/9" />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>src</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Video file URL (native player).</td></tr>
+    <tr><td style={td0}>embedUrl</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Embed URL (iframe). Takes precedence over src.</td></tr>
+    <tr><td style={td0}>poster</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Poster + click-to-play thumbnail (native).</td></tr>
+    <tr><td style={td0}>aspect</td><td style={td(true)}>'16/9' | '4/3' | '1/1' | '21/9'</td><td style={td(true)}>'16/9'</td><td style={td(false)}>Frame aspect ratio.</td></tr>
+    <tr><td style={td0}>controls / autoPlay / loop / muted</td><td style={td(true)}>boolean</td><td style={td(true)}>true / false…</td><td style={td(false)}>Native playback flags.</td></tr>
+    <tr><td style={td0}>framed</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Rounded corners + border.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Accessible frame title.</td></tr>
+  </tbody>
+</table>
+
+See the **Marketing → Video** stories.

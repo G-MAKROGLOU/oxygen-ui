@@ -1,0 +1,52 @@
+{/* src/docs/LeadCapture.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Marketing/LeadCapture/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# LeadCapture
+
+A footer call-to-action band with an inline email-capture form — title,
+supporting copy, an email field and a submit button.
+
+## Mental model
+
+A self-contained section: it owns the email field state and, on submit, fires
+`onSubmit(email)` then swaps the form for `successMessage`. The field is a real
+`type="email"` input (browser validation + an accessible label). `background`
+adds a soft accent glow or stays flat on the surface.
+
+## Quick start
+
+```tsx
+import { LeadCapture } from '@geomak/ui'
+
+<LeadCapture
+  title="Stay in the loop"
+  description="Product updates and maritime insights, monthly."
+  buttonLabel="Subscribe"
+  note="We respect your inbox. Unsubscribe anytime."
+  onSubmit={(email) => subscribe(email)}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Headline (required).</td></tr>
+    <tr><td style={td0}>description / note</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Supporting copy / small print.</td></tr>
+    <tr><td style={td0}>onSubmit</td><td style={td(true)}>{'(email: string) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired with the entered email.</td></tr>
+    <tr><td style={td0}>buttonLabel / placeholder / inputLabel</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>'Subscribe' / …</td><td style={td(false)}>Submit text, field placeholder, a11y label.</td></tr>
+    <tr><td style={td0}>successMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>(default)</td><td style={td(false)}>Shown in place of the form after submit.</td></tr>
+    <tr><td style={td0}>background</td><td style={td(true)}>'surface' | 'gradient'</td><td style={td(true)}>'gradient'</td><td style={td(false)}>Backdrop treatment.</td></tr>
+    <tr><td style={td0}>centered</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Centre vs left-align content.</td></tr>
+  </tbody>
+</table>
+
+See the **Marketing → LeadCapture** stories.

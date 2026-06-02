@@ -1,0 +1,58 @@
+{/* src/docs/CookieConsent.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Marketing/CookieConsent/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# CookieConsent
+
+A cookie / consent banner for accepting or rejecting non-essential cookies and
+linking to your policy.
+
+## Mental model
+
+**Self-managing by default.** It remembers the visitor's choice in
+`localStorage` under `storageKey` (default `'oxygen-cookie-consent'`) and stays
+dismissed on return. Drop it once near your app root and you're done. Wire
+`onAccept` / `onDecline` to (de)activate analytics. For full control, pass
+`storageKey={null}` and drive visibility with `open`. Rendered in a Portal,
+fixed to the bottom.
+
+## Quick start
+
+```tsx
+import { CookieConsent } from '@geomak/ui'
+
+<CookieConsent
+  title="Cookies"
+  message="We use cookies to enhance your experience."
+  declineLabel="Reject"              // omit for accept-only
+  learnMoreHref="/privacy"
+  onAccept={enableAnalytics}
+  onDecline={disableAnalytics}
+/>
+```
+
+Read the stored choice yourself anytime via `localStorage.getItem('oxygen-cookie-consent')`
+(`'accepted'` | `'declined'`).
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>message / title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>(default copy)</td><td style={td(false)}>Banner body + optional heading.</td></tr>
+    <tr><td style={td0}>acceptLabel / declineLabel</td><td style={td(true)}>string</td><td style={td(true)}>'Accept all' / —</td><td style={td(false)}>Action labels. Omit declineLabel for accept-only.</td></tr>
+    <tr><td style={td0}>onAccept / onDecline</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Choice callbacks.</td></tr>
+    <tr><td style={td0}>learnMoreHref / learnMoreLabel</td><td style={td(true)}>string</td><td style={td(true)}>— / 'Learn more'</td><td style={td(false)}>Policy link.</td></tr>
+    <tr><td style={td0}>storageKey</td><td style={td(true)}>string | null</td><td style={td(true)}>'oxygen-cookie-consent'</td><td style={td(false)}>Persistence key; null disables (use open).</td></tr>
+    <tr><td style={td0}>open</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Controlled visibility (overrides persistence).</td></tr>
+    <tr><td style={td0}>position</td><td style={td(true)}>'bottom' | 'bottom-left' | 'bottom-right'</td><td style={td(true)}>'bottom'</td><td style={td(false)}>Placement.</td></tr>
+  </tbody>
+</table>
+
+See the **Marketing → CookieConsent** stories.

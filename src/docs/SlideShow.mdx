@@ -1,0 +1,59 @@
+{/* src/docs/SlideShow.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Marketing/SlideShow/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# SlideShow
+
+A full-bleed hero carousel. Each slide carries an eyebrow, title, description and
+CTAs over an optional background image (with a legibility scrim).
+
+## Mental model
+
+Pass an array of `slides`; the component cross-fades between them, auto-advances
+(pausing on hover), and renders arrows + dots. A slide with an `image` gets a
+dark scrim and light text; without one it falls back to the surface background
+with foreground text. `prefers-reduced-motion` disables the fade.
+
+## Quick start
+
+```tsx
+import { SlideShow, Button } from '@geomak/ui'
+
+<SlideShow slides={[
+  { eyebrow: 'Fleet', title: 'Command your fleet', description: '…', image: hero1,
+    actions: <><Button content="Start" /><Button variant="outline" content="Demo" /></> },
+  { title: 'Stay compliant', image: hero2 },
+]} />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>slides</td><td style={td(true)}>Slide[]</td><td style={td(true)}>—</td><td style={td(false)}>The slides (see below).</td></tr>
+    <tr><td style={td0}>autoPlay / interval</td><td style={td(true)}>boolean / number</td><td style={td(true)}>true / 6000</td><td style={td(false)}>Auto-advance + cadence (ms). Pauses on hover.</td></tr>
+    <tr><td style={td0}>showArrows / showDots</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Navigation affordances.</td></tr>
+    <tr><td style={td0}>height</td><td style={td(true)}>number | string</td><td style={td(true)}>460</td><td style={td(false)}>Stage height.</td></tr>
+  </tbody>
+</table>
+
+### Slide
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Headline (required).</td></tr>
+    <tr><td style={td0}>eyebrow / description / actions</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Kicker, paragraph, CTA row.</td></tr>
+    <tr><td style={td0}>image</td><td style={td(true)}>string</td><td style={td(false)}>Background image URL (adds scrim + light text).</td></tr>
+    <tr><td style={td0}>align</td><td style={td(true)}>'start' | 'center'</td><td style={td(false)}>Text alignment. Default 'center'.</td></tr>
+  </tbody>
+</table>
+
+See the **Marketing → SlideShow** stories.

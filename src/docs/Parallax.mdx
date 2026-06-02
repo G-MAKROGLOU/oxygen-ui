@@ -1,0 +1,47 @@
+{/* src/docs/Parallax.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Marketing/Parallax/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Parallax
+
+A scroll-driven band whose background drifts slower than the page as the frame
+passes through the viewport, with centred content over an optional scrim.
+
+## Mental model
+
+`background` is an image URL or any node parked behind `children`. As you
+scroll, the background translates by a fraction of the frame height set by
+`speed` (0 = static, 1 = dramatic). Driven by Framer Motion's scroll progress,
+and disabled under `prefers-reduced-motion`.
+
+## Quick start
+
+```tsx
+import { Parallax, Button } from '@geomak/ui'
+
+<Parallax background="/img/ocean.jpg" height={520} speed={0.35}>
+  <h2 className="text-4xl font-bold text-white">Built for the open sea</h2>
+  <Button content="Get started" />
+</Parallax>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>background</td><td style={td(true)}>string | ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Image URL or node behind the content.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Centred foreground content.</td></tr>
+    <tr><td style={td0}>speed</td><td style={td(true)}>number (0–1)</td><td style={td(true)}>0.3</td><td style={td(false)}>Drift as a fraction of frame height.</td></tr>
+    <tr><td style={td0}>overlay</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Dim scrim for text legibility.</td></tr>
+    <tr><td style={td0}>height</td><td style={td(true)}>number | string</td><td style={td(true)}>440</td><td style={td(false)}>Frame height.</td></tr>
+  </tbody>
+</table>
+
+See the **Marketing → Parallax** stories.
