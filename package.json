@@ -48,7 +48,9 @@
     "test:coverage": "vitest run --coverage",
     "test:types": "tsc --noEmit",
     "test:lint": "eslint src --max-warnings 0",
-    "ci": "yarn test:types && yarn test:lint && yarn test"
+    "size": "yarn build:js && node scripts/size-guard.mjs",
+    "size:report": "yarn build:js && node scripts/size-guard.mjs --report",
+    "ci": "yarn test:types && yarn test:lint && yarn test && yarn size"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
