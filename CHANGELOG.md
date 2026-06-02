@@ -1,3 +1,10 @@
+## [6.27.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.27.1...v6.27.2) (2026-06-02)
+
+
+### Bug Fixes
+
+* **table:** cohesive pagination strip; add neutral Button 'outline' variant ([00e45ce](https://github.com/G-MAKROGLOU/oxygen-ui/commit/00e45ce27ffd0b64ceae3f17adef034e86f7f4a6)), closes [#d3dde8](https://github.com/G-MAKROGLOU/oxygen-ui/issues/d3dde8)
+
 ## [6.27.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.27.0...v6.27.1) (2026-06-02)
 
 
