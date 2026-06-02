@@ -307,65 +307,55 @@ function Pagination({
         }
     }, [serverSide, options.perPage, picker])
 
-    const navBtn = (icon: React.ReactNode, disabled: boolean, onClick: () => void) => (
-        <IconButton disabled={disabled} onClick={onClick} icon={icon} />
+    const navBtn = (icon: React.ReactNode, disabled: boolean, onClick: () => void, title: string) => (
+        <IconButton type="bordered" size="sm" disabled={disabled} onClick={onClick} icon={icon} title={title} />
     )
 
     const chevronRight = (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
     )
 
     const doubleChevronRight = (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
         </svg>
     )
 
     return (
-        <div className="flex gap-2 items-center justify-end pt-2">
-            {navBtn(
-                <span className="rotate-180 inline-flex">{doubleChevronRight}</span>,
-                activePage === 0,
-                () => onPageChange(0)
-            )}
-            {navBtn(
-                <span className="rotate-180 inline-flex">{chevronRight}</span>,
-                activePage === 0,
-                () => activePage > 0 && onPageChange(activePage - 1)
-            )}
-            <span className="bg-surface-raised rounded-lg ml-2 mr-2 shadow-sm p-2 w-10 text-center select-none text-foreground">
-                {activePage + 1}
-            </span>
-            {navBtn(
-                chevronRight,
-                activePage === maxPage,
-                () => activePage < maxPage && onPageChange(activePage + 1)
-            )}
-            {navBtn(
-                doubleChevronRight,
-                activePage === maxPage,
-                () => onPageChange(maxPage)
-            )}
+        <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-3 pt-3">
             {options.withPicker && (
-                <Dropdown
-                    style={{ width: 80, position: 'relative', bottom: 4 }}
-                    hasSearch={false}
-                    items={picker}
-                    isMultiselect={false}
-                    value={displayPerPageKey}
-                    onChange={({ target: { value } }) => {
-                        // Pagination is single-select; ignore array values that
-                        // could come through from a multi-select Dropdown.
-                        if (Array.isArray(value)) return
-                        const numKey = typeof value === 'number' ? value : Number(value)
-                        if (!serverSide) setPerPageKey(numKey)
-                        const opt = picker.find((o) => o.key === numKey)
-                        onPerPageChange(opt?.label ?? opt?.value ?? numKey)
-                    }}
-                />
+                <div className="mr-auto flex items-center gap-2">
+                    <span className="whitespace-nowrap text-xs text-foreground-muted">Rows per page</span>
+                    <Dropdown
+                        size="sm"
+                        style={{ width: 76 }}
+                        hasSearch={false}
+                        items={picker}
+                        isMultiselect={false}
+                        value={displayPerPageKey}
+                        onChange={({ target: { value } }) => {
+                            // Pagination is single-select; ignore array values that
+                            // could come through from a multi-select Dropdown.
+                            if (Array.isArray(value)) return
+                            const numKey = typeof value === 'number' ? value : Number(value)
+                            if (!serverSide) setPerPageKey(numKey)
+                            const opt = picker.find((o) => o.key === numKey)
+                            onPerPageChange(opt?.label ?? opt?.value ?? numKey)
+                        }}
+                    />
+                </div>
             )}
+            <div className="flex items-center gap-1">
+                {navBtn(<span className="inline-flex rotate-180">{doubleChevronRight}</span>, activePage === 0, () => onPageChange(0), 'First page')}
+                {navBtn(<span className="inline-flex rotate-180">{chevronRight}</span>, activePage === 0, () => activePage > 0 && onPageChange(activePage - 1), 'Previous page')}
+                <span className="px-2 text-sm tabular-nums text-foreground-secondary select-none">
+                    {activePage + 1} <span className="text-foreground-muted">/ {maxPage + 1}</span>
+                </span>
+                {navBtn(chevronRight, activePage === maxPage, () => activePage < maxPage && onPageChange(activePage + 1), 'Next page')}
+                {navBtn(doubleChevronRight, activePage === maxPage, () => onPageChange(maxPage), 'Last page')}
+            </div>
         </div>
     )
 }
