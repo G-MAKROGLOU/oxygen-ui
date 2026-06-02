@@ -188,9 +188,9 @@ export default function Scheduler({
                     <IconButton type="bordered" size="sm" icon={<Chevron dir="left" />} title="Previous" onClick={() => go(-1)} />
                     <IconButton type="bordered" size="sm" icon={<Chevron dir="right" />} title="Next" onClick={() => go(1)} />
                     <Button variant="ghost" size="sm" content="Today" onClick={goToday} />
-                    <h2 className="ml-1 min-w-[9rem] text-base font-semibold tracking-tight text-foreground">
+                    <h2 className="ml-1 flex min-w-[9rem] items-center gap-2 text-lg font-semibold tracking-tight text-foreground">
                         {title}
-                        {loading && <span className="ml-2 inline-flex translate-y-0.5"><Spinner /></span>}
+                        {loading && <Spinner />}
                     </h2>
                 </div>
                 <div className="flex items-center gap-2">
@@ -277,7 +277,9 @@ function MonthView({
                             className={[
                                 'group flex min-h-[5rem] flex-col gap-1 border-b border-r border-border p-1.5 text-left transition-colors',
                                 '[&:nth-child(7n)]:border-r-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent',
-                                inMonth ? 'bg-surface hover:bg-surface-raised' : 'bg-background/40',
+                                // surface===surface-raised in light mode, so hover lifts toward the
+                                // cool chart-mist background instead (a visible, on-brand tint).
+                                inMonth ? 'bg-surface hover:bg-background' : 'bg-background hover:bg-surface',
                             ].join(' ')}
                         >
                             <span
@@ -329,6 +331,8 @@ function WeekView({
     onSelectSlot?: (d: Date) => void; onSelectEvent?: (e: SchedulerEvent) => void
 }) {
     const days = useMemo(() => getWeekDays(cursor, weekStartsOn), [cursor, weekStartsOn])
+    const labels = useMemo(() => weekdayLabels(weekStartsOn), [weekStartsOn])
+    const dow = (d: Date) => labels[(d.getDay() - weekStartsOn + 7) % 7]
     const [startHour, endHour] = dayHours
     const hours = useMemo(
         () => Array.from({ length: endHour - startHour }, (_, i) => startHour + i),
@@ -344,7 +348,7 @@ function WeekView({
                 <div className="border-r border-border" />
                 {days.map((d) => (
                     <div key={d.getTime()} className="border-r border-border px-1 py-1.5 text-center last:border-r-0">
-                        <div className="text-[11px] font-medium uppercase tracking-wide text-foreground-muted">{weekdayLabels(weekStartsOn)[(d.getDay() - weekStartsOn + 7) % 7]}</div>
+                        <div className="text-[11px] font-medium uppercase tracking-wide text-foreground-muted">{dow(d)}</div>
                         <div className={['mx-auto mt-0.5 flex h-6 w-6 items-center justify-center rounded-full text-xs tabular-nums', isToday(d) ? 'bg-accent font-semibold text-accent-fg' : 'text-foreground'].join(' ')}>
                             {d.getDate()}
                         </div>
@@ -374,9 +378,9 @@ function WeekView({
                                     <button
                                         type="button"
                                         key={h}
-                                        aria-label={`${weekdayLabels(weekStartsOn)[(day.getDay() - weekStartsOn + 7) % 7]} ${day.getDate()} ${hourLabel(h)}`}
+                                        aria-label={`${dow(day)} ${day.getDate()} ${hourLabel(h)}`}
                                         onClick={() => onSelectSlot?.(new Date(day.getFullYear(), day.getMonth(), day.getDate(), h))}
-                                        className="absolute left-0 right-0 border-b border-border/60 hover:bg-surface-raised/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
+                                        className="absolute left-0 right-0 border-b border-border hover:bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
                                         style={{ top: i * hourHeight, height: hourHeight }}
                                     />
                                 ))}
@@ -392,11 +396,16 @@ function WeekView({
                                             key={e.id}
                                             onClick={(ev) => { ev.stopPropagation(); onSelectEvent?.(e) }}
                                             title={`${e.title} · ${timeLabel(e.start)}–${timeLabel(e.end)}`}
-                                            className="absolute left-0.5 right-0.5 overflow-hidden rounded-md border-l-2 px-1.5 py-0.5 text-left text-[11px] leading-tight text-foreground shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                                            style={{ top: Math.max(0, top), height, borderLeftColor: color, backgroundColor: `color-mix(in oklab, ${color} 16%, var(--color-surface))` }}
+                                            className="absolute left-0.5 right-0.5 overflow-hidden rounded-md border px-1.5 py-0.5 text-left text-[11px] leading-tight text-foreground shadow-sm transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                            style={{
+                                                top: Math.max(0, top),
+                                                height,
+                                                backgroundColor: `color-mix(in oklab, ${color} 14%, var(--color-surface))`,
+                                                borderColor: `color-mix(in oklab, ${color} 40%, var(--color-surface))`,
+                                            }}
                                         >
                                             <div className="truncate font-medium">{e.title}</div>
-                                            <div className="truncate text-foreground-muted">{timeLabel(e.start)}</div>
+                                            <div className="truncate" style={{ color }}>{timeLabel(e.start)}</div>
                                         </button>
                                     )
                                 })}
