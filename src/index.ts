@@ -136,6 +136,9 @@ export type { FABProps, FABAction, FABPosition, FABSize, FABTone } from './compo
 export { default as PopConfirm } from './components/core/PopConfirm'
 export type { PopConfirmProps, PopConfirmTone } from './components/core/PopConfirm'
 
+export { default as LogoutTimer } from './components/core/LogoutTimer'
+export type { LogoutTimerProps } from './components/core/LogoutTimer'
+
 export { default as Calendar } from './components/core/Calendar'
 export type { CalendarProps, CalendarEvent } from './components/core/Calendar'
 

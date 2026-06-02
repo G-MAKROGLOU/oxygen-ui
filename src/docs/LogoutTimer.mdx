@@ -1,0 +1,59 @@
+{/* src/docs/LogoutTimer.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Feedback/LogoutTimer/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# LogoutTimer
+
+An inactivity / session-timeout guard. After a period of no activity it raises a
+warning dialog that counts down to an automatic sign-out — the standard
+"You'll be signed out soon" pattern for banking, admin, and CRM apps.
+
+## Mental model
+
+Activity events (mouse, keyboard, touch, scroll) reset an idle timer. After
+`timeout` ms idle, a warning Modal appears and counts down for `countdown` ms.
+While the warning is up, background activity **does not** reset it — the user
+must choose: **Stay signed in** (`onContinue`, idle timer restarts) or **Sign
+out now** (`onLogout`). If the countdown reaches zero, `onLogout` fires
+automatically. Closing the dialog (Esc / backdrop) counts as staying.
+
+Mount it once near the app root — typically alongside your
+[SecureLayout](/docs/layout-securelayout-guide--docs).
+
+## Quick start
+
+```tsx
+import { LogoutTimer } from '@geomak/ui'
+
+<LogoutTimer
+  timeout={15 * 60_000}   // warn after 15 minutes idle
+  countdown={60_000}      // 60 seconds to respond
+  onLogout={() => navigate('/logout')}
+  onContinue={() => refreshSession()}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>timeout</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>Idle time (ms) before the warning appears.</td></tr>
+    <tr><td style={td0}>countdown</td><td style={td(true)}>number</td><td style={td(true)}>60000</td><td style={td(false)}>Warning countdown (ms) before auto sign-out.</td></tr>
+    <tr><td style={td0}>onLogout</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired on countdown elapse or explicit sign-out.</td></tr>
+    <tr><td style={td0}>onContinue</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired when the user stays (session extended).</td></tr>
+    <tr><td style={td0}>onWarning</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired when the warning first appears.</td></tr>
+    <tr><td style={td0}>enabled</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Master switch; false fully disables the timer.</td></tr>
+    <tr><td style={td0}>events</td><td style={td(true)}>string[]</td><td style={td(true)}>mouse/key/touch/scroll/wheel</td><td style={td(false)}>Activity events that reset the idle timer.</td></tr>
+    <tr><td style={td0}>title / description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>"Still there?" / …</td><td style={td(false)}>Warning dialog copy.</td></tr>
+    <tr><td style={td0}>continueLabel / logoutLabel</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Stay signed in' / 'Sign out now'</td><td style={td(false)}>Button labels.</td></tr>
+  </tbody>
+</table>
+
+See the **Feedback → LogoutTimer** stories.
