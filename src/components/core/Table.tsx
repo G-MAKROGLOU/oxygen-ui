@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import SearchInput from '../inputs/SearchInput'
-import Dropdown from '../inputs/Dropdown'
+import MenuButton from './MenuButton'
 import IconButton from './IconButton'
 import { SkeletonBox } from './Skeleton'
 
@@ -307,6 +307,9 @@ function Pagination({
         }
     }, [serverSide, options.perPage, picker])
 
+    const currentOpt = picker.find((o) => o.key === displayPerPageKey)
+    const currentPerPageLabel = currentOpt?.label ?? currentOpt?.value ?? options.perPage ?? ''
+
     const navBtn = (icon: React.ReactNode, disabled: boolean, onClick: () => void, title: string) => (
         <IconButton type="bordered" size="sm" disabled={disabled} onClick={onClick} icon={icon} title={title} />
     )
@@ -328,22 +331,19 @@ function Pagination({
             {options.withPicker && (
                 <div className="mr-auto flex items-center gap-2">
                     <span className="whitespace-nowrap text-xs text-foreground-muted">Rows per page</span>
-                    <Dropdown
+                    <MenuButton
+                        variant="secondary"
                         size="sm"
-                        style={{ width: 76 }}
-                        hasSearch={false}
-                        items={picker}
-                        isMultiselect={false}
-                        value={displayPerPageKey}
-                        onChange={({ target: { value } }) => {
-                            // Pagination is single-select; ignore array values that
-                            // could come through from a multi-select Dropdown.
-                            if (Array.isArray(value)) return
-                            const numKey = typeof value === 'number' ? value : Number(value)
-                            if (!serverSide) setPerPageKey(numKey)
-                            const opt = picker.find((o) => o.key === numKey)
-                            onPerPageChange(opt?.label ?? opt?.value ?? numKey)
-                        }}
+                        side="top"
+                        label={String(currentPerPageLabel)}
+                        items={picker.map((o) => ({
+                            key: o.key,
+                            label: String(o.label ?? o.value ?? o.key),
+                            onSelect: () => {
+                                if (!serverSide) setPerPageKey(o.key)
+                                onPerPageChange(o.label ?? o.value ?? o.key)
+                            },
+                        }))}
                     />
                 </div>
             )}
