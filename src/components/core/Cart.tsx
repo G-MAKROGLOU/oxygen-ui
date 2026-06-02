@@ -62,11 +62,11 @@ const Stepper = ({
     return (
         <div className="inline-flex items-center rounded-md border border-border overflow-hidden">
             <button type="button" aria-label="Decrease quantity" disabled={quantity <= 1} onClick={() => onChange?.(quantity - 1)} className={btn}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-3.5 w-3.5"><path strokeLinecap="round" d="M5 12h14" /></svg>
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-3.5 w-3.5"><path strokeLinecap="round" d="M5 12h14" /></svg>
             </button>
             <span className="w-8 text-center text-sm tabular-nums text-foreground select-none">{quantity}</span>
             <button type="button" aria-label="Increase quantity" disabled={max != null && quantity >= max} onClick={() => onChange?.(quantity + 1)} className={btn}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-3.5 w-3.5"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-3.5 w-3.5"><path strokeLinecap="round" d="M12 5v14M5 12h14" /></svg>
             </button>
         </div>
     )

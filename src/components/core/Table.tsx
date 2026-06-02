@@ -325,13 +325,13 @@ function Pagination({
     // Chevrons centred in the 24×24 viewBox (centre x=12) so the rotated left
     // pair lines up identically with the right pair.
     const chevronRight = (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6" />
         </svg>
     )
 
     const doubleChevronRight = (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l6 6-6 6M12 6l6 6-6 6" />
         </svg>
     )

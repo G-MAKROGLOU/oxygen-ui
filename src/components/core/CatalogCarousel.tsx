@@ -70,7 +70,7 @@ export default function CatalogCarousel({ items, buttonText, onOpen, className =
                     aria-label="Previous"
                     className="cursor-pointer rounded-lg transition-all duration-300 hover:bg-ice-dark dark:hover:bg-independence rotate-180"
                 >
-                    <svg viewBox="0 0 24 24" fill="none" stroke={COLORS.PALETTE['prussian-blue']} strokeWidth={2} className="h-10 w-10 dark:stroke-white">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke={COLORS.PALETTE['prussian-blue']} strokeWidth={2} className="h-10 w-10 dark:stroke-white">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                 </button>
@@ -111,7 +111,7 @@ export default function CatalogCarousel({ items, buttonText, onOpen, className =
                     aria-label="Next"
                     className="cursor-pointer rounded-lg transition-all duration-300 hover:bg-ice-dark dark:hover:bg-independence"
                 >
-                    <svg viewBox="0 0 24 24" fill="none" stroke={COLORS.PALETTE['prussian-blue']} strokeWidth={2} className="h-10 w-10 dark:stroke-white">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke={COLORS.PALETTE['prussian-blue']} strokeWidth={2} className="h-10 w-10 dark:stroke-white">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                 </button>
