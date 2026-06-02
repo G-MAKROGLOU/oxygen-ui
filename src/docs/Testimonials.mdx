@@ -1,0 +1,52 @@
+{/* src/docs/Testimonials.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Marketing/Testimonials/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Testimonials
+
+A wall of customer quotes — testimonial, optional star rating, and author with
+avatar.
+
+## Quick start
+
+```tsx
+import { Testimonials } from '@geomak/ui'
+
+<Testimonials title="Loved by ops teams" columns={3} testimonials={[
+  { quote: 'Cut our reporting time in half.', author: 'Maria F.', role: 'Fleet Manager', avatar: url, rating: 5 },
+]} />
+```
+
+Responsive grid (one column on mobile); `columns={1}` renders a single centred
+featured quote. The avatar falls back to the author's initials.
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>testimonials</td><td style={td(true)}>Testimonial[]</td><td style={td(true)}>—</td><td style={td(false)}>The quotes.</td></tr>
+    <tr><td style={td0}>eyebrow / title / description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Optional section header.</td></tr>
+    <tr><td style={td0}>columns</td><td style={td(true)}>1 | 2 | 3</td><td style={td(true)}>3</td><td style={td(false)}>Widest-breakpoint column count.</td></tr>
+  </tbody>
+</table>
+
+### Testimonial
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>quote</td><td style={td(true)}>ReactNode</td><td style={td(false)}>The testimonial text.</td></tr>
+    <tr><td style={td0}>author / role</td><td style={td(true)}>ReactNode</td><td style={td(false)}>Name + role/company.</td></tr>
+    <tr><td style={td0}>avatar</td><td style={td(true)}>string</td><td style={td(false)}>Image URL (falls back to initials).</td></tr>
+    <tr><td style={td0}>rating</td><td style={td(true)}>number</td><td style={td(false)}>1–5 stars.</td></tr>
+  </tbody>
+</table>
+
+See the **Marketing → Testimonials** stories.

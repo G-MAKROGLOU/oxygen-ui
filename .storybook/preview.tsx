@@ -129,6 +129,7 @@ const preview: Preview = {
                     'Feedback',
                     'Progress',
                     'E-Commerce',
+                    'Marketing',
                     'Hooks',
                     '*',
                 ],

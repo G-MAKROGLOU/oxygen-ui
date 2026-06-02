@@ -366,6 +366,16 @@ export type { Breakpoint, BreakpointState } from './hooks/useMediaQuery'
 export { useJwt } from './hooks/useJwt'
 export type { JwtResult } from './hooks/useJwt'
 
+// ── Marketing ─────────────────────────────────────────────────────────────────
+export { default as Jumbotron } from './components/marketing/Jumbotron'
+export type { JumbotronProps, JumbotronLayout, JumbotronBackground } from './components/marketing/Jumbotron'
+export { default as FeatureGrid } from './components/marketing/FeatureGrid'
+export type { FeatureGridProps, Feature } from './components/marketing/FeatureGrid'
+export { default as PricingPlans } from './components/marketing/PricingPlans'
+export type { PricingPlansProps, PricingPlan } from './components/marketing/PricingPlans'
+export { default as Testimonials } from './components/marketing/Testimonials'
+export type { TestimonialsProps, Testimonial } from './components/marketing/Testimonials'
+
 // ── Composite form components ─────────────────────────────────────────────────
 export { default as CreditCardForm } from './components/forms/CreditCardForm'
 export type { CreditCardFormProps, CreditCardValue } from './components/forms/CreditCardForm'

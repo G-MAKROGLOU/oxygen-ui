@@ -1,0 +1,47 @@
+{/* src/docs/FeatureGrid.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Marketing/FeatureGrid/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# FeatureGrid
+
+A responsive grid of product features — icon, title, blurb — with an optional
+section header.
+
+## Quick start
+
+```tsx
+import { FeatureGrid } from '@geomak/ui'
+
+<FeatureGrid
+  eyebrow="Platform"
+  title="Everything in one portal"
+  columns={3}
+  features={[
+    { icon: <BoltIcon />, title: 'Real-time', description: 'Live vessel data.' },
+    { icon: <ShieldIcon />, title: 'Compliance', description: 'CII / AER / EU-ETS.' },
+  ]}
+/>
+```
+
+Collapses to one column on mobile; `columns` (2 / 3 / 4) sets the widest layout.
+Each feature icon sits in an accent-tinted tile.
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>features</td><td style={td(true)}>Feature[]</td><td style={td(true)}>—</td><td style={td(false)}>{'{ icon?, title, description? }'} per cell.</td></tr>
+    <tr><td style={td0}>eyebrow / title / description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Optional section header.</td></tr>
+    <tr><td style={td0}>columns</td><td style={td(true)}>2 | 3 | 4</td><td style={td(true)}>3</td><td style={td(false)}>Widest-breakpoint column count.</td></tr>
+    <tr><td style={td0}>centeredHeader</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Centre vs left-align the header.</td></tr>
+  </tbody>
+</table>
+
+See the **Marketing → FeatureGrid** stories.
