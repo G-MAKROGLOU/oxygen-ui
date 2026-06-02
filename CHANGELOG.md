@@ -1,3 +1,10 @@
+# [6.15.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.14.0...v6.15.0) (2026-06-02)
+
+
+### Features
+
+* **tokens:** add backdrop scrim token; fix invisible modal/drawer overlays ([86d7f43](https://github.com/G-MAKROGLOU/oxygen-ui/commit/86d7f43e857956349c7887f3eb729e5b97fd19b1))
+
 # [6.14.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.13.0...v6.14.0) (2026-06-02)
 
 
