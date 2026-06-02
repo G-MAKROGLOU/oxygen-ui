@@ -45,6 +45,60 @@ const [messages, setMessages] = useState<ChatMessage[]>(initial)
 Enter sends; Shift+Enter inserts a newline. Use `hideComposer` for a read-only
 transcript.
 
+## Loading history
+
+Chat doesn't fetch — you do — but it gives you a transcript **skeleton** for the
+first load via `loading`. Show it while a history request is in flight, then
+hand over the messages:
+
+```tsx
+const [messages, setMessages] = useState<ChatMessage[]>([])
+const [loading, setLoading] = useState(true)
+
+useEffect(() => {
+  fetch('/api/chat/history')
+    .then((r) => r.json())
+    .then(setMessages)
+    .finally(() => setLoading(false))
+}, [])
+
+<Chat currentUserId="me" messages={messages} loading={loading} onSend={send} />
+```
+
+See the **Async history — MSW (HTTP)** story (mocked with Mock Service Worker).
+
+## Real-time with a WebSocket
+
+Because Chat is controlled, wiring it to a socket is just "push inbound frames
+into state, send outbound on the composer." Drive the header `subtitle` and
+`loading` from the connection state for a complete feel:
+
+```tsx
+const [messages, setMessages] = useState<ChatMessage[]>([])
+const [status, setStatus] = useState<'connecting' | 'online' | 'offline'>('connecting')
+const socket = useRef<WebSocket | null>(null)
+
+useEffect(() => {
+  const ws = new WebSocket('wss://…/room/42')
+  socket.current = ws
+  ws.onopen = () => setStatus('online')
+  ws.onclose = () => setStatus('offline')
+  ws.onmessage = (e) => setMessages((m) => [...m, JSON.parse(e.data)])
+  return () => ws.close()
+}, [])
+
+const send = (text: string) => {
+  setMessages((m) => [...m, { id: uid(), authorId: 'me', text, timestamp: new Date(), status: 'sent' }]) // optimistic
+  socket.current?.send(JSON.stringify({ text }))
+}
+
+<Chat currentUserId="me" subtitle={status} messages={messages} loading={status === 'connecting'} onSend={send} />
+```
+
+The same shape works for socket.io / SSE / any push transport. See the
+**Real-time — WebSocket (MSW ws)** story (a live `WebSocket` mocked end-to-end
+by MSW).
+
 ## API reference
 
 <table style={tbl}>
@@ -56,6 +110,7 @@ transcript.
     <tr><td style={td0}>typingNames</td><td style={td(true)}>string[]</td><td style={td(true)}>[]</td><td style={td(false)}>Shows an animated typing indicator.</td></tr>
     <tr><td style={td0}>title / subtitle / avatar / headerActions</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>—</td><td style={td(false)}>Optional header. Omit all for no header.</td></tr>
     <tr><td style={td0}>placeholder / disabled / hideComposer</td><td style={td(true)}>string / boolean</td><td style={td(true)}>—</td><td style={td(false)}>Composer config; hideComposer = read-only.</td></tr>
+    <tr><td style={td0}>loading</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Shows a transcript skeleton (while loading history, before messages arrive).</td></tr>
     <tr><td style={td0}>emptyState</td><td style={td(true)}>ReactNode</td><td style={td(true)}>"No messages yet…"</td><td style={td(false)}>Shown with no messages.</td></tr>
     <tr><td style={td0}>height</td><td style={td(true)}>number | string</td><td style={td(true)}>480</td><td style={td(false)}>Overall height; the transcript scrolls within it.</td></tr>
   </tbody>

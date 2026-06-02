@@ -51,4 +51,10 @@ describe('Chat', () => {
         render(<Chat currentUserId="me" messages={messages} hideComposer />)
         expect(screen.queryByRole('textbox', { name: 'Message' })).toBeNull()
     })
+
+    it('shows a skeleton while loading with no messages yet', () => {
+        const { container } = render(<Chat currentUserId="me" messages={[]} loading onSend={() => {}} />)
+        expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0)
+        expect(screen.queryByText(/No messages yet/i)).toBeNull()
+    })
 })

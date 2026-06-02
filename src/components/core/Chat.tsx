@@ -38,6 +38,8 @@ export interface ChatProps {
     disabled?: boolean
     /** Hide the composer entirely (read-only transcript). */
     hideComposer?: boolean
+    /** Shows a transcript skeleton (use while loading history, before messages arrive). */
+    loading?: boolean
     /** Shown when there are no messages. */
     emptyState?: React.ReactNode
     /** Overall height — the message list scrolls within it. Default `480`. */
@@ -77,6 +79,24 @@ function TypingDots() {
     )
 }
 
+const SKELETON_ROWS: { own: boolean; w: number }[] = [
+    { own: false, w: 150 }, { own: false, w: 110 }, { own: true, w: 180 }, { own: false, w: 130 }, { own: true, w: 90 },
+]
+
+/** Transcript placeholder shown while history loads. */
+function ChatSkeleton() {
+    return (
+        <div className="flex flex-col gap-2" aria-hidden="true">
+            {SKELETON_ROWS.map((r, i) => (
+                <div key={i} className={['flex items-end gap-2', r.own ? 'flex-row-reverse' : ''].filter(Boolean).join(' ')}>
+                    {!r.own && <span className="h-6 w-6 flex-shrink-0 animate-pulse rounded-full bg-surface" />}
+                    <span className="h-8 animate-pulse rounded-2xl bg-surface" style={{ width: r.w }} />
+                </div>
+            ))}
+        </div>
+    )
+}
+
 /**
  * A chat / messaging surface: a scrollable transcript of message bubbles plus a
  * composer. Own messages (matching `currentUserId`) align right in the accent
@@ -107,6 +127,7 @@ export default function Chat({
     placeholder = 'Write a message…',
     disabled = false,
     hideComposer = false,
+    loading = false,
     emptyState,
     height = 480,
     className = '',
@@ -186,7 +207,9 @@ export default function Chat({
             {/* Transcript */}
             <div className="relative flex-1 overflow-hidden">
                 <div ref={listRef} onScroll={onScroll} className="flex h-full flex-col gap-1 overflow-y-auto bg-background px-4 py-3">
-                    {messages.length === 0 && !isTyping ? (
+                    {loading && messages.length === 0 ? (
+                        <ChatSkeleton />
+                    ) : messages.length === 0 && !isTyping ? (
                         <div className="flex flex-1 items-center justify-center text-center text-sm text-foreground-muted">
                             {emptyState ?? 'No messages yet. Say hello 👋'}
                         </div>
