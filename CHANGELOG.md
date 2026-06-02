@@ -1,3 +1,10 @@
+## [6.26.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.26.0...v6.26.1) (2026-06-02)
+
+
+### Bug Fixes
+
+* **responsive:** stack DateRangePicker on mobile; wrap OtpInput ([4371ed1](https://github.com/G-MAKROGLOU/oxygen-ui/commit/4371ed1efced059b12f531008004c728e0e3a02c))
+
 # [6.26.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.25.0...v6.26.0) (2026-06-02)
 
 

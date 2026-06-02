@@ -1,6 +1,6 @@
 {
   "name": "@geomak/ui",
-  "version": "6.26.0",
+  "version": "6.26.1",
   "description": "Oxygen Design System — reusable UI primitives built with Radix UI behaviours and Tailwind CSS styling",
   "author": "G-MAKROGLOU",
   "license": "MIT",
