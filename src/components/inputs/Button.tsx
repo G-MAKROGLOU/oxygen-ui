@@ -1,6 +1,6 @@
 import React from 'react'
 
-export interface ButtonProps {
+export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
     /** Button content (text or nodes). */
     content?: React.ReactNode
     /** Visual style variant */
@@ -11,16 +11,8 @@ export interface ButtonProps {
     buttonType?: 'button' | 'submit' | 'reset'
     /** Show a loading spinner and disable the control. */
     loading?: boolean
-    /** Disable interaction and dim the control. */
-    disabled?: boolean
-    /** Inline style overrides (width, etc.). Margins/layout belong in the parent. */
-    style?: React.CSSProperties
-    /** Extra classes appended to the button (override variant/size styles). */
-    className?: string
     /** Leading icon — rendered before content */
     icon?: React.ReactNode
-    /** Click handler. */
-    onClick?: React.MouseEventHandler<HTMLButtonElement>
     /**
      * @deprecated Pass `variant` instead. Kept for API compat — currently no-op.
      * Will be removed in the next major version.
@@ -46,8 +38,6 @@ const VARIANT_CLASSES: Record<NonNullable<ButtonProps['variant']>, string> = {
     ].join(' '),
 
     ghost: [
-        // Semantic tokens handle both light and dark modes — no `dark:`
-        // variants needed.
         'bg-transparent text-foreground-secondary',
         'hover:bg-surface-raised hover:text-foreground',
         'active:bg-surface',
@@ -74,6 +64,7 @@ const SIZE_CLASSES: Record<NonNullable<ButtonProps['size']>, string> = {
  * Primary action button with variant + size system.
  *
  * Width is never hardcoded — set `style={{ width }}` or let the parent grid/flex control it.
+ * Uses `React.forwardRef` so it works as a Radix `asChild` trigger (Popover, Tooltip, etc.).
  *
  * @example
  * <Button content="Save" onClick={handleSave} />
@@ -81,26 +72,34 @@ const SIZE_CLASSES: Record<NonNullable<ButtonProps['size']>, string> = {
  * <Button content="Cancel" variant="secondary" />
  * <Button content="Loading…" loading buttonType="submit" />
  */
-export default function Button({
-    content,
-    variant = 'primary',
-    size = 'md',
-    buttonType = 'button',
-    loading,
-    disabled,
-    style,
-    icon,
-    onClick,
-    className = '',
-}: ButtonProps) {
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+    {
+        content,
+        variant = 'primary',
+        size = 'md',
+        buttonType = 'button',
+        loading,
+        disabled,
+        style,
+        icon,
+        onClick,
+        className = '',
+        type: _deprecated, // consume deprecated prop — do not spread to DOM
+        ...rest
+    },
+    ref,
+) {
     return (
         <button
+            // Spread first so named props below take precedence over anything
+            // injected by Radix asChild (data-state, aria-*, etc.)
+            {...rest}
+            ref={ref}
             onClick={onClick}
             disabled={disabled || loading}
             type={buttonType}
             style={style}
             className={[
-                // Base — layout, transitions, focus reset
                 'inline-flex items-center justify-center font-medium',
                 'outline-none transition-colors duration-150 select-none',
                 'whitespace-nowrap',
@@ -128,4 +127,8 @@ export default function Button({
             {content}
         </button>
     )
-}
+})
+
+Button.displayName = 'Button'
+
+export default Button
