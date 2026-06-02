@@ -227,10 +227,10 @@ export default function DateRangePicker({
                     <Popover.Content
                         align="start"
                         sideOffset={4}
-                        className="bg-surface text-foreground border border-border rounded-lg shadow-md z-50 p-3 flex gap-3 animate-in fade-in-0 zoom-in-95"
+                        className="bg-surface text-foreground border border-border rounded-lg shadow-md z-50 p-3 flex flex-col gap-3 sm:flex-row max-w-[calc(100vw-1rem)] max-h-[calc(100vh-2rem)] overflow-auto animate-in fade-in-0 zoom-in-95"
                     >
                         {presets && presets.length > 0 && (
-                            <div className="flex flex-col gap-1 pr-3 border-r border-border min-w-[120px]">
+                            <div className="flex flex-col gap-1 min-w-[120px] sm:pr-3 sm:border-r sm:border-border">
                                 {presets.map((p) => (
                                     <button
                                         key={p.label}
@@ -243,7 +243,7 @@ export default function DateRangePicker({
                                 ))}
                             </div>
                         )}
-                        <div className="flex gap-4">
+                        <div className="flex flex-col gap-4 sm:flex-row">
                             <div className="relative">
                                 <button
                                     type="button"

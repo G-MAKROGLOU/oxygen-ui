@@ -134,7 +134,7 @@ export default function OtpInput({
 
     return (
         <Field className={className} label={label} htmlFor={htmlFor} errorId={errorId} errorMessage={errorMessage} required={required} layout={layout} helperText={helperText}>
-            <div className="flex items-center gap-2" role="group" aria-label={typeof label === 'string' ? label : 'One-time code'}>
+            <div className="flex flex-wrap items-center gap-2" role="group" aria-label={typeof label === 'string' ? label : 'One-time code'}>
                 {chars.map((char, idx) => (
                     <React.Fragment key={idx}>
                         <input
