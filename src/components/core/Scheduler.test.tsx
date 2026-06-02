@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import Scheduler, { type SchedulerEvent } from './Scheduler'
 
@@ -47,6 +47,35 @@ describe('Scheduler', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Previous year' }))
         fireEvent.click(screen.getByText('Mar'))
         expect(screen.getByText('March 2025')).toBeInTheDocument()
+    })
+
+    it('shows a skeleton on first load, then the events', async () => {
+        let resolve!: (e: SchedulerEvent[]) => void
+        const loadEvents = vi.fn(() => new Promise<SchedulerEvent[]>((r) => { resolve = r }))
+        const { container } = render(<Scheduler loadEvents={loadEvents} defaultDate={new Date(2026, 5, 15)} />)
+        expect(container.querySelector('.animate-pulse')).not.toBeNull() // skeleton while pending
+        resolve([{ id: 1, title: 'Loaded', start: new Date(2026, 5, 10, 9, 0) }])
+        expect(await screen.findByText('Loaded')).toBeInTheDocument()
+    })
+
+    it('surfaces a load error with a retry that refetches', async () => {
+        let attempt = 0
+        const loadEvents = vi.fn(async () => {
+            attempt += 1
+            if (attempt === 1) throw new Error('boom')
+            return [{ id: 1, title: 'Recovered', start: new Date(2026, 5, 10, 9, 0) }]
+        })
+        render(<Scheduler loadEvents={loadEvents} defaultDate={new Date(2026, 5, 15)} />)
+        expect(await screen.findByText(/load events/i)).toBeInTheDocument()
+        fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
+        expect(await screen.findByText('Recovered')).toBeInTheDocument()
+    })
+
+    it('calls onError when the loader rejects', async () => {
+        const onError = vi.fn()
+        const loadEvents = vi.fn(async () => { throw new Error('boom') })
+        render(<Scheduler loadEvents={loadEvents} onError={onError} defaultDate={new Date(2026, 5, 15)} />)
+        await waitFor(() => expect(onError).toHaveBeenCalled())
     })
 
     it('shows the New event button only when onNewEvent is given', () => {

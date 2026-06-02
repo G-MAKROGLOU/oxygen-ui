@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { http, HttpResponse, delay } from 'msw'
 import Scheduler, { type SchedulerEvent } from './Scheduler'
@@ -73,4 +73,36 @@ export const Controlled: Story = {
 export const BusinessHoursWeek: Story = {
     name: 'Week — business hours (7–20)',
     render: () => <Frame><Scheduler events={DEMO_EVENTS} defaultView="week" dayHours={[7, 20]} /></Frame>,
+}
+
+export const AsyncError: Story = {
+    name: 'Async error + retry',
+    parameters: {
+        msw: { handlers: [http.get('/api/scheduler/events', async () => { await delay(400); return HttpResponse.error() })] },
+        docs: { description: { story: 'When `loadEvents` rejects, the Scheduler surfaces a retry state (and fires `onError`) instead of silently showing an empty calendar. The mocked endpoint here always fails.' } },
+    },
+    render: () => <Frame><Scheduler loadEvents={loadEvents} onError={(e) => console.warn('Scheduler load failed', e)} /></Frame>,
+}
+
+export const Editable: Story = {
+    name: 'Create / delete (controlled)',
+    parameters: { docs: { description: { story: 'CRUD is consumer-owned: click empty space to create, click an event to delete. The Scheduler just reports the intent via onSelectSlot / onSelectEvent; you mutate your own state.' } } },
+    render: () => {
+        const Demo = () => {
+            const [events, setEvents] = useState<SchedulerEvent[]>(DEMO_EVENTS)
+            return (
+                <Scheduler
+                    events={events}
+                    onSelectSlot={(d) => {
+                        const title = window.prompt('New event title')
+                        if (!title) return
+                        setEvents((e) => [...e, { id: Date.now(), title, start: d, end: new Date(d.getTime() + 3_600_000), color: COLORS[e.length % COLORS.length] }])
+                    }}
+                    onSelectEvent={(ev) => { if (window.confirm(`Delete "${ev.title}"?`)) setEvents((e) => e.filter((x) => x.id !== ev.id)) }}
+                    onNewEvent={() => window.alert('Wire this to your own create form / modal')}
+                />
+            )
+        }
+        return <Frame><Demo /></Frame>
+    },
 }

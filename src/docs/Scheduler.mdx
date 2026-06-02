@@ -45,6 +45,42 @@ import { Scheduler } from '@geomak/ui'
 <Scheduler events={events} defaultView="week" onSelectSlot={(d) => createAt(d)} />
 ```
 
+## Creating, editing & deleting events
+
+The Scheduler is **read-oriented**: it renders events and reports intent, but it
+owns no event form or persistence (your API, validation, and modals stay yours).
+Wire the callbacks to your own flow, then update `events` (or let `loadEvents`
+refetch):
+
+- **Create** — `onSelectSlot(date)` fires when an empty day cell (month) or time
+  slot (week) is clicked; `onNewEvent()` fires from the toolbar button.
+- **Edit / delete** — `onSelectEvent(event)` fires when an event is clicked; open
+  your editor (e.g. a `Modal`) and mutate from there.
+
+```tsx
+const [events, setEvents] = useState(initial)
+
+<Scheduler
+  events={events}
+  onSelectSlot={(date) => openCreateModal(date)}
+  onSelectEvent={(e) => openEditModal(e)}   // edit or delete inside the modal
+/>
+```
+
+See the **Create / delete (controlled)** story for a working example.
+
+## Loading & errors
+
+With `loadEvents`, the Scheduler manages the async states for you:
+
+- **First load** shows a grid-shaped **skeleton**; background refetches (paging
+  with events already on screen) show a subtle spinner by the title instead.
+- **Failure** is surfaced, not swallowed: a **retry** state replaces the grid and
+  the optional `onError(error)` callback fires. (Earlier behaviour silently
+  showed an empty calendar; it no longer does.)
+
+See the **Async error + retry** story.
+
 ## API reference
 
 <table style={tbl}>

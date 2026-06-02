@@ -70,6 +70,8 @@ export interface SchedulerProps {
     onSelectEvent?: (event: SchedulerEvent) => void
     /** Click the "New event" toolbar button. Omit to hide it. */
     onNewEvent?: () => void
+    /** Called when `loadEvents` rejects. The Scheduler also shows a retry state. */
+    onError?: (error: unknown) => void
     className?: string
     style?: React.CSSProperties
 }
@@ -130,6 +132,7 @@ export default function Scheduler({
     onSelectSlot,
     onSelectEvent,
     onNewEvent,
+    onError,
     className = '',
     style,
 }: SchedulerProps) {
@@ -138,31 +141,37 @@ export default function Scheduler({
     const [cursor, setCursor] = useState<Date>(() => defaultDate ?? new Date())
     const [loaded, setLoaded] = useState<SchedulerEvent[]>([])
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<unknown>(null)
+    const [reloadKey, setReloadKey] = useState(0)
     const [dir, setDir] = useState(0) // -1 / +1 for slide direction
 
-    const loaderRef = useRef(loadEvents)
-    loaderRef.current = loadEvents
+    // Hold the callbacks in a ref so the effect re-runs only on range/view/retry,
+    // not when an inline loadEvents/onError changes identity on a parent render.
+    const cbRef = useRef({ loadEvents, onError })
+    cbRef.current = { loadEvents, onError }
 
     const range = useMemo<SchedulerRange>(
         () => (view === 'month' ? monthRange(cursor) : weekRange(cursor, weekStartsOn)),
         [view, cursor, weekStartsOn],
     )
 
-    // Load on range/view change when a loader is provided. Keyed by from/to/view
-    // so an inline loader doesn't refetch on every parent render.
+    // Load on range/view/retry change when a loader is provided.
     const fromKey = range.from.getTime()
     const toKey = range.to.getTime()
     useEffect(() => {
-        const loader = loaderRef.current
+        const { loadEvents: loader, onError: onErr } = cbRef.current
         if (!loader) return
         let cancelled = false
         setLoading(true)
+        setError(null)
         Promise.resolve(loader({ from: new Date(fromKey), to: new Date(toKey) }, view))
             .then((evts) => { if (!cancelled) setLoaded(evts) })
-            .catch(() => { if (!cancelled) setLoaded([]) })
+            .catch((err) => { if (!cancelled) { setError(err ?? new Error('Failed to load events')); onErr?.(err) } })
             .finally(() => { if (!cancelled) setLoading(false) })
         return () => { cancelled = true }
-    }, [fromKey, toKey, view])
+    }, [fromKey, toKey, view, reloadKey])
+
+    const retry = useCallback(() => setReloadKey((k) => k + 1), [])
 
     const events = useMemo(
         () => (controlledEvents ?? loaded).map(normalize),
@@ -214,6 +223,11 @@ export default function Scheduler({
                 previous view unmounts immediately and the new one fades/slides
                 in — robust, with no exit phase that can stall mid-transition. */}
             <div className="relative flex-1 overflow-hidden">
+                {error ? (
+                    <SchedulerError onRetry={retry} />
+                ) : loadEvents && loading && events.length === 0 ? (
+                    <SchedulerSkeleton view={view} />
+                ) : (
                     <motion.div
                         key={`${view}-${range.from.getTime()}`}
                         initial={{ opacity: 0, x: reduced ? 0 : dir * 24 }}
@@ -241,7 +255,61 @@ export default function Scheduler({
                             />
                         )}
                     </motion.div>
+                )}
             </div>
+        </div>
+    )
+}
+
+// ── Loading / error states ────────────────────────────────────────────────────
+
+/** Grid-shaped placeholder shown on the first load (before any events arrive). */
+function SchedulerSkeleton({ view }: { view: SchedulerView }) {
+    const bar = 'rounded bg-background animate-pulse'
+    if (view === 'week') {
+        return (
+            <div className="flex h-full flex-col p-3" aria-hidden="true">
+                <div className="mb-3 grid gap-2" style={{ gridTemplateColumns: '3.5rem repeat(7, 1fr)' }}>
+                    <span />
+                    {Array.from({ length: 7 }, (_, i) => <span key={i} className={`${bar} mx-auto h-8 w-8 rounded-full`} />)}
+                </div>
+                <div className="flex flex-1 flex-col gap-3">
+                    {Array.from({ length: 8 }, (_, i) => <span key={i} className={`${bar} h-6`} style={{ width: `${60 + ((i * 13) % 35)}%` }} />)}
+                </div>
+            </div>
+        )
+    }
+    return (
+        <div className="flex h-full flex-col p-3" aria-hidden="true">
+            <div className="mb-3 grid grid-cols-7 gap-2">
+                {Array.from({ length: 7 }, (_, i) => <span key={i} className={`${bar} h-2.5`} />)}
+            </div>
+            <div className="grid flex-1 grid-cols-7 grid-rows-5 gap-2">
+                {Array.from({ length: 35 }, (_, i) => (
+                    <div key={i} className="flex flex-col gap-1.5">
+                        <span className={`${bar} h-5 w-5 rounded-full`} />
+                        {i % 3 === 0 && <span className={`${bar} h-3`} />}
+                        {i % 5 === 0 && <span className={`${bar} h-3`} style={{ width: '70%' }} />}
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+function SchedulerError({ onRetry }: { onRetry: () => void }) {
+    return (
+        <div role="alert" className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full text-status-error" style={{ backgroundColor: 'color-mix(in oklab, var(--color-error) 12%, var(--color-surface))' }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true" className="h-5 w-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h16.94a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+                </svg>
+            </span>
+            <div>
+                <div className="text-sm font-semibold text-foreground">Couldn’t load events</div>
+                <div className="mt-0.5 text-xs text-foreground-muted">Something went wrong fetching this range.</div>
+            </div>
+            <Button size="sm" variant="secondary" content="Retry" onClick={onRetry} />
         </div>
     )
 }
