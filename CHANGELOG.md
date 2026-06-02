@@ -1,3 +1,10 @@
+# [6.31.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.30.0...v6.31.0) (2026-06-02)
+
+
+### Features
+
+* **marketing:** Jumbotron, FeatureGrid, PricingPlans, Testimonials (batch 1) ([1cd57db](https://github.com/G-MAKROGLOU/oxygen-ui/commit/1cd57db6ce9ab7962d8651069c5e33e6c9a93008))
+
 # [6.30.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.29.2...v6.30.0) (2026-06-02)
 
 
