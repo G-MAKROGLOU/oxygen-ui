@@ -1,3 +1,10 @@
+## [6.34.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.34.0...v6.34.1) (2026-06-02)
+
+
+### Performance Improvements
+
+* **scheduler:** bucket events by day instead of scanning per cell ([0a5107b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/0a5107b63817cf6bacadaa4f83377941f790da19))
+
 # [6.34.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.33.0...v6.34.0) (2026-06-02)
 
 
