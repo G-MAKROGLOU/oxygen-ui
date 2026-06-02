@@ -313,7 +313,7 @@ function Pagination({
     // Square, flat, neutral icon buttons — same primitive/height/border as the
     // per-page MenuButton so the whole strip reads as one cohesive group.
     const navBtn = (icon: React.ReactNode, disabled: boolean, onClick: () => void, title: string) => (
-        <Button variant="outline" size="sm" disabled={disabled} onClick={onClick} icon={icon} className="w-7 !px-0 focus-visible:!ring-offset-0" aria-label={title} title={title} />
+        <Button variant="outline" size="sm" disabled={disabled} onClick={onClick} icon={icon} className="w-7 !px-0 focus-visible:!ring-[3px] focus-visible:!ring-focus-ring focus-visible:!ring-offset-0" aria-label={title} title={title} />
     )
 
     const chevronRight = (
@@ -337,7 +337,7 @@ function Pagination({
                         variant="outline"
                         size="sm"
                         side="top"
-                        className="focus-visible:!ring-offset-0"
+                        className="focus-visible:!ring-[3px] focus-visible:!ring-focus-ring focus-visible:!ring-offset-0"
                         label={String(currentPerPageLabel)}
                         items={picker.map((o) => ({
                             key: o.key,
