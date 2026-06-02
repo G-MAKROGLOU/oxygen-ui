@@ -112,7 +112,7 @@ const Chevron = ({ dir }: { dir: 'left' | 'right' }) => (
  * directly via `events`, or hand it an async `loadEvents(range, view)` and it
  * manages the loading / empty states as the user pages around.
  *
- * For single-date selection use {@link Calendar} (the date-picker grid) instead.
+ * For single-date selection use the {@link DatePicker} input instead.
  *
  * @example
  * <Scheduler

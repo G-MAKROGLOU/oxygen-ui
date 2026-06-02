@@ -142,9 +142,6 @@ export type { PopConfirmProps, PopConfirmTone } from './components/core/PopConfi
 export { default as LogoutTimer } from './components/core/LogoutTimer'
 export type { LogoutTimerProps } from './components/core/LogoutTimer'
 
-export { default as Calendar } from './components/core/Calendar'
-export type { CalendarProps, CalendarEvent } from './components/core/Calendar'
-
 export { default as Scheduler } from './components/core/Scheduler'
 export type { SchedulerProps, SchedulerEvent, SchedulerView, SchedulerRange } from './components/core/Scheduler'
 
