@@ -1,3 +1,10 @@
+# [6.24.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.23.0...v6.24.0) (2026-06-02)
+
+
+### Features
+
+* **logout-timer:** inactivity session-timeout guard (Feedback) ([33d26f2](https://github.com/G-MAKROGLOU/oxygen-ui/commit/33d26f2285d0d0feb317a9b00a3b45bddbbdb11c))
+
 # [6.23.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.22.0...v6.23.0) (2026-06-02)
 
 
