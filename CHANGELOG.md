@@ -1,3 +1,10 @@
+# [6.18.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.17.2...v6.18.0) (2026-06-02)
+
+
+### Features
+
+* **theme:** restore standard gray/slate/zinc scales + black ([8853115](https://github.com/G-MAKROGLOU/oxygen-ui/commit/8853115ee26544ec290e30160eb0981455c5e419))
+
 ## [6.17.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.17.1...v6.17.2) (2026-06-02)
 
 
