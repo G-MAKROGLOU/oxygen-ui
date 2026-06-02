@@ -1,3 +1,10 @@
+# [6.28.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.27.3...v6.28.0) (2026-06-02)
+
+
+### Features
+
+* **hooks:** useLocalStorage, useMediaQuery (+useBreakpoint), useJwt ([be0bdc3](https://github.com/G-MAKROGLOU/oxygen-ui/commit/be0bdc312adc495f607ece070c70147ed895eb74))
+
 ## [6.27.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.27.2...v6.27.3) (2026-06-02)
 
 
