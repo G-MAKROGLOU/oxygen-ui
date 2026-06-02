@@ -32,6 +32,18 @@ export const Danger: Story = {
     args: { variant: 'danger', content: 'Delete' },
 }
 
+export const Warning: Story = {
+    args: { variant: 'warning', content: 'Send to all' },
+}
+
+export const Success: Story = {
+    args: { variant: 'success', content: 'Approve' },
+}
+
+export const Info: Story = {
+    args: { variant: 'info', content: 'Learn more' },
+}
+
 export const Sizes: Story = {
     render: () => (
         <div className="flex items-center gap-3">
@@ -49,6 +61,9 @@ export const AllVariants: Story = {
             <Button variant="secondary" content="Secondary" />
             <Button variant="ghost"     content="Ghost" />
             <Button variant="danger"    content="Danger" />
+            <Button variant="warning"   content="Warning" />
+            <Button variant="success"   content="Success" />
+            <Button variant="info"      content="Info" />
         </div>
     ),
 }

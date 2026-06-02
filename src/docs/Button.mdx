@@ -16,7 +16,8 @@ a built-in loading state.
 ## Mental model
 
 Content goes in `content` (text or nodes). `variant` sets intent — `primary`
-(filled accent), `secondary` (outlined), `ghost` (quiet), `danger` (destructive).
+(filled accent), `secondary` (outlined), `ghost` (quiet), plus four status
+variants: `danger` (destructive), `warning`, `success`, and `info`.
 `loading` swaps in a spinner and disables the button. Width is never hardcoded:
 let the parent flex/grid size it, or pass `style={{ width }}`.
 
@@ -44,7 +45,7 @@ import { Button } from '@geomak/ui'
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
     <tr><td style={td0}>content</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Button label / nodes.</td></tr>
-    <tr><td style={td0}>variant</td><td style={td(true)}>'primary'|'secondary'|'ghost'|'danger'</td><td style={td(true)}>'primary'</td><td style={td(false)}>Visual intent.</td></tr>
+    <tr><td style={td0}>variant</td><td style={td(true)}>'primary'|'secondary'|'ghost'|'danger'|'warning'|'success'|'info'</td><td style={td(true)}>'primary'</td><td style={td(false)}>Visual intent.</td></tr>
     <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md' | 'lg'</td><td style={td(true)}>'md'</td><td style={td(false)}>Height / padding / font.</td></tr>
     <tr><td style={td0}>buttonType</td><td style={td(true)}>'button'|'submit'|'reset'</td><td style={td(true)}>'button'</td><td style={td(false)}>Native button type.</td></tr>
     <tr><td style={td0}>loading</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Spinner + disabled.</td></tr>

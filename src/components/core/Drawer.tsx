@@ -58,7 +58,7 @@ export default function Drawer({
                     {isOpen && (
                         <Dialog.Overlay asChild>
                             <motion.div
-                                className="fixed inset-0 bg-black/40 z-overlay"
+                                className="fixed inset-0 bg-backdrop z-overlay"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}

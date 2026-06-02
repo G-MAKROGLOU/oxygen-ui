@@ -41,6 +41,8 @@ export const semanticTokens = {
         warning:                  '#d68910',
         success:                  '#1e8449',
         info:                     '#1565c0',
+        // Scrim
+        backdrop:                 'rgba(6, 15, 26, 0.45)',
     },
 
     dark: {
@@ -64,6 +66,8 @@ export const semanticTokens = {
         warning:                  '#ffb347',
         success:                  '#5cb85c',
         info:                     '#5bc0de',
+        // Scrim (denser on dark backgrounds)
+        backdrop:                 'rgba(0, 0, 0, 0.6)',
     },
 
     // Mode-independent tokens
@@ -168,6 +172,7 @@ export const vars = {
         warning:             'var(--color-warning)',
         success:             'var(--color-success)',
         info:                'var(--color-info)',
+        backdrop:            'var(--color-backdrop)',
     },
 
     radius: {

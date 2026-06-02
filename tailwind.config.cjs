@@ -42,6 +42,10 @@ module.exports = {
                 'status-warning':       'var(--color-warning)',
                 'status-success':       'var(--color-success)',
                 'status-info':          'var(--color-info)',
+                // Scrim behind modals / drawers. Alpha is baked into the token
+                // value, so use the bare `bg-backdrop` utility (no `/opacity`
+                // modifier — that produces invalid CSS on a var-valued token).
+                'backdrop':             'var(--color-backdrop)',
                 // Soft focus-halo colours — `color-mix` reads the accent / error
                 // var live, so theme overrides flow through. Used as the ring
                 // colour for the refined input focus state (crisp 1px border +

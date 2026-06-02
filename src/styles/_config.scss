@@ -25,6 +25,8 @@ $color-error:                 #c0392b  !default;
 $color-warning:               #d68910  !default;
 $color-success:               #1e8449  !default;
 $color-info:                  #1565c0  !default;
+// Scrim behind modals / drawers — navy-tinted to match the brand surface stack.
+$color-backdrop:              rgba(6, 15, 26, 0.45)  !default;
 
 // ── Colors — Dark ─────────────────────────────────────────────────────────────
 $color-dark-background:            #060f1a  !default;
@@ -42,6 +44,8 @@ $color-dark-error:                 #ff6b6b  !default;
 $color-dark-warning:               #ffb347  !default;
 $color-dark-success:               #5cb85c  !default;
 $color-dark-info:                  #5bc0de  !default;
+// Denser scrim on dark backgrounds so the dimmed page reads clearly.
+$color-dark-backdrop:              rgba(0, 0, 0, 0.6)  !default;
 
 // ── Radius — enterprise scale (tighter than consumer-app defaults) ─────────────
 $radius-sm:    2px     !default;  // tags, badges, tight inputs

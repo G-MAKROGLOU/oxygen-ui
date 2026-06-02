@@ -35,6 +35,9 @@
         --color-success:              #{c.$color-success};
         --color-info:                 #{c.$color-info};
 
+        // Scrim
+        --color-backdrop:             #{c.$color-backdrop};
+
         // ── Radius ───────────────────────────────────────────────────────────
         --radius-sm:    #{c.$radius-sm};
         --radius-md:    #{c.$radius-md};
@@ -138,6 +141,9 @@
         --color-warning:              #{c.$color-dark-warning};
         --color-success:              #{c.$color-dark-success};
         --color-info:                 #{c.$color-dark-info};
+
+        // Scrim
+        --color-backdrop:             #{c.$color-dark-backdrop};
 
         // Shadows — pure dark (no blue tint)
         --shadow-sm:    #{c.$shadow-dark-sm};
