@@ -1,3 +1,10 @@
+# [6.21.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.20.0...v6.21.0) (2026-06-02)
+
+
+### Features
+
+* add MenuButton, Stepper, Timeline, SecureLayout ([b7ac1aa](https://github.com/G-MAKROGLOU/oxygen-ui/commit/b7ac1aacf6b7cb734fcaf152976b04796c00f8d8))
+
 # [6.20.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.19.0...v6.20.0) (2026-06-02)
 
 
