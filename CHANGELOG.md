@@ -1,3 +1,10 @@
+# [6.29.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.28.0...v6.29.0) (2026-06-02)
+
+
+### Features
+
+* **chat:** messaging surface (Data Display) ([da07554](https://github.com/G-MAKROGLOU/oxygen-ui/commit/da075540f8690c873b01cd75367be401b839b038))
+
 # [6.28.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.27.3...v6.28.0) (2026-06-02)
 
 
