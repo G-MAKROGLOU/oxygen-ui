@@ -1,0 +1,112 @@
+{/* src/docs/CartProvider.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="E-Commerce/Cart Provider/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Cart Provider
+
+An app-wide cart store. Wrap your tree in `CartProvider` once, then call
+`useCart()` from anywhere — a product grid, the cart drawer, a TopBar badge, and
+the checkout page all read and mutate the same state with no prop-drilling.
+
+## Mental model
+
+`CartProvider` owns the items array (uncontrolled, seeded by `initialItems`).
+Components don't pass the cart around — they pull exactly what they need from
+`useCart()`. Mutations are immutable and quantity-safe: `addToCart` merges into
+an existing line and every quantity is clamped to `1..max`. Subscribe to changes
+via `onChange` to persist (e.g. `localStorage`) or sync to a backend.
+
+`useCart()` throws if called outside a `CartProvider`, so a missing provider
+fails loudly in development rather than silently no-op'ing.
+
+## Quick start
+
+```tsx
+import { CartProvider, useCart } from '@geomak/ui'
+
+// 1. Provide once, near the root
+<CartProvider initialItems={[]} onChange={(items) => save(items)}>
+  <App />
+</CartProvider>
+
+// 2. Consume anywhere inside
+function AddButton({ product }) {
+  const { addToCart, isInCart } = useCart()
+  return (
+    <Button
+      content={isInCart(product.id) ? 'Add more' : 'Add to cart'}
+      onClick={() => addToCart(product)}
+    />
+  )
+}
+```
+
+## CartProvider props
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Subtree with access to the store.</td></tr>
+    <tr><td style={td0}>initialItems</td><td style={td(true)}>CartLineItem[]</td><td style={td(true)}>[]</td><td style={td(false)}>Seed the cart.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(items: CartLineItem[]) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires on every mutation — persist / sync here.</td></tr>
+  </tbody>
+</table>
+
+## useCart() API
+
+`useCart()` returns the live store and its mutators:
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Member</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>items</td><td style={td(true)}>CartLineItem[]</td><td style={td(false)}>Current line items.</td></tr>
+    <tr><td style={td0}>addToCart</td><td style={td(true)}>{'(item: CartItemInput, quantity?: number) => void'}</td><td style={td(false)}>Add a product. If the id already exists, increases its quantity (clamped to <code>max</code>). Quantity defaults to <code>item.quantity ?? 1</code>.</td></tr>
+    <tr><td style={td0}>removeFromCart</td><td style={td(true)}>{'(id: string | number) => void'}</td><td style={td(false)}>Remove a line entirely.</td></tr>
+    <tr><td style={td0}>updateQuantity</td><td style={td(true)}>{'(id: string | number, quantity: number) => void'}</td><td style={td(false)}>Set an exact quantity (clamped to <code>1..max</code>).</td></tr>
+    <tr><td style={td0}>clearCart</td><td style={td(true)}>{'() => void'}</td><td style={td(false)}>Empty the cart.</td></tr>
+    <tr><td style={td0}>isInCart</td><td style={td(true)}>{'(id: string | number) => boolean'}</td><td style={td(false)}>Whether a line with this id exists.</td></tr>
+    <tr><td style={td0}>getItemCount</td><td style={td(true)}>{'() => number'}</td><td style={td(false)}>Total units across all lines (sum of quantities).</td></tr>
+    <tr><td style={td0}>getCartTotal</td><td style={td(true)}>{'() => number'}</td><td style={td(false)}>Subtotal — sum of <code>price × quantity</code>.</td></tr>
+  </tbody>
+</table>
+
+### CartItemInput
+
+The shape accepted by `addToCart` — a `CartLineItem` with an **optional**
+`quantity` (defaults to 1):
+
+```ts
+type CartItemInput = Omit<CartLineItem, 'quantity'> & { quantity?: number }
+```
+
+## Recipes
+
+**Persist across reloads** — wire `onChange` + `initialItems`:
+
+```tsx
+<CartProvider
+  initialItems={JSON.parse(localStorage.getItem('cart') ?? '[]')}
+  onChange={(items) => localStorage.setItem('cart', JSON.stringify(items))}
+>
+  <App />
+</CartProvider>
+```
+
+**Cart count anywhere** — the badge in the TopBar:
+
+```tsx
+const { getItemCount } = useCart()
+<Badge count={getItemCount()} tone="accent"><CartIcon /></Badge>
+```
+
+> `CartButton` already wraps this pattern, and `Checkout` consumes the same
+> store. See their guides.
+
+See the **E-Commerce → Cart in AppShell** and **Checkout** stories for the
+provider driving a full flow.

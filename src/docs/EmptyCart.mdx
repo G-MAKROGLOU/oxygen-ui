@@ -1,0 +1,63 @@
+{/* src/docs/EmptyCart.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="E-Commerce/EmptyCart/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# EmptyCart
+
+The empty-state for a shopping cart: a configurable illustration with a title,
+optional description, and an optional call-to-action. `Cart` renders it by
+default when it has no items.
+
+## Mental model
+
+A presentational block with sensible defaults. The default illustration is
+line-art tinted from the live theme tokens (`--color-accent`,
+`--color-border-strong`), so it adapts to light / dark and any brand override
+automatically. Everything is configurable: swap the `illustration` for your own
+art (or `null` to hide it), and override `title` / `description` / `action`.
+
+## Quick start
+
+```tsx
+import { Cart, EmptyCart, Button } from '@geomak/ui'
+
+// Default — Cart shows <EmptyCart /> automatically when empty
+<Cart items={[]} />
+
+// Configured — pass it into Cart's emptyState slot
+<Cart
+  items={[]}
+  emptyState={
+    <EmptyCart
+      title="No items yet"
+      description="Browse the catalog to add equipment."
+      action={<Button content="Browse products" variant="secondary" size="sm" />}
+    />
+  }
+/>
+
+// Fully custom illustration
+<EmptyCart illustration={<MyBrandArt />} title="Nothing here" />
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>illustration</td><td style={td(true)}>ReactNode</td><td style={td(true)}>line-art cart</td><td style={td(false)}>Art above the text. Pass your own node to replace it, or <code>null</code> to hide.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Your cart is empty'</td><td style={td(false)}>Headline.</td></tr>
+    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Secondary line under the title.</td></tr>
+    <tr><td style={td0}>action</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Call-to-action (e.g. a "Browse" button).</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+  </tbody>
+</table>
+
+See the **E-Commerce → Cart** stories (*Empty (default illustration)* and
+*Empty (configured)*).

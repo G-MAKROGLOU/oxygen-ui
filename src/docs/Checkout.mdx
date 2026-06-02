@@ -1,0 +1,64 @@
+{/* src/docs/Checkout.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="E-Commerce/Checkout/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Checkout
+
+A complete, two-column checkout page: the `Cart` summary on the left and the
+`CreditCardForm` on the right. It composes the whole flow off the cart store —
+drop it inside a `CartProvider` and it just works.
+
+## Mental model
+
+`Checkout` reads live items from `useCart()` (so it must be inside a
+`CartProvider`) and wires the cart's quantity / remove controls back to the
+store. The total is the cart subtotal plus your `summaryRows` (shipping, tax,
+discounts). The pay button is **disabled whenever the cart is empty** — via the
+form's `submitDisabled`, so the card fields stay editable but payment can't be
+submitted with nothing to buy. It defaults its label to `Pay <total>` and stacks
+to one column below the `lg` breakpoint.
+
+## Quick start
+
+```tsx
+import { CartProvider, Checkout } from '@geomak/ui'
+
+<CartProvider initialItems={cartItems}>
+  <Checkout
+    summaryRows={[
+      { label: 'Shipping', value: 24 },
+      { label: 'Tax (8%)', value: 178.36 },
+    ]}
+    onPaid={async (card) => {
+      await charge(card)
+    }}
+  />
+</CartProvider>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Checkout'</td><td style={td(false)}>Page heading.</td></tr>
+    <tr><td style={td0}>summaryRows</td><td style={td(true)}>CartSummaryRow[]</td><td style={td(true)}>[]</td><td style={td(false)}>Extra rows added to the subtotal (shipping, tax; negative for discounts).</td></tr>
+    <tr><td style={td0}>formatPrice</td><td style={td(true)}>{'(n) => string'}</td><td style={td(true)}>$0.00</td><td style={td(false)}>Price formatter (cart + button total).</td></tr>
+    <tr><td style={td0}>paymentTitle</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Payment'</td><td style={td(false)}>Heading above the card form.</td></tr>
+    <tr><td style={td0}>submitLabel</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Pay &lt;total&gt;'</td><td style={td(false)}>Pay button label. Always disabled while the cart is empty.</td></tr>
+    <tr><td style={td0}>onPaid</td><td style={td(true)}>{'(card: CreditCardValue) => void | Promise<void>'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires once the card validates and the cart is non-empty.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+  </tbody>
+</table>
+
+> Requires a `CartProvider` ancestor (**Cart Provider** guide). The card form is
+> documented under **Forms → CreditCardForm**.
+
+See the **E-Commerce → Checkout** stories (*With items* and *Empty cart (pay
+disabled)*).

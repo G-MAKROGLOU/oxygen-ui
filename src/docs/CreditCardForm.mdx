@@ -47,6 +47,16 @@ import { CreditCardForm } from '@geomak/ui'
 {/* your own submit elsewhere, using the latest `card` */}
 ```
 
+## Gating the pay button
+
+Use `submitDisabled` to block payment on an external condition while leaving the
+fields editable (`disabled` would freeze everything). This is how the
+**E-Commerce → Checkout** page disables Pay until the cart has items:
+
+```tsx
+<CreditCardForm submitDisabled={cartItems.length === 0} submitLabel={`Pay ${total}`} onSubmit={pay} />
+```
+
 ## API reference
 
 <table style={tbl}>
@@ -57,6 +67,7 @@ import { CreditCardForm } from '@geomak/ui'
     <tr><td style={td0}>defaultValue</td><td style={td(true)}>Partial&lt;CreditCardValue&gt;</td><td style={td(true)}>—</td><td style={td(false)}>Seed fields (uncontrolled).</td></tr>
     <tr><td style={td0}>size</td><td style={td(true)}>FieldSize</td><td style={td(true)}>'md'</td><td style={td(false)}>Inner field size.</td></tr>
     <tr><td style={td0}>disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Disable all fields + submit.</td></tr>
+    <tr><td style={td0}>submitDisabled</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Disable only the submit button (fields stay editable). Gate payment on an external condition — e.g. an empty cart.</td></tr>
     <tr><td style={td0}>requireName</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Require cardholder name.</td></tr>
     <tr><td style={td0}>hideSubmit</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Hide built-in submit (embed mode).</td></tr>
     <tr><td style={td0}>submitLabel</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Pay'</td><td style={td(false)}>Submit button label.</td></tr>

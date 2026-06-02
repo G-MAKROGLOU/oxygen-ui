@@ -1,0 +1,61 @@
+{/* src/docs/CartButton.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="E-Commerce/CartButton/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# CartButton
+
+A ready-made TopBar cart trigger: an icon button with a live item-count badge
+overlaid on its corner. It reads the count straight from the cart store, so it
+stays in sync no matter where items are added.
+
+## Mental model
+
+`CartButton` is a thin composition of `IconButton` + `Badge` wired to
+`useCart()`. It must live inside a `CartProvider`. The badge shows
+`getItemCount()` (total units) and auto-hides at zero; the count is also folded
+into the accessible label (`"Cart (3)"`). You own what the click does — usually
+open a cart `Drawer` or navigate to `Checkout`.
+
+## Quick start
+
+```tsx
+import { CartProvider, CartButton, TopBar, AppShell } from '@geomak/ui'
+
+<CartProvider>
+  <AppShell
+    topBar={
+      <TopBar
+        brand={<Logo />}
+        actions={<CartButton onClick={() => setCartOpen(true)} />}
+      />
+    }
+  >
+    <ProductGrid />
+  </AppShell>
+</CartProvider>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>onClick</td><td style={td(true)}>MouseEventHandler</td><td style={td(true)}>—</td><td style={td(false)}>Click handler — open the cart drawer / go to checkout.</td></tr>
+    <tr><td style={td0}>variant</td><td style={td(true)}>'primary' | 'bordered'</td><td style={td(true)}>'bordered'</td><td style={td(false)}>Icon-button style.</td></tr>
+    <tr><td style={td0}>badgeTone</td><td style={td(true)}>BadgeTone</td><td style={td(true)}>'accent'</td><td style={td(false)}>Count badge colour.</td></tr>
+    <tr><td style={td0}>max</td><td style={td(true)}>number</td><td style={td(true)}>99</td><td style={td(false)}>Cap the badge number (e.g. <code>99+</code>).</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>string</td><td style={td(true)}>'Cart'</td><td style={td(false)}>Accessible label; the live count is appended.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>cart glyph</td><td style={td(false)}>Override the cart icon.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Class on the badge wrapper.</td></tr>
+  </tbody>
+</table>
+
+> Requires a `CartProvider` ancestor — see the **Cart Provider** guide.
+
+See the **E-Commerce → Cart in AppShell** story.
