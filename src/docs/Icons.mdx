@@ -22,16 +22,30 @@ and defaults to 24px. Most icons are outline (stroked); a few are solid (carets,
 dots, `StarFilled`). Icons are **decorative by default** (`aria-hidden`); pass a
 `title` only when the icon is the sole meaning of a control.
 
-Icons live under the **`Icon` namespace** so they never clash with component
-names (there's both a `Table` component and a `Table` icon):
+There are **two ways to import**, by design:
 
 ```tsx
-import { Icon } from '@geomak/ui'
+// 1) Tree-shakeable named imports from the /icons subpath — ship only what you
+//    use. Best for app code. Every icon is available here (no name clashes).
+import { Search, Trash, Plus } from '@geomak/ui/icons'
+<Search />
 
-<Icon.Search />                                    // 24px, inherits text colour
-<Icon.Trash size={20} className="text-status-error" title="Delete" />
-<button className="text-accent"><Icon.Plus /></button>   // follows the button colour
+// 2) The Icon.* namespace from the root entry — quick and discoverable. Lives
+//    on the root so it never clashes with component names (there's both a
+//    `Table` component and a `Table` icon).
+import { Icon } from '@geomak/ui'
+<Icon.Search />
 ```
+
+```tsx
+<Search />                                    // 24px, inherits text colour
+<Trash size={20} className="text-status-error" title="Delete" />
+<button className="text-accent"><Plus /></button>   // follows the button colour
+```
+
+Per-icon tree-shaking is real: importing a single icon from `@geomak/ui/icons`
+bundles ~0.7 KB, not the whole set (each definition is `/* @__PURE__ */`-annotated
+and the package is marked side-effect-free).
 
 ## Colour & size
 
