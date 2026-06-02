@@ -1,3 +1,10 @@
+# [6.27.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.26.1...v6.27.0) (2026-06-02)
+
+
+### Features
+
+* **scheduler:** loading skeleton + surfaced async errors with retry ([e7eafa0](https://github.com/G-MAKROGLOU/oxygen-ui/commit/e7eafa0fa68fe0acb7d820294f8ee5cc67d61366))
+
 ## [6.26.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.26.0...v6.26.1) (2026-06-02)
 
 
