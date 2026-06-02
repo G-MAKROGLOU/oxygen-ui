@@ -1,3 +1,10 @@
+# [6.25.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.24.1...v6.25.0) (2026-06-02)
+
+
+### Features
+
+* **scheduler:** event calendar with month and week views (Data Display) ([3331626](https://github.com/G-MAKROGLOU/oxygen-ui/commit/3331626f2b778b1e21885d1a157063d8cb57ef59))
+
 ## [6.24.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.24.0...v6.24.1) (2026-06-02)
 
 
