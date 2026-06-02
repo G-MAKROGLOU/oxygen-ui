@@ -4,7 +4,7 @@ export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
     /** Button content (text or nodes). */
     content?: React.ReactNode
     /** Visual style variant */
-    variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'warning' | 'success' | 'info'
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'warning' | 'success' | 'info'
     /** Size — controls height, padding, and font size */
     size?: 'sm' | 'md' | 'lg'
     /** HTML button type */
@@ -34,6 +34,18 @@ const VARIANT_CLASSES: Record<NonNullable<ButtonProps['variant']>, string> = {
         'hover:bg-accent hover:text-accent-fg',
         'active:bg-accent-hover active:text-accent-fg',
         'disabled:border-foreground-muted disabled:text-foreground-muted disabled:cursor-not-allowed',
+        'focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
+    ].join(' '),
+
+    // Neutral, flat, hairline-bordered button — the quiet sibling of `secondary`
+    // (which carries the accent border). Mirrors the input border behaviour:
+    // hairline at rest, strong-hairline on hover. No shadow (flat at rest).
+    outline: [
+        'bg-surface text-foreground',
+        'border border-border hover:border-border-strong',
+        'hover:bg-surface-raised',
+        'active:bg-surface',
+        'disabled:text-foreground-muted disabled:cursor-not-allowed',
         'focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
     ].join(' '),
 

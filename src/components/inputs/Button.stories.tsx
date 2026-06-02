@@ -24,6 +24,10 @@ export const Secondary: Story = {
     args: { variant: 'secondary', content: 'Cancel' },
 }
 
+export const Outline: Story = {
+    args: { variant: 'outline', content: 'Filter' },
+}
+
 export const Ghost: Story = {
     args: { variant: 'ghost', content: 'More options' },
 }
@@ -59,6 +63,7 @@ export const AllVariants: Story = {
         <div className="flex flex-wrap gap-3">
             <Button variant="primary"   content="Primary" />
             <Button variant="secondary" content="Secondary" />
+            <Button variant="outline"   content="Outline" />
             <Button variant="ghost"     content="Ghost" />
             <Button variant="danger"    content="Danger" />
             <Button variant="warning"   content="Warning" />

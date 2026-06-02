@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import SearchInput from '../inputs/SearchInput'
 import MenuButton from './MenuButton'
-import IconButton from './IconButton'
+import Button from '../inputs/Button'
 import { SkeletonBox } from './Skeleton'
 
 /** ─────────────────── types ─────────────────── */
@@ -310,8 +310,10 @@ function Pagination({
     const currentOpt = picker.find((o) => o.key === displayPerPageKey)
     const currentPerPageLabel = currentOpt?.label ?? currentOpt?.value ?? options.perPage ?? ''
 
+    // Square, flat, neutral icon buttons — same primitive/height/border as the
+    // per-page MenuButton so the whole strip reads as one cohesive group.
     const navBtn = (icon: React.ReactNode, disabled: boolean, onClick: () => void, title: string) => (
-        <IconButton type="bordered" size="sm" disabled={disabled} onClick={onClick} icon={icon} title={title} />
+        <Button variant="outline" size="sm" disabled={disabled} onClick={onClick} icon={icon} className="w-7 !px-0" aria-label={title} title={title} />
     )
 
     const chevronRight = (
@@ -332,7 +334,7 @@ function Pagination({
                 <div className="mr-auto flex items-center gap-2">
                     <span className="whitespace-nowrap text-xs text-foreground-muted">Rows per page</span>
                     <MenuButton
-                        variant="secondary"
+                        variant="outline"
                         size="sm"
                         side="top"
                         label={String(currentPerPageLabel)}
