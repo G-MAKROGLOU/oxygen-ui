@@ -1,3 +1,10 @@
+# [6.26.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.25.0...v6.26.0) (2026-06-02)
+
+
+### Features
+
+* **scheduler:** quick month/year jump picker in the toolbar ([d93f4de](https://github.com/G-MAKROGLOU/oxygen-ui/commit/d93f4deed67477a006a6a619c7b16a7ec072ca28))
+
 # [6.25.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.24.1...v6.25.0) (2026-06-02)
 
 
