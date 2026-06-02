@@ -1,3 +1,10 @@
+# [6.13.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.12.0...v6.13.0) (2026-06-02)
+
+
+### Features
+
+* **storybook:** add branded logo and custom dark manager theme ([0f96d67](https://github.com/G-MAKROGLOU/oxygen-ui/commit/0f96d6777683fc9db83ee074df7c406ab2e874f7))
+
 # [6.12.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.11.0...v6.12.0) (2026-06-01)
 
 
