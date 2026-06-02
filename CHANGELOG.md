@@ -1,3 +1,10 @@
+# [6.30.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.29.2...v6.30.0) (2026-06-02)
+
+
+### Features
+
+* **styles): one styled scrollbar system-wide; fix(chat:** fixed composer ([0890394](https://github.com/G-MAKROGLOU/oxygen-ui/commit/0890394b57846ea2912dd9cd07004957215dadea)), closes [#8898aa](https://github.com/G-MAKROGLOU/oxygen-ui/issues/8898aa)
+
 ## [6.29.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.29.1...v6.29.2) (2026-06-02)
 
 
