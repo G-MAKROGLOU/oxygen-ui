@@ -1,4 +1,5 @@
 const PALETTE = require('./src/utils/palette.json')
+const colors = require('tailwindcss/colors')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -14,7 +15,17 @@ module.exports = {
             lg:  '976px',
             xl:  '1440px',
         },
-        colors: PALETTE,
+        // Brand palette + standard neutral scales. PALETTE holds the brand
+        // tokens; the gray/slate/zinc ramps and black are merged back in as
+        // sane defaults (Tailwind's `theme.colors` replaces the built-ins, so
+        // without this they'd be unavailable — see the earlier off-palette bugs).
+        colors: {
+            ...PALETTE,
+            black: colors.black,
+            gray:  colors.gray,
+            slate: colors.slate,
+            zinc:  colors.zinc,
+        },
         fontFamily: {
             sans: ['var(--font-family-sans)', 'sans-serif'],
         },
