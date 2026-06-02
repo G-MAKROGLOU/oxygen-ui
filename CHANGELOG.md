@@ -1,3 +1,10 @@
+## [6.27.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.27.2...v6.27.3) (2026-06-02)
+
+
+### Bug Fixes
+
+* **table:** align pagination with the search row; flush focus ring ([96a903b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/96a903be9f49bd7972f1dbcd9512e7bc3dc5b966))
+
 ## [6.27.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.27.1...v6.27.2) (2026-06-02)
 
 
