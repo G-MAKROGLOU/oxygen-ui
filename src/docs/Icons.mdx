@@ -1,0 +1,117 @@
+{/* src/docs/Icons.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Icons/Usage/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Icons
+
+A cohesive pack of SVG icons that colour with `currentColor`, size in pixels,
+and are accessible by default. Browse them all in **Icons → Gallery** (click any
+icon to copy its usage).
+
+## Mental model
+
+Every icon is a small React component drawn on a 24×24 grid. It has **no hard-coded
+colour or size** — it inherits the surrounding text colour via `currentColor`
+and defaults to 24px. Most icons are outline (stroked); a few are solid (carets,
+dots, `StarFilled`). Icons are **decorative by default** (`aria-hidden`); pass a
+`title` only when the icon is the sole meaning of a control.
+
+Icons live under the **`Icon` namespace** so they never clash with component
+names (there's both a `Table` component and a `Table` icon):
+
+```tsx
+import { Icon } from '@geomak/ui'
+
+<Icon.Search />                                    // 24px, inherits text colour
+<Icon.Trash size={20} className="text-status-error" title="Delete" />
+<button className="text-accent"><Icon.Plus /></button>   // follows the button colour
+```
+
+## Colour & size
+
+Because icons use `currentColor`, set colour with a text utility on the icon or
+any ancestor:
+
+```tsx
+<Icon.Heart className="text-accent" />
+<span className="text-status-success"><Icon.CheckCircle /></span>
+```
+
+Size is a pixel number (or any CSS length). Outline icons accept `strokeWidth`
+(default `1.5`):
+
+```tsx
+<Icon.Bell size={32} />
+<Icon.Settings size={28} strokeWidth={2} />
+```
+
+The `Spinner` icon is static markup — add `className="animate-spin"` to rotate it.
+
+## Accessibility
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Case</th><th style={th}>What to do</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>Icon beside text</td><td style={td(false)}>Leave it decorative (default). It's <code>aria-hidden</code>; the text is the label.</td></tr>
+    <tr><td style={td0}>Icon-only control</td><td style={td(false)}>Pass <code>title</code> (→ <code>role="img"</code> + <code>aria-label</code>), or label the wrapping button.</td></tr>
+  </tbody>
+</table>
+
+## API reference
+
+Every icon accepts these plus any native `<svg>` prop (`className`, `style`,
+`onClick`, `ref`, …).
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>size</td><td style={td(true)}>number | string</td><td style={td(true)}>24</td><td style={td(false)}>Width + height (px, or any CSS length).</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Accessible label; without it the icon is aria-hidden.</td></tr>
+    <tr><td style={td0}>strokeWidth</td><td style={td(true)}>number</td><td style={td(true)}>1.5</td><td style={td(false)}>Outline weight (ignored by solid icons).</td></tr>
+  </tbody>
+</table>
+
+## Extending the pack
+
+Use `createIcon(name, content, options?)` to make your own icons that match the
+built-ins exactly — same sizing, `currentColor`, ref forwarding, and a11y. Draw
+the artwork on a 24×24 grid (or set a custom `viewBox`).
+
+```tsx
+import { createIcon } from '@geomak/ui'
+
+// Outline (default): paths use stroke="currentColor", round caps/joins.
+const Anchor = createIcon('Anchor',
+  <path d="M12 21V8m0 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-7 4a7 7 0 0 0 14 0M3 11h4m10 0h4" />)
+
+// Solid: fill="currentColor".
+const Pin = createIcon('Pin', <path d="M12 2 4 9v13h16V9z" />, { solid: true })
+
+<Anchor size={32} className="text-accent" title="Anchor" />
+```
+
+<table style={tbl}>
+  <thead><tr><th style={th}>createIcon arg</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>name</td><td style={td(true)}>string</td><td style={td(false)}>Sets the component's displayName.</td></tr>
+    <tr><td style={td0}>content</td><td style={td(true)}>ReactNode</td><td style={td(false)}>The SVG children (paths, circles, …).</td></tr>
+    <tr><td style={td0}>options.viewBox</td><td style={td(true)}>string</td><td style={td(false)}>Default '0 0 24 24'.</td></tr>
+    <tr><td style={td0}>options.solid</td><td style={td(true)}>boolean</td><td style={td(false)}>Fill with currentColor instead of stroking.</td></tr>
+  </tbody>
+</table>
+
+See it live in **Icons → Extending**.
+
+## Back-compat aliases
+
+Earlier names still resolve to their current equivalents, so existing call sites
+keep working: `XClose`→`X`, `Checked`→`Check`, `Cog`→`Settings`, `Tweak`→`Sliders`,
+`Expand`→`Maximize`, `Collapse`→`Minimize`, `ShowMore`→`DotsVertical`,
+`Delete`→`Trash`, `Bookmarks`→`Bookmark`, `CircleStack`/`Data`→`Database`,
+`DoubleChevronRight`→`ChevronsRight`, `Loading`→`Spinner`, `PowerOff`→`Power`.

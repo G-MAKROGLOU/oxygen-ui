@@ -12,7 +12,12 @@ export type {
 export { default as COLORS } from './utils/colors'
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
+// Icons live under the `Icon` namespace (e.g. `Icon.Search`, `Icon.ChevronDown`)
+// to avoid clashing with component names (Table, Video, Chat …). Use `createIcon`
+// to extend the pack with your own icons that match the built-ins.
 export { default as Icon } from './icons/icons'
+export { createIcon } from './icons/createIcon'
+export type { IconProps, CreateIconOptions, IconComponent } from './icons/createIcon'
 
 // ─── Layout components ───────────────────────────────────────────────────────
 // Structural primitives that re-anchor or compose rendering.

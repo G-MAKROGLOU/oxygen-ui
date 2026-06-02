@@ -121,6 +121,8 @@ const preview: Preview = {
                     ['Introduction', 'Palette', 'Typography', 'Tokens', 'Parameterization'],
                     'Themes',
                     ['ThemeProvider', 'ThemeSwitch'],
+                    'Icons',
+                    ['Gallery', 'Usage', 'Extending'],
                     'Layout',
                     'Buttons',
                     'Inputs',
