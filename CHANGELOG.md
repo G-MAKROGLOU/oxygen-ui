@@ -1,3 +1,10 @@
+# [6.19.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.18.0...v6.19.0) (2026-06-02)
+
+
+### Features
+
+* **card-carousel:** add 'rotating' coverflow variant ([321b70e](https://github.com/G-MAKROGLOU/oxygen-ui/commit/321b70e6d064dfcb6a5c0d431f7aef4bcda8fadd))
+
 # [6.18.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.17.2...v6.18.0) (2026-06-02)
 
 
