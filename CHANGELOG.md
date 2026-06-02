@@ -1,3 +1,10 @@
+# [6.32.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.31.0...v6.32.0) (2026-06-02)
+
+
+### Features
+
+* **marketing:** SlideShow, Video, Parallax, Blog, Socials, CookieConsent, LeadCapture (batch 2) ([6100937](https://github.com/G-MAKROGLOU/oxygen-ui/commit/61009377ea584d1c78e755a1b46c2744f4e57305))
+
 # [6.31.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.30.0...v6.31.0) (2026-06-02)
 
 
