@@ -1,3 +1,10 @@
+## [6.27.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.27.0...v6.27.1) (2026-06-02)
+
+
+### Bug Fixes
+
+* **table:** rows-per-page picker showed a stray clear button, no value ([9427fcb](https://github.com/G-MAKROGLOU/oxygen-ui/commit/9427fcbc1b79da3243cfcf4b1ee4f919faa11d92))
+
 # [6.27.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.26.1...v6.27.0) (2026-06-02)
 
 
