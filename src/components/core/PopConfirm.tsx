@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
+import { motion } from 'framer-motion'
 import * as Popover from '@radix-ui/react-popover'
-import Button from '../inputs/Button'
+import Button, { ButtonProps } from '../inputs/Button'
 
-export type PopConfirmTone = 'default' | 'danger'
+export type PopConfirmTone = 'default' | 'info' | 'warning' | 'error' | 'danger' | 'success'
 
 export interface PopConfirmProps {
     /** The trigger element. Cloned as the popover anchor (rendered `asChild`). */
@@ -19,7 +20,7 @@ export interface PopConfirmProps {
     confirmText?: React.ReactNode
     /** Cancel button label. Default `'Cancel'`. */
     cancelText?: React.ReactNode
-    /** `'danger'` colours the confirm button red. Default `'default'`. */
+    /** Visual + semantic tone of the confirmation prompt. Default `'default'`. */
     tone?: PopConfirmTone
     /** Leading icon shown beside the title. */
     icon?: React.ReactNode
@@ -31,15 +32,33 @@ export interface PopConfirmProps {
     className?: string
 }
 
+const ICON_COLOR: Record<PopConfirmTone, string> = {
+    default: 'text-foreground-muted',
+    info:    'text-status-info',
+    warning: 'text-status-warning',
+    error:   'text-status-error',
+    danger:  'text-status-error',
+    success: 'text-status-success',
+}
+
+const CONFIRM_VARIANT: Record<PopConfirmTone, ButtonProps['variant']> = {
+    default: 'primary',
+    info:    'info',
+    warning: 'warning',
+    error:   'danger',
+    danger:  'danger',
+    success: 'success',
+}
+
 /**
  * A lightweight confirm prompt anchored to its trigger, on Radix Popover. Use it
- * for in-place "are you sure?" gates (delete, archive) instead of a full Modal.
- * An async `onConfirm` keeps the confirm button in a loading state until it
- * resolves, then closes.
+ * for in-place "are you sure?" gates (delete, archive, publish, etc.) instead of
+ * a full Modal. An async `onConfirm` keeps the confirm button in a loading state
+ * until it resolves, then closes.
  *
  * @example
  * ```tsx
- * <PopConfirm title="Delete this vessel?" tone="danger" confirmText="Delete" onConfirm={remove}>
+ * <PopConfirm title="Delete this vessel?" tone="error" confirmText="Delete" onConfirm={remove}>
  *   <Button content="Delete" variant="danger" />
  * </PopConfirm>
  * ```
@@ -91,34 +110,40 @@ export default function PopConfirm({
                     side={side}
                     sideOffset={8}
                     collisionPadding={12}
-                    className={[
-                        'z-[400] w-64 rounded-lg border border-border bg-surface p-3.5 shadow-lg',
-                        'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
-                        'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
-                        className,
-                    ].filter(Boolean).join(' ')}
+                    className={['z-[400] focus:outline-none', className].filter(Boolean).join(' ')}
                 >
-                    <div className="flex gap-2.5">
-                        {icon && (
-                            <span className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center ${tone === 'danger' ? 'text-status-error' : 'text-status-warning'}`}>
-                                {icon}
-                            </span>
-                        )}
-                        <div className="min-w-0">
-                            <div className="text-sm font-medium text-foreground">{title}</div>
-                            {description && <div className="mt-1 text-xs text-foreground-secondary leading-snug">{description}</div>}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.12, ease: [0.16, 1, 0.3, 1] }}
+                        className="w-64 rounded-lg border border-border bg-surface p-3.5 shadow-lg"
+                    >
+                        <div className="flex gap-2.5">
+                            {icon && (
+                                <span className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center ${ICON_COLOR[tone]}`}>
+                                    {icon}
+                                </span>
+                            )}
+                            <div className="min-w-0">
+                                <div className="text-sm font-medium text-foreground">{title}</div>
+                                {description && (
+                                    <div className="mt-1 text-xs text-foreground-secondary leading-snug">
+                                        {description}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                    <div className="mt-3 flex justify-end gap-2">
-                        <Button content={cancelText} size="sm" variant="ghost" onClick={handleCancel} />
-                        <Button
-                            content={confirmText}
-                            size="sm"
-                            variant={tone === 'danger' ? 'danger' : 'primary'}
-                            loading={loading}
-                            onClick={handleConfirm}
-                        />
-                    </div>
+                        <div className="mt-3 flex justify-end gap-2">
+                            <Button content={cancelText} size="sm" variant="ghost" onClick={handleCancel} />
+                            <Button
+                                content={confirmText}
+                                size="sm"
+                                variant={CONFIRM_VARIANT[tone]}
+                                loading={loading}
+                                onClick={handleConfirm}
+                            />
+                        </div>
+                    </motion.div>
                     <Popover.Arrow className="fill-surface" />
                 </Popover.Content>
             </Popover.Portal>

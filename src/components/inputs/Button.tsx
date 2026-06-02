@@ -1,10 +1,10 @@
 import React from 'react'
 
-export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
+export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'content'> {
     /** Button content (text or nodes). */
     content?: React.ReactNode
     /** Visual style variant */
-    variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
+    variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'warning' | 'success' | 'info'
     /** Size — controls height, padding, and font size */
     size?: 'sm' | 'md' | 'lg'
     /** HTML button type */
@@ -51,6 +51,30 @@ const VARIANT_CLASSES: Record<NonNullable<ButtonProps['variant']>, string> = {
         'active:opacity-100',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         'focus-visible:ring-2 focus-visible:ring-status-error focus-visible:ring-offset-2',
+    ].join(' '),
+
+    warning: [
+        'bg-status-warning text-white',
+        'hover:opacity-90',
+        'active:opacity-100',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
+        'focus-visible:ring-2 focus-visible:ring-status-warning focus-visible:ring-offset-2',
+    ].join(' '),
+
+    success: [
+        'bg-status-success text-white',
+        'hover:opacity-90',
+        'active:opacity-100',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
+        'focus-visible:ring-2 focus-visible:ring-status-success focus-visible:ring-offset-2',
+    ].join(' '),
+
+    info: [
+        'bg-status-info text-white',
+        'hover:opacity-90',
+        'active:opacity-100',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
+        'focus-visible:ring-2 focus-visible:ring-status-info focus-visible:ring-offset-2',
     ].join(' '),
 }
 
