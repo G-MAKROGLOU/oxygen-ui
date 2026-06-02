@@ -85,10 +85,14 @@ export default function TextInput({
     required,
     prefix,
     suffix,
+    id,
 }: TextInputProps) {
     const errorId = useId()
     const hasError = errorMessage != null
     const hasAdornment = prefix != null || suffix != null
+    // `htmlFor` is the current API; fall back to the deprecated `id` so older
+    // call sites keep associating the label + input correctly.
+    const inputId = htmlFor ?? id
 
     const input = (
         <input
@@ -99,7 +103,7 @@ export default function TextInput({
             onBlur={onBlur}
             type={type}
             name={name}
-            id={htmlFor}
+            id={inputId}
             aria-invalid={hasError || undefined}
             aria-describedby={hasError ? errorId : undefined}
             placeholder={placeholder ?? ''}
@@ -117,7 +121,7 @@ export default function TextInput({
     return (
         <Field className={className}
             label={label}
-            htmlFor={htmlFor}
+            htmlFor={inputId}
             errorId={errorId}
             errorMessage={errorMessage}
             helperText={helperText}
