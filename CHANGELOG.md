@@ -1,3 +1,10 @@
+# [6.33.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.32.0...v6.33.0) (2026-06-02)
+
+
+### Features
+
+* **icons:** rebuild into a consistent, extensible, documented icon pack ([a569b1b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/a569b1b4210ede5bd1868c1097cf6c630e62a5ca))
+
 # [6.32.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.31.0...v6.32.0) (2026-06-02)
 
 
