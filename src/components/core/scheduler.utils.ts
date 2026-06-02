@@ -33,6 +33,9 @@ export const sameDay = (a: Date, b: Date): boolean =>
 
 export const isToday = (d: Date): boolean => sameDay(d, new Date())
 
+/** Stable per-day key (`y-m-d`) for bucketing events into a Map. */
+export const dayKey = (d: Date): string => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+
 export const isSameMonth = (a: Date, b: Date): boolean =>
     a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()
 

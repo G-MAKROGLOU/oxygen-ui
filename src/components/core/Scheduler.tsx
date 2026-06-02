@@ -10,8 +10,8 @@ import {
     toDate,
     addDays,
     addMonths,
-    sameDay,
     isToday,
+    dayKey,
     isSameMonth,
     buildMonthGrid,
     getWeekDays,
@@ -379,6 +379,21 @@ function MonthYearPicker({ label, cursor, onPick }: { label: string; cursor: Dat
 
 const MAX_CHIPS = 3
 
+const NO_EVENTS: NormEvent[] = []
+
+/** Bucket events by calendar day so views do O(1) lookups instead of scanning
+ * the whole event list per cell (O(days × events) → O(events)). */
+function bucketByDay(events: NormEvent[]): Map<string, NormEvent[]> {
+    const map = new Map<string, NormEvent[]>()
+    for (const e of events) {
+        const key = dayKey(e.start)
+        const bucket = map.get(key)
+        if (bucket) bucket.push(e)
+        else map.set(key, [e])
+    }
+    return map
+}
+
 function MonthView({
     cursor, weekStartsOn, events, onSelectSlot, onSelectEvent,
 }: {
@@ -386,6 +401,7 @@ function MonthView({
     onSelectSlot?: (d: Date) => void; onSelectEvent?: (e: SchedulerEvent) => void
 }) {
     const grid = useMemo(() => buildMonthGrid(cursor, weekStartsOn), [cursor, weekStartsOn])
+    const eventsByDay = useMemo(() => bucketByDay(events), [events])
     const labels = weekdayLabels(weekStartsOn)
 
     return (
@@ -400,7 +416,7 @@ function MonthView({
             <div className="grid flex-1 grid-cols-7 grid-rows-6">
                 {grid.map((day, i) => {
                     const inMonth = isSameMonth(day, cursor)
-                    const dayEvents = events.filter((e) => sameDay(e.start, day))
+                    const dayEvents = eventsByDay.get(dayKey(day)) ?? NO_EVENTS
                     const today = isToday(day)
                     return (
                         <button
@@ -464,6 +480,7 @@ function WeekView({
     onSelectSlot?: (d: Date) => void; onSelectEvent?: (e: SchedulerEvent) => void
 }) {
     const days = useMemo(() => getWeekDays(cursor, weekStartsOn), [cursor, weekStartsOn])
+    const eventsByDay = useMemo(() => bucketByDay(events), [events])
     const labels = useMemo(() => weekdayLabels(weekStartsOn), [weekStartsOn])
     const dow = (d: Date) => labels[(d.getDay() - weekStartsOn + 7) % 7]
     const [startHour, endHour] = dayHours
@@ -503,7 +520,7 @@ function WeekView({
 
                     {/* Day columns */}
                     {days.map((day) => {
-                        const dayEvents = events.filter((e) => sameDay(e.start, day) && !e.allDay)
+                        const dayEvents = (eventsByDay.get(dayKey(day)) ?? NO_EVENTS).filter((e) => !e.allDay)
                         return (
                             <div key={day.getTime()} className="relative border-r border-border last:border-r-0">
                                 {/* hour lines + click targets */}
