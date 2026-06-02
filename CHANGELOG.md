@@ -1,3 +1,10 @@
+# [6.16.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.15.0...v6.16.0) (2026-06-02)
+
+
+### Features
+
+* **modal,drawer:** named size scale + width escape hatch; drop dead size tuple ([b94d789](https://github.com/G-MAKROGLOU/oxygen-ui/commit/b94d789823c50b0e2443762a188733f1d779b69d))
+
 # [6.15.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.14.0...v6.15.0) (2026-06-02)
 
 
