@@ -370,7 +370,7 @@ function TreeNodeRow({
                     onClick={(e) => { e.stopPropagation(); onToggle() }}
                     aria-label={isExpanded ? 'Collapse' : 'Expand'}
                     tabIndex={-1}
-                    className="w-5 h-5 inline-flex items-center justify-center rounded hover:bg-black/10 focus:outline-none"
+                    className="w-5 h-5 inline-flex items-center justify-center rounded hover:bg-surface-raised focus:outline-none"
                 >
                     <svg
                         viewBox="0 0 24 24"

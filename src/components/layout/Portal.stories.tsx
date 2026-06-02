@@ -41,7 +41,7 @@ export const Basic: Story = {
                     {open && (
                         <Portal>
                             <div
-                                className="fixed inset-0 z-[500000] flex items-center justify-center bg-black/60"
+                                className="fixed inset-0 z-[500000] flex items-center justify-center bg-backdrop"
                                 onClick={() => setOpen(false)}
                             >
                                 <div className="rounded-lg bg-surface p-6 shadow-xl max-w-sm" onClick={(e) => e.stopPropagation()}>

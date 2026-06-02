@@ -69,7 +69,7 @@ export interface PortalProps {
  * @example Full-screen loading overlay
  * ```tsx
  * <Portal>
- *   <div className="fixed inset-0 bg-black/40 z-overlay flex items-center justify-center">
+ *   <div className="fixed inset-0 bg-backdrop z-overlay flex items-center justify-center">
  *     <Spinner />
  *   </div>
  * </Portal>
