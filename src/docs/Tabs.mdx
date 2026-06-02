@@ -29,7 +29,7 @@ heavy full-fill pill. Built on Radix Tabs, so roving-tabindex keyboard nav,
 - `Tabs.Add` — an optional trailing "+" affordance for dynamic tabs.
 
 A `Trigger` and its `Panel` are paired by `value`. Provide `defaultValue`
-(uncontrolled) or `value` + `onValueChange` (controlled).
+(uncontrolled) or `value` + `onChange` (controlled).
 
 ## Quick start
 
@@ -134,7 +134,7 @@ function Workspace() {
   }
 
   return (
-    <Tabs value={active} onValueChange={setActive}>
+    <Tabs value={active} onChange={setActive}>
       <Tabs.List aria-label="Open vessels">
         {tabs.map((t) => (
           <Tabs.Trigger key={t.key} value={t.key} closeable onClose={() => close(t.key)}>
@@ -193,7 +193,7 @@ names. The marker honours `prefers-reduced-motion`.
   <tbody>
     <tr><td style={td0}>value</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Controlled active tab.</td></tr>
     <tr><td style={td0}>defaultValue</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Uncontrolled initial active tab.</td></tr>
-    <tr><td style={td0}>onValueChange</td><td style={td(true)}>{'(value) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires with the next active value.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(value) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires with the next active value.</td></tr>
     <tr><td style={td0}>variant</td><td style={td(true)}>'underline' | 'segmented' | 'enclosed'</td><td style={td(true)}>'underline'</td><td style={td(false)}>Visual style.</td></tr>
     <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md' | 'lg'</td><td style={td(true)}>'md'</td><td style={td(false)}>Control height + type scale.</td></tr>
     <tr><td style={td0}>orientation</td><td style={td(true)}>'horizontal' | 'vertical'</td><td style={td(true)}>'horizontal'</td><td style={td(false)}>Strip-above vs. rail-beside.</td></tr>

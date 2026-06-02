@@ -22,7 +22,7 @@ export interface AccordionProps {
     /** Controlled open value(s). */
     value?: string | string[]
     /** Fires when the open set changes. */
-    onValueChange?: (value: string | string[]) => void
+    onChange?: (value: string | string[]) => void
     /** In `single` mode, allow the open item to be collapsed. Default `true`. */
     collapsible?: boolean
     /**
@@ -59,7 +59,7 @@ function Accordion({
     type = 'single',
     defaultValue,
     value,
-    onValueChange,
+    onChange,
     collapsible = true,
     variant = 'separated',
     className = '',
@@ -85,7 +85,7 @@ function Accordion({
                 type="multiple"
                 defaultValue={defaultValue as string[] | undefined}
                 value={value as string[] | undefined}
-                onValueChange={onValueChange as ((v: string[]) => void) | undefined}
+                onValueChange={onChange as ((v: string[]) => void) | undefined}
                 {...common}
             >
                 {inner}
@@ -99,7 +99,7 @@ function Accordion({
             collapsible={collapsible}
             defaultValue={defaultValue as string | undefined}
             value={value as string | undefined}
-            onValueChange={onValueChange as ((v: string) => void) | undefined}
+            onValueChange={onChange as ((v: string) => void) | undefined}
             {...common}
         >
             {inner}

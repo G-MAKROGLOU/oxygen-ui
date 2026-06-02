@@ -15,7 +15,7 @@ const SIZE_MAP: Record<DrawerSize, number | string> = {
 }
 
 export interface DrawerProps {
-    isOpen?: boolean
+    open?: boolean
     onClose?: () => void
     hasFooter?: boolean
     /** 'left' | 'right' — which edge the panel slides from */
@@ -48,12 +48,12 @@ export interface DrawerProps {
  * prefers-reduced-motion is respected via useReducedMotion().
  *
  * @example
- * <Drawer isOpen={open} placement="right" onClose={() => setOpen(false)} title="Filters">
+ * <Drawer open={open} placement="right" onClose={() => setOpen(false)} title="Filters">
  *   <FilterForm />
  * </Drawer>
  */
 export default function Drawer({
-    isOpen = false,
+    open = false,
     onClose,
     hasFooter = true,
     placement = 'right',
@@ -75,11 +75,11 @@ export default function Drawer({
     const widthCss = typeof resolvedWidth === 'number' ? `${resolvedWidth}px` : resolvedWidth
 
     return (
-        <Dialog.Root open={isOpen} onOpenChange={(open) => { if (!open) onClose?.() }}>
+        <Dialog.Root open={open} onOpenChange={(next) => { if (!next) onClose?.() }}>
             <Dialog.Portal forceMount>
                 {/* ── Backdrop ── */}
                 <AnimatePresence>
-                    {isOpen && (
+                    {open && (
                         <Dialog.Overlay asChild>
                             <motion.div
                                 className="fixed inset-0 bg-backdrop z-overlay"
@@ -94,7 +94,7 @@ export default function Drawer({
 
                 {/* ── Panel ── */}
                 <AnimatePresence>
-                    {isOpen && (
+                    {open && (
                         <Dialog.Content asChild>
                             <motion.div
                                 className={`fixed top-0 bottom-0 ${isRight ? 'right-0' : 'left-0'} z-modal flex flex-col bg-surface shadow-xl focus:outline-none ${className}`.trim()}
@@ -134,8 +134,8 @@ export default function Drawer({
 
                                 {/* Body — render children unconditionally so they
                                     stay mounted through Radix's exit animation.
-                                    Previously `{isOpen && children}` unmounted
-                                    children the moment isOpen flipped to false,
+                                    Previously `{open && children}` unmounted
+                                    children the moment open flipped to false,
                                     losing form state mid-close. */}
                                 <div className="flex-1 overflow-y-auto p-5">
                                     {children}

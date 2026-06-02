@@ -28,7 +28,7 @@ export interface ModalProps {
      * content and scroll internally rather than taking a fixed height.
      */
     width?: number | string
-    isOpen?: boolean
+    open?: boolean
     onClose?: () => void
     onOk?: () => void
     onCancel?: () => void
@@ -49,14 +49,14 @@ export interface ModalProps {
  * prefers-reduced-motion is respected via useReducedMotion().
  *
  * @example
- * <Modal isOpen={open} onClose={() => setOpen(false)} title="Confirm" onOk={handleOk}>
+ * <Modal open={open} onClose={() => setOpen(false)} title="Confirm" onOk={handleOk}>
  *   Are you sure you want to delete this item?
  * </Modal>
  */
 export default function Modal({
     width,
     size = 'md',
-    isOpen = false,
+    open = false,
     onClose,
     onOk,
     onCancel,
@@ -72,11 +72,11 @@ export default function Modal({
     const maxWidth = width ?? SIZE_MAP[size]
 
     return (
-        <Dialog.Root open={isOpen} onOpenChange={(open) => { if (!open) onClose?.() }}>
+        <Dialog.Root open={open} onOpenChange={(next) => { if (!next) onClose?.() }}>
             <Dialog.Portal forceMount>
                 {/* ── Backdrop ── */}
                 <AnimatePresence>
-                    {isOpen && (
+                    {open && (
                         <Dialog.Overlay asChild>
                             <motion.div
                                 className="fixed inset-0 bg-backdrop z-overlay"
@@ -91,7 +91,7 @@ export default function Modal({
 
                 {/* ── Panel ── */}
                 <AnimatePresence>
-                    {isOpen && (
+                    {open && (
                         <Dialog.Content asChild>
                             <motion.div
                                 className={`fixed left-1/2 top-1/2 z-modal flex flex-col w-[calc(100%-2rem)] max-h-[90dvh] bg-surface rounded-2xl shadow-xl overflow-hidden focus:outline-none ${className}`.trim()}
@@ -133,8 +133,8 @@ export default function Modal({
 
                                 {/* Body — render children unconditionally so they
                                     stay mounted through Radix's exit animation.
-                                    Previously `{isOpen && children}` unmounted
-                                    children the moment isOpen flipped to false,
+                                    Previously `{open && children}` unmounted
+                                    children the moment open flipped to false,
                                     losing form state mid-close. */}
                                 <div className={`flex-1 overflow-y-auto p-5 ${hasFooter ? '' : 'pb-5'}`}>
                                     {children}

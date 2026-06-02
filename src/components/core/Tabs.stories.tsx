@@ -164,7 +164,7 @@ export const Dynamic: Story = {
 
             return (
                 <div className="w-[560px] max-w-full">
-                    <Tabs value={active} onValueChange={setActive}>
+                    <Tabs value={active} onChange={setActive}>
                         <Tabs.List aria-label="Open vessels">
                             {tabs.map((t) => (
                                 <Tabs.Trigger key={t.key} value={t.key} closeable onClose={() => close(t.key)}>

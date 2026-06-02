@@ -22,7 +22,7 @@ const ModalDemo = (args: React.ComponentProps<typeof Modal>) => {
             <Button content="Open Modal" onClick={() => setOpen(true)} />
             <Modal
                 {...args}
-                isOpen={open}
+                open={open}
                 onClose={() => setOpen(false)}
                 onOk={() => setOpen(false)}
                 onCancel={() => setOpen(false)}

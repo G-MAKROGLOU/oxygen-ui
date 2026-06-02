@@ -52,7 +52,7 @@ describe('Tabs', () => {
         function Dyn() {
             const [v, setV] = useState('x')
             return (
-                <Tabs value={v} onValueChange={setV}>
+                <Tabs value={v} onChange={setV}>
                     <Tabs.List aria-label="t">
                         <Tabs.Trigger value="x" closeable onClose={onClose}>One</Tabs.Trigger>
                         <Tabs.Add onClick={onAdd} />

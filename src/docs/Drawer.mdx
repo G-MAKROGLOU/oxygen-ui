@@ -15,7 +15,7 @@ model as Modal, but it enters from the left or right edge.
 
 ## Mental model
 
-Controlled via `isOpen` + `onClose`. `placement` picks the edge it slides from and
+Controlled via `open` + `onClose`. `placement` picks the edge it slides from and
 `width` sets the panel width. Like Modal, it has an optional built-in OK/Cancel
 footer (`hasFooter`, `onOk`, `onCancel`), or supply your own actions in `children`.
 
@@ -30,7 +30,7 @@ import { Drawer } from '@geomak/ui'
 const [open, setOpen] = useState(false)
 
 <Drawer
-  isOpen={open}
+  open={open}
   placement="right"
   width={420}
   onClose={() => setOpen(false)}
@@ -45,7 +45,7 @@ const [open, setOpen] = useState(false)
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>isOpen</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Controlled open state.</td></tr>
+    <tr><td style={td0}>open</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Controlled open state.</td></tr>
     <tr><td style={td0}>onClose</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Esc / overlay / close button.</td></tr>
     <tr><td style={td0}>placement</td><td style={td(true)}>'left' | 'right'</td><td style={td(true)}>'right'</td><td style={td(false)}>Edge the panel slides from.</td></tr>
     <tr><td style={td0}>width</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>Panel width in px.</td></tr>

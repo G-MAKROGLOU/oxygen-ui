@@ -9,7 +9,7 @@ export interface IconButtonProps {
     type?: IconButtonVariant
     buttonType?: 'button' | 'submit' | 'reset'
     disabled?: boolean
-    size?: 'sm' | 'lg'
+    size?: 'sm' | 'md' | 'lg'
     loading?: boolean
     loadingIcon?: React.ReactNode
     title?: string
@@ -32,7 +32,7 @@ export default function IconButton({
     type = 'primary',
     buttonType = 'button',
     disabled = false,
-    size = 'lg',
+    size = 'md',
     loading = false,
     loadingIcon,
     title,
@@ -60,7 +60,7 @@ export default function IconButton({
             title={title}
             aria-label={title}
             style={style}
-            className={`${size === 'sm' ? 'p-1' : 'p-2'} rounded-lg shadow-md transition-colors duration-150 ${colorScheme} disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${className}`.trim()}
+            className={`${size === 'sm' ? 'p-1' : size === 'md' ? 'p-1.5' : 'p-2'} rounded-lg shadow-md transition-colors duration-150 ${colorScheme} disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${className}`.trim()}
         >
             {loading ? loadingIcon : icon}
         </button>

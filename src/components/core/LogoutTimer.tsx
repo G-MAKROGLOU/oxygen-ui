@@ -144,7 +144,7 @@ export default function LogoutTimer({
     }, [enabled, timeout, countdown, events.join(','), startIdle, clearTimers])
 
     return (
-        <Modal isOpen={warning} onClose={stay} hasFooter={false} title={title} size="sm">
+        <Modal open={warning} onClose={stay} hasFooter={false} title={title} size="sm">
             <div className="flex flex-col gap-4">
                 <p className="text-sm text-foreground-secondary">{description}</p>
 

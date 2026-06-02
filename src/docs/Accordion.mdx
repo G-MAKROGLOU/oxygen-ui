@@ -19,7 +19,7 @@ and full keyboard support.
 with a unique `value` and a `title` (the always-visible trigger). `type="single"`
 (default) keeps one panel open at a time — `collapsible` lets that one close;
 `type="multiple"` allows any number open. Open state is uncontrolled via
-`defaultValue` or controlled via `value` + `onValueChange`. Radix supplies the
+`defaultValue` or controlled via `value` + `onChange`. Radix supplies the
 height var that the `accordion-down` / `accordion-up` keyframes animate.
 
 ## Quick start
@@ -53,7 +53,7 @@ import { Accordion } from '@geomak/ui'
 
 ```tsx
 const [open, setOpen] = useState('a')
-<Accordion type="single" value={open} onValueChange={setOpen}>…</Accordion>
+<Accordion type="single" value={open} onChange={setOpen}>…</Accordion>
 ```
 
 ## API reference
@@ -65,7 +65,7 @@ const [open, setOpen] = useState('a')
   <tbody>
     <tr><td style={td0}>type</td><td style={td(true)}>'single' | 'multiple'</td><td style={td(true)}>'single'</td><td style={td(false)}>One open panel vs many.</td></tr>
     <tr><td style={td0}>defaultValue / value</td><td style={td(true)}>string | string[]</td><td style={td(true)}>—</td><td style={td(false)}>Uncontrolled / controlled open set.</td></tr>
-    <tr><td style={td0}>onValueChange</td><td style={td(true)}>{'(v: string | string[]) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Open-set change handler.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(v: string | string[]) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Open-set change handler.</td></tr>
     <tr><td style={td0}>collapsible</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>(single) Allow the open item to close.</td></tr>
     <tr><td style={td0}>variant</td><td style={td(true)}>'separated' | 'contained'</td><td style={td(true)}>'separated'</td><td style={td(false)}>Bordered cards vs one divided surface.</td></tr>
     <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>

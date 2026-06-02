@@ -72,7 +72,7 @@ function Shop() {
             </AppShell>
 
             <Drawer
-                isOpen={open}
+                open={open}
                 onClose={() => setOpen(false)}
                 placement="right"
                 size="lg"

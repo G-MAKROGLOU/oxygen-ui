@@ -23,7 +23,7 @@ const DrawerDemo = (args: React.ComponentProps<typeof Drawer>) => {
             <Button content="Open Drawer" onClick={() => setOpen(true)} />
             <Drawer
                 {...args}
-                isOpen={open}
+                open={open}
                 onClose={() => setOpen(false)}
                 onOk={() => setOpen(false)}
                 onCancel={() => setOpen(false)}

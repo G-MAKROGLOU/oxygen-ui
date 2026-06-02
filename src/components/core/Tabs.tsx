@@ -67,7 +67,7 @@ export interface TabsProps {
     /** Uncontrolled initial active tab value. */
     defaultValue?: string
     /** Fires with the next active value. */
-    onValueChange?: (value: string) => void
+    onChange?: (value: string) => void
     /** Visual style. `'underline'` (default) | `'segmented'` | `'enclosed'`. */
     variant?: TabsVariant
     /** Size preset. Default `'md'`. */
@@ -106,7 +106,7 @@ export interface TabsProps {
 function Tabs({
     value,
     defaultValue,
-    onValueChange,
+    onChange,
     variant = 'underline',
     size = 'md',
     orientation = 'horizontal',
@@ -122,8 +122,8 @@ function Tabs({
 
     const select = useCallback((next: string) => {
         if (!isControlled) setInternal(next)
-        onValueChange?.(next)
-    }, [isControlled, onValueChange])
+        onChange?.(next)
+    }, [isControlled, onChange])
 
     // Tab registry — triggers self-register their label/icon so the overflow
     // menu can enumerate them. `version` only bumps on membership change (add /
