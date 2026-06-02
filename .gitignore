@@ -35,7 +35,7 @@ yarn-error.log*
 
 # Local notes & tooling working files (not tracked)
 CLAUDE.md
-docs/HANDOFF.md
+/docs/
 .impeccable/
 DESIGN.md
 PRODUCT.md
