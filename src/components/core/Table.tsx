@@ -312,19 +312,27 @@ function Pagination({
 
     // Square, flat, neutral icon buttons — same primitive/height/border as the
     // per-page MenuButton so the whole strip reads as one cohesive group.
+    // Match the input focus style (border turns accent, no ring band) so the
+    // controls don't flash a heavy halo.
+    const FOCUS = 'focus-visible:!ring-0 focus-visible:!border-accent'
+
+    // Square, flat, neutral icon buttons — same primitive/height/border as the
+    // per-page MenuButton so the whole strip reads as one cohesive group.
     const navBtn = (icon: React.ReactNode, disabled: boolean, onClick: () => void, title: string) => (
-        <Button variant="outline" size="sm" disabled={disabled} onClick={onClick} icon={icon} className="w-7 !px-0 focus-visible:!ring-[3px] focus-visible:!ring-focus-ring focus-visible:!ring-offset-0" aria-label={title} title={title} />
+        <Button variant="outline" size="sm" disabled={disabled} onClick={onClick} icon={icon} className={`w-7 !px-0 ${FOCUS}`} aria-label={title} title={title} />
     )
 
+    // Chevrons centred in the 24×24 viewBox (centre x=12) so the rotated left
+    // pair lines up identically with the right pair.
     const chevronRight = (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6" />
         </svg>
     )
 
     const doubleChevronRight = (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l6 6-6 6M12 6l6 6-6 6" />
         </svg>
     )
 
@@ -337,7 +345,7 @@ function Pagination({
                         variant="outline"
                         size="sm"
                         side="top"
-                        className="focus-visible:!ring-[3px] focus-visible:!ring-focus-ring focus-visible:!ring-offset-0"
+                        className={FOCUS}
                         label={String(currentPerPageLabel)}
                         items={picker.map((o) => ({
                             key: o.key,
@@ -353,7 +361,7 @@ function Pagination({
             <div className="flex items-center gap-1">
                 {navBtn(<span className="inline-flex rotate-180">{doubleChevronRight}</span>, activePage === 0, () => onPageChange(0), 'First page')}
                 {navBtn(<span className="inline-flex rotate-180">{chevronRight}</span>, activePage === 0, () => activePage > 0 && onPageChange(activePage - 1), 'Previous page')}
-                <span className="px-2 text-sm tabular-nums text-foreground-secondary select-none">
+                <span className="px-2 text-xs tabular-nums text-foreground-secondary select-none">
                     {activePage + 1} <span className="text-foreground-muted">/ {maxPage + 1}</span>
                 </span>
                 {navBtn(chevronRight, activePage === maxPage, () => activePage < maxPage && onPageChange(activePage + 1), 'Next page')}
