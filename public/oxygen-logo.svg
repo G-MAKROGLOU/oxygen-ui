@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="148" height="36" viewBox="0 0 148 36" fill="none">
+
+  <!-- Soft glow halo behind nucleus -->
+  <circle cx="18" cy="18" r="9" fill="#2d88ff" fill-opacity="0.1"/>
+
+  <!-- Orbital ring 1 — horizontal, full opacity -->
+  <ellipse cx="18" cy="18" rx="15.5" ry="5.5" stroke="#2d88ff" stroke-width="1.5"/>
+
+  <!-- Orbital ring 2 — 60° tilt, mid opacity -->
+  <ellipse cx="18" cy="18" rx="15.5" ry="5.5"
+    stroke="#4d9aff" stroke-width="1.5" opacity="0.6"
+    transform="rotate(60 18 18)"/>
+
+  <!-- Orbital ring 3 — -60° tilt, low opacity (depth) -->
+  <ellipse cx="18" cy="18" rx="15.5" ry="5.5"
+    stroke="#4d9aff" stroke-width="1.5" opacity="0.28"
+    transform="rotate(-60 18 18)"/>
+
+  <!-- Nucleus -->
+  <circle cx="18" cy="18" r="3.5" fill="#2d88ff"/>
+  <!-- Highlight glint on nucleus -->
+  <circle cx="16.6" cy="16.6" r="1.2" fill="white" fill-opacity="0.5"/>
+
+  <!-- Vertical divider -->
+  <line x1="40" y1="8" x2="40" y2="28" stroke="#2e4a64" stroke-width="1"/>
+
+  <!-- Wordmark -->
+  <text x="50" y="23.5"
+    font-family="-apple-system, BlinkMacSystemFont, 'Inter var', 'Inter', 'Segoe UI', sans-serif"
+    font-size="15" letter-spacing="-0.3">
+    <tspan font-weight="600" fill="#e8f0f8">oxygen</tspan><tspan
+      dx="5" font-weight="300" fill="#4d9aff">ui</tspan>
+  </text>
+
+</svg>
