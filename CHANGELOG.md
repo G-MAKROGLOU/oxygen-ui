@@ -1,3 +1,10 @@
+## [6.17.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.17.0...v6.17.1) (2026-06-02)
+
+
+### Bug Fixes
+
+* **polish:** purge off-palette color utilities library-wide ([9bf07b6](https://github.com/G-MAKROGLOU/oxygen-ui/commit/9bf07b64c3da8ff2a6c0eb78091615c55c6a6a08))
+
 # [6.17.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.16.0...v6.17.0) (2026-06-02)
 
 
