@@ -1,3 +1,10 @@
+# [6.22.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.21.1...v6.22.0) (2026-06-02)
+
+
+### Features
+
+* **secure-layout:** first-class simple/JWT-only path ([4b02559](https://github.com/G-MAKROGLOU/oxygen-ui/commit/4b02559958fcc9751208b91cc0563044dd5d0032))
+
 ## [6.21.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.21.0...v6.21.1) (2026-06-02)
 
 
