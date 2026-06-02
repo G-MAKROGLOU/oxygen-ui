@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 
 export interface SecureLayoutProps {
@@ -155,6 +155,12 @@ export default function SecureLayout({
 }: SecureLayoutProps) {
     const reduced = useReducedMotion()
 
+    // Hold the callbacks in a ref so the check effect does NOT depend on their
+    // identity — otherwise an inline `canAccess` (the common case) would re-run
+    // the check (and re-fire any request inside it) on every parent render.
+    const cbs = useRef({ canAccess, onGranted, onDeny })
+    cbs.current = { canAccess, onGranted, onDeny }
+
     // Serialise array inputs so the effect re-runs on value (not identity) changes.
     const rolesKey = JSON.stringify(roles)
     const requiredRolesKey = JSON.stringify(requiredRoles)
@@ -182,19 +188,20 @@ export default function SecureLayout({
 
     useEffect(() => {
         let cancelled = false
+        const { canAccess: check, onGranted: granted, onDeny: deny } = cbs.current
         const finish = (ok: boolean) => {
             if (cancelled) return
             setState(ok ? 'granted' : 'denied')
-            if (ok) onGranted?.()
-            else onDeny?.()
+            if (ok) granted?.()
+            else deny?.()
         }
 
         if (!passesSync()) {
             finish(false)
-        } else if (!canAccess) {
+        } else if (!check) {
             finish(true)
         } else {
-            const result = canAccess(route)
+            const result = check(route)
             // Only enter the 'checking' state for a genuine promise — a
             // synchronous canAccess resolves in place, so per-route guarding
             // with an in-memory map never flashes a loading state on navigation.
@@ -216,7 +223,6 @@ export default function SecureLayout({
         route,
         requireAllRoles,
         requireAllPermissions,
-        canAccess,
         rolesKey,
         requiredRolesKey,
         permissionsKey,

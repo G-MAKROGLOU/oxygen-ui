@@ -47,7 +47,7 @@ export const AsyncCheck: Story = {
 }
 
 export const TokenLoginBootstrap: Story = {
-    name: 'JWT bootstrap (VesOPS-style)',
+    name: 'JWT bootstrap (token-login)',
     render: () => {
         const [log, setLog] = useState<string[]>([])
         const add = (m: string) => setLog((l) => [...l, m])

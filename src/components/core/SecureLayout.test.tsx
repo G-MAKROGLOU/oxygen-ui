@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import SecureLayout from './SecureLayout'
 
@@ -92,6 +92,24 @@ describe('SecureLayout', () => {
         rerender(<SecureLayout route="/no" canAccess={canAccess} fallback={<div>denied</div>}>{Secret}</SecureLayout>)
         expect(await screen.findByText('denied')).toBeInTheDocument()
         expect(canAccess).toHaveBeenLastCalledWith('/no')
+    })
+
+    it('runs canAccess once despite parent re-renders with a new inline fn', async () => {
+        const calls = { n: 0 }
+        function Harness() {
+            const [, force] = React.useState(0)
+            return (
+                <>
+                    <button onClick={() => force((x) => x + 1)}>rerender</button>
+                    <SecureLayout canAccess={() => { calls.n++; return true }}>{Secret}</SecureLayout>
+                </>
+            )
+        }
+        render(<Harness />)
+        await screen.findByText('secret content')
+        fireEvent.click(screen.getByText('rerender'))
+        fireEvent.click(screen.getByText('rerender'))
+        await waitFor(() => expect(calls.n).toBe(1))
     })
 
     it('treats an expired JWT as unauthenticated', async () => {
