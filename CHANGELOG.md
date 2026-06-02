@@ -1,3 +1,10 @@
+# [6.23.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.22.0...v6.23.0) (2026-06-02)
+
+
+### Features
+
+* **secure-layout:** per-route access from a single root wrapper ([19f3b37](https://github.com/G-MAKROGLOU/oxygen-ui/commit/19f3b372398b36798482f39efc380182191649e0))
+
 # [6.22.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.21.1...v6.22.0) (2026-06-02)
 
 
