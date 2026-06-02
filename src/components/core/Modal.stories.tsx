@@ -8,6 +8,9 @@ const meta: Meta<typeof Modal> = {
     component: Modal,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],
+    argTypes: {
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl', 'full'] },
+    },
 }
 export default meta
 type Story = StoryObj<typeof Modal>
@@ -55,12 +58,30 @@ export const CustomButtonText: Story = {
     },
 }
 
-export const CustomWidth: Story = {
+export const Small: Story = {
     render: (args) => <ModalDemo {...args} />,
     args: {
         title: 'Compact Modal',
-        width: 420,
-        children: <p className="text-sm text-foreground-secondary">A narrower 420 px panel for short confirmations.</p>,
+        size: 'sm',
+        children: <p className="text-sm text-foreground-secondary">A 400 px panel for short confirmations.</p>,
+    },
+}
+
+export const Large: Story = {
+    render: (args) => <ModalDemo {...args} />,
+    args: {
+        title: 'Spacious Modal',
+        size: 'lg',
+        children: <p className="text-sm text-foreground-secondary">An 800 px panel for forms or detailed content.</p>,
+    },
+}
+
+export const ExplicitWidth: Story = {
+    render: (args) => <ModalDemo {...args} />,
+    args: {
+        title: 'Custom Width',
+        width: '48rem',
+        children: <p className="text-sm text-foreground-secondary">An explicit <code>width=&quot;48rem&quot;</code> overrides the size scale.</p>,
     },
 }
 

@@ -3,19 +3,31 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Button from '../inputs/Button'
 
+export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
+
+/** Named max-width scale (px) — keeps modal widths consistent across the app. */
+const SIZE_MAP: Record<ModalSize, number | string> = {
+    sm:   400,
+    md:   600,
+    lg:   800,
+    xl:   1000,
+    full: 'calc(100vw - 2rem)',
+}
+
 export interface ModalProps {
     /**
-     * Max width of the modal panel in pixels (default 600).
-     * On narrow viewports the panel fills the screen minus 1 rem on each side.
-     * Height is always content-driven (max 90 dvh).
+     * Named width scale (default `'md'`). Keeps modals consistent across the
+     * app: sm 400 · md 600 · lg 800 · xl 1000 · full (viewport − 2rem).
      */
-    width?: number
+    size?: ModalSize
     /**
-     * @deprecated Use `width` instead. The second tuple value (height) was
-     * never honoured and is silently ignored. Kept for backwards
-     * compatibility — will be removed in a future major version.
+     * Explicit max-width escape hatch — a number (px) or any CSS length
+     * (e.g. `'48rem'`). Overrides `size` when set.
+     *
+     * Height is always content-driven (max 90 dvh): modals grow with their
+     * content and scroll internally rather than taking a fixed height.
      */
-    size?: [number, number] | [number]
+    width?: number | string
     isOpen?: boolean
     onClose?: () => void
     onOk?: () => void
@@ -43,7 +55,7 @@ export interface ModalProps {
  */
 export default function Modal({
     width,
-    size,
+    size = 'md',
     isOpen = false,
     onClose,
     onOk,
@@ -56,9 +68,8 @@ export default function Modal({
     className = '',
 }: ModalProps) {
     const reduced = useReducedMotion()
-    // Prefer the new `width` prop; fall back to the deprecated `size[0]`;
-    // finally default to 600 px.
-    const maxWidth = width ?? size?.[0] ?? 600
+    // Explicit `width` wins; otherwise resolve the named size scale.
+    const maxWidth = width ?? SIZE_MAP[size]
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={(open) => { if (!open) onClose?.() }}>

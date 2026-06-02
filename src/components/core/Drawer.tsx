@@ -3,13 +3,33 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Button from '../inputs/Button'
 
+export type DrawerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
+
+/** Named width scale (px) — keeps drawer widths consistent across the app. */
+const SIZE_MAP: Record<DrawerSize, number | string> = {
+    sm:   280,
+    md:   320,
+    lg:   480,
+    xl:   640,
+    full: 'calc(100vw - 1rem)',
+}
+
 export interface DrawerProps {
     isOpen?: boolean
     onClose?: () => void
     hasFooter?: boolean
     /** 'left' | 'right' — which edge the panel slides from */
     placement?: 'left' | 'right'
-    width?: number
+    /**
+     * Named width scale (default `'md'`): sm 280 · md 320 · lg 480 · xl 640 ·
+     * full (viewport − 1rem). The panel always spans the full viewport height.
+     */
+    size?: DrawerSize
+    /**
+     * Explicit width escape hatch — a number (px) or any CSS length
+     * (e.g. `'30rem'`). Overrides `size` when set.
+     */
+    width?: number | string
     okText?: string
     cancelText?: string
     onOk?: () => void
@@ -37,7 +57,8 @@ export default function Drawer({
     onClose,
     hasFooter = true,
     placement = 'right',
-    width = 320,
+    size = 'md',
+    width,
     okText = 'Ok',
     cancelText = 'Cancel',
     onOk,
@@ -49,6 +70,9 @@ export default function Drawer({
     const reduced = useReducedMotion()
     const isRight = placement === 'right'
     const hiddenX = isRight ? '100%' : '-100%'
+    // Explicit `width` wins; otherwise resolve the named size scale.
+    const resolvedWidth = width ?? SIZE_MAP[size]
+    const widthCss = typeof resolvedWidth === 'number' ? `${resolvedWidth}px` : resolvedWidth
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={(open) => { if (!open) onClose?.() }}>
@@ -74,7 +98,7 @@ export default function Drawer({
                         <Dialog.Content asChild>
                             <motion.div
                                 className={`fixed top-0 bottom-0 ${isRight ? 'right-0' : 'left-0'} z-modal flex flex-col bg-surface shadow-xl focus:outline-none ${className}`.trim()}
-                                style={{ width: `min(calc(100vw - 1rem), ${width}px)` }}
+                                style={{ width: `min(calc(100vw - 1rem), ${widthCss})` }}
                                 initial={{ x: reduced ? 0 : hiddenX, opacity: reduced ? 0 : 1 }}
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: reduced ? 0 : hiddenX, opacity: reduced ? 0 : 1 }}

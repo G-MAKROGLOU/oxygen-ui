@@ -8,6 +8,10 @@ const meta: Meta<typeof Drawer> = {
     component: Drawer,
     parameters: { layout: 'centered' },
     tags: ['autodocs'],
+    argTypes: {
+        placement: { control: 'inline-radio', options: ['left', 'right'] },
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl', 'full'] },
+    },
 }
 export default meta
 type Story = StoryObj<typeof Drawer>
@@ -55,11 +59,20 @@ export const WithoutFooter: Story = {
     },
 }
 
-export const Wide: Story = {
+export const Large: Story = {
     render: (args) => <DrawerDemo {...args} />,
     args: {
-        title: 'Wide Drawer',
-        width: 480,
-        children: <p className="text-sm text-foreground-secondary">A wider 480 px panel for richer content.</p>,
+        title: 'Large Drawer',
+        size: 'lg',
+        children: <p className="text-sm text-foreground-secondary">A 480 px panel for richer content.</p>,
+    },
+}
+
+export const ExplicitWidth: Story = {
+    render: (args) => <DrawerDemo {...args} />,
+    args: {
+        title: 'Custom Width',
+        width: '30rem',
+        children: <p className="text-sm text-foreground-secondary">An explicit <code>width=&quot;30rem&quot;</code> overrides the size scale.</p>,
     },
 }

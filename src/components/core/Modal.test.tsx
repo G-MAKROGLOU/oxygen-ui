@@ -86,8 +86,14 @@ describe('Modal', () => {
 
     // ── Responsive sizing ─────────────────────────────────────────────────
 
-    it('applies maxWidth from size[0]', () => {
-        render(<Modal isOpen title="Info" size={[480]} />)
+    it('applies maxWidth from the named size scale', () => {
+        render(<Modal isOpen title="Info" size="lg" />)
+        const dialog = screen.getByRole('dialog')
+        expect(dialog).toHaveStyle({ maxWidth: '800px' })
+    })
+
+    it('lets an explicit width override the size scale', () => {
+        render(<Modal isOpen title="Info" size="lg" width={480} />)
         const dialog = screen.getByRole('dialog')
         expect(dialog).toHaveStyle({ maxWidth: '480px' })
     })

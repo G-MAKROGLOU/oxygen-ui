@@ -77,10 +77,10 @@ export { default as IconButton } from './components/core/IconButton'
 export type { IconButtonProps } from './components/core/IconButton'
 
 export { default as Modal } from './components/core/Modal'
-export type { ModalProps } from './components/core/Modal'
+export type { ModalProps, ModalSize } from './components/core/Modal'
 
 export { default as Drawer } from './components/core/Drawer'
-export type { DrawerProps } from './components/core/Drawer'
+export type { DrawerProps, DrawerSize } from './components/core/Drawer'
 
 export { default as Tooltip, TooltipProvider } from './components/core/Tooltip'
 export type { TooltipProps } from './components/core/Tooltip'
