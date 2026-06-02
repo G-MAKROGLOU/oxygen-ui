@@ -178,10 +178,12 @@ function RotatingCarousel({
     const [active, setActive] = useState(0)
     const reduced = useReducedMotion()
 
-    const idx = Math.min(Math.max(active, 0), Math.max(0, count - 1))
-    const atStart = idx <= 0
-    const atEnd = idx >= count - 1
-    const step = (dir: -1 | 1) => setActive((a) => Math.min(Math.max(a + dir, 0), count - 1))
+    // Circular: the stack loops, so there's always a neighbour on each side
+    // (the first card shows the last one on its left) and the arrows wrap at
+    // the ends instead of dead-ending.
+    const wrap = (n: number) => (count > 0 ? ((n % count) + count) % count : 0)
+    const idx = wrap(active)
+    const step = (dir: -1 | 1) => setActive((a) => wrap(a + dir))
 
     const w = typeof itemWidth === 'number' ? itemWidth : parseInt(String(itemWidth), 10) || 320
     const widthCss = typeof itemWidth === 'number' ? `${itemWidth}px` : itemWidth
@@ -209,7 +211,7 @@ function RotatingCarousel({
             onKeyDown={onKeyDown}
         >
             {showArrows && (
-                <button type="button" aria-label="Previous" onClick={() => step(-1)} disabled={atStart} className={`${arrowBtn} left-1`}>
+                <button type="button" aria-label="Previous" onClick={() => step(-1)} className={`${arrowBtn} left-1`}>
                     <Arrow dir="left" />
                 </button>
             )}
@@ -225,7 +227,10 @@ function RotatingCarousel({
                 )}
 
                 {slides.map((slide, i) => {
-                    const offset = i - idx
+                    // Shortest signed circular distance from the active card, so a
+                    // card near the "end" wraps to peek from the opposite side.
+                    let offset = wrap(i - idx)
+                    if (offset > count / 2) offset -= count
                     const abs = Math.abs(offset)
                     if (abs > 2) return null // keep a small window mounted for smooth in/out
                     const isCenter = offset === 0
@@ -256,7 +261,7 @@ function RotatingCarousel({
             </div>
 
             {showArrows && (
-                <button type="button" aria-label="Next" onClick={() => step(1)} disabled={atEnd} className={`${arrowBtn} right-1`}>
+                <button type="button" aria-label="Next" onClick={() => step(1)} className={`${arrowBtn} right-1`}>
                     <Arrow dir="right" />
                 </button>
             )}
