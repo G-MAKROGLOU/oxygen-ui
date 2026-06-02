@@ -33,6 +33,9 @@ yarn-error.log*
 # TypeScript
 *.tsbuildinfo
 
-# Local notes (not tracked)
+# Local notes & tooling working files (not tracked)
 CLAUDE.md
 docs/HANDOFF.md
+.impeccable/
+DESIGN.md
+PRODUCT.md
