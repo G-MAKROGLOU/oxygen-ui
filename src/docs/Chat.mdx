@@ -1,0 +1,78 @@
+{/* src/docs/Chat.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/Chat/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# Chat
+
+A messaging surface: a scrollable transcript of message bubbles plus a composer.
+
+## Mental model
+
+Chat is **controlled** — you own the `messages` array; the composer reports text
+via `onSend` (you append and re-render). Each message carries an `authorId`;
+those matching `currentUserId` align right in the accent colour, everyone else
+aligns left on a raised surface with an avatar (image or initials of
+`authorName`) and name. Consecutive messages from one author **group** (one
+avatar + name per group, timestamp on the last bubble). The list **auto-scrolls**
+to the newest message unless you've scrolled up to read history, in which case a
+"jump to latest" button appears. `typingNames` shows an animated indicator.
+
+## Quick start
+
+```tsx
+import { Chat, type ChatMessage } from '@geomak/ui'
+
+const [messages, setMessages] = useState<ChatMessage[]>(initial)
+
+<Chat
+  currentUserId="me"
+  title="Maria Ferreira"
+  subtitle="Online"
+  messages={messages}
+  typingNames={typing}            // e.g. ['Maria']
+  onSend={(text) => {
+    setMessages((m) => [...m, { id: uid(), authorId: 'me', text, timestamp: new Date(), status: 'sent' }])
+  }}
+/>
+```
+
+Enter sends; Shift+Enter inserts a newline. Use `hideComposer` for a read-only
+transcript.
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>messages</td><td style={td(true)}>ChatMessage[]</td><td style={td(true)}>—</td><td style={td(false)}>The transcript.</td></tr>
+    <tr><td style={td0}>currentUserId</td><td style={td(true)}>string | number</td><td style={td(true)}>—</td><td style={td(false)}>Messages with this authorId align right (accent).</td></tr>
+    <tr><td style={td0}>onSend</td><td style={td(true)}>{'(text: string) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired with the trimmed composer text.</td></tr>
+    <tr><td style={td0}>typingNames</td><td style={td(true)}>string[]</td><td style={td(true)}>[]</td><td style={td(false)}>Shows an animated typing indicator.</td></tr>
+    <tr><td style={td0}>title / subtitle / avatar / headerActions</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>—</td><td style={td(false)}>Optional header. Omit all for no header.</td></tr>
+    <tr><td style={td0}>placeholder / disabled / hideComposer</td><td style={td(true)}>string / boolean</td><td style={td(true)}>—</td><td style={td(false)}>Composer config; hideComposer = read-only.</td></tr>
+    <tr><td style={td0}>emptyState</td><td style={td(true)}>ReactNode</td><td style={td(true)}>"No messages yet…"</td><td style={td(false)}>Shown with no messages.</td></tr>
+    <tr><td style={td0}>height</td><td style={td(true)}>number | string</td><td style={td(true)}>480</td><td style={td(false)}>Overall height; the transcript scrolls within it.</td></tr>
+  </tbody>
+</table>
+
+### ChatMessage
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>id</td><td style={td(true)}>string | number</td><td style={td(false)}>Stable key.</td></tr>
+    <tr><td style={td0}>authorId</td><td style={td(true)}>string | number</td><td style={td(false)}>Compared to currentUserId for own vs incoming.</td></tr>
+    <tr><td style={td0}>authorName / avatar</td><td style={td(true)}>string</td><td style={td(false)}>Name + avatar (falls back to initials) for incoming.</td></tr>
+    <tr><td style={td0}>text</td><td style={td(true)}>string</td><td style={td(false)}>Message body (wraps, preserves newlines).</td></tr>
+    <tr><td style={td0}>timestamp</td><td style={td(true)}>Date | string</td><td style={td(false)}>Shown on the last bubble of a group.</td></tr>
+    <tr><td style={td0}>status</td><td style={td(true)}>'sent' | 'delivered' | 'read'</td><td style={td(false)}>Shown under your own last bubble.</td></tr>
+  </tbody>
+</table>
+
+See the **Data Display → Chat** stories.
