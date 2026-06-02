@@ -1,3 +1,10 @@
+# [6.34.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.33.0...v6.34.0) (2026-06-02)
+
+
+### Features
+
+* **icons:** add tree-shakeable @geomak/ui/icons subpath export ([fbbef31](https://github.com/G-MAKROGLOU/oxygen-ui/commit/fbbef3115fc4d2c1869ed1afac780c26f00ce6ec))
+
 # [6.33.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.32.0...v6.33.0) (2026-06-02)
 
 
