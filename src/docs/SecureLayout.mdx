@@ -67,6 +67,31 @@ Even simpler — gate purely on a token's validity:
 </SecureLayout>
 ```
 
+## Per-route — one wrapper, decision per path
+
+To gate *different routes* from a **single** wrapper around the whole app, pass
+the current path as `route` (from your router). The check re-runs whenever
+`route` changes (i.e. on navigation), and `canAccess` receives the path so it
+can decide per route. Keep `canAccess` **synchronous** (consult an in-memory
+route → roles map) and there's no loading flash on navigation.
+
+```tsx
+const allowed = { '/admin': ['admin'], '/reports': ['analyst', 'admin'] }
+
+<SecureLayout
+  route={location.pathname}
+  canAccess={(path) => (allowed[path] ?? []).some((r) => user.roles.includes(r))}
+  onDeny={() => navigate('/403')}
+>
+  <AppRoutes />
+</SecureLayout>
+```
+
+Without `route`, the check runs on mount and refresh only — so a root wrapper
+gates the *app* (and re-bootstraps on reload) but does **not** re-evaluate on
+client-side navigation. Add `route` to make one wrapper guard every path; or
+nest a SecureLayout inside individual routes if they need independent gates.
+
 ## Full — RBAC + PBAC gate
 
 ```tsx
@@ -92,7 +117,8 @@ Even simpler — gate purely on a token's validity:
     <tr><td style={td0}>requireAllRoles</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Require all roles, not just one.</td></tr>
     <tr><td style={td0}>permissions / requiredPermissions</td><td style={td(true)}>string[]</td><td style={td(true)}>—</td><td style={td(false)}>User perms vs. required (PBAC).</td></tr>
     <tr><td style={td0}>requireAllPermissions</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Require all permissions.</td></tr>
-    <tr><td style={td0}>canAccess</td><td style={td(true)}>{'() => boolean | Promise<boolean>'}</td><td style={td(true)}>—</td><td style={td(false)}>Final predicate (may be async). The hook for custom / token-login logic.</td></tr>
+    <tr><td style={td0}>route</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Current path (e.g. location.pathname). Makes the check re-run on navigation and is passed to <code>canAccess</code> — enables per-route gating from one wrapper.</td></tr>
+    <tr><td style={td0}>canAccess</td><td style={td(true)}>{'(route?) => boolean | Promise<boolean>'}</td><td style={td(true)}>—</td><td style={td(false)}>Final predicate (may be async); receives the route. The hook for custom / token-login / per-route logic.</td></tr>
     <tr><td style={td0}>loadingFallback</td><td style={td(true)}>ReactNode</td><td style={td(true)}>spinner</td><td style={td(false)}>Shown while checking. <code>null</code> → render nothing.</td></tr>
     <tr><td style={td0}>fallback</td><td style={td(true)}>ReactNode</td><td style={td(true)}>"Access denied" panel</td><td style={td(false)}>Shown when denied. <code>null</code> → render nothing (redirect flows).</td></tr>
     <tr><td style={td0}>onGranted</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired once on grant (e.g. hydrate state, redirect to a landing route).</td></tr>

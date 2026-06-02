@@ -74,6 +74,45 @@ export const TokenLoginBootstrap: Story = {
     },
 }
 
+export const PerRouteSingleWrapper: Story = {
+    name: 'Per-route (single wrapper)',
+    render: () => {
+        // Pretend router. One SecureLayout wraps everything; `route` drives the check.
+        const [route, setRoute] = useState('/dashboard')
+        const userRoles = ['analyst']
+        const allowed: Record<string, string[]> = {
+            '/dashboard': [],                 // public to any signed-in user
+            '/reports': ['analyst', 'admin'],
+            '/admin': ['admin'],
+        }
+        const tabBtn = (path: string) =>
+            <button key={path} type="button" onClick={() => setRoute(path)}
+                className={`rounded-md px-3 py-1.5 text-sm ${route === path ? 'bg-accent text-accent-fg' : 'bg-surface-raised text-foreground-secondary'}`}>
+                {path}
+            </button>
+        return (
+            <div className="flex flex-col gap-4">
+                <div className="flex gap-2">{['/dashboard', '/reports', '/admin'].map(tabBtn)}</div>
+                <SecureLayout
+                    route={route}
+                    canAccess={(path) => (allowed[path ?? ''] ?? []).length === 0 || (allowed[path ?? ''] ?? []).some((r) => userRoles.includes(r))}
+                    fallback={
+                        <div className="rounded-xl border border-border bg-surface p-8 text-center">
+                            <div className="text-sm font-semibold text-foreground">403 — no access to {route}</div>
+                            <div className="mt-1 text-xs text-foreground-muted">Your roles: {userRoles.join(', ')}</div>
+                        </div>
+                    }
+                >
+                    <div className="rounded-xl border border-border bg-surface p-8 text-center">
+                        <div className="text-sm font-semibold text-foreground">✅ {route}</div>
+                        <div className="mt-1 text-xs text-foreground-muted">You have access to this route.</div>
+                    </div>
+                </SecureLayout>
+            </div>
+        )
+    },
+}
+
 export const ToggleAccess: Story = {
     name: 'Live role toggle',
     render: () => {

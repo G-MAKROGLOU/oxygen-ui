@@ -28,8 +28,21 @@ export interface SecureLayoutProps {
     requiredPermissions?: string[]
     requireAllPermissions?: boolean
 
-    /** Final say. Runs after the built-in checks; may be async. Return false to deny. */
-    canAccess?: () => boolean | Promise<boolean>
+    /**
+     * The current route path (e.g. `location.pathname`). Pass it from your
+     * router to do **per-route** access from a single root wrapper: the check
+     * re-runs whenever `route` changes (i.e. on navigation), and the value is
+     * forwarded to `canAccess`. Omit it for a static, app-wide gate.
+     */
+    route?: string
+
+    /**
+     * Final say. Runs after the built-in checks; may be async; return false to
+     * deny. Receives the current `route`, so a single wrapper can decide access
+     * per path (e.g. consult a route → permissions map). Keep it synchronous
+     * for instant, flash-free per-route guarding.
+     */
+    canAccess?: (route?: string) => boolean | Promise<boolean>
 
     /** Shown while the (possibly async) check resolves. Pass `null` to render nothing. */
     loadingFallback?: React.ReactNode
@@ -110,6 +123,17 @@ const Spinner = () => (
  * >
  *   <AppRoutes />
  * </SecureLayout>
+ *
+ * @example Per-route access from a single root wrapper
+ * // Pass the path so the check re-runs on navigation; decide per route.
+ * const allowed = { '/admin': ['admin'], '/reports': ['analyst', 'admin'] }
+ * <SecureLayout
+ *   route={location.pathname}
+ *   canAccess={(path) => (allowed[path] ?? []).some((r) => user.roles.includes(r))}
+ *   onDeny={() => navigate('/403')}
+ * >
+ *   <AppRoutes />
+ * </SecureLayout>
  */
 export default function SecureLayout({
     children,
@@ -121,6 +145,7 @@ export default function SecureLayout({
     permissions,
     requiredPermissions,
     requireAllPermissions,
+    route,
     canAccess,
     loadingFallback,
     fallback,
@@ -169,8 +194,16 @@ export default function SecureLayout({
         } else if (!canAccess) {
             finish(true)
         } else {
-            setState('checking')
-            Promise.resolve(canAccess()).then((ok) => finish(Boolean(ok)))
+            const result = canAccess(route)
+            // Only enter the 'checking' state for a genuine promise — a
+            // synchronous canAccess resolves in place, so per-route guarding
+            // with an in-memory map never flashes a loading state on navigation.
+            if (result && typeof (result as Promise<boolean>).then === 'function') {
+                setState('checking')
+                ;(result as Promise<boolean>).then((ok) => finish(Boolean(ok)))
+            } else {
+                finish(Boolean(result))
+            }
         }
 
         return () => {
@@ -180,6 +213,7 @@ export default function SecureLayout({
     }, [
         isAuthenticated,
         token,
+        route,
         requireAllRoles,
         requireAllPermissions,
         canAccess,

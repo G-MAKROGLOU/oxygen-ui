@@ -79,6 +79,21 @@ describe('SecureLayout', () => {
         expect(container).toBeEmptyDOMElement()
     })
 
+    it('forwards the route to canAccess and re-checks when it changes', async () => {
+        const allowed: Record<string, boolean> = { '/ok': true, '/no': false }
+        const canAccess = vi.fn((path?: string) => allowed[path ?? ''] ?? false)
+        const { rerender } = render(
+            <SecureLayout route="/ok" canAccess={canAccess} fallback={<div>denied</div>}>{Secret}</SecureLayout>,
+        )
+        expect(await screen.findByText('secret content')).toBeInTheDocument()
+        expect(canAccess).toHaveBeenLastCalledWith('/ok')
+
+        // Navigate to a disallowed route → re-checks and denies.
+        rerender(<SecureLayout route="/no" canAccess={canAccess} fallback={<div>denied</div>}>{Secret}</SecureLayout>)
+        expect(await screen.findByText('denied')).toBeInTheDocument()
+        expect(canAccess).toHaveBeenLastCalledWith('/no')
+    })
+
     it('treats an expired JWT as unauthenticated', async () => {
         const expired = makeToken({ exp: Math.floor(Date.now() / 1000) - 100 })
         render(<SecureLayout token={expired} fallback={<div>denied</div>}>{Secret}</SecureLayout>)
