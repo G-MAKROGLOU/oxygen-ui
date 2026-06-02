@@ -184,7 +184,7 @@ export default function Stepper({
             {steps.map((step, i) => {
                 const state = stateOf(i)
                 return (
-                    <li key={step.key} className="relative flex flex-1 flex-col items-center last:flex-none">
+                    <li key={step.key} className="relative flex flex-1 flex-col items-center">
                         {i > 0 && (
                             <span className="absolute right-1/2 h-0.5 w-full bg-border" style={{ top: s.center - 1 }}>
                                 <motion.span
