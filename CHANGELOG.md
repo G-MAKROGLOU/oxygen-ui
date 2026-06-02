@@ -1,3 +1,10 @@
+## [6.29.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.29.1...v6.29.2) (2026-06-02)
+
+
+### Bug Fixes
+
+* **table:** centre pagination chevrons, match input focus, smaller page text ([f6a7712](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f6a77123447ffb6aa84ac2c03cc18abf6fb11a82))
+
 ## [6.29.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.29.0...v6.29.1) (2026-06-02)
 
 
