@@ -1,3 +1,17 @@
+# [7.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.34.1...v7.0.0) (2026-06-03)
+
+
+### Bug Fixes
+
+* **release:** correct release rules so pending changes publish ([7f17487](https://github.com/G-MAKROGLOU/oxygen-ui/commit/7f1748782d2b737592de160015dde9fbedff097e))
+
+
+### BREAKING CHANGES
+
+* **release:** component prop names standardized for consistency. Modal and
+Drawer `isOpen` is now `open`; Accordion and Tabs `onValueChange` is now
+`onChange`; IconButton `size` is now 'sm' | 'md' | 'lg' (default 'md').
+
 ## [6.34.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.34.0...v6.34.1) (2026-06-02)
 
 
