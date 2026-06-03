@@ -10,9 +10,9 @@
 [![types](https://img.shields.io/npm/types/@geomak/ui?color=0466c8)](https://www.npmjs.com/package/@geomak/ui)
 [![license](https://img.shields.io/npm/l/@geomak/ui?color=0466c8)](./LICENSE)
 [![React 19](https://img.shields.io/badge/React-19-0466c8)](https://react.dev)
-[![Storybook](https://img.shields.io/badge/Storybook-live%20demo-ff4785)](https://oxygen-ui.netlify.app)
+[![Storybook](https://img.shields.io/badge/Storybook-live%20demo-ff4785)](https://oxygenui.com)
 
-### ▶ [Browse the live, interactive demo →](https://oxygen-ui.netlify.app)
+### ▶ [Browse the live, interactive demo →](https://oxygenui.com)
 
 <!-- Tip: drop a Storybook screen-recording here for the launch — docs/assets/preview.gif -->
 
@@ -64,7 +64,7 @@ import { ChevronDown, Search, createIcon } from '@geomak/ui/icons'
 
 ## Components
 
-60+ components across these groups — all with **live controls and a written guide** in [Storybook](https://oxygen-ui.netlify.app).
+60+ components across these groups — all with **live controls and a written guide** in [Storybook](https://oxygenui.com).
 
 | Group | Components |
 |---|---|
