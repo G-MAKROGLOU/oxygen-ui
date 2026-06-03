@@ -1,3 +1,5 @@
+## [7.0.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.0.0...v7.0.1) (2026-06-03)
+
 # [7.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.34.1...v7.0.0) (2026-06-03)
 
 
