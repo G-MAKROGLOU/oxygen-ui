@@ -1,79 +1,101 @@
-# @geomak/ui
+<div align="center">
 
-**Oxygen Design System** — a production-grade React component library for enterprise apps: internal dashboards, CRM tools, and landing pages.
+<img src="./public/oxygen-logo.svg" alt="oxygen-ui" width="96" height="96" />
 
-Built with **React 19**, **Radix UI** (accessibility & behaviour), **Tailwind CSS v3**, and **Framer Motion**. Fully themeable through a CSS-variable design-token layer, with first-class light/dark support. Ships as ESM + CJS + TypeScript declarations.
+# @geomak/ui · Oxygen Design System
+
+**60+ production-grade React components for enterprise apps** — dashboards, CRMs, internal tools, and landing pages. Token-driven, accessible, light/dark first-class, and properly tree-shakeable.
+
+[![npm version](https://img.shields.io/npm/v/@geomak/ui?color=0466c8&label=npm)](https://www.npmjs.com/package/@geomak/ui)
+[![types](https://img.shields.io/npm/types/@geomak/ui?color=0466c8)](https://www.npmjs.com/package/@geomak/ui)
+[![license](https://img.shields.io/npm/l/@geomak/ui?color=0466c8)](./LICENSE)
+[![React 19](https://img.shields.io/badge/React-19-0466c8)](https://react.dev)
+[![Storybook](https://img.shields.io/badge/Storybook-live%20demo-ff4785)](https://oxygen-ui.netlify.app)
+
+### ▶ [Browse the live, interactive demo →](https://oxygen-ui.netlify.app)
+
+<!-- Tip: drop a Storybook screen-recording here for the launch — docs/assets/preview.gif -->
+
+</div>
+
+Built on **React 19**, **Radix UI** (accessibility + behaviour), **Tailwind CSS**, and **Framer Motion**. Ships as ESM + CJS + TypeScript declarations, with a CSS-variable token layer you can re-theme at runtime.
 
 ---
 
-## Installation
+## Why oxygen-ui
+
+- **Token-driven, dark mode first-class.** Every colour, radius, shadow, and motion value is a CSS variable. Light and dark aren't an afterthought — both are designed. Re-theme the whole system with one override.
+- **Accessible by default.** Behaviour comes from Radix (focus traps, keyboard nav, ARIA); icons are `aria-hidden`, controls are labelled.
+- **Genuinely tree-shakeable.** Import one icon and ship **0.45 KB** (not the whole set). The entire library is **~76 KB gzipped** with deps external — and a CI guard keeps it from regressing.
+- **Strict and tested.** `strict` TypeScript, ESLint at zero warnings, 360+ unit tests, per-export bundle budgets in CI.
+- **Batteries included.** Not just buttons — a `Scheduler`, a real-time `Chat` (WebSocket-ready), `Table` with pagination, a `Form` engine, an e-commerce `Cart`, and a full **Marketing** kit (hero, pricing, testimonials, lead capture) to build the landing page too.
+
+---
+
+## Quick start
 
 ```bash
-npm install @geomak/ui
-# or
-yarn add @geomak/ui
+npm install @geomak/ui      # peer deps: react@19, react-dom@19
 ```
 
-Import the stylesheet once at your app root:
-
 ```tsx
-import '@geomak/ui/styles'
-```
+import '@geomak/ui/styles'                       // 1. tokens + component styles, once at the root
+import { ThemeProvider, Button, Badge } from '@geomak/ui'
 
-Wrap your app with the providers for the features you use:
-
-```tsx
-import { NotificationProvider, TooltipProvider } from '@geomak/ui'
-
-function App() {
-    return (
-        <NotificationProvider>
-            <TooltipProvider>
-                {/* your app */}
-            </TooltipProvider>
-        </NotificationProvider>
-    )
+export default function App() {
+  return (
+    <ThemeProvider>                              {/* 2. light/dark + token theming */}
+      <Button content="Get started" />
+      <Badge tone="accent">New</Badge>
+    </ThemeProvider>
+  )
 }
 ```
 
-Optional providers: `ThemeProvider` (scoped theming / dark mode), `CartProvider` (e-commerce cart state).
+Tree-shakeable icons live on their own subpath:
+
+```tsx
+import { ChevronDown, Search, createIcon } from '@geomak/ui/icons'
+```
+
+> Optional providers wrap only the features you use: `NotificationProvider`, `TooltipProvider`, `CartProvider`.
 
 ---
 
 ## Components
 
-60+ components across the following groups. Browse the full, interactive catalog with live controls and guides in **Storybook** (`yarn storybook`, or the deployed build on Netlify).
+60+ components across these groups — all with **live controls and a written guide** in [Storybook](https://oxygen-ui.netlify.app).
 
 | Group | Components |
 |---|---|
-| **Layout** | AppShell · Box · Flex · Grid · Portal · ScalableContainer · FadingBase |
-| **Navigation** | TopBar · Sidebar · Breadcrumbs · ContextMenu · MegaMenu |
+| **Layout** | AppShell · Box · Flex · Grid · Portal · ScalableContainer |
+| **Navigation** | TopBar · Sidebar · Breadcrumbs · ContextMenu · MegaMenu · MenuButton |
 | **Buttons** | Button · IconButton · FAB |
 | **Inputs** | TextInput · NumberInput · Password · SearchInput · TextArea · Checkbox · Switch · RadioGroup · SegmentedControl · Dropdown · AutoComplete · TreeSelect · TagsInput · Slider · Rating · OtpInput · FileInput · ColorPicker · DatePicker · DateRangePicker · TimePicker |
-| **Forms** | Form (`useForm` API) · CreditCardForm |
-| **Data Display** | Table · List · Tree · Tabs · Accordion · Card · CardCarousel · Statistic · Avatar · Badge · Kbd · Calendar · Typography |
-| **Feedback** | Modal · Drawer · Tooltip · Notification · PopConfirm · Wizard |
+| **Forms** | Form (`useForm`) · CreditCardForm |
+| **Data Display** | Table · List · Tree · Tabs · Accordion · Card · CardCarousel · Statistic · Avatar · Badge · Kbd · Typography · **Chat** · **Scheduler** · Timeline · Stepper |
+| **Feedback** | Modal · Drawer · Tooltip · Notification · PopConfirm · Wizard · LogoutTimer |
 | **Progress** | LoadingSpinner · Skeleton |
 | **E-Commerce** | Cart · CartProvider / `useCart` · CartButton · EmptyCart · Checkout |
+| **Marketing** | Jumbotron · FeatureGrid · PricingPlans · Testimonials · SlideShow · Video · Parallax · Blog · Socials · CookieConsent · LeadCapture |
+| **Icons** | `Icon.*` namespace · `@geomak/ui/icons` (tree-shakeable) · `createIcon` |
 | **Theming** | ThemeProvider · ThemeSwitch |
+| **Hooks** | useForm · useJwt · useBreakpoint · useLocalStorage |
 
 ---
 
 ## Design tokens
 
-Every visual decision is driven by a CSS-variable token layer (colours, radius, shadows, typography, density, motion, z-index) — swap any of it at runtime with a single override. Tokens are also exported as JS for canvas / email / SSR contexts:
+Every visual decision is a CSS variable (colour, radius, shadow, typography, density, motion, z-index). Tokens are also exported as JS for canvas / email / SSR:
 
 ```tsx
-import { semanticTokens, vars, palette } from '@geomak/ui/tokens'
+import { vars, semanticTokens, palette } from '@geomak/ui/tokens'
 
-// CSS-var references (respond to light/dark automatically)
-<div style={{ background: vars.color.surface, borderRadius: vars.radius.lg }} />
-
-// Resolved hex/px values
-semanticTokens.dark.accent // '#2d88ff'
+<div style={{ background: vars.color.surface, borderRadius: vars.radius.lg }} />   // CSS-var refs (auto light/dark)
+semanticTokens.dark.accent // resolved hex
 ```
 
-Override globally after importing the stylesheet:
+Override globally, after importing the stylesheet:
 
 ```css
 :root { --color-accent: #7c3aed; }
@@ -83,63 +105,50 @@ See the **Tokens**, **Palette**, and **Parameterization** guides in Storybook.
 
 ---
 
-## Tailwind setup (consuming app)
+## Tailwind setup (optional)
 
-To use the same tokens and utilities in your own markup, extend your Tailwind config with the shipped brand palette. The library's compiled `styles` already cover the components themselves — this step is only needed for your own classes.
+The shipped `@geomak/ui/styles` already covers the components. This step is only needed if you want the same brand palette + token utilities in *your own* markup:
 
 ```js
-const PALETTE = require('@geomak/ui/src/utils/palette.json')
+// tailwind.config.cjs
+const { palette } = require('@geomak/ui/tokens')
 
 module.exports = {
-    content: ['./src/**/*.{ts,tsx}', './node_modules/@geomak/ui/dist/**/*.js'],
-    darkMode: 'class',
-    theme: {
-        extend: {
-            colors: PALETTE,
-            // semantic utilities map to the CSS vars, e.g.:
-            // background: 'var(--color-background)', surface: 'var(--color-surface)', …
-        },
-    },
+  content: ['./src/**/*.{ts,tsx}', './node_modules/@geomak/ui/dist/**/*.js'],
+  darkMode: 'class',
+  theme: { extend: { colors: palette } },
 }
 ```
 
-The library's own config also restores the standard **gray / slate / zinc** ramps and **black** alongside the brand palette, so the basic neutrals are always available.
+The standard **gray / slate / zinc** ramps and **black** stay available alongside the brand palette.
+
+---
+
+## Package exports
+
+| Import | What |
+|---|---|
+| `@geomak/ui` | All components, providers, hooks, the `Icon` namespace, `cx` |
+| `@geomak/ui/icons` | Tree-shakeable named icons + `createIcon` |
+| `@geomak/ui/styles` | Compiled CSS (tokens + components) |
+| `@geomak/ui/tokens` | `palette`, `semanticTokens`, `vars` as JS |
 
 ---
 
 ## Development
 
 ```bash
-yarn              # install dependencies
-yarn storybook    # start Storybook
-yarn build        # build the library (ESM + CJS + .d.ts + styles)
-yarn typecheck    # type-check
-yarn lint         # lint
-yarn test         # run unit tests (Vitest)
-yarn ci           # typecheck + lint + test
+yarn              # install
+yarn storybook    # interactive catalog + guides
+yarn build        # ESM + CJS + .d.ts + styles
+yarn ci           # typecheck + lint + test + bundle-size guard
+yarn size         # report per-export gzip sizes against budgets
 ```
+
+Releases are automated with [semantic-release](https://github.com/semantic-release/semantic-release) + [Conventional Commits](https://www.conventionalcommits.org/): merging to `main` lints, type-checks, tests, publishes to npm, and deploys Storybook.
 
 ---
 
-## Releases
+## License
 
-Uses [semantic-release](https://github.com/semantic-release/semantic-release) with [Conventional Commits](https://www.conventionalcommits.org/).
-
-| Commit prefix | Version bump |
-|---|---|
-| `fix:` | patch (0.0.x) |
-| `feat:` | minor (0.x.0) |
-| `feat!:` / `BREAKING CHANGE:` | major (x.0.0) |
-
-Merging to `main` automatically lints, type-checks, tests, publishes to npm, and deploys Storybook to Netlify.
-
----
-
-## Publishing
-
-Handled automatically by GitHub Actions on merge to `main`. To publish manually:
-
-```bash
-yarn build
-npm publish --access public
-```
+[MIT](./LICENSE) © G-MAKROGLOU
