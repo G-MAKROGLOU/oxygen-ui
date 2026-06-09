@@ -449,32 +449,22 @@ function Pagination({
     onPageChange,
     maxPage,
     options,
+    perPage,
     onPerPageChange,
-    serverSide = false,
 }: {
     activePage: number
     onPageChange: (page: number) => void
     maxPage: number
     options: PaginationOptions
+    /** The table's authoritative rows-per-page — shared by all pagers. */
+    perPage: number
     onPerPageChange: (perPage: number) => void
-    serverSide?: boolean
 }) {
     const picker = options.pickerOptions ?? DEFAULT_PICKER
-    const matchedOption = picker.find(
-        (o) => o.label === options.perPage || o.value === options.perPage
-    )
-    const [perPageKey, setPerPageKey] = useState(() => matchedOption?.key ?? picker[0]?.key)
-    const displayPerPageKey = serverSide ? matchedOption?.key ?? perPageKey : perPageKey
-
-    useEffect(() => {
-        if (serverSide && options.perPage != null) {
-            const next = picker.find((o) => o.label === options.perPage || o.value === options.perPage)
-            if (next) setPerPageKey(next.key)
-        }
-    }, [serverSide, options.perPage, picker])
-
-    const currentOpt = picker.find((o) => o.key === displayPerPageKey)
-    const currentPerPageLabel = currentOpt?.label ?? currentOpt?.value ?? options.perPage ?? ''
+    // Derive the selected option from the table's perPage (single source of
+    // truth) so multiple pagers (position: 'both') always stay in sync.
+    const currentOpt = picker.find((o) => o.value === perPage || o.label === perPage)
+    const currentPerPageLabel = currentOpt?.label ?? currentOpt?.value ?? perPage ?? ''
 
     // Square, flat, neutral icon buttons — same primitive/height/border as the
     // per-page MenuButton so the whole strip reads as one cohesive group.
@@ -516,10 +506,7 @@ function Pagination({
                         items={picker.map((o) => ({
                             key: o.key,
                             label: String(o.label ?? o.value ?? o.key),
-                            onSelect: () => {
-                                if (!serverSide) setPerPageKey(o.key)
-                                onPerPageChange(o.label ?? o.value ?? o.key)
-                            },
+                            onSelect: () => onPerPageChange(o.value ?? o.label ?? o.key),
                         }))}
                     />
                 </div>
@@ -721,9 +708,9 @@ export default function Table<T extends Record<string, any> = Record<string, any
             activePage={activePage}
             onPageChange={handlePageChange}
             maxPage={MAX_PAGE}
+            perPage={perPage}
             onPerPageChange={onPaginationChange}
             options={pagination}
-            serverSide={isServerSide}
         />
     )
 
