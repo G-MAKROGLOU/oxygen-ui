@@ -1,3 +1,10 @@
+# [7.2.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.1.0...v7.2.0) (2026-06-09)
+
+
+### Features
+
+* add RadioTile, PasswordStrength, and VirtualList ([d087e88](https://github.com/G-MAKROGLOU/oxygen-ui/commit/d087e88affe20b105e469163ef429e2e8ce6600b))
+
 # [7.1.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.0.1...v7.1.0) (2026-06-09)
 
 
