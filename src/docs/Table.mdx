@@ -86,7 +86,11 @@ const columns: TableColumn<Vessel>[] = [
     <tr><td style={td0}>getRowKey</td><td style={td(true)}>{'(row, i) => React.Key'}</td><td style={td(true)}>index</td><td style={td(false)}>Stable key; pass for mutable lists.</td></tr>
     <tr><td style={td0}>pagination</td><td style={td(true)}>PaginationOptions</td><td style={td(true)}>—</td><td style={td(false)}>Client or server pagination.</td></tr>
     <tr><td style={td0}>expandRow</td><td style={td(true)}>ExpandRowOptions&lt;T&gt;</td><td style={td(true)}>—</td><td style={td(false)}>Per-row expand panel (animated height + fade, reduced-motion aware).</td></tr>
-    <tr><td style={td0}>hasSearch</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Built-in search field.</td></tr>
+    <tr><td style={td0}>hasSearch</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Show the built-in search field.</td></tr>
+    <tr><td style={td0}>search</td><td style={td(true)}>SearchOptions&lt;T&gt;</td><td style={td(true)}>—</td><td style={td(false)}>Tune search: keys, matchMode ('contains'|'startsWith'|'equals'), caseSensitive, debounceMs, placeholder, predicate.</td></tr>
+    <tr><td style={td0}>defaultSort</td><td style={td(true)}>{'{ key, direction } | null'}</td><td style={td(true)}>null</td><td style={td(false)}>Initial sort (uncontrolled).</td></tr>
+    <tr><td style={td0}>onSortChange</td><td style={td(true)}>{'(sort | null) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Sort changed/cleared. Use for server-side sorting.</td></tr>
+    <tr><td style={td0}>onCellEdit</td><td style={td(true)}>{'({ row, key, value, rowIndex }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>An editable cell committed a value (update your rows here).</td></tr>
     <tr><td style={td0}>loading / loadingRowCount</td><td style={td(true)}>boolean / number</td><td style={td(true)}>false / 8</td><td style={td(false)}>Skeleton rows during fetch.</td></tr>
     <tr><td style={td0}>header / footer</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Slots above / below the table.</td></tr>
     <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Wrapper overrides.</td></tr>
@@ -104,7 +108,14 @@ const columns: TableColumn<Vessel>[] = [
     <tr><td style={td0}>component</td><td style={td(true)}>{'(value, row) => ReactNode'}</td><td style={td(false)}>Custom cell renderer.</td></tr>
     <tr><td style={td0}>width</td><td style={td(true)}>string | number</td><td style={td(false)}>Explicit column width.</td></tr>
     <tr><td style={td0}>align</td><td style={td(true)}>'left'|'center'|'right'</td><td style={td(false)}>Header + cell alignment (default center).</td></tr>
+    <tr><td style={td0}>sortable</td><td style={td(true)}>boolean</td><td style={td(false)}>Click the header to sort (none → asc → desc → none).</td></tr>
+    <tr><td style={td0}>sortAccessor</td><td style={td(true)}>{'(row) => value'}</td><td style={td(false)}>Custom sort value (defaults to row[keyBind]).</td></tr>
+    <tr><td style={td0}>editable</td><td style={td(true)}>boolean</td><td style={td(false)}>Inline-edit cells; commits via onCellEdit.</td></tr>
+    <tr><td style={td0}>editor</td><td style={td(true)}>{'(args) => ReactNode'}</td><td style={td(false)}>Custom inline editor (overrides the text input).</td></tr>
   </tbody>
 </table>
+
+> **Pagination position:** `PaginationOptions.position` accepts `'top'` (default), `'bottom'`, or `'both'`.
+> **Expand icon:** the default chevron rotates when open; pass `expandRow.expandIcon` (rotates) or both `expandIcon` + `collapseIcon` (swap) to customise.
 
 See the **Data Display → Table** stories for pagination, expand, and async loading.

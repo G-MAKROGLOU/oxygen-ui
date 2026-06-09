@@ -1,5 +1,5 @@
 import React from 'react'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import Table, { TableColumn } from './Table'
 
@@ -191,5 +191,88 @@ describe('Table', () => {
         expect(screen.queryByTestId('expanded-Charlie')).not.toBeInTheDocument()
         // Button now reports aria-expanded=true
         expect(screen.getByRole('button', { name: /collapse row/i })).toBe(expandButtons[1])
+    })
+
+    // ── Sorting ────────────────────────────────────────────────────────────
+
+    const SORT_ROWS = [
+        { key: 'r1', name: 'Charlie', role: 'Viewer', status: 'Active' },
+        { key: 'r2', name: 'Alice', role: 'Admin', status: 'Active' },
+        { key: 'r3', name: 'Bob', role: 'Editor', status: 'Inactive' },
+    ]
+    const SORTABLE: TableColumn[] = [{ key: 'name', label: 'Name', keyBind: 'name', sortable: true }, ...COLUMNS.slice(1)]
+    const bodyOrder = (container: HTMLElement) =>
+        Array.from(container.querySelectorAll('tbody > tr td:first-child')).map((td) => td.textContent)
+
+    it('sorts ascending then descending then clears on header click', () => {
+        const onSortChange = vi.fn()
+        const { container } = render(
+            <Table columns={SORTABLE} rows={SORT_ROWS} pagination={{ enabled: false }} onSortChange={onSortChange} />,
+        )
+        const header = screen.getByRole('button', { name: /Name/ })
+        fireEvent.click(header) // asc
+        expect(bodyOrder(container)).toEqual(['Alice', 'Bob', 'Charlie'])
+        expect(onSortChange).toHaveBeenLastCalledWith({ key: 'name', direction: 'asc' })
+        fireEvent.click(header) // desc
+        expect(bodyOrder(container)).toEqual(['Charlie', 'Bob', 'Alice'])
+        expect(screen.getByRole('columnheader', { name: /Name/ })).toHaveAttribute('aria-sort', 'descending')
+        fireEvent.click(header) // cleared → original order
+        expect(bodyOrder(container)).toEqual(['Charlie', 'Alice', 'Bob'])
+        expect(onSortChange).toHaveBeenLastCalledWith(null)
+    })
+
+    it('respects defaultSort', () => {
+        const { container } = render(
+            <Table columns={SORTABLE} rows={SORT_ROWS} pagination={{ enabled: false }} defaultSort={{ key: 'name', direction: 'asc' }} />,
+        )
+        expect(bodyOrder(container)).toEqual(['Alice', 'Bob', 'Charlie'])
+    })
+
+    // ── Editable cells ─────────────────────────────────────────────────────
+
+    it('edits a cell and fires onCellEdit on Enter', () => {
+        const onCellEdit = vi.fn()
+        const cols: TableColumn[] = [{ key: 'name', label: 'Name', keyBind: 'name', editable: true }, ...COLUMNS.slice(1)]
+        render(<Table columns={cols} rows={ROWS} pagination={{ enabled: false }} onCellEdit={onCellEdit} />)
+        fireEvent.click(screen.getByRole('button', { name: 'Alice' }))
+        const input = screen.getByRole('textbox') as HTMLInputElement
+        fireEvent.change(input, { target: { value: 'Alicia' } })
+        fireEvent.keyDown(input, { key: 'Enter' })
+        expect(onCellEdit).toHaveBeenCalledWith(expect.objectContaining({ key: 'name', value: 'Alicia', rowIndex: 0 }))
+    })
+
+    // ── Search options ─────────────────────────────────────────────────────
+
+    it('restricts search to the configured keys', () => {
+        render(<Table columns={COLUMNS} rows={ROWS} pagination={{ enabled: false }} search={{ keys: ['name'] }} />)
+        // 'Admin' is a role value; with keys=['name'] it should match nothing
+        fireEvent.change(screen.getByPlaceholderText('Search term...'), { target: { value: 'admin' } })
+        expect(screen.queryByText('Alice')).not.toBeInTheDocument()
+    })
+
+    it('supports startsWith match mode + custom placeholder', () => {
+        render(<Table columns={COLUMNS} rows={ROWS} pagination={{ enabled: false }} search={{ matchMode: 'startsWith', placeholder: 'Find…' }} />)
+        const input = screen.getByPlaceholderText('Find…')
+        fireEvent.change(input, { target: { value: 'lic' } }) // 'lic' is inside 'Alice' but not a prefix
+        expect(screen.queryByText('Alice')).not.toBeInTheDocument()
+        fireEvent.change(input, { target: { value: 'ali' } })
+        expect(screen.getByText('Alice')).toBeInTheDocument()
+    })
+
+    // ── Pagination position ────────────────────────────────────────────────
+
+    it('renders two pagers when position is "both"', () => {
+        render(<Table columns={COLUMNS} rows={ROWS} pagination={{ enabled: true, position: 'both' }} />)
+        expect(screen.getAllByLabelText('Next page')).toHaveLength(2)
+    })
+
+    it('renders the pager after the table when position is "bottom"', () => {
+        const { container } = render(
+            <Table columns={COLUMNS} rows={ROWS} hasSearch={false} pagination={{ enabled: true, position: 'bottom' }} />,
+        )
+        const table = container.querySelector('table')!
+        const nextBtn = screen.getByLabelText('Next page')
+        // bottom pager comes after the table in document order
+        expect(table.compareDocumentPosition(nextBtn) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     })
 })

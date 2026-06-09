@@ -213,3 +213,91 @@ export const AsyncServerSide: Story = {
         },
     },
 }
+
+/** ── Sorting ─────────────────────────────────────────────────────────────── */
+
+const SORTABLE_COLUMNS: TableColumn[] = [
+    { key: 'id', label: 'ID', keyBind: 'id', sortable: true, width: 80 },
+    { key: 'name', label: 'Name', keyBind: 'name', sortable: true },
+    { key: 'status', label: 'Status', keyBind: 'status', sortable: true },
+    { key: 'dwt', label: 'DWT', keyBind: 'dwt', sortable: true, align: 'right' },
+    { key: 'port', label: 'Port', keyBind: 'port' },
+]
+
+export const Sortable: Story = {
+    args: {
+        columns: SORTABLE_COLUMNS,
+        rows: ALL_ROWS.slice(0, 25),
+        pagination: { enabled: true, perPage: 10 },
+        defaultSort: { key: 'dwt', direction: 'desc' },
+    },
+}
+
+/** ── Editable cells ──────────────────────────────────────────────────────── */
+
+export const EditableCells: Story = {
+    render: () => {
+        const Demo = () => {
+            const [rows, setRows] = useState(ALL_ROWS.slice(0, 8))
+            const cols: TableColumn<typeof rows[number]>[] = [
+                { key: 'id', label: 'ID', keyBind: 'id', width: 80 },
+                { key: 'name', label: 'Name', keyBind: 'name', editable: true, sortable: true },
+                { key: 'port', label: 'Port', keyBind: 'port', editable: true },
+                { key: 'status', label: 'Status', keyBind: 'status' },
+            ]
+            return (
+                <Table
+                    columns={cols}
+                    rows={rows}
+                    getRowKey={(r) => r.key}
+                    pagination={{ enabled: false }}
+                    onCellEdit={({ row, key, value }) =>
+                        setRows((prev) => prev.map((r) => (r.key === row.key ? { ...r, [key]: value } : r)))
+                    }
+                    header={<p className="mb-2 text-sm text-foreground-secondary">Click a Name or Port cell to edit · Enter commits · Esc cancels</p>}
+                />
+            )
+        }
+        return <Demo />
+    },
+}
+
+/** ── Pagination position ─────────────────────────────────────────────────── */
+
+export const PaginationBottom: Story = {
+    args: { columns: COLUMNS, rows: ALL_ROWS.slice(0, 25), pagination: { enabled: true, perPage: 10, position: 'bottom' } },
+}
+
+export const PaginationBoth: Story = {
+    args: { columns: COLUMNS, rows: ALL_ROWS.slice(0, 25), pagination: { enabled: true, perPage: 10, position: 'both' } },
+}
+
+/** ── Search options ──────────────────────────────────────────────────────── */
+
+export const SearchByNameOnly: Story = {
+    args: {
+        columns: COLUMNS,
+        rows: ALL_ROWS.slice(0, 40),
+        pagination: { enabled: true, perPage: 10 },
+        search: { keys: ['name'], matchMode: 'startsWith', placeholder: 'Search by name…' },
+    },
+}
+
+/** ── Custom expand icon (swap instead of rotate) ─────────────────────────── */
+
+export const CustomExpandIcon: Story = {
+    args: {
+        columns: COLUMNS,
+        rows: ALL_ROWS.slice(0, 6),
+        pagination: { enabled: false },
+        hasSearch: false,
+        expandRow: {
+            enabled: true,
+            expandIcon: <span className="text-lg leading-none text-foreground-muted">＋</span>,
+            collapseIcon: <span className="text-lg leading-none text-accent">－</span>,
+            expandComponent: (row: typeof ALL_ROWS[0]) => (
+                <div className="px-4 py-3 text-sm text-foreground-secondary">IMO {row.imo} · Flag {row.flag} · DWT {row.dwt.toLocaleString()}</div>
+            ),
+        },
+    },
+}

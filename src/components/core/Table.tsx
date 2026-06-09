@@ -35,12 +35,60 @@ export interface TableColumn<T extends Record<string, any> = Record<string, any>
     width?: string | number
     /** Text alignment for both header and cells. Defaults to `'center'`. */
     align?: 'left' | 'center' | 'right'
+    /** Allow clicking this column's header to sort by it. */
+    sortable?: boolean
+    /** Custom value used when sorting (defaults to `row[keyBind]`). */
+    sortAccessor?: (row: T) => string | number | boolean | Date | null | undefined
+    /** Make this column's cells inline-editable. Pair with `onCellEdit`. */
+    editable?: boolean
+    /** Custom inline editor (overrides the built-in text input). */
+    editor?: (args: EditorArgs<T>) => React.ReactNode
+}
+
+export interface EditorArgs<T extends Record<string, any> = Record<string, any>> {
+    value: T[keyof T]
+    row: T
+    /** Commit a new value (fires `onCellEdit`) and leave edit mode. */
+    commit: (next: string) => void
+    /** Discard changes and leave edit mode. */
+    cancel: () => void
+}
+
+export interface CellEditInfo<T extends Record<string, any> = Record<string, any>> {
+    row: T
+    key: keyof T & string
+    value: string
+    /** Index of the row within the current page. */
+    rowIndex: number
+}
+
+export type SortDirection = 'asc' | 'desc'
+export interface SortState {
+    key: string
+    direction: SortDirection
+}
+
+export interface SearchOptions<T extends Record<string, any> = Record<string, any>> {
+    /** Restrict search to these row keys. Default: every value in the row. */
+    keys?: (keyof T & string)[]
+    /** Match strategy. Default `'contains'`. */
+    matchMode?: 'contains' | 'startsWith' | 'equals'
+    /** Case-sensitive matching. Default `false`. */
+    caseSensitive?: boolean
+    /** Debounce the filter (ms) — useful for large lists. Default `0`. */
+    debounceMs?: number
+    /** Input placeholder. */
+    placeholder?: string
+    /** Full custom matcher — overrides keys / matchMode / caseSensitive. */
+    predicate?: (row: T, term: string) => boolean
 }
 
 export interface PaginationOptions {
     enabled?: boolean
     perPage?: number
     withPicker?: boolean
+    /** Where to render the pager: `'top'` (default), `'bottom'`, or `'both'`. */
+    position?: 'top' | 'bottom' | 'both'
     serverSide?: boolean
     /** Server-side: current 1-based page number */
     page?: number
@@ -55,7 +103,10 @@ export interface PaginationOptions {
 
 export interface ExpandRowOptions<T extends Record<string, any> = Record<string, any>> {
     enabled?: boolean
+    /** Icon shown when collapsed. If no `collapseIcon` is given, this icon rotates 180° when open. */
     expandIcon?: React.ReactNode
+    /** Distinct icon shown when expanded. When set, the icons swap instead of rotating. */
+    collapseIcon?: React.ReactNode
     expandComponent?: (row: T) => React.ReactNode
 }
 
@@ -73,6 +124,14 @@ export interface TableProps<T extends Record<string, any> = Record<string, any>>
     pagination?: PaginationOptions
     expandRow?: ExpandRowOptions<T>
     hasSearch?: boolean
+    /** Fine-tune search: keys, match mode, debounce, placeholder, custom predicate. */
+    search?: SearchOptions<T>
+    /** Initial sort (uncontrolled). */
+    defaultSort?: SortState | null
+    /** Fires when the sort column/direction changes, or clears (`null`). Use for server-side sorting. */
+    onSortChange?: (sort: SortState | null) => void
+    /** Fires when an editable cell commits a new value. */
+    onCellEdit?: (info: CellEditInfo<T>) => void
     footer?: React.ReactNode
     header?: React.ReactNode
     /**
@@ -132,58 +191,158 @@ const cellAlign = (align: TableColumn['align']) =>
 
 /** ─────────────────── sub-components ─────────────────── */
 
+/** Comparator for client-side sorting — numeric-aware, null-safe. */
+function compareValues(a: unknown, b: unknown): number {
+    if (a == null && b == null) return 0
+    if (a == null) return -1
+    if (b == null) return 1
+    if (typeof a === 'number' && typeof b === 'number') return a - b
+    if (a instanceof Date && b instanceof Date) return a.getTime() - b.getTime()
+    if (typeof a === 'boolean' && typeof b === 'boolean') return a === b ? 0 : a ? 1 : -1
+    return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' })
+}
+
+/** Up/down chevron pair; the active direction is highlighted in the accent. */
+function SortGlyph({ direction }: { direction?: SortDirection }) {
+    return (
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true" className="shrink-0">
+            <path d="M8 11l4-4 4 4" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                className={direction === 'asc' ? 'text-accent' : 'text-foreground-muted'} opacity={direction === 'asc' ? 1 : 0.45} />
+            <path d="M8 13l4 4 4-4" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                className={direction === 'desc' ? 'text-accent' : 'text-foreground-muted'} opacity={direction === 'desc' ? 1 : 0.45} />
+        </svg>
+    )
+}
+
 function TableHeader<T extends Record<string, any>>({
     columns,
     hasExpand,
+    sort,
+    onSort,
 }: {
     columns: TableColumn<T>[]
     hasExpand: boolean
+    sort: SortState | null
+    onSort: (col: TableColumn<T>) => void
 }) {
     return (
         <thead className="bg-surface-raised border-b border-border">
             <tr>
                 {hasExpand && <th aria-hidden="true" className="w-9" />}
-                {columns.map((col) => (
-                    <th
-                        key={col.key}
-                        scope="col"
-                        className={`${cellAlign(col.align)} text-sm font-semibold text-foreground py-3 px-3`}
-                        style={col.width != null ? { width: col.width } : undefined}
-                    >
-                        {col.label}
-                    </th>
-                ))}
+                {columns.map((col) => {
+                    const active = sort?.key === col.keyBind
+                    const dir = active ? sort!.direction : undefined
+                    const justify = col.align === 'left' ? 'justify-start' : col.align === 'right' ? 'justify-end' : 'justify-center'
+                    return (
+                        <th
+                            key={col.key}
+                            scope="col"
+                            aria-sort={col.sortable ? (active ? (dir === 'asc' ? 'ascending' : 'descending') : 'none') : undefined}
+                            className={`${cellAlign(col.align)} text-sm font-semibold text-foreground py-3 px-3`}
+                            style={col.width != null ? { width: col.width } : undefined}
+                        >
+                            {col.sortable ? (
+                                <button
+                                    type="button"
+                                    onClick={() => onSort(col)}
+                                    className={`inline-flex items-center gap-1.5 ${justify} w-full select-none rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${active ? 'text-accent' : 'hover:text-accent'}`}
+                                >
+                                    <span>{col.label}</span>
+                                    <SortGlyph direction={dir} />
+                                </button>
+                            ) : (
+                                col.label
+                            )}
+                        </th>
+                    )
+                })}
             </tr>
         </thead>
     )
 }
 
+// Chevron (down when collapsed) — rotates to point up when the row expands, so
+// the open/closed state is actually visible (the old plus-in-circle looked
+// identical rotated). Override per-row via expandRow.expandIcon / collapseIcon.
 const DefaultExpandIcon = (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        fill="currentColor"
-        className="w-5 h-5 text-foreground-muted"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        className="w-4 h-4 text-foreground-muted"
         aria-hidden="true"
     >
-        <path
-            fillRule="evenodd"
-            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
-            clipRule="evenodd"
-        />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
     </svg>
 )
+
+/**
+ * An inline-editable cell: shows the value (or `column.component`) until
+ * clicked, then a text input (or a custom `column.editor`). Enter / blur
+ * commits via `onCellEdit`; Escape cancels. The data stays controlled by the
+ * consumer — update your rows in the `onCellEdit` handler.
+ */
+function EditableCell<T extends Record<string, any>>({
+    col,
+    row,
+    rowIndex,
+    onCellEdit,
+}: {
+    col: TableColumn<T>
+    row: T
+    rowIndex: number
+    onCellEdit?: (info: CellEditInfo<T>) => void
+}) {
+    const [editing, setEditing] = useState(false)
+    const value = row[col.keyBind] as T[keyof T]
+    const commit = (next: string) => {
+        setEditing(false)
+        onCellEdit?.({ row, key: col.keyBind, value: next, rowIndex })
+    }
+    const cancel = () => setEditing(false)
+
+    if (editing) {
+        if (col.editor) return <>{col.editor({ value, row, commit, cancel })}</>
+        return (
+            <input
+                autoFocus
+                defaultValue={value == null ? '' : String(value)}
+                onBlur={(e) => commit(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') { e.preventDefault(); commit((e.target as HTMLInputElement).value) }
+                    else if (e.key === 'Escape') { e.preventDefault(); cancel() }
+                }}
+                aria-label={`Edit ${typeof col.label === 'string' ? col.label : col.keyBind}`}
+                className="w-full rounded border border-accent bg-surface px-2 py-1 text-sm text-foreground outline-none"
+            />
+        )
+    }
+    return (
+        <button
+            type="button"
+            onClick={() => setEditing(true)}
+            title="Click to edit"
+            className={`${cellAlign(col.align)} w-full cursor-text rounded px-1 py-0.5 hover:bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
+        >
+            {col.component ? col.component(value, row) : (value as React.ReactNode)}
+        </button>
+    )
+}
 
 function TableBody<T extends Record<string, any>>({
     columns,
     rows,
     expandRow,
     getRowKey,
+    onCellEdit,
 }: {
     columns: TableColumn<T>[]
     rows: T[]
     expandRow: ExpandRowOptions<T>
     getRowKey: (row: T, index: number) => React.Key
+    onCellEdit?: (info: CellEditInfo<T>) => void
 }) {
     // Expand state is keyed by the row's stable key — survives reorder/filter
     // as long as `getRowKey` returns the same value for the same row.
@@ -221,11 +380,13 @@ function TableBody<T extends Record<string, any>>({
                                         onClick={() => toggleRow(rowKey)}
                                         aria-expanded={isExpanded}
                                         aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
-                                        className={`w-9 h-9 inline-flex items-center justify-center rounded-md hover:bg-surface/80 transition-transform duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                                            isExpanded ? 'rotate-180' : ''
+                                        className={`w-9 h-9 inline-flex items-center justify-center rounded-md hover:bg-background transition-transform duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                                            isExpanded && !expandRow.collapseIcon ? 'rotate-180' : ''
                                         }`}
                                     >
-                                        {expandRow.expandIcon ?? DefaultExpandIcon}
+                                        {isExpanded
+                                            ? expandRow.collapseIcon ?? expandRow.expandIcon ?? DefaultExpandIcon
+                                            : expandRow.expandIcon ?? DefaultExpandIcon}
                                     </button>
                                 </td>
                             )}
@@ -234,9 +395,13 @@ function TableBody<T extends Record<string, any>>({
                                     key={col.key}
                                     className={`${cellAlign(col.align)} text-sm text-foreground py-2 px-3 align-middle`}
                                 >
-                                    {col.component
-                                        ? col.component(row[col.keyBind] as T[keyof T], row)
-                                        : (row[col.keyBind] as React.ReactNode)}
+                                    {col.editable ? (
+                                        <EditableCell col={col} row={row} rowIndex={i} onCellEdit={onCellEdit} />
+                                    ) : col.component ? (
+                                        col.component(row[col.keyBind] as T[keyof T], row)
+                                    ) : (
+                                        row[col.keyBind] as React.ReactNode
+                                    )}
                                 </td>
                             ))}
                         </tr>
@@ -420,6 +585,10 @@ export default function Table<T extends Record<string, any> = Record<string, any
     pagination = DEFAULT_PAGINATION,
     expandRow = DEFAULT_EXPAND as ExpandRowOptions<T>,
     hasSearch = true,
+    search,
+    defaultSort = null,
+    onSortChange,
+    onCellEdit,
     footer = null,
     header = null,
     loading = false,
@@ -433,28 +602,65 @@ export default function Table<T extends Record<string, any> = Record<string, any
         typeof pagination.perPage === 'number' ? pagination.perPage : 15
     )
     const [activePage, setActivePage] = useState(0)
+    const [sortState, setSortState] = useState<SortState | null>(defaultSort)
 
     const isServerSide = !!(pagination.enabled && pagination.serverSide)
 
-    // Filter is derived state — memoized so each keystroke only runs the
-    // O(n × columns) scan once per `searchTerm` change, not on every render.
-    // Server-side mode short-circuits: the consumer's API is the filter.
-    const filteredRows = useMemo(() => {
-        if (isServerSide || !searchTerm) return rows
-        const term = searchTerm.toLowerCase()
-        return rows.filter((row) =>
-            Object.values(row).some(
-                (v) => v != null && String(v).toLowerCase().includes(term)
-            )
-        )
-    }, [rows, searchTerm, isServerSide])
+    // Cycle a column's sort: none → asc → desc → none. Emits onSortChange so
+    // server-side consumers can refetch; client-side sorting happens below.
+    const handleSort = (col: TableColumn<T>) => {
+        const key = col.keyBind
+        let next: SortState | null
+        if (!sortState || sortState.key !== key) next = { key, direction: 'asc' }
+        else if (sortState.direction === 'asc') next = { key, direction: 'desc' }
+        else next = null
+        setSortState(next)
+        onSortChange?.(next)
+    }
 
-    // Pagination buckets — also derived. Re-bucketed whenever the filtered
-    // set OR page size changes.
+    // Optional debounce for the search term (eases very large client lists).
+    const debounceMs = search?.debounceMs ?? 0
+    const [debouncedTerm, setDebouncedTerm] = useState('')
+    useEffect(() => {
+        if (debounceMs <= 0) { setDebouncedTerm(searchTerm); return }
+        const t = setTimeout(() => setDebouncedTerm(searchTerm), debounceMs)
+        return () => clearTimeout(t)
+    }, [searchTerm, debounceMs])
+    const term = debounceMs > 0 ? debouncedTerm : searchTerm
+
+    // Client-side filter — memoised so the scan runs once per term change, not
+    // per render. Server-side short-circuits (the consumer's API is the filter).
+    const filteredRows = useMemo(() => {
+        if (isServerSide || !term) return rows
+        if (search?.predicate) return rows.filter((row) => search.predicate!(row, term))
+        const cs = !!search?.caseSensitive
+        const needle = cs ? term : term.toLowerCase()
+        const mode = search?.matchMode ?? 'contains'
+        const keys = search?.keys
+        const test = (raw: unknown) => {
+            if (raw == null) return false
+            const s = cs ? String(raw) : String(raw).toLowerCase()
+            return mode === 'startsWith' ? s.startsWith(needle) : mode === 'equals' ? s === needle : s.includes(needle)
+        }
+        return rows.filter((row) => (keys ? keys.some((k) => test(row[k])) : Object.values(row).some(test)))
+    }, [rows, term, isServerSide, search?.predicate, search?.caseSensitive, search?.matchMode, search?.keys])
+
+    // Sorted view of the filtered rows (client-side). Server-side sorting is
+    // delegated to the consumer via onSortChange — the page data is untouched.
+    const sortedRows = useMemo(() => {
+        if (isServerSide || !sortState) return filteredRows
+        const col = columns.find((c) => c.keyBind === sortState.key)
+        const accessor = col?.sortAccessor ?? ((r: T) => r[sortState.key])
+        const out = [...filteredRows].sort((a, b) => compareValues(accessor(a), accessor(b)))
+        if (sortState.direction === 'desc') out.reverse()
+        return out
+    }, [filteredRows, sortState, isServerSide, columns])
+
+    // Pagination buckets — derived. Re-bucketed when the sorted set or page size changes.
     const datasets = useMemo(() => {
         if (isServerSide) return [rows]
-        return createDatasets(filteredRows, pagination.enabled ? perPage : null)
-    }, [filteredRows, perPage, pagination.enabled, isServerSide, rows])
+        return createDatasets(sortedRows, pagination.enabled ? perPage : null)
+    }, [sortedRows, perPage, pagination.enabled, isServerSide, rows])
 
     const MAX_PAGE = useMemo(() => {
         if (isServerSide && typeof pagination.maxPage === 'number') return Math.max(0, pagination.maxPage)
@@ -506,34 +712,43 @@ export default function Table<T extends Record<string, any> = Record<string, any
         setActivePage(newPage)
     }
 
+    const pagPos = pagination.position ?? 'top'
+    const showTopPager = !!pagination.enabled && (pagPos === 'top' || pagPos === 'both')
+    const showBottomPager = !!pagination.enabled && (pagPos === 'bottom' || pagPos === 'both')
+    const pager = (
+        <Pagination
+            activePage={activePage}
+            onPageChange={handlePageChange}
+            maxPage={MAX_PAGE}
+            onPerPageChange={onPaginationChange}
+            options={pagination}
+            serverSide={isServerSide}
+        />
+    )
+
     return (
         <div className={`w-full h-max rounded-lg ${className}`.trim()} style={style}>
-            <div className="flex items-center justify-between mb-2">
-                {hasSearch && (
-                    <SearchInput
-                        ref={searchRef}
-                        value={searchTerm}
-                        onChange={onSearchChange}
-                        placeholder="Search term..."
-                    />
-                )}
-                {pagination.enabled && (
-                    <Pagination
-                        activePage={activePage}
-                        onPageChange={handlePageChange}
-                        maxPage={MAX_PAGE}
-                        onPerPageChange={onPaginationChange}
-                        options={pagination}
-                        serverSide={isServerSide}
-                    />
-                )}
-            </div>
+            {(hasSearch || showTopPager) && (
+                <div className="flex items-center justify-between gap-3 mb-2">
+                    {hasSearch ? (
+                        <SearchInput
+                            ref={searchRef}
+                            value={searchTerm}
+                            onChange={onSearchChange}
+                            placeholder={search?.placeholder ?? 'Search term...'}
+                        />
+                    ) : (
+                        <span />
+                    )}
+                    {showTopPager && pager}
+                </div>
+            )}
             <div>{header}</div>
             {/* Horizontal scroll wrapper — enables swipe-scroll on narrow viewports
                 without forcing the table itself to layout horizontally. */}
             <div className="overflow-x-auto rounded-lg">
                 <table className="w-full border-collapse" aria-busy={loading || undefined}>
-                    <TableHeader columns={columns} hasExpand={!!expandRow.enabled} />
+                    <TableHeader columns={columns} hasExpand={!!expandRow.enabled} sort={sortState} onSort={handleSort} />
                     {loading ? (
                         <TableSkeletonBody
                             columns={columns}
@@ -546,10 +761,12 @@ export default function Table<T extends Record<string, any> = Record<string, any
                             rows={currentPageRows}
                             expandRow={expandRow}
                             getRowKey={getRowKey}
+                            onCellEdit={onCellEdit}
                         />
                     )}
                 </table>
             </div>
+            {showBottomPager && <div className="mt-2 flex justify-end">{pager}</div>}
             <div>{footer}</div>
         </div>
     )
