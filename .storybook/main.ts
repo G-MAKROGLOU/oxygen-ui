@@ -8,6 +8,17 @@ const config: StorybookConfig = {
         name: '@storybook/react-vite',
         options: {},
     },
+    // Infer rich Controls + prop descriptions from our TypeScript interfaces.
+    // `propFilter` keeps each component's own props and drops the inherited
+    // DOM/React attributes (from node_modules), so Controls stay focused.
+    typescript: {
+        reactDocgen: 'react-docgen-typescript',
+        reactDocgenTypescriptOptions: {
+            shouldExtractLiteralValuesFromEnum: true,
+            shouldRemoveUndefinedFromOptional: true,
+            propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
+        },
+    },
     staticDirs: ['../public'],
     docs: {
         autodocs: 'tag',
