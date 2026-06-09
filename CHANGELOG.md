@@ -1,3 +1,10 @@
+## [7.2.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.2.1...v7.2.2) (2026-06-09)
+
+
+### Bug Fixes
+
+* **table:** keep both pagers' per-page picker in sync ([b492b5a](https://github.com/G-MAKROGLOU/oxygen-ui/commit/b492b5a6f037d3d91bd4c2136656f76351f6b28f))
+
 ## [7.2.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.2.0...v7.2.1) (2026-06-09)
 
 
