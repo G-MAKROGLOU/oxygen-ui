@@ -1,3 +1,10 @@
+## [7.2.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.2.0...v7.2.1) (2026-06-09)
+
+
+### Bug Fixes
+
+* UAT polish for Table, RadioTile, PasswordStrength ([60ff7c6](https://github.com/G-MAKROGLOU/oxygen-ui/commit/60ff7c65d972d3897ecef0535d6ee612eb1db0b6))
+
 # [7.2.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.1.0...v7.2.0) (2026-06-09)
 
 
