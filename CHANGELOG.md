@@ -1,3 +1,10 @@
+# [7.1.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.0.1...v7.1.0) (2026-06-09)
+
+
+### Features
+
+* **table:** column sorting, editable cells, pagination position, search options, clearer expand icon ([2c4d578](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2c4d578ec5cd97e8c1e36672cb157a394b8e2326))
+
 ## [7.0.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.0.0...v7.0.1) (2026-06-03)
 
 # [7.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.34.1...v7.0.0) (2026-06-03)
