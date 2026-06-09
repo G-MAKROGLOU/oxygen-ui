@@ -127,11 +127,12 @@ export default function RadioTile({
                         value={opt.value}
                         disabled={opt.disabled}
                         className={cx(
-                            'group relative flex flex-col gap-1 rounded-xl border bg-surface text-left transition-all duration-150',
+                            'group relative flex flex-col gap-1 rounded-xl border bg-surface text-left transition-colors duration-150',
                             PAD[size],
                             'border-border hover:border-border-strong',
                             'data-[state=checked]:border-accent data-[state=checked]:ring-1 data-[state=checked]:ring-accent',
-                            'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                            // Keyboard focus only (no mouse-click flash); ring is instant, not animated.
+                            'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1 focus-visible:ring-offset-surface',
                             'disabled:cursor-not-allowed disabled:opacity-50',
                         )}
                     >

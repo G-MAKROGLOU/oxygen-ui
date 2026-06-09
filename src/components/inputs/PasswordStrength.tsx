@@ -123,12 +123,20 @@ export default function PasswordStrength({
             {!hideMeter && (
                 <>
                     <div className="flex gap-1" role="meter" aria-valuemin={0} aria-valuemax={4} aria-valuenow={score} aria-label="Password strength">
-                        {[1, 2, 3, 4].map((seg) => (
-                            <span
-                                key={seg}
-                                className={cx('h-1.5 flex-1 rounded-full transition-colors duration-200', seg <= score ? BAR_COLOR[score] : 'bg-border')}
-                            />
-                        ))}
+                        {[1, 2, 3, 4].map((seg) => {
+                            const active = seg <= score
+                            return (
+                                <div key={seg} className="h-1.5 flex-1 overflow-hidden rounded-full bg-border">
+                                    <div
+                                        className={cx(
+                                            'h-full origin-left rounded-full transition-[transform,background-color] duration-300 ease-out motion-reduce:transition-none',
+                                            score > 0 ? BAR_COLOR[score] : 'bg-border',
+                                        )}
+                                        style={{ transform: `scaleX(${active ? 1 : 0})`, transitionDelay: active ? `${(seg - 1) * 70}ms` : '0ms' }}
+                                    />
+                                </div>
+                            )
+                        })}
                     </div>
                     {label && (
                         <p className="text-xs">

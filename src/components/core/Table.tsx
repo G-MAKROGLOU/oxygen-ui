@@ -308,6 +308,7 @@ function EditableCell<T extends Record<string, any>>({
         return (
             <input
                 autoFocus
+                size={1}
                 defaultValue={value == null ? '' : String(value)}
                 onBlur={(e) => commit(e.target.value)}
                 onKeyDown={(e) => {
@@ -315,7 +316,7 @@ function EditableCell<T extends Record<string, any>>({
                     else if (e.key === 'Escape') { e.preventDefault(); cancel() }
                 }}
                 aria-label={`Edit ${typeof col.label === 'string' ? col.label : col.keyBind}`}
-                className="w-full rounded border border-accent bg-surface px-2 py-1 text-sm text-foreground outline-none"
+                className="box-border w-full min-w-0 rounded border border-accent bg-surface px-2 py-1 text-sm text-foreground outline-none"
             />
         )
     }
@@ -380,7 +381,7 @@ function TableBody<T extends Record<string, any>>({
                                         onClick={() => toggleRow(rowKey)}
                                         aria-expanded={isExpanded}
                                         aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
-                                        className={`w-9 h-9 inline-flex items-center justify-center rounded-md hover:bg-background transition-transform duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                                        className={`w-9 h-9 inline-flex items-center justify-center rounded-md text-foreground-muted hover:text-foreground transition-[transform,color] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                                             isExpanded && !expandRow.collapseIcon ? 'rotate-180' : ''
                                         }`}
                                     >
@@ -503,7 +504,7 @@ function Pagination({
 
     return (
         <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-3">
-            {options.withPicker && (
+            {options.withPicker !== false && (
                 <div className="mr-auto flex items-center gap-2">
                     <span className="whitespace-nowrap text-xs text-foreground-muted">Rows per page</span>
                     <MenuButton
