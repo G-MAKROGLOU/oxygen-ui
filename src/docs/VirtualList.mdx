@@ -1,0 +1,56 @@
+{/* src/docs/VirtualList.mdx */}
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Data Display/VirtualList/Guide" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# VirtualList
+
+A windowed list: only the rows in view (plus a little overscan) are mounted, so
+10,000 rows scroll as cheaply as 20. Zero dependencies. Set `searchable` for a
+built-in filter — the canonical "virtualized search".
+
+## Mental model
+
+Give it `items`, a fixed `rowHeight`, and a `renderItem`. It measures its own
+viewport, tracks scroll, and renders just the visible slice positioned with a
+single transform. Provide a stable `getKey` for smooth reuse. Row height is
+**fixed** in this lean build; for variable-height rows reach for a dedicated
+virtualizer.
+
+## Quick start
+
+```tsx
+import { VirtualList } from '@geomak/ui'
+
+<VirtualList
+  items={vessels}
+  rowHeight={56}
+  height={420}
+  searchable
+  searchKeys={['name', 'imo']}
+  getKey={(v) => v.id}
+  renderItem={(v) => <Row vessel={v} />}
+/>
+```
+
+## API reference
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>items</td><td style={td(true)}>T[]</td><td style={td(true)}>—</td><td style={td(false)}>Full dataset.</td></tr>
+    <tr><td style={td0}>rowHeight</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>Fixed row height in px.</td></tr>
+    <tr><td style={td0}>renderItem</td><td style={td(true)}>{'(item, index) => ReactNode'}</td><td style={td(true)}>—</td><td style={td(false)}>Row renderer.</td></tr>
+    <tr><td style={td0}>height</td><td style={td(true)}>number | string</td><td style={td(true)}>400</td><td style={td(false)}>Viewport height (px or CSS).</td></tr>
+    <tr><td style={td0}>getKey / overscan</td><td style={td(true)}>{'(item,i)=>Key'} / number</td><td style={td(true)}>index / 6</td><td style={td(false)}>Stable keys; rows rendered beyond the viewport.</td></tr>
+    <tr><td style={td0}>searchable / searchKeys / filter</td><td style={td(true)}>boolean / (keyof T)[] / fn</td><td style={td(true)}>false</td><td style={td(false)}>Built-in search field + matching.</td></tr>
+    <tr><td style={td0}>emptyState / searchPlaceholder</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>—</td><td style={td(false)}>Empty + input copy.</td></tr>
+  </tbody>
+</table>
+
+See the **Data Display → VirtualList** stories.

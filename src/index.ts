@@ -218,7 +218,14 @@ export type {
     TableColumn,
     PaginationOptions,
     ExpandRowOptions,
+    SearchOptions,
+    SortState,
+    SortDirection,
+    CellEditInfo,
+    EditorArgs,
 } from './components/core/Table'
+export { default as VirtualList } from './components/core/VirtualList'
+export type { VirtualListProps } from './components/core/VirtualList'
 
 /** Theme-toggle switch (moon/sun icons, accent track) */
 export { default as ThemeSwitch } from './components/core/Switch'
@@ -273,6 +280,10 @@ export type { NumberInputProps } from './components/inputs/NumberInput'
 
 export { default as Password } from './components/inputs/Password'
 export type { PasswordProps } from './components/inputs/Password'
+export { default as PasswordStrength, scorePassword, defaultPasswordRules } from './components/inputs/PasswordStrength'
+export type { PasswordStrengthProps, PasswordRule, PasswordScore, PasswordStrengthResult } from './components/inputs/PasswordStrength'
+export { default as RadioTile } from './components/inputs/RadioTile'
+export type { RadioTileProps, RadioTileOption } from './components/inputs/RadioTile'
 
 export { default as SearchInput } from './components/inputs/SearchInput'
 export type { SearchInputProps } from './components/inputs/SearchInput'
