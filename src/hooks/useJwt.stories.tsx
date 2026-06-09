@@ -40,3 +40,24 @@ export const Demo: Story = {
         return <Example />
     },
 }
+
+const SAMPLE_JWT =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkphbmUgRG9lIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzAwMDAwMDAwfQ.s5_aXm6n9c0qVQ4l9b5Xy7lFh0n8m3o2p1q9r8s7t6u'
+
+export const Playground: Story = {
+    args: { token: SAMPLE_JWT },
+    argTypes: { token: { control: 'text' } },
+    render: (args: { token: string }) => {
+        const Demo = () => {
+            const jwt = useJwt(args.token)
+            return (
+                <div className="flex w-80 flex-col gap-2">
+                    <TextArea label="JWT" value={args.token} rows={3} onChange={() => {}} />
+                    <Badge tone={jwt.isValid ? 'success' : 'error'} variant="soft">{jwt.isValid ? 'valid' : jwt.isExpired ? 'expired' : 'invalid'}</Badge>
+                    <pre className="overflow-auto rounded-lg border border-border bg-surface p-3 text-xs text-foreground-secondary">{JSON.stringify(jwt, null, 2)}</pre>
+                </div>
+            )
+        }
+        return <Demo />
+    },
+}

@@ -33,3 +33,21 @@ export const Demo: Story = {
         return <Example />
     },
 }
+
+export const Playground: Story = {
+    args: { storageKey: 'oxygen-demo', initialValue: 'hello' },
+    argTypes: { storageKey: { control: 'text' }, initialValue: { control: 'text' } },
+    render: (args: { storageKey: string; initialValue: string }) => {
+        const Demo = () => {
+            const [value, setValue, remove] = useLocalStorage(args.storageKey, args.initialValue)
+            return (
+                <div className="flex w-72 flex-col gap-2">
+                    <TextInput label={`localStorage["${args.storageKey}"]`} value={value} onChange={(e) => setValue(e.target.value)} />
+                    <Button content="Reset to initial" variant="outline" onClick={remove} />
+                    <p className="text-xs text-foreground-muted">Edit, then refresh — it persists. Change the key/initial value in Controls.</p>
+                </div>
+            )
+        }
+        return <Demo key={args.storageKey} />
+    },
+}

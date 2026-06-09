@@ -215,3 +215,37 @@ export const DynamicFields: Story = {
         return <Demo />
     },
 }
+
+// ── Playground (controls drive field config + validation) ─────────────────────
+export const Playground: Story = {
+    args: { label: 'Email', placeholder: 'you@example.com', required: true, validateEmail: true },
+    argTypes: {
+        label: { control: 'text' },
+        placeholder: { control: 'text' },
+        required: { control: 'boolean' },
+        validateEmail: { control: 'boolean' },
+    },
+    render: (args: { label: string; placeholder: string; required: boolean; validateEmail: boolean }) => {
+        function Demo() {
+            const form = useForm({ initialValues: { value: '' } })
+            const [submitted, setSubmitted] = useState<unknown>(null)
+            return (
+                <div className="w-80">
+                    <Form form={form} onFinish={setSubmitted} className="flex flex-col gap-4">
+                        <TextInput
+                            label={args.label}
+                            placeholder={args.placeholder}
+                            {...form.fieldNative('value', {
+                                required: args.required ? `${args.label} is required` : undefined,
+                                pattern: args.validateEmail ? { value: patterns.email, message: 'Enter a valid email' } : undefined,
+                            })}
+                        />
+                        <Button content="Submit" buttonType="submit" variant="primary" />
+                    </Form>
+                    <Result data={submitted} />
+                </div>
+            )
+        }
+        return <Demo />
+    },
+}

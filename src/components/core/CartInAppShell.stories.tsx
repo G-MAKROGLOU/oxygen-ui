@@ -54,7 +54,7 @@ function Catalogue() {
 }
 
 /** The shell: TopBar with the live CartButton, plus a Drawer holding the Cart. */
-function Shop() {
+function Shop({ placement = 'right', size = 'lg' }: { placement?: 'left' | 'right'; size?: 'sm' | 'md' | 'lg' }) {
     const [open, setOpen] = useState(false)
     const { items, updateQuantity, removeFromCart } = useCart()
 
@@ -74,8 +74,8 @@ function Shop() {
             <Drawer
                 open={open}
                 onClose={() => setOpen(false)}
-                placement="right"
-                size="lg"
+                placement={placement}
+                size={size}
                 hasFooter={false}
                 title="Your cart"
             >
@@ -95,9 +95,14 @@ function Shop() {
 
 export const Default: Story = {
     name: 'Cart in AppShell',
-    render: () => (
+    args: { placement: 'right', size: 'lg' },
+    argTypes: {
+        placement: { control: 'inline-radio', options: ['left', 'right'] },
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+    },
+    render: (args: { placement: 'left' | 'right'; size: 'sm' | 'md' | 'lg' }) => (
         <CartProvider>
-            <Shop />
+            <Shop placement={args.placement} size={args.size} />
         </CartProvider>
     ),
 }

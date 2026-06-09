@@ -100,3 +100,26 @@ export const AllPositions: StoryObj = {
         </div>
     ),
 }
+
+// ── Playground (controls drive a real toast) ───────────────────────────────────
+
+function PlaygroundFire({ tone, title, description, duration }: { tone: 'info' | 'success' | 'warning' | 'danger'; title: string; description?: string; duration?: number }) {
+    const api = useNotification()
+    return <Button content="Show notification" onClick={() => api[tone]({ title, description, duration })} />
+}
+
+export const Playground: StoryObj = {
+    args: { tone: 'success', title: 'Saved', description: 'Your changes have been saved.', duration: 4000, position: 'top-right' },
+    argTypes: {
+        tone: { control: 'inline-radio', options: ['info', 'success', 'warning', 'danger'] },
+        position: { control: 'select', options: ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'] },
+        duration: { control: { type: 'number', step: 500 } },
+        title: { control: 'text' },
+        description: { control: 'text' },
+    },
+    render: ({ position, ...rest }: { position: NotificationPosition; tone: 'info' | 'success' | 'warning' | 'danger'; title: string; description?: string; duration?: number }) => (
+        <NotificationProvider position={position}>
+            <PlaygroundFire {...rest} />
+        </NotificationProvider>
+    ),
+}

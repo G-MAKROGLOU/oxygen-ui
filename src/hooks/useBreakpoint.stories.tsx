@@ -38,3 +38,25 @@ export const Demo: Story = {
         return <Example />
     },
 }
+
+export const Playground: Story = {
+    args: { highlight: 'active' },
+    argTypes: { highlight: { control: 'inline-radio', options: ['active', 'sm', 'md', 'lg', 'xl'] } },
+    render: (args: { highlight: 'active' | 'sm' | 'md' | 'lg' | 'xl' }) => {
+        const Demo = () => {
+            const bp = useBreakpoint()
+            return (
+                <div className="flex flex-col items-center gap-2">
+                    <div className="text-sm text-foreground">active: <strong className="text-accent">{bp.active}</strong></div>
+                    <div className="flex gap-1.5">
+                        {(['sm', 'md', 'lg', 'xl'] as const).map((k) => {
+                            const on = args.highlight === k || (args.highlight === 'active' && bp.active === k)
+                            return <Badge key={k} tone={on ? 'accent' : bp[k] ? 'success' : 'neutral'} variant="soft">{k}: {String(bp[k])}</Badge>
+                        })}
+                    </div>
+                </div>
+            )
+        }
+        return <Demo />
+    },
+}

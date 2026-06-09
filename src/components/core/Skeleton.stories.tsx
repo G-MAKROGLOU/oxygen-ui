@@ -2,12 +2,17 @@ import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SkeletonBox, SkeletonText, SkeletonCircle, SkeletonCard } from './Skeleton'
 
-const meta: Meta = {
+const meta: Meta<typeof SkeletonBox> = {
     title: 'Progress/Skeleton',
+    component: SkeletonBox,
     parameters: { layout: 'padded' },
     tags: ['autodocs'],
 }
 export default meta
+
+export const Playground: StoryObj<typeof SkeletonBox> = {
+    args: { width: 240, height: 48 },
+}
 
 export const Box: StoryObj = {
     render: () => (

@@ -27,7 +27,7 @@ const GROUPS: { label: string; names: string[] }[] = [
 const ns = Icon as unknown as Record<string, IconComponent>
 const TOTAL = GROUPS.reduce((n, g) => n + g.names.length, 0)
 
-function Cell({ name }: { name: string }) {
+function Cell({ name, size = 26 }: { name: string; size?: number }) {
     const Glyph = ns[name]
     const [copied, setCopied] = useState(false)
     if (!Glyph) return null
@@ -43,14 +43,16 @@ function Cell({ name }: { name: string }) {
             title={`Click to copy <Icon.${name} />`}
             className="group flex flex-col items-center gap-2 rounded-lg border border-border bg-surface p-3 text-foreground-secondary transition-colors hover:border-border-strong hover:bg-surface-raised hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
-            <Glyph size={26} className={name === 'Spinner' ? 'animate-spin' : undefined} />
+            <Glyph size={size} className={name === 'Spinner' ? 'animate-spin' : undefined} />
             <span className="max-w-full truncate text-[11px] text-foreground-muted group-hover:text-foreground">{copied ? 'Copied!' : name}</span>
         </button>
     )
 }
 
 export const Gallery: Story = {
-    render: () => {
+    args: { size: 26 },
+    argTypes: { size: { control: { type: 'range', min: 14, max: 48, step: 2 } } },
+    render: ({ size = 26 }: { size?: number }) => {
         const [q, setQ] = useState('')
         const query = q.trim().toLowerCase()
         const groups = useMemo(
@@ -77,7 +79,7 @@ export const Gallery: Story = {
                     <section key={g.label} className="mb-8">
                         <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-foreground-muted">{g.label}</h2>
                         <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9">
-                            {g.names.map((n) => <Cell key={n} name={n} />)}
+                            {g.names.map((n) => <Cell key={n} name={n} size={size} />)}
                         </div>
                     </section>
                 ))}

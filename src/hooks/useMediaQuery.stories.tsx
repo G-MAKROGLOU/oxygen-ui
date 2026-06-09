@@ -43,3 +43,20 @@ export const Demo: Story = {
         return <Example />
     },
 }
+
+export const Playground: Story = {
+    args: { query: '(min-width: 768px)' },
+    argTypes: { query: { control: 'text' } },
+    render: (args: { query: string }) => {
+        const Demo = () => {
+            const matches = useMediaQuery(args.query)
+            return (
+                <div className="flex flex-col items-center gap-2">
+                    <code className="text-xs text-foreground-muted">{args.query}</code>
+                    <Badge tone={matches ? 'success' : 'neutral'} variant="soft">{matches ? 'matches' : 'no match'}</Badge>
+                </div>
+            )
+        }
+        return <Demo />
+    },
+}
