@@ -57,3 +57,19 @@ export const EmptyConfigured: Story = {
         />
     ),
 }
+
+const PLAYGROUND_CART: CartLineItem[] = [
+    { id: 1, name: 'Marine radar unit', meta: 'X-band · 4 ft', price: 1290, quantity: 1, max: 5 },
+    { id: 2, name: 'AIS transponder', meta: 'Class B', price: 449.99, quantity: 2 },
+    { id: 3, name: 'GPS antenna', meta: 'Active · SMA', price: 89, quantity: 1 },
+]
+
+export const Playground: Story = {
+    args: { checkoutLabel: 'Checkout' },
+    argTypes: { checkoutLabel: { control: 'text' } },
+    render: (args: { checkoutLabel: string }) => (
+        <div className="mx-auto max-w-md">
+            <Cart items={PLAYGROUND_CART} checkoutLabel={args.checkoutLabel} formatPrice={(v) => `$${v.toFixed(2)}`} onCheckout={() => alert('Checkout')} />
+        </div>
+    ),
+}

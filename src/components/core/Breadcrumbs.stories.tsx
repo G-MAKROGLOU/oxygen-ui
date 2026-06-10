@@ -55,3 +55,16 @@ export const Collapsed: Story = {
         />
     ),
 }
+
+const PLAYGROUND_CRUMBS = [
+    { label: 'Home', href: '#' },
+    { label: 'Fleet', href: '#' },
+    { label: 'Vessels', href: '#' },
+    { label: 'Aurora' },
+]
+
+export const Playground: Story = {
+    args: { items: PLAYGROUND_CRUMBS, maxItems: 0 },
+    argTypes: { maxItems: { control: { type: 'number', min: 0, max: 6 } } },
+    render: (args) => <Breadcrumbs items={args.items ?? PLAYGROUND_CRUMBS} maxItems={args.maxItems} />,
+}

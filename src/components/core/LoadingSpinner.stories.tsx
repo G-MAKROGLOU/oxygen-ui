@@ -152,3 +152,13 @@ export const InsideButton: Story = {
         </div>
     ),
 }
+
+export const Playground: Story = {
+    args: { prompt: 'Loading fleet data', size: 'md', inline: true },
+    argTypes: {
+        prompt: { control: 'text' },
+        size: { control: 'inline-radio', options: ['xs', 'sm', 'md', 'lg'] },
+        inline: { control: 'boolean' },
+    },
+    render: (args) => <LoadingSpinner {...args} />,
+}

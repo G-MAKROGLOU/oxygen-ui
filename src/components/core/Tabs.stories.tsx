@@ -202,3 +202,24 @@ export const Overflow: Story = {
     ),
     parameters: { docs: { description: { story: 'When the strip overflows, it scrolls (drag / wheel / swipe), the edges fade, and prev/next chevrons appear only on the overflowing side. A "Show all tabs" menu (⋯) also appears — hover or click it to jump straight to any tab; the picked tab scrolls into view.' } } },
 }
+
+export const Playground: Story = {
+    args: { variant: 'underline', size: 'md', orientation: 'horizontal' },
+    argTypes: {
+        variant: { control: 'inline-radio', options: ['underline', 'segmented', 'enclosed'] },
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+        orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] },
+    },
+    render: (args) => (
+        <Tabs defaultValue="overview" variant={args.variant} size={args.size} orientation={args.orientation}>
+            <Tabs.List aria-label="Sections">
+                <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+                <Tabs.Trigger value="activity" badge={12}>Activity</Tabs.Trigger>
+                <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Panel value="overview"><div className="p-4 text-sm text-foreground-secondary">Overview panel</div></Tabs.Panel>
+            <Tabs.Panel value="activity"><div className="p-4 text-sm text-foreground-secondary">Activity panel</div></Tabs.Panel>
+            <Tabs.Panel value="settings"><div className="p-4 text-sm text-foreground-secondary">Settings panel</div></Tabs.Panel>
+        </Tabs>
+    ),
+}

@@ -54,3 +54,14 @@ export const Overlay: Story = {
         </div>
     ),
 }
+
+export const Playground: Story = {
+    args: { children: 'Beta', tone: 'accent', variant: 'soft', size: 'md' },
+    argTypes: {
+        children: { control: 'text' },
+        tone: { control: 'select', options: ['neutral', 'accent', 'success', 'warning', 'error', 'info'] },
+        variant: { control: 'inline-radio', options: ['solid', 'soft', 'outline'] },
+        size: { control: 'inline-radio', options: ['sm', 'md'] },
+    },
+    render: (args) => <Badge {...args} />,
+}

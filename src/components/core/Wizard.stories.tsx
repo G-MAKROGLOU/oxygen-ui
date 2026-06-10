@@ -115,3 +115,38 @@ export const NonDismissible: Story = {
         return <Demo />
     },
 }
+
+export const Playground: Story = {
+    args: { dismissible: true },
+    argTypes: { dismissible: { control: 'boolean' } },
+    render: (args: { dismissible: boolean }) => {
+        const Demo = () => {
+            const headerRef = useRef<HTMLHeadingElement>(null)
+            const sidebarRef = useRef<HTMLDivElement>(null)
+            const [reset, setReset] = useState(0)
+            return (
+                <div className="min-h-screen bg-background p-6">
+                    <Wizard
+                        key={reset}
+                        storageKey={null}
+                        dismissible={args.dismissible}
+                        steps={[
+                            { stepRef: headerRef, title: 'Welcome', description: 'The header shows where you are.', placement: 'bottom' },
+                            { stepRef: sidebarRef, title: 'Navigation', description: 'Jump between sections here.', placement: 'right' },
+                        ]}
+                    >
+                        <div className="mx-auto flex max-w-3xl flex-col gap-4">
+                            <h1 ref={headerRef} className="text-2xl font-semibold text-foreground">Fleet Dashboard</h1>
+                            <div ref={sidebarRef} className="w-44 rounded-lg border border-border bg-surface p-4">
+                                <p className="mb-2 text-sm font-medium text-foreground">Sections</p>
+                                <ul className="space-y-1 text-sm text-foreground-secondary"><li>Vessels</li><li>Routes</li><li>Reports</li></ul>
+                            </div>
+                            <Button content="Restart tour" variant="secondary" onClick={() => setReset((r) => r + 1)} />
+                        </div>
+                    </Wizard>
+                </div>
+            )
+        }
+        return <Demo />
+    },
+}

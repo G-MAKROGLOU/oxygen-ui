@@ -106,3 +106,16 @@ export const Editable: Story = {
         return <Frame><Demo /></Frame>
     },
 }
+
+export const Playground: Story = {
+    args: { defaultView: 'month', hourHeight: 48 },
+    argTypes: {
+        defaultView: { control: 'inline-radio', options: ['month', 'week'] },
+        hourHeight: { control: { type: 'number', min: 32, max: 96, step: 4 } },
+    },
+    render: (args) => (
+        <Frame>
+            <Scheduler events={DEMO_EVENTS} defaultView={args.defaultView} hourHeight={args.hourHeight} onSelectEvent={(e) => alert(e.title)} />
+        </Frame>
+    ),
+}

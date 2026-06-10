@@ -42,3 +42,16 @@ export const EmptyCartDisablesPayment: Story = {
         </CartProvider>
     ),
 }
+
+export const Playground: Story = {
+    args: { title: 'Checkout', submitLabel: 'Pay now' },
+    argTypes: { title: { control: 'text' }, submitLabel: { control: 'text' } },
+    render: (args: { title: string; submitLabel: string }) => (
+        <CartProvider initialItems={[
+            { id: 1, name: 'Marine radar unit', price: 1290, quantity: 1 },
+            { id: 2, name: 'AIS transponder', price: 449.99, quantity: 2 },
+        ] as CartLineItem[]}>
+            <Checkout title={args.title} submitLabel={args.submitLabel} summaryRows={[{ label: 'Shipping', value: 24 }]} />
+        </CartProvider>
+    ),
+}

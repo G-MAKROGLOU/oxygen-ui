@@ -130,3 +130,35 @@ export const Responsive: Story = {
         </MegaMenu>
     ),
 }
+
+export const Playground: Story = {
+    args: { align: 'start', responsive: true },
+    argTypes: {
+        align: { control: 'inline-radio', options: ['start', 'center', 'end'] },
+        responsive: { control: 'boolean' },
+    },
+    render: (args) => (
+        <MegaMenu align={args.align} responsive={args.responsive} aria-label="Main">
+            <MegaMenu.Item label="Products">
+                <MegaMenu.Panel columns={2}>
+                    <MegaMenu.Section title="Platform">
+                        <MegaMenu.Link href="#">Analytics</MegaMenu.Link>
+                        <MegaMenu.Link href="#">Streams</MegaMenu.Link>
+                    </MegaMenu.Section>
+                    <MegaMenu.Section title="Operations">
+                        <MegaMenu.Link href="#">Security</MegaMenu.Link>
+                        <MegaMenu.Link href="#">Support desk</MegaMenu.Link>
+                    </MegaMenu.Section>
+                </MegaMenu.Panel>
+            </MegaMenu.Item>
+            <MegaMenu.Item label="Solutions">
+                <MegaMenu.Panel>
+                    <MegaMenu.Section title="By industry">
+                        <MegaMenu.Link href="#">Shipping</MegaMenu.Link>
+                        <MegaMenu.Link href="#">Logistics</MegaMenu.Link>
+                    </MegaMenu.Section>
+                </MegaMenu.Panel>
+            </MegaMenu.Item>
+        </MegaMenu>
+    ),
+}

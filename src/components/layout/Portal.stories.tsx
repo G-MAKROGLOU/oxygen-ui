@@ -236,3 +236,16 @@ export const Disabled: Story = {
         return <Demo />
     },
 }
+
+export const Playground: Story = {
+    args: { mountToBody: true },
+    argTypes: { mountToBody: { control: 'boolean' } },
+    render: (args: { mountToBody: boolean }) => (
+        <div className="text-sm text-foreground">
+            <p>This text lives in the story root. The card below renders through a Portal to <code>document.body</code> when enabled.</p>
+            <Portal target={args.mountToBody ? undefined : null}>
+                <div className="fixed bottom-4 right-4 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground shadow-lg">Portaled to body ✓</div>
+            </Portal>
+        </div>
+    ),
+}

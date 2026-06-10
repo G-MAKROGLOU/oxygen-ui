@@ -110,3 +110,13 @@ export const InsideACard: Story = {
         </ContextMenu>
     ),
 }
+
+export const Playground: Story = {
+    args: { triggerLabel: 'Right-click me' },
+    argTypes: { triggerLabel: { control: 'text' } },
+    render: (args: { triggerLabel: string }) => (
+        <ContextMenu items={FlatItems}>
+            <div className="flex h-40 w-72 items-center justify-center rounded-xl border border-dashed border-border bg-surface text-sm text-foreground-secondary">{args.triggerLabel}</div>
+        </ContextMenu>
+    ),
+}

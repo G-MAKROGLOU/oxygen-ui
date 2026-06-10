@@ -84,3 +84,17 @@ export const PolymorphicAs: Story = {
         </Typography>
     ),
 }
+
+export const Playground: Story = {
+    args: { children: 'The quick brown fox jumps over the lazy dog', variant: 'h3', color: 'foreground', weight: 'semibold', align: 'left', truncate: false, muted: false },
+    argTypes: {
+        children: { control: 'text' },
+        variant: { control: 'select', options: ['display', 'h1', 'h2', 'h3', 'h4', 'subtitle', 'body', 'caption', 'overline', 'code'] },
+        color: { control: 'select', options: ['foreground', 'foreground-secondary', 'foreground-muted', 'accent', 'status-error', 'status-warning', 'status-success', 'status-info', 'inherit'] },
+        weight: { control: 'inline-radio', options: ['normal', 'medium', 'semibold', 'bold'] },
+        align: { control: 'inline-radio', options: ['left', 'center', 'right', 'justify'] },
+        truncate: { control: 'boolean' },
+        muted: { control: 'boolean' },
+    },
+    render: (args) => <Typography {...args} />,
+}

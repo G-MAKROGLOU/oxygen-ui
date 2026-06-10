@@ -90,3 +90,16 @@ export const Embedded: Story = {
         </div>
     ),
 }
+
+export const Playground: Story = {
+    args: { size: 'md', disabled: false, submitDisabled: false, requireName: true, hideSubmit: false, submitLabel: 'Pay $49.00' },
+    argTypes: {
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+        disabled: { control: 'boolean' },
+        submitDisabled: { control: 'boolean' },
+        requireName: { control: 'boolean' },
+        hideSubmit: { control: 'boolean' },
+        submitLabel: { control: 'text' },
+    },
+    render: (args) => <div className="mx-auto max-w-sm"><CreditCardForm {...args} onSubmit={() => undefined} /></div>,
+}

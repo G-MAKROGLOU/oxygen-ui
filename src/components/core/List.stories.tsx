@@ -102,3 +102,18 @@ export const Disabled: Story = {
         />
     ),
 }
+
+const PLAYGROUND_ITEMS = [
+    { key: 1, label: 'Aurora', description: 'Bulk carrier · at sea' },
+    { key: 2, label: 'Borealis', description: 'Tanker · in port' },
+    { key: 3, label: 'Cygnus', description: 'Container · anchored' },
+]
+
+export const Playground: Story = {
+    args: { density: 'comfortable', activeKey: 1 },
+    argTypes: {
+        density: { control: 'inline-radio', options: ['compact', 'comfortable', 'spacious'] },
+        activeKey: { control: 'inline-radio', options: [1, 2, 3] },
+    },
+    render: (args) => <List items={PLAYGROUND_ITEMS} onItemClick={() => {}} density={args.density} activeKey={args.activeKey} />,
+}
