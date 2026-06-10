@@ -102,6 +102,60 @@ function FlyoutItems({ items }: { items: SidebarItem[] }) {
     )
 }
 
+/**
+ * Collapsed-mode flyout for a group item. Opens on hover (with a short close
+ * delay so the pointer can cross the gap into the panel); click / Enter still
+ * toggles it for touch + keyboard users.
+ */
+function CollapsedFlyout({ item, trigger }: { item: SidebarItem; trigger: React.ReactElement }) {
+    const [open, setOpen] = useState(false)
+    const closeTimer = React.useRef<number | undefined>(undefined)
+
+    const openNow = () => {
+        window.clearTimeout(closeTimer.current)
+        setOpen(true)
+    }
+    const closeSoon = () => {
+        window.clearTimeout(closeTimer.current)
+        closeTimer.current = window.setTimeout(() => setOpen(false), 150)
+    }
+    React.useEffect(() => () => window.clearTimeout(closeTimer.current), [])
+
+    return (
+        <DropdownMenu.Root open={open} onOpenChange={setOpen} modal={false}>
+            <DropdownMenu.Trigger
+                asChild
+                onPointerEnter={openNow}
+                onPointerLeave={closeSoon}
+                // For mouse, hover owns open/close — block Radix's pointerdown
+                // toggle so clicking the icon doesn't close the hover-opened
+                // menu. Touch (no hover) and keyboard still toggle normally.
+                onPointerDown={(e) => {
+                    if (e.pointerType === 'mouse') e.preventDefault()
+                }}
+            >
+                {trigger}
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Portal>
+                <DropdownMenu.Content
+                    side="right"
+                    align="start"
+                    sideOffset={8}
+                    collisionPadding={8}
+                    className={FLYOUT_PANEL}
+                    onPointerEnter={openNow}
+                    onPointerLeave={closeSoon}
+                >
+                    <DropdownMenu.Label className="px-2.5 pb-1 pt-1.5 text-xs font-semibold text-foreground-muted">
+                        {item.label}
+                    </DropdownMenu.Label>
+                    <FlyoutItems items={item.items!} />
+                </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+        </DropdownMenu.Root>
+    )
+}
+
 function NavItem({
     item,
     isExpanded,
@@ -169,23 +223,10 @@ function NavItem({
     )
 
     if (!isExpanded) {
-        // Collapsed + children → the icon opens a flyout listing the sub-items
-        // (otherwise they'd be unreachable in icon-only mode).
-        if (hasChildren) {
-            return (
-                <DropdownMenu.Root>
-                    <DropdownMenu.Trigger asChild>{btn}</DropdownMenu.Trigger>
-                    <DropdownMenu.Portal>
-                        <DropdownMenu.Content side="right" align="start" sideOffset={8} collisionPadding={8} className={FLYOUT_PANEL}>
-                            <DropdownMenu.Label className="px-2.5 pb-1 pt-1.5 text-xs font-semibold text-foreground-muted">
-                                {item.label}
-                            </DropdownMenu.Label>
-                            <FlyoutItems items={item.items!} />
-                        </DropdownMenu.Content>
-                    </DropdownMenu.Portal>
-                </DropdownMenu.Root>
-            )
-        }
+        // Collapsed + children → hovering the icon opens a flyout listing the
+        // sub-items (otherwise they'd be unreachable in icon-only mode).
+        // Click / Enter still toggles it for touch + keyboard users.
+        if (hasChildren) return <CollapsedFlyout item={item} trigger={btn} />
         return (
             <Tooltip title={item.label} placement="right" delayDuration={200}>
                 {btn}

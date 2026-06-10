@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
 import Sidebar from './Sidebar'
@@ -64,7 +64,7 @@ describe('Sidebar submenus', () => {
 })
 
 describe('Sidebar collapsed flyout', () => {
-    it('opens a flyout with the sub-items when collapsed', async () => {
+    it('opens a flyout with the sub-items on hover when collapsed', async () => {
         const user = userEvent.setup()
         const onVessels = vi.fn()
         const sections: SidebarSection[] = [
@@ -84,16 +84,31 @@ describe('Sidebar collapsed flyout', () => {
         ]
         render(<Sidebar sections={sections} isExpanded={false} onToggle={() => {}} />)
 
-        // Sub-items hidden until the icon is clicked
+        // Sub-items hidden until the icon is hovered
         expect(screen.queryByText('Vessels')).toBeNull()
 
-        await user.click(screen.getByRole('button', { name: /Fleet/i }))
+        await user.hover(screen.getByRole('button', { name: /Fleet/i }))
 
         // Flyout shows the group label + sub-items; selecting one fires its onClick
         expect(await screen.findByText('Vessels')).toBeInTheDocument()
         expect(screen.getByText('Crew')).toBeInTheDocument()
         await user.click(screen.getByText('Vessels'))
         expect(onVessels).toHaveBeenCalledTimes(1)
+    })
+
+    it('closes the flyout shortly after the pointer leaves', async () => {
+        const user = userEvent.setup()
+        const sections: SidebarSection[] = [
+            { key: 'm', items: [{ key: 'f', label: 'Fleet', items: [{ key: 'v', label: 'Vessels' }] }] },
+        ]
+        render(<Sidebar sections={sections} isExpanded={false} onToggle={() => {}} />)
+
+        const trigger = screen.getByRole('button', { name: /Fleet/i })
+        await user.hover(trigger)
+        expect(await screen.findByText('Vessels')).toBeInTheDocument()
+
+        await user.unhover(trigger)
+        await waitFor(() => expect(screen.queryByText('Vessels')).toBeNull(), { timeout: 1000 })
     })
 
     it('highlights the collapsed group icon when a descendant is active', () => {
