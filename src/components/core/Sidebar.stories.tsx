@@ -155,3 +155,57 @@ export const Interactive: Story = {
         },
     },
 }
+
+// ── Submenus (nested items) ─────────────────────────────────────────────────
+const ICON = (d: string) => (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d={d} /></svg>
+)
+
+const NAV_SUBMENUS: SidebarSection[] = [
+    {
+        key: 'main',
+        items: [
+            { key: 'overview', label: 'Overview', isActive: false, icon: ICON('M3 3h6v6H3zM11 3h6v6h-6zM3 11h6v6H3zM11 11h6v6h-6z') },
+            {
+                key: 'fleet', label: 'Fleet', icon: ICON('M3 13l2-6 5 2 5-2 2 6H3z'), defaultOpen: true,
+                items: [
+                    { key: 'vessels', label: 'Vessels', isActive: true },
+                    { key: 'maintenance', label: 'Maintenance', badge: 2 },
+                    { key: 'crew', label: 'Crew' },
+                ],
+            },
+            {
+                key: 'reports', label: 'Reports', icon: ICON('M4 4h12v12H4z'),
+                items: [
+                    { key: 'cii', label: 'CII compliance' },
+                    { key: 'fuel', label: 'Fuel & emissions' },
+                ],
+            },
+        ],
+    },
+]
+
+export const WithSubmenus: Story = {
+    render: () => {
+        const Demo = () => {
+            const [open, setOpen] = useState(true)
+            return <Sidebar sections={NAV_SUBMENUS} isExpanded={open} onToggle={() => setOpen((o) => !o)} />
+        }
+        return <Demo />
+    },
+}
+
+export const Playground: Story = {
+    args: { expandedWidth: 220, collapsedWidth: 52 },
+    argTypes: {
+        expandedWidth: { control: { type: 'number', step: 10 } },
+        collapsedWidth: { control: { type: 'number', step: 4 } },
+    },
+    render: (args) => {
+        const Demo = () => {
+            const [open, setOpen] = useState(true)
+            return <Sidebar sections={NAV_SUBMENUS} isExpanded={open} onToggle={() => setOpen((o) => !o)} expandedWidth={args.expandedWidth} collapsedWidth={args.collapsedWidth} />
+        }
+        return <Demo />
+    },
+}

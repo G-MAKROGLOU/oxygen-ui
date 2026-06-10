@@ -1,17 +1,25 @@
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Tooltip, { TooltipProvider } from './Tooltip'
 
 /** ─────────────────── types ─────────────────── */
 
 export interface SidebarItem {
     key: string
-    icon: React.ReactNode
+    /** Leading icon. Optional for nested sub-items (they show a dot instead). */
+    icon?: React.ReactNode
     label: string
     isActive?: boolean
     onClick?: () => void
     /** Numeric badge shown on the icon */
     badge?: number
+    /**
+     * Nested sub-items. When present (and the sidebar is expanded), the item
+     * becomes an expandable group with a chevron; clicking toggles the children.
+     */
+    items?: SidebarItem[]
+    /** Start the sub-menu expanded. Defaults to open when a descendant is active. */
+    defaultOpen?: boolean
 }
 
 export interface SidebarSection {
@@ -40,14 +48,26 @@ export interface SidebarProps {
 function NavItem({
     item,
     isExpanded,
+    depth = 0,
 }: {
     item: SidebarItem
     isExpanded: boolean
+    depth?: number
 }) {
+    const hasChildren = !!(item.items && item.items.length)
+    const [open, setOpen] = useState<boolean>(item.defaultOpen ?? (hasChildren && !!item.items?.some((c) => c.isActive)))
+
+    const handleClick = () => {
+        if (hasChildren && isExpanded) setOpen((o) => !o)
+        item.onClick?.()
+    }
+
     const btn = (
         <button
             type="button"
-            onClick={item.onClick}
+            onClick={handleClick}
+            aria-expanded={hasChildren && isExpanded ? open : undefined}
+            style={isExpanded && depth > 0 ? { paddingLeft: 10 + depth * 18 } : undefined}
             className={[
                 'group relative flex w-full items-center gap-2.5 rounded-md',
                 'px-2.5 py-2 transition-colors duration-100',
@@ -57,9 +77,9 @@ function NavItem({
                     : 'text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
             ].join(' ')}
         >
-            {/* Icon */}
+            {/* Icon (or a dot for icon-less sub-items) */}
             <span className="relative flex h-5 w-5 flex-shrink-0 items-center justify-center">
-                {item.icon}
+                {item.icon ?? (depth > 0 ? <span className="h-1.5 w-1.5 rounded-full bg-current opacity-50" /> : null)}
                 {item.badge !== undefined && item.badge > 0 && (
                     <span className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-status-error text-[9px] font-bold text-white leading-none">
                         {item.badge > 99 ? '99+' : item.badge}
@@ -69,28 +89,57 @@ function NavItem({
 
             {/* Label — only visible when expanded */}
             {isExpanded && (
-                <motion.span
-                    initial={false}
-                    animate={{ opacity: 1 }}
-                    className="truncate text-sm font-medium"
-                >
+                <motion.span initial={false} animate={{ opacity: 1 }} className="flex-1 truncate text-left text-sm font-medium">
                     {item.label}
                 </motion.span>
             )}
 
-            {/* Active indicator bar */}
-            {item.isActive && (
+            {/* Expand/collapse chevron for groups */}
+            {isExpanded && hasChildren && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true"
+                    className={`h-4 w-4 flex-shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
+                </svg>
+            )}
+
+            {/* Active indicator bar (top-level only) */}
+            {item.isActive && depth === 0 && (
                 <span className="absolute inset-y-0 left-0 w-[3px] rounded-r-full bg-accent" />
             )}
         </button>
     )
 
-    if (isExpanded) return btn
+    if (!isExpanded) {
+        return (
+            <Tooltip title={item.label} placement="right" delayDuration={200}>
+                {btn}
+            </Tooltip>
+        )
+    }
+
+    if (!hasChildren) return btn
 
     return (
-        <Tooltip title={item.label} placement="right" delayDuration={200}>
+        <>
             {btn}
-        </Tooltip>
+            <AnimatePresence initial={false}>
+                {open && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                        style={{ overflow: 'hidden' }}
+                    >
+                        <div className="mt-0.5 flex flex-col gap-0.5">
+                            {item.items!.map((child) => (
+                                <NavItem key={child.key} item={child} isExpanded={isExpanded} depth={depth + 1} />
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     )
 }
 
