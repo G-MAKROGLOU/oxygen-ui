@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { fn } from 'storybook/test'
 import SecureLayout from './SecureLayout'
 import Button from '../inputs/Button'
 
@@ -7,6 +8,9 @@ const meta: Meta<typeof SecureLayout> = {
     title: 'Layout/SecureLayout',
     component: SecureLayout,
     parameters: { layout: 'padded' },
+    // SecureLayout *calls* onGranted/onDeny during its access check; explicit
+    // spies avoid Storybook's implicit-action-arg render error (argTypesRegex).
+    args: { onGranted: fn(), onDeny: fn() },
 }
 export default meta
 type Story = StoryObj<typeof SecureLayout>
