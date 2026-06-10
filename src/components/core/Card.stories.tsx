@@ -13,6 +13,24 @@ const meta: Meta<typeof Card> = {
 export default meta
 type Story = StoryObj<typeof Card>
 
+// Args-driven Playground so the Controls panel has editable inputs (the curated
+// stories below use composition and don't bind args).
+export const Playground: Story = {
+    args: { interactive: true, padding: 'md', flush: false },
+    argTypes: {
+        interactive: { control: 'boolean' },
+        flush: { control: 'boolean' },
+        padding: { control: 'inline-radio', options: ['none', 'sm', 'md', 'lg'] },
+    },
+    render: (args) => (
+        <Card {...args} onClick={() => {}}>
+            <Card.Header title="Aurora" subtitle="Bulk carrier · IMO 9381760" action={<Badge tone="success" variant="soft">At sea</Badge>} />
+            <Card.Body>Off the North Sea, en route to Rotterdam. ETA in 14 hours.</Card.Body>
+            <Card.Footer><Button content="Track" size="sm" /></Card.Footer>
+        </Card>
+    ),
+}
+
 export const Composed: Story = {
     render: () => (
         <Card>
