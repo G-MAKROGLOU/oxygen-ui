@@ -1,3 +1,10 @@
+## [7.3.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.3.0...v7.3.1) (2026-06-10)
+
+
+### Bug Fixes
+
+* **sidebar:** make sub-menu items reachable when collapsed ([a534624](https://github.com/G-MAKROGLOU/oxygen-ui/commit/a53462466f80fa3b2c1e4cddd178654762dea132))
+
 # [7.3.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.2.2...v7.3.0) (2026-06-10)
 
 
