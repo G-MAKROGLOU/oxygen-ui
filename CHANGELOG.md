@@ -1,3 +1,10 @@
+# [7.3.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.2.2...v7.3.0) (2026-06-10)
+
+
+### Features
+
+* **sidebar:** nested sub-menu items ([397f1a6](https://github.com/G-MAKROGLOU/oxygen-ui/commit/397f1a60e927834582aa49930688c9f648e6c681))
+
 ## [7.2.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.2.1...v7.2.2) (2026-06-09)
 
 
