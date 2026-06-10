@@ -59,3 +59,21 @@ export const Wrap: Story = {
         </Flex>
     ),
 }
+
+export const Playground: Story = {
+    args: { direction: 'row', align: 'center', justify: 'between', gap: 'md', wrap: 'nowrap' },
+    argTypes: {
+        direction: { control: 'inline-radio', options: ['row', 'row-reverse', 'col', 'col-reverse'] },
+        align: { control: 'select', options: ['start', 'center', 'end', 'stretch', 'baseline'] },
+        justify: { control: 'select', options: ['start', 'center', 'end', 'between', 'around', 'evenly'] },
+        wrap: { control: 'inline-radio', options: ['nowrap', 'wrap', 'wrap-reverse'] },
+        gap: { control: 'inline-radio', options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    },
+    render: (args) => (
+        <Flex {...args} p="md" border="border" radius="lg" style={{ minHeight: 120 }}>
+            <Box p="md" background="surface-raised" radius="md">A</Box>
+            <Box p="md" background="surface-raised" radius="md">B</Box>
+            <Box p="md" background="surface-raised" radius="md">C</Box>
+        </Flex>
+    ),
+}

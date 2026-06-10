@@ -63,3 +63,15 @@ export const PolymorphicAs: Story = {
         </Box>
     ),
 }
+
+export const Playground: Story = {
+    args: { p: 'lg', background: 'surface', border: 'border', radius: 'lg', shadow: 'sm' },
+    argTypes: {
+        p: { control: 'inline-radio', options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+        background: { control: 'select', options: ['none', 'background', 'surface', 'surface-raised', 'accent'] },
+        border: { control: 'select', options: ['none', 'border', 'border-strong', 'accent', 'status-error'] },
+        radius: { control: 'select', options: ['none', 'sm', 'md', 'lg', 'xl', '2xl', 'full'] },
+        shadow: { control: 'inline-radio', options: ['none', 'sm', 'md', 'lg', 'xl'] },
+    },
+    render: (args) => <Box {...args}><Typography>Box content — tweak padding, background, border, radius and shadow.</Typography></Box>,
+}

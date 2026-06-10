@@ -32,3 +32,13 @@ export const Toggle: Story = {
         return <Demo />
     },
 }
+
+export const Playground: Story = {
+    args: { isMounted: true },
+    argTypes: { isMounted: { control: 'boolean' } },
+    render: (args) => (
+        <FadingBase isMounted={args.isMounted}>
+            <div className="rounded-lg border border-border bg-surface p-6 text-foreground">Toggle <code>isMounted</code> to fade me in and out.</div>
+        </FadingBase>
+    ),
+}

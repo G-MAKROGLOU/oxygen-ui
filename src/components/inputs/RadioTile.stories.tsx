@@ -61,3 +61,27 @@ export const WithError: Story = {
 export const Disabled: Story = {
     args: { options: PLANS, columns: 3, label: 'Choose a plan', disabled: true, defaultValue: 'starter' },
 }
+
+const PLAYGROUND_OPTIONS = [
+    { value: 'a', label: 'Starter', description: '1 vessel' },
+    { value: 'b', label: 'Pro', description: 'Unlimited vessels', badge: 'Popular' },
+    { value: 'c', label: 'Enterprise', description: 'SSO + SLA' },
+]
+
+export const Playground: Story = {
+    args: { columns: 3, size: 'md', label: 'Choose a plan', disabled: false, required: false },
+    argTypes: {
+        columns: { control: 'inline-radio', options: [1, 2, 3] },
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+        label: { control: 'text' },
+        disabled: { control: 'boolean' },
+        required: { control: 'boolean' },
+    },
+    render: (args) => {
+        const Demo = () => {
+            const [value, setValue] = useState('b')
+            return <RadioTile {...args} options={PLAYGROUND_OPTIONS} value={value} onChange={setValue} />
+        }
+        return <Demo />
+    },
+}

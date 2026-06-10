@@ -138,3 +138,23 @@ export const NoSidebar: Story = {
         </AppShell>
     ),
 }
+
+export const Playground: Story = {
+    args: { sidebarDefaultExpanded: true, sidebarExpandedWidth: 220, sidebarCollapsedWidth: 52 },
+    argTypes: {
+        sidebarDefaultExpanded: { control: 'boolean' },
+        sidebarExpandedWidth: { control: { type: 'number', step: 10 } },
+        sidebarCollapsedWidth: { control: { type: 'number', step: 4 } },
+    },
+    render: (args) => (
+        <AppShell
+            topBar={<TopBar brand={<span className="text-sm font-semibold text-foreground">Oxygen</span>} actions={<Button content="Profile" size="sm" variant="ghost" />} />}
+            sidebarSections={NAV}
+            sidebarDefaultExpanded={args.sidebarDefaultExpanded}
+            sidebarExpandedWidth={args.sidebarExpandedWidth}
+            sidebarCollapsedWidth={args.sidebarCollapsedWidth}
+        >
+            <SampleContent />
+        </AppShell>
+    ),
+}

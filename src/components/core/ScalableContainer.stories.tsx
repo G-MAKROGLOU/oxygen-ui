@@ -106,3 +106,18 @@ export const FillParent: Story = {
         </div>
     ),
 }
+
+export const Playground: Story = {
+    args: { height: 220, togglePosition: 'top-right' },
+    argTypes: {
+        height: { control: { type: 'number', step: 20 } },
+        togglePosition: { control: 'select', options: ['top-left', 'top-right', 'bottom-left', 'bottom-right'] },
+    },
+    render: (args) => (
+        <TooltipProvider>
+            <ScalableContainer height={args.height} togglePosition={args.togglePosition}>
+                <div className="h-full rounded-lg border border-border bg-surface p-6 text-foreground">Click the toggle to expand / collapse.</div>
+            </ScalableContainer>
+        </TooltipProvider>
+    ),
+}

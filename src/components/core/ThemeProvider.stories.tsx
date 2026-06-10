@@ -45,3 +45,16 @@ export const ScopedAccent: Story = {
         </div>
     ),
 }
+
+export const Playground: Story = {
+    args: { colorScheme: 'light' },
+    argTypes: { colorScheme: { control: 'inline-radio', options: ['light', 'dark', 'system', 'auto'] } },
+    render: (args) => (
+        <ThemeProvider colorScheme={args.colorScheme}>
+            <div className="rounded-lg border border-border bg-surface p-6 text-foreground">
+                <p className="mb-3 text-sm">colorScheme = <strong className="text-accent">{args.colorScheme}</strong></p>
+                <Button content="Accent button" />
+            </div>
+        </ThemeProvider>
+    ),
+}

@@ -76,3 +76,18 @@ export const TwoColumnLayout: Story = {
         </Grid>
     ),
 }
+
+export const Playground: Story = {
+    args: { cols: 3, gap: 'md', align: 'stretch', justify: 'stretch' },
+    argTypes: {
+        cols: { control: { type: 'number', min: 1, max: 12 } },
+        gap: { control: 'inline-radio', options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+        align: { control: 'select', options: ['start', 'center', 'end', 'stretch'] },
+        justify: { control: 'select', options: ['start', 'center', 'end', 'stretch'] },
+    },
+    render: (args) => (
+        <Grid {...args}>
+            {Array.from({ length: 6 }, (_, i) => <Box key={i} p="md" background="surface-raised" radius="md">Cell {i + 1}</Box>)}
+        </Grid>
+    ),
+}

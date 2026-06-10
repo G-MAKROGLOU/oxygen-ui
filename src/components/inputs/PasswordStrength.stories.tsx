@@ -72,3 +72,16 @@ export const AllLevels: Story = {
         </div>
     ),
 }
+
+export const Playground: Story = {
+    args: { value: 'Tr4de-secure!', confirmValue: '', showRequirements: true, hideMeter: false },
+    argTypes: {
+        value: { control: 'text' },
+        confirmValue: { control: 'text' },
+        showRequirements: { control: 'boolean' },
+        hideMeter: { control: 'boolean' },
+    },
+    render: (args) => (
+        <PasswordStrength value={args.value} confirmValue={args.confirmValue || undefined} showRequirements={args.showRequirements} hideMeter={args.hideMeter} />
+    ),
+}
