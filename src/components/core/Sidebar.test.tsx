@@ -1,6 +1,7 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { describe, it, expect, vi } from 'vitest'
 import Sidebar from './Sidebar'
 import type { SidebarSection } from './Sidebar'
 
@@ -59,5 +60,47 @@ describe('Sidebar submenus', () => {
         ]
         render(<Sidebar sections={sections} isExpanded onToggle={() => {}} />)
         expect(screen.getByRole('button', { name: /Overview/i })).not.toHaveAttribute('aria-expanded')
+    })
+})
+
+describe('Sidebar collapsed flyout', () => {
+    it('opens a flyout with the sub-items when collapsed', async () => {
+        const user = userEvent.setup()
+        const onVessels = vi.fn()
+        const sections: SidebarSection[] = [
+            {
+                key: 'm',
+                items: [
+                    {
+                        key: 'f',
+                        label: 'Fleet',
+                        items: [
+                            { key: 'v', label: 'Vessels', onClick: onVessels },
+                            { key: 'c', label: 'Crew' },
+                        ],
+                    },
+                ],
+            },
+        ]
+        render(<Sidebar sections={sections} isExpanded={false} onToggle={() => {}} />)
+
+        // Sub-items hidden until the icon is clicked
+        expect(screen.queryByText('Vessels')).toBeNull()
+
+        await user.click(screen.getByRole('button', { name: /Fleet/i }))
+
+        // Flyout shows the group label + sub-items; selecting one fires its onClick
+        expect(await screen.findByText('Vessels')).toBeInTheDocument()
+        expect(screen.getByText('Crew')).toBeInTheDocument()
+        await user.click(screen.getByText('Vessels'))
+        expect(onVessels).toHaveBeenCalledTimes(1)
+    })
+
+    it('highlights the collapsed group icon when a descendant is active', () => {
+        const sections: SidebarSection[] = [
+            { key: 'm', items: [{ key: 'f', label: 'Fleet', items: [{ key: 'v', label: 'Vessels', isActive: true }] }] },
+        ]
+        render(<Sidebar sections={sections} isExpanded={false} onToggle={() => {}} />)
+        expect(screen.getByRole('button', { name: /Fleet/i }).className).toContain('text-accent')
     })
 })

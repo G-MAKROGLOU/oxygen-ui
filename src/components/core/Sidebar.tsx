@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import Tooltip, { TooltipProvider } from './Tooltip'
 
 /** ─────────────────── types ─────────────────── */
@@ -45,6 +46,62 @@ export interface SidebarProps {
 
 /** ─────────────────── sub-components ─────────────────── */
 
+/** True when the item or any nested descendant is active. */
+function hasActiveDescendant(item: SidebarItem): boolean {
+    return !!item.items?.some((c) => c.isActive || hasActiveDescendant(c))
+}
+
+const FLYOUT_PANEL =
+    'z-[400] min-w-[11rem] rounded-lg border border-border bg-surface p-1 shadow-lg ' +
+    'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 ' +
+    'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95'
+
+/** Sub-items inside the collapsed-mode flyout. Nested groups become sub-menus. */
+function FlyoutItems({ items }: { items: SidebarItem[] }) {
+    return (
+        <>
+            {items.map((child) => {
+                const cls = [
+                    'flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm outline-none cursor-pointer select-none transition-colors',
+                    child.isActive ? 'text-accent data-[highlighted]:bg-accent/10' : 'text-foreground data-[highlighted]:bg-surface-raised',
+                ].join(' ')
+                const label = (
+                    <>
+                        <span className="flex-1 truncate">{child.label}</span>
+                        {child.badge !== undefined && child.badge > 0 && (
+                            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-status-error px-1 text-[9px] font-bold leading-none text-white">
+                                {child.badge > 99 ? '99+' : child.badge}
+                            </span>
+                        )}
+                    </>
+                )
+                if (child.items?.length) {
+                    return (
+                        <DropdownMenu.Sub key={child.key}>
+                            <DropdownMenu.SubTrigger className={cls}>
+                                {label}
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true" className="h-3.5 w-3.5 flex-shrink-0">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m9 6 6 6-6 6" />
+                                </svg>
+                            </DropdownMenu.SubTrigger>
+                            <DropdownMenu.Portal>
+                                <DropdownMenu.SubContent sideOffset={6} collisionPadding={8} className={FLYOUT_PANEL}>
+                                    <FlyoutItems items={child.items} />
+                                </DropdownMenu.SubContent>
+                            </DropdownMenu.Portal>
+                        </DropdownMenu.Sub>
+                    )
+                }
+                return (
+                    <DropdownMenu.Item key={child.key} onSelect={() => child.onClick?.()} className={cls}>
+                        {label}
+                    </DropdownMenu.Item>
+                )
+            })}
+        </>
+    )
+}
+
 function NavItem({
     item,
     isExpanded,
@@ -55,7 +112,7 @@ function NavItem({
     depth?: number
 }) {
     const hasChildren = !!(item.items && item.items.length)
-    const [open, setOpen] = useState<boolean>(item.defaultOpen ?? (hasChildren && !!item.items?.some((c) => c.isActive)))
+    const [open, setOpen] = useState<boolean>(item.defaultOpen ?? (hasChildren && hasActiveDescendant(item)))
 
     const handleClick = () => {
         if (hasChildren && isExpanded) setOpen((o) => !o)
@@ -66,13 +123,15 @@ function NavItem({
         <button
             type="button"
             onClick={handleClick}
+            // Icon-only mode hides the text label, so expose it for AT.
+            aria-label={!isExpanded && typeof item.label === 'string' ? item.label : undefined}
             aria-expanded={hasChildren && isExpanded ? open : undefined}
             style={isExpanded && depth > 0 ? { paddingLeft: 10 + depth * 18 } : undefined}
             className={[
                 'group relative flex w-full items-center gap-2.5 rounded-md',
                 'px-2.5 py-2 transition-colors duration-100',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset',
-                item.isActive
+                item.isActive || (!isExpanded && hasActiveDescendant(item))
                     ? 'bg-accent/10 text-accent'
                     : 'text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
             ].join(' ')}
@@ -110,6 +169,23 @@ function NavItem({
     )
 
     if (!isExpanded) {
+        // Collapsed + children → the icon opens a flyout listing the sub-items
+        // (otherwise they'd be unreachable in icon-only mode).
+        if (hasChildren) {
+            return (
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger asChild>{btn}</DropdownMenu.Trigger>
+                    <DropdownMenu.Portal>
+                        <DropdownMenu.Content side="right" align="start" sideOffset={8} collisionPadding={8} className={FLYOUT_PANEL}>
+                            <DropdownMenu.Label className="px-2.5 pb-1 pt-1.5 text-xs font-semibold text-foreground-muted">
+                                {item.label}
+                            </DropdownMenu.Label>
+                            <FlyoutItems items={item.items!} />
+                        </DropdownMenu.Content>
+                    </DropdownMenu.Portal>
+                </DropdownMenu.Root>
+            )
+        }
         return (
             <Tooltip title={item.label} placement="right" delayDuration={200}>
                 {btn}
