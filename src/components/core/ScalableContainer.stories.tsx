@@ -127,11 +127,31 @@ export const Playground: Story = {
 // `expandContainerRef` the expansion PUSHES instead: the chart's wrappers grow
 // (animated flex-grow) so it dominates the section while the sibling charts
 // shrink — but stay visible. Collapse restores the original grid.
-const FakeChart = ({ label }: { label: string }) => (
-    <div className="flex h-full w-full items-center justify-center rounded-lg border border-border bg-surface-raised text-sm text-foreground-secondary">
-        {label}
-    </div>
-)
+// Mimics a real chart: re-measures on window resize (like ECharts / Chart.js)
+// and reports its current size, so you can see content adapting — not breaking —
+// as the push expansion resizes it.
+const FakeChart = ({ label }: { label: string }) => {
+    const ref = React.useRef<HTMLDivElement>(null)
+    const [size, setSize] = React.useState('')
+    React.useEffect(() => {
+        const measure = () => {
+            const r = ref.current?.getBoundingClientRect()
+            if (r) setSize(`${Math.round(r.width)}×${Math.round(r.height)}`)
+        }
+        measure()
+        window.addEventListener('resize', measure)
+        return () => window.removeEventListener('resize', measure)
+    }, [])
+    return (
+        <div ref={ref} className="relative flex h-full w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-lg border border-border bg-surface-raised text-foreground-secondary">
+            <svg viewBox="0 0 100 32" preserveAspectRatio="none" className="absolute inset-x-2 bottom-1 h-1/3 text-accent opacity-60" aria-hidden="true">
+                <polyline points="0,28 12,20 24,24 36,12 48,16 60,6 72,14 84,4 100,10" fill="none" stroke="currentColor" strokeWidth={2} vectorEffect="non-scaling-stroke" />
+            </svg>
+            <span className="text-sm">{label}</span>
+            <span className="text-xs tabular-nums text-foreground-muted">{size}</span>
+        </div>
+    )
+}
 
 export const PushExpandInFlexLayout: Story = {
     name: 'Push expansion in flex layout (expandContainerRef)',

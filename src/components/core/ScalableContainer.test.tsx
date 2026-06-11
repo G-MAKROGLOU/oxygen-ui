@@ -61,8 +61,8 @@ describe('ScalableContainer push expansion (expandContainerRef)', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
 
         // The wrapper and its row (both flex items inside the section) grow.
-        expect(wrapperA.style.flexGrow).toBe('5')
-        expect(row.style.flexGrow).toBe('5')
+        expect(wrapperA.style.flexGrow).toBe('3')
+        expect(row.style.flexGrow).toBe('3')
         // Siblings keep their own sizing — they shrink but stay in layout.
         expect(screen.getByTestId('wrapper-b').style.flexGrow).toBe('1')
         expect(screen.getByText('chart B')).toBeInTheDocument()
@@ -75,9 +75,9 @@ describe('ScalableContainer push expansion (expandContainerRef)', () => {
     })
 
     it('honours expandRatio', () => {
-        render(<Harness ratio={3} />)
+        render(<Harness ratio={2} />)
         fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
-        expect(screen.getByTestId('wrapper-a').style.flexGrow).toBe('3')
+        expect(screen.getByTestId('wrapper-a').style.flexGrow).toBe('2')
     })
 
     it('does not touch elements outside the bounding section', () => {
@@ -93,11 +93,20 @@ describe('ScalableContainer push expansion (expandContainerRef)', () => {
         expect(screen.getByTestId('section').style.flexGrow).toBe('')
     })
 
+    it('emits window resize kicks so charts re-measure after the push', async () => {
+        render(<Harness />)
+        const onResize = vi.fn()
+        window.addEventListener('resize', onResize)
+        fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
+        await waitFor(() => expect(onResize).toHaveBeenCalled())
+        window.removeEventListener('resize', onResize)
+    })
+
     it('restores consumer styles on unmount while expanded', async () => {
         const { unmount } = render(<Harness />)
         const wrapperA = screen.getByTestId('wrapper-a')
         fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
-        expect(wrapperA.style.flexGrow).toBe('5')
+        expect(wrapperA.style.flexGrow).toBe('3')
         unmount()
         await waitFor(() => expect(wrapperA.style.flexGrow).toBe('2'))
     })

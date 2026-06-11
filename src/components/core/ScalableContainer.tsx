@@ -43,9 +43,10 @@ export interface ScalableContainerProps {
     expandContainerRef?: React.RefObject<HTMLElement | null>
     /**
      * How dominant the pushed expansion is, as a flex-grow multiplier applied
-     * to the container's wrappers (push mode only). Default `5` — i.e. the
-     * expanded container takes roughly 5 parts for every 1 part a sibling
-     * keeps. Raise for a more fullscreen feel, lower for a gentler split.
+     * to the container's wrappers (push mode only). Default `3` — i.e. the
+     * expanded container takes roughly 3 parts for every 1 part a sibling
+     * keeps, leaving the siblings enough room to stay legible. Raise for a
+     * more fullscreen feel, lower for a gentler split.
      */
     expandRatio?: number
     /** Extra classes merged onto the container root. */
@@ -105,7 +106,7 @@ export default function ScalableContainer({
     collapseIcon,
     togglePosition = 'top-right',
     expandContainerRef,
-    expandRatio = 5,
+    expandRatio = 3,
     className = '',
 }: ScalableContainerProps) {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -116,6 +117,21 @@ export default function ScalableContainer({
     const usePush = expandContainerRef != null
     const grownRef = useRef<GrownAncestor[]>([])
     const prevScaled = useRef(isScaled)
+
+    // Charts and other measure-once content don't notice their container being
+    // resized by a CSS flex transition. Most chart libraries DO listen to
+    // window resize, so emit resize kicks while the transition runs and once
+    // it settles — both the expanded chart and the shrunken siblings re-render
+    // at their new sizes instead of staying malformed.
+    const kickResizeDuringTransition = () => {
+        if (typeof window === 'undefined') return
+        const kick = () => window.dispatchEvent(new Event('resize'))
+        const interval = window.setInterval(kick, 80)
+        window.setTimeout(() => {
+            window.clearInterval(interval)
+            kick()
+        }, reduced ? 0 : 400)
+    }
 
     // ── Push expansion (expandContainerRef mode) ──────────────────────────────
     // Raise flex-grow on every flex item between the container and the
@@ -170,6 +186,7 @@ export default function ScalableContainer({
         prevScaled.current = isScaled
         if (isScaled) growAncestors()
         else restoreAncestors()
+        kickResizeDuringTransition()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isScaled, usePush])
 
@@ -202,6 +219,13 @@ export default function ScalableContainer({
     return (
         <motion.div
             ref={containerRef}
+            // Base style mirrors the animation target so layout is correct from
+            // the very first paint (and in frame-starved environments); framer
+            // tweens between the values on toggle.
+            style={{
+                width: isScaled && !usePush ? expandedWidth : width,
+                height: isScaled && !usePush ? expandedHeight : height,
+            }}
             animate={{
                 // Push mode keeps the container filling its (now growing)
                 // wrapper — the wrapper's flex-grow does the work.
