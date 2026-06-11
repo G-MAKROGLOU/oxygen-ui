@@ -53,31 +53,38 @@ describe('ScalableContainer push expansion (expandContainerRef)', () => {
         )
     }
 
-    it('raises flex-grow on the wrapper chain when expanded and restores it on collapse', () => {
+    it('takes the full row width (wrap + basis 100%) and grows its row, restoring on collapse', async () => {
         render(<Harness />)
         const wrapperA = screen.getByTestId('wrapper-a')
         const row = screen.getByTestId('row')
 
         fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
 
-        // The wrapper and its row (both flex items inside the section) grow.
-        expect(wrapperA.style.flexGrow).toBe('3')
+        // Row parent wraps; the expanded wrapper takes the full width and
+        // claims ratio/(ratio+1) of the row's height — siblings reflow below.
+        expect(row.style.flexWrap).toBe('wrap')
+        expect(wrapperA.style.flexBasis).toBe('100%')
+        expect(wrapperA.style.height).toBe('75%')
+        // The row itself (flex item of the column section) grows vertically.
         expect(row.style.flexGrow).toBe('3')
-        // Siblings keep their own sizing — they shrink but stay in layout.
+        // Siblings keep their own sizing and stay in layout.
         expect(screen.getByTestId('wrapper-b').style.flexGrow).toBe('1')
         expect(screen.getByText('chart B')).toBeInTheDocument()
 
         fireEvent.click(screen.getByRole('button', { name: 'Collapse container' }))
 
         // Inline styles restored to what the consumer set.
-        expect(wrapperA.style.flexGrow).toBe('2')
+        expect(wrapperA.style.flexBasis).toBe('0%')
+        expect(wrapperA.style.height).toBe('')
         expect(row.style.flexGrow).toBe('')
+        await waitFor(() => expect(row.style.flexWrap).toBe(''))
     })
 
     it('honours expandRatio', () => {
-        render(<Harness ratio={2} />)
+        render(<Harness ratio={4} />)
         fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
-        expect(screen.getByTestId('wrapper-a').style.flexGrow).toBe('2')
+        expect(screen.getByTestId('wrapper-a').style.height).toBe('80%')
+        expect(screen.getByTestId('row').style.flexGrow).toBe('4')
     })
 
     it('does not touch elements outside the bounding section', () => {
@@ -105,10 +112,15 @@ describe('ScalableContainer push expansion (expandContainerRef)', () => {
     it('restores consumer styles on unmount while expanded', async () => {
         const { unmount } = render(<Harness />)
         const wrapperA = screen.getByTestId('wrapper-a')
+        const row = screen.getByTestId('row')
         fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
-        expect(wrapperA.style.flexGrow).toBe('3')
+        expect(wrapperA.style.flexBasis).toBe('100%')
         unmount()
-        await waitFor(() => expect(wrapperA.style.flexGrow).toBe('2'))
+        await waitFor(() => {
+            expect(wrapperA.style.flexBasis).toBe('0%')
+            expect(wrapperA.style.height).toBe('')
+            expect(row.style.flexWrap).toBe('')
+        })
     })
 })
 

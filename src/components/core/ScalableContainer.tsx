@@ -34,19 +34,21 @@ export interface ScalableContainerProps {
      * Bounding element the expansion is allowed to grow within. When the
      * container sits in size-constrained flex-item wrappers (where width /
      * height 100% makes expand-in-place a no-op), providing this ref switches
-     * to PUSH expansion: every flex item between the container and this
-     * element gets its `flex-grow` raised (animated), so this container takes
-     * most of the space while its siblings shrink — but stay visible.
-     * Collapsing restores the wrappers' original sizing. Omit for the classic
+     * to PUSH expansion: the container's row becomes `flex-wrap: wrap` and the
+     * container takes the FULL parent width (`flex-basis: 100%`), so sibling
+     * charts reflow below it at full width — pushed, visible, and intact.
+     * Column levels between the container and this element get `flex-grow`
+     * raised so the expanded row dominates vertically too. Collapsing
+     * restores the wrappers' original sizing exactly. Omit for the classic
      * expand-in-place behaviour.
      */
     expandContainerRef?: React.RefObject<HTMLElement | null>
     /**
-     * How dominant the pushed expansion is, as a flex-grow multiplier applied
-     * to the container's wrappers (push mode only). Default `3` — i.e. the
-     * expanded container takes roughly 3 parts for every 1 part a sibling
-     * keeps, leaving the siblings enough room to stay legible. Raise for a
-     * more fullscreen feel, lower for a gentler split.
+     * Vertical dominance of the pushed expansion (push mode only). Default
+     * `3` — the expanded chart keeps expandRatio/(expandRatio+1) of its row's
+     * height (and its row takes expandRatio parts per sibling row), leaving
+     * the reflowed siblings the remainder. Raise for a more fullscreen feel,
+     * lower for a gentler split.
      */
     expandRatio?: number
     /** Extra classes merged onto the container root. */
@@ -63,7 +65,14 @@ const TOGGLE_POSITION_CLASS: Record<NonNullable<ScalableContainerProps['togglePo
 /** Inline styles we temporarily override on ancestor flex items in push mode. */
 interface GrownAncestor {
     el: HTMLElement
-    prev: { flexGrow: string; flexBasis: string; transition: string }
+    parent: HTMLElement
+    prev: {
+        flexGrow: string
+        flexBasis: string
+        height: string
+        transition: string
+        parentFlexWrap: string
+    }
 }
 
 /**
@@ -76,10 +85,12 @@ interface GrownAncestor {
  * - **In place** (default): animates the container's own width/height to
  *   `expandedWidth`/`expandedHeight`.
  * - **Push** (`expandContainerRef` set): for containers whose resting size is
- *   owned by flex-item wrappers. Expanding raises `flex-grow` on every flex
- *   item between the container and the bounding element, so the container
- *   grows to dominate the section while sibling containers shrink but remain
- *   visible. Collapsing restores the original layout.
+ *   owned by flex-item wrappers. Expanding makes the container span the FULL
+ *   parent width (its row becomes `flex-wrap: wrap` and the wrapper takes
+ *   `flex-basis: 100%`), with sibling charts reflowing below it at full
+ *   width — visible and intact, not squeezed. Column levels raise `flex-grow`
+ *   so the expanded row also dominates vertically. Collapsing restores the
+ *   original layout exactly.
  *
  * @example
  * ```tsx
@@ -134,11 +145,18 @@ export default function ScalableContainer({
     }
 
     // ── Push expansion (expandContainerRef mode) ──────────────────────────────
-    // Raise flex-grow on every flex item between the container and the
-    // bounding element. Each level pushes its own siblings, so the expansion
-    // propagates through nested rows/columns — siblings shrink proportionally
-    // but never disappear from layout. flex-grow is animatable, so a CSS
-    // transition gives the same eased growth as the in-place mode.
+    // Walk the flex items between the container and the bounding element and
+    // rework each level by its parent's direction:
+    // - ROW parents become `flex-wrap: wrap` and the chain item takes
+    //   `flex-basis: 100%` — the expanded chart spans the FULL parent width
+    //   and its row-siblings reflow onto the next line(s) at full size instead
+    //   of being squeezed beside it. The chain item also claims
+    //   expandRatio/(expandRatio+1) of the row's height so the wrapped
+    //   siblings keep the remainder.
+    // - COLUMN parents get the chain item's `flex-grow` raised, pushing the
+    //   other rows down — smaller, but intact and visible.
+    // Everything is driven by animatable properties (flex-basis, height,
+    // flex-grow) with a CSS transition matching the in-place easing.
     const growAncestors = () => {
         const bound = expandContainerRef?.current
         if (!bound || !containerRef.current) return
@@ -146,22 +164,33 @@ export default function ScalableContainer({
         let el: HTMLElement | null = containerRef.current.parentElement
         while (el && el !== bound && bound.contains(el)) {
             const parent: HTMLElement | null = el.parentElement
-            if (parent && getComputedStyle(parent).display.includes('flex')) {
+            const parentStyle = parent ? getComputedStyle(parent) : null
+            if (parent && parentStyle && parentStyle.display.includes('flex')) {
                 grown.push({
                     el,
+                    parent,
                     prev: {
                         flexGrow: el.style.flexGrow,
                         flexBasis: el.style.flexBasis,
+                        height: el.style.height,
                         transition: el.style.transition,
+                        parentFlexWrap: parent.style.flexWrap,
                     },
                 })
-                const grow = `flex-grow ${reduced ? 0 : 0.32}s cubic-bezier(0.16, 1, 0.3, 1), flex-basis ${reduced ? 0 : 0.32}s cubic-bezier(0.16, 1, 0.3, 1)`
-                el.style.transition = el.style.transition ? `${el.style.transition}, ${grow}` : grow
-                // A definite basis makes every level share by grow factor alone:
-                // expandRatio parts for this chain vs ~1 part per sibling — the
-                // expanded chart dominates, siblings shrink but stay visible.
-                el.style.flexBasis = '0%'
-                el.style.flexGrow = String(expandRatio)
+                const t = (prop: string) => `${prop} ${reduced ? 0 : 0.32}s cubic-bezier(0.16, 1, 0.3, 1)`
+                const ours = `${t('flex-grow')}, ${t('flex-basis')}, ${t('height')}`
+                el.style.transition = el.style.transition ? `${el.style.transition}, ${ours}` : ours
+
+                if (parentStyle.flexDirection.startsWith('row')) {
+                    // Full-width line of its own; siblings wrap below.
+                    parent.style.flexWrap = 'wrap'
+                    el.style.flexBasis = '100%'
+                    el.style.height = `${(expandRatio / (expandRatio + 1)) * 100}%`
+                } else {
+                    // Column: take expandRatio parts vs ~1 per sibling row.
+                    el.style.flexBasis = '0%'
+                    el.style.flexGrow = String(expandRatio)
+                }
             }
             el = parent
         }
@@ -169,13 +198,15 @@ export default function ScalableContainer({
     }
 
     const restoreAncestors = () => {
-        for (const { el, prev } of grownRef.current) {
+        for (const { el, parent, prev } of grownRef.current) {
             el.style.flexGrow = prev.flexGrow
             el.style.flexBasis = prev.flexBasis
-            // Drop our transition after the shrink settles so we leave the
-            // element's inline styles exactly as we found them.
+            el.style.height = prev.height
+            // Drop our transition (and the parent's wrap) after the shrink
+            // settles so we leave inline styles exactly as we found them.
             window.setTimeout(() => {
                 el.style.transition = prev.transition
+                parent.style.flexWrap = prev.parentFlexWrap
             }, reduced ? 0 : 360)
         }
         grownRef.current = []
@@ -192,10 +223,12 @@ export default function ScalableContainer({
 
     // Restore consumer styles if we unmount while expanded.
     useEffect(() => () => {
-        for (const { el, prev } of grownRef.current) {
+        for (const { el, parent, prev } of grownRef.current) {
             el.style.flexGrow = prev.flexGrow
             el.style.flexBasis = prev.flexBasis
+            el.style.height = prev.height
             el.style.transition = prev.transition
+            parent.style.flexWrap = prev.parentFlexWrap
         }
     }, [])
 
