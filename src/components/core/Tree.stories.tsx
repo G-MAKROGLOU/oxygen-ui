@@ -95,3 +95,38 @@ export const PartiallyExpanded: Story = {
         ),
     ],
 }
+
+// Mirrors the deepest real-world structure (7 levels:
+// Vessels → group → fleet → class → vessel → mode → report-type) —
+// regression story for the additive-indentation clipping bug.
+const DEEP_NODES: TreeNode[] = [
+    {
+        key: 'vessels', label: 'Vessels',
+        children: [{
+            key: 'group', label: 'Dry cargo group',
+            children: [{
+                key: 'fleet', label: 'Atlantic fleet',
+                children: [{
+                    key: 'class', label: 'Panamax class',
+                    children: [{
+                        key: 'vessel', label: 'MV Aurora',
+                        children: [{
+                            key: 'mode', label: 'At sea',
+                            children: [
+                                { key: 'noon', label: 'Noon report' },
+                                { key: 'departure', label: 'Departure report' },
+                                { key: 'arrival', label: 'Arrival report' },
+                            ],
+                        }],
+                    }],
+                }],
+            }],
+        }],
+    },
+]
+
+export const DeeplyNested: Story = {
+    name: 'Deeply nested (7 levels)',
+    args: { nodes: DEEP_NODES, defaultExpandAll: true },
+    decorators: [(StoryFn) => <div className="w-80 overflow-hidden rounded-lg border border-border bg-surface p-3"><StoryFn /></div>],
+}

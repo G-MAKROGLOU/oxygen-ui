@@ -38,7 +38,6 @@ interface NodeProps {
     onNodeClick: TreeProps['onNodeClick']
     defaultExpandAll: boolean
     defaultExpandedKeys: string[]
-    depth?: number
 }
 
 function TreeNodeItem({
@@ -46,14 +45,12 @@ function TreeNodeItem({
     onNodeClick,
     defaultExpandAll,
     defaultExpandedKeys,
-    depth = 0,
 }: NodeProps) {
     if (!isParent(item)) {
         return (
             <button
                 type="button"
                 className="flex w-full items-center gap-2.5 cursor-pointer select-none group text-left rounded-md px-2 py-1.5 hover:bg-surface-raised transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                style={{ paddingLeft: depth * 12 + 8 }}
                 onClick={() =>
                     onNodeClick({
                         isParent: false,
@@ -79,11 +76,7 @@ function TreeNodeItem({
             : []
 
     return (
-        <Accordion.Root
-            type="multiple"
-            defaultValue={initialOpen}
-            style={{ paddingLeft: depth * 12 }}
-        >
+        <Accordion.Root type="multiple" defaultValue={initialOpen}>
             <Accordion.Item value={item.key} className="border-none">
                 {/* The Trigger handles BOTH expand/collapse (via Radix) and
                     onNodeClick — clicking anywhere on the parent row fires
@@ -131,7 +124,6 @@ function TreeNodeItem({
                                 onNodeClick={onNodeClick}
                                 defaultExpandAll={defaultExpandAll}
                                 defaultExpandedKeys={defaultExpandedKeys}
-                                depth={depth + 1}
                             />
                         ))}
                     </div>

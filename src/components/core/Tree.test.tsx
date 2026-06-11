@@ -87,3 +87,28 @@ describe('Tree', () => {
         expect(screen.getByText('Child one')).toBeInTheDocument()
     })
 })
+
+describe('Tree deep-nesting indentation (regression)', () => {
+    // 7 levels: Vessels → group → fleet → class → vessel → mode → report-type.
+    // Depth-based inline padding used to stack on top of the per-level ml-3.5
+    // wrapper, pushing deep leaves past the panel edge (clipped by
+    // overflow-hidden). Indentation must come from nesting alone.
+    const deep = (level: number): TreeNode =>
+        level === 7
+            ? { key: `n${level}`, label: `Node ${level}` }
+            : { key: `n${level}`, label: `Node ${level}`, children: [deep(level + 1)] }
+
+    it('applies no inline left padding at any depth', () => {
+        render(<Tree nodes={[deep(1)]} onNodeClick={vi.fn()} defaultExpandAll />)
+
+        const leaf = screen.getByText('Node 7').closest('button')!
+        expect(leaf.style.paddingLeft).toBe('')
+
+        // No element in the deepest leaf's ancestry carries inline paddingLeft
+        let el: HTMLElement | null = leaf
+        while (el) {
+            expect(el.style.paddingLeft).toBe('')
+            el = el.parentElement
+        }
+    })
+})
