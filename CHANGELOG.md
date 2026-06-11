@@ -1,3 +1,10 @@
+## [7.3.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.3.2...v7.3.3) (2026-06-11)
+
+
+### Bug Fixes
+
+* **tree:** deep nodes clipped off-screen by additive depth indentation ([2d4a0e1](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2d4a0e124c4233fc80ec5a054b34e85c81fedfe6))
+
 ## [7.3.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.3.1...v7.3.2) (2026-06-10)
 
 
