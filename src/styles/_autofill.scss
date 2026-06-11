@@ -1,0 +1,32 @@
+// ── Autofill — token-aware browser autofill styling ──────────────────────────
+//
+// Browsers force their own background (white / pale blue in Chrome) and black
+// text onto autofilled fields, ignoring the input's CSS background. Inside the
+// design system's `bg-surface` inputs that renders as a jarring light rectangle
+// — especially broken in dark mode. The background can't be overridden
+// directly, but an opaque inset box-shadow paints over it, and
+// `-webkit-text-fill-color` restores the foreground. The absurdly long
+// background-color transition defeats the UA's late repaint of the autofill
+// highlight.
+@layer base {
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    select:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px var(--color-surface) inset;
+        box-shadow: 0 0 0 1000px var(--color-surface) inset;
+        -webkit-text-fill-color: var(--color-foreground);
+        caret-color: var(--color-foreground);
+        transition: background-color 9999999s ease-out 0s;
+    }
+
+    // Standard selector (Firefox). Its highlight can't be fully removed, but
+    // the token colours keep the field legible in both schemes.
+    input:autofill,
+    textarea:autofill,
+    select:autofill {
+        background-color: var(--color-surface);
+        color: var(--color-foreground);
+    }
+}
