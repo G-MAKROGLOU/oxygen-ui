@@ -1,3 +1,10 @@
+## [7.3.4](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.3.3...v7.3.4) (2026-06-11)
+
+
+### Bug Fixes
+
+* **inputs:** popup layers hidden under Drawer/Modal overlays ([41c07bc](https://github.com/G-MAKROGLOU/oxygen-ui/commit/41c07bca2e22030613fe4d40c1af28cea842e466))
+
 ## [7.3.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.3.2...v7.3.3) (2026-06-11)
 
 
