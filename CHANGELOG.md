@@ -1,3 +1,10 @@
+## [7.3.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.3.1...v7.3.2) (2026-06-10)
+
+
+### Bug Fixes
+
+* **sidebar:** open the collapsed flyout on hover ([b48605f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/b48605fd7f3aedbb6e1b812d384dcbc459e3b18a))
+
 ## [7.3.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.3.0...v7.3.1) (2026-06-10)
 
 
