@@ -1,3 +1,10 @@
+# [7.4.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.3.4...v7.4.0) (2026-06-11)
+
+
+### Features
+
+* **scalable-container:** expandContainerRef breakout overlay ([a929ead](https://github.com/G-MAKROGLOU/oxygen-ui/commit/a929ead36397af175fc9cdb834573b03ca8814ce))
+
 ## [7.3.4](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.3.3...v7.3.4) (2026-06-11)
 
 
