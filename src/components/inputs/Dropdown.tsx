@@ -351,8 +351,9 @@ export default function Dropdown({
                         <Popover.Content
                             align="start"
                             sideOffset={4}
+                            collisionPadding={8}
                             style={{ width: style?.width || 240 }}
-                            className="bg-surface text-foreground border border-border rounded-lg shadow-md z-50 p-2 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+                            className="bg-surface text-foreground border border-border rounded-lg shadow-md z-popover p-2 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
                             onInteractOutside={() => setOpen(false)}
                         >
                             {hasSearch && (

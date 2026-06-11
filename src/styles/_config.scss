@@ -131,5 +131,8 @@ $z-sticky:   150  !default;
 $z-topbar:   200  !default;
 $z-overlay:  300  !default;
 $z-modal:    400  !default;
+// Floating input popups (dropdown lists, date/time calendars) must layer
+// above modal/drawer panels they may be opened from, but below toasts.
+$z-popover:  450  !default;
 $z-toast:    500  !default;
 $z-tooltip:  600  !default;

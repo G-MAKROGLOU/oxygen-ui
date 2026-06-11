@@ -227,7 +227,8 @@ export default function DateRangePicker({
                     <Popover.Content
                         align="start"
                         sideOffset={4}
-                        className="bg-surface text-foreground border border-border rounded-lg shadow-md z-50 p-3 flex flex-col gap-3 sm:flex-row max-w-[calc(100vw-1rem)] max-h-[calc(100vh-2rem)] overflow-auto animate-in fade-in-0 zoom-in-95"
+                            collisionPadding={8}
+                        className="bg-surface text-foreground border border-border rounded-lg shadow-md z-popover p-3 flex flex-col gap-3 sm:flex-row max-w-[calc(100vw-1rem)] max-h-[calc(100vh-2rem)] overflow-auto animate-in fade-in-0 zoom-in-95"
                     >
                         {presets && presets.length > 0 && (
                             <div className="flex flex-col gap-1 min-w-[120px] sm:pr-3 sm:border-r sm:border-border">

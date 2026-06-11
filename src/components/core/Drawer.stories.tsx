@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import Drawer from './Drawer'
 import Button from '../inputs/Button'
+import Dropdown from '../inputs/Dropdown'
+import DatePicker from '../inputs/DatePicker'
 
 const meta: Meta<typeof Drawer> = {
     title: 'Feedback/Drawer',
@@ -74,5 +76,39 @@ export const ExplicitWidth: Story = {
         title: 'Custom Width',
         width: '30rem',
         children: <p className="text-sm text-foreground-secondary">An explicit <code>width=&quot;30rem&quot;</code> overrides the size scale.</p>,
+    },
+}
+
+// Regression: floating input popups (dropdown list, date-picker calendar) must
+// layer ABOVE the drawer panel/backdrop (z-popover > z-modal), not under it.
+export const WithFormPopups: Story = {
+    name: 'With popup inputs (Dropdown + DatePicker)',
+    render: () => {
+        const Demo = () => {
+            const [open, setOpen] = useState(true)
+            const [vessel, setVessel] = useState<string | number | undefined>(undefined)
+            const [date, setDate] = useState<Date | undefined>(undefined)
+            return (
+                <>
+                    <Button content="Open Drawer" onClick={() => setOpen(true)} />
+                    <Drawer open={open} onClose={() => setOpen(false)} title="New report" hasFooter={false} size="md">
+                        <div className="flex flex-col gap-4 p-1">
+                            <Dropdown
+                                label="Vessel"
+                                items={[
+                                    { key: 'aurora', label: 'MV Aurora' },
+                                    { key: 'borealis', label: 'MV Borealis' },
+                                    { key: 'cygnus', label: 'MV Cygnus' },
+                                ]}
+                                value={vessel}
+                                onChange={(e) => setVessel(e.target.value as string)}
+                            />
+                            <DatePicker label="Report date" value={date} onChange={setDate} />
+                        </div>
+                    </Drawer>
+                </>
+            )
+        }
+        return <Demo />
     },
 }

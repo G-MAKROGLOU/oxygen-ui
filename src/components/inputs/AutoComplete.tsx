@@ -241,8 +241,9 @@ export default function AutoComplete({
                         <Popover.Content
                             align="start"
                             sideOffset={4}
+                            collisionPadding={8}
                             onOpenAutoFocus={(e) => e.preventDefault()}
-                            className="w-64 bg-surface border border-border rounded-lg mt-1 shadow-md z-50 overflow-y-auto max-h-36 animate-in fade-in-0 zoom-in-95"
+                            className="w-64 bg-surface border border-border rounded-lg mt-1 shadow-md z-popover overflow-y-auto max-h-36 animate-in fade-in-0 zoom-in-95"
                         >
                             {loading ? (
                                 <div className="h-full w-full flex items-center justify-center gap-2 py-4 text-sm text-foreground-secondary">

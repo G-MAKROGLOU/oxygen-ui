@@ -160,7 +160,8 @@ export default function TimePicker({
                     <Popover.Content
                         align="start"
                         sideOffset={4}
-                        className="bg-surface text-foreground border border-border rounded-lg shadow-md z-50 p-2 flex gap-1 animate-in fade-in-0 zoom-in-95"
+                            collisionPadding={8}
+                        className="bg-surface text-foreground border border-border rounded-lg shadow-md z-popover p-2 flex gap-1 animate-in fade-in-0 zoom-in-95"
                     >
                         <Column items={hours} selected={selectedHourCol}
                             onPick={(h) => use12Hours ? setHour12(h, period as 'AM' | 'PM') : update({ h })}

@@ -263,7 +263,8 @@ export default function DatePicker({
                         <Popover.Content
                             align="start"
                             sideOffset={4}
-                            className="bg-surface text-foreground border border-border rounded-lg shadow-md z-50 p-3 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+                            collisionPadding={8}
+                            className="bg-surface text-foreground border border-border rounded-lg shadow-md z-popover p-3 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
                             onOpenAutoFocus={(e) => {
                                 e.preventDefault()
                                 // Focus is moved by the focusDate effect once the grid mounts

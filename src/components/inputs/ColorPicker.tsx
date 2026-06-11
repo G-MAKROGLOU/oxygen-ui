@@ -113,7 +113,8 @@ export default function ColorPicker({
                     <Popover.Content
                         align="start"
                         sideOffset={4}
-                        className="bg-surface text-foreground border border-border rounded-lg shadow-md z-50 p-3 w-56 animate-in fade-in-0 zoom-in-95"
+                            collisionPadding={8}
+                        className="bg-surface text-foreground border border-border rounded-lg shadow-md z-popover p-3 w-56 animate-in fade-in-0 zoom-in-95"
                     >
                         <div className="grid grid-cols-6 gap-2 mb-3">
                             {swatches.map((sw) => (
