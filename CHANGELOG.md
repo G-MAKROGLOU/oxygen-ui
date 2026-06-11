@@ -1,3 +1,10 @@
+## [7.4.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.4.2...v7.4.3) (2026-06-11)
+
+
+### Bug Fixes
+
+* **scalable-container:** expanded container spans the full parent width ([8d8c728](https://github.com/G-MAKROGLOU/oxygen-ui/commit/8d8c728a83155de6147fe06c2f985d2ed0e2b41a))
+
 ## [7.4.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.4.1...v7.4.2) (2026-06-11)
 
 
