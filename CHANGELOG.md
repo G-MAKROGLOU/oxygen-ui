@@ -1,3 +1,10 @@
+## [7.4.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.4.1...v7.4.2) (2026-06-11)
+
+
+### Bug Fixes
+
+* **scalable-container:** keep sibling charts intact during push expansion ([0964d6a](https://github.com/G-MAKROGLOU/oxygen-ui/commit/0964d6a33df79cf2ab44afa0ee1808a7217afd58))
+
 ## [7.4.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.4.0...v7.4.1) (2026-06-11)
 
 
