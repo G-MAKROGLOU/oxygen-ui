@@ -6,11 +6,15 @@ const theme = create({
     base: 'dark',
 
     // Brand — HTML title so the logo and the library version render together
-    // (a plain `brandImage` would suppress the title text entirely).
+    // (a plain `brandImage` would suppress the title text entirely). The
+    // build-time package.json version is only a fallback: the badge updates
+    // itself from the npm registry at runtime (see below), because the
+    // release bot's version-bump commit is tagged [skip ci] — builds always
+    // run one commit BEFORE the bump, so a baked-in version lags forever.
     brandTitle: `
         <div style="display:flex;align-items:center;gap:8px">
             <img src="/oxygen-logo.svg" alt="Oxygen UI" style="height:32px" />
-            <span style="font-size:10px;font-weight:600;color:#5c7a92;line-height:1;align-self:flex-end;padding-bottom:3px">v${version}</span>
+            <span id="oxygen-version-badge" style="font-size:10px;font-weight:600;color:#5c7a92;line-height:1;align-self:flex-end;padding-bottom:3px">v${version}</span>
         </div>
     `,
     brandUrl:   '#',
@@ -50,3 +54,25 @@ const theme = create({
 })
 
 addons.setConfig({ theme })
+
+// Keep the version badge live: ask the npm registry for the latest published
+// version and overwrite the build-time fallback once the sidebar renders.
+const updateVersionBadge = async () => {
+    try {
+        const res = await fetch('https://registry.npmjs.org/@geomak%2Fui/latest')
+        if (!res.ok) return
+        const { version: latest } = (await res.json()) as { version?: string }
+        if (!latest) return
+        for (let i = 0; i < 40; i++) {
+            const el = document.getElementById('oxygen-version-badge')
+            if (el) {
+                el.textContent = `v${latest}`
+                return
+            }
+            await new Promise((r) => setTimeout(r, 250))
+        }
+    } catch {
+        /* offline / registry hiccup — the build-time fallback stays */
+    }
+}
+void updateVersionBadge()
