@@ -9,8 +9,8 @@ const theme = create({
     // (a plain `brandImage` would suppress the title text entirely).
     brandTitle: `
         <div style="display:flex;align-items:center;gap:8px">
-            <img src="/oxygen-logo.svg" alt="Oxygen UI" style="height:22px" />
-            <span style="font-size:11px;font-weight:600;color:#9ab0c4;border:1px solid #1e3348;border-radius:9999px;padding:1px 8px;line-height:1.6">v${version}</span>
+            <img src="/oxygen-logo.svg" alt="Oxygen UI" style="height:32px" />
+            <span style="font-size:10px;font-weight:600;color:#5c7a92;line-height:1;align-self:flex-end;padding-bottom:3px">v${version}</span>
         </div>
     `,
     brandUrl:   '#',
