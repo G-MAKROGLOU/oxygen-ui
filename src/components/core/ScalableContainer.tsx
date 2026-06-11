@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import Tooltip from './Tooltip'
 import { cx } from '../../utils/cx'
@@ -32,29 +31,25 @@ export interface ScalableContainerProps {
      */
     togglePosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
     /**
-     * Bounding element the EXPANDED state should overlay. When provided, the
-     * expanded content renders into a body portal positioned over this
-     * element's rect instead of growing in place — letting the container break
-     * out of a size-constrained wrapper (e.g. a flex item) whose normal-state
-     * sizing it should otherwise respect. Collapsing returns it to normal
-     * flow. Omit for the classic expand-in-place behaviour.
+     * Bounding element the expansion is allowed to grow within. When the
+     * container sits in size-constrained flex-item wrappers (where width /
+     * height 100% makes expand-in-place a no-op), providing this ref switches
+     * to PUSH expansion: every flex item between the container and this
+     * element gets its `flex-grow` raised (animated), so this container takes
+     * most of the space while its siblings shrink — but stay visible.
+     * Collapsing restores the wrappers' original sizing. Omit for the classic
+     * expand-in-place behaviour.
      */
     expandContainerRef?: React.RefObject<HTMLElement | null>
+    /**
+     * How dominant the pushed expansion is, as a flex-grow multiplier applied
+     * to the container's wrappers (push mode only). Default `5` — i.e. the
+     * expanded container takes roughly 5 parts for every 1 part a sibling
+     * keeps. Raise for a more fullscreen feel, lower for a gentler split.
+     */
+    expandRatio?: number
     /** Extra classes merged onto the container root. */
     className?: string
-}
-
-/** Viewport-relative rect snapshot used to place the breakout overlay. */
-interface OverlayRect {
-    left: number
-    top: number
-    width: number
-    height: number
-}
-
-const rectOf = (el: HTMLElement): OverlayRect => {
-    const r = el.getBoundingClientRect()
-    return { left: r.left, top: r.top, width: r.width, height: r.height }
 }
 
 const TOGGLE_POSITION_CLASS: Record<NonNullable<ScalableContainerProps['togglePosition']>, string> = {
@@ -64,29 +59,37 @@ const TOGGLE_POSITION_CLASS: Record<NonNullable<ScalableContainerProps['togglePo
     'bottom-right': 'bottom-2 right-2',
 }
 
+/** Inline styles we temporarily override on ancestor flex items in push mode. */
+interface GrownAncestor {
+    el: HTMLElement
+    prev: { flexGrow: string; flexBasis: string; transition: string }
+}
+
 /**
- * Container that smoothly expands to fill its parent on click and
- * collapses back to its resting size. Reads like a macOS / Windows
- * window resizing — subtle elevation shift, smooth scale, no flash
- * of colour or harsh background change.
+ * Container that smoothly expands on click and collapses back to its
+ * resting size. Reads like a macOS / Windows window resizing — subtle
+ * elevation shift, smooth scale, no flash of colour or harsh background
+ * change.
  *
- * **What's different from the previous version**
- * - Animates BOTH width and height (was width-only).
- * - No baked-in background — the container is transparent by default,
- *   so it overlays whatever surface the consumer puts behind it.
- * - Shadow lifts on expand (`shadow-md` → `shadow-2xl`) like a window
- *   being raised. No colour change.
- * - The toggle button is a plain rounded chip with the chevron icon,
- *   not the old `IconButton` with the heavy background. Floats over
- *   the content via absolute positioning so it doesn't push layout.
- * - Configurable toggle position (default top-right, matching OS
- *   close-button convention).
+ * Two expansion modes:
+ * - **In place** (default): animates the container's own width/height to
+ *   `expandedWidth`/`expandedHeight`.
+ * - **Push** (`expandContainerRef` set): for containers whose resting size is
+ *   owned by flex-item wrappers. Expanding raises `flex-grow` on every flex
+ *   item between the container and the bounding element, so the container
+ *   grows to dominate the section while sibling containers shrink but remain
+ *   visible. Collapsing restores the original layout.
  *
  * @example
  * ```tsx
  * <ScalableContainer width={480} height={300}>
  *   <Chart data={metrics} />
  * </ScalableContainer>
+ *
+ * // Push mode inside a flex grid:
+ * const sectionRef = useRef<HTMLDivElement>(null)
+ * <div ref={sectionRef} className="flex flex-col flex-1 min-h-0 gap-2">…
+ *   <ScalableContainer width="100%" height="100%" expandContainerRef={sectionRef}>
  * ```
  */
 export default function ScalableContainer({
@@ -102,6 +105,7 @@ export default function ScalableContainer({
     collapseIcon,
     togglePosition = 'top-right',
     expandContainerRef,
+    expandRatio = 5,
     className = '',
 }: ScalableContainerProps) {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -109,65 +113,83 @@ export default function ScalableContainer({
     const isScaled = expanded ?? internalScaled
     const reduced = useReducedMotion()
 
-    // ── Breakout overlay (expandContainerRef mode) ────────────────────────────
-    // 'open': overlay covers the bounding element. 'closing': animating back to
-    // the in-flow placeholder before unmounting. The in-flow container keeps its
-    // RESTING size the whole time — the wrapper (e.g. a flex item) never sees a
-    // layout change.
-    const usePortal = expandContainerRef != null
-    const [overlay, setOverlay] = useState<'closed' | 'open' | 'closing'>('closed')
-    const [fromRect, setFromRect] = useState<OverlayRect | null>(null)
-    const [targetRect, setTargetRect] = useState<OverlayRect | null>(null)
+    const usePush = expandContainerRef != null
+    const grownRef = useRef<GrownAncestor[]>([])
     const prevScaled = useRef(isScaled)
 
-    useEffect(() => {
-        if (!usePortal || isScaled === prevScaled.current) return
-        prevScaled.current = isScaled
-        if (isScaled) {
-            const src = containerRef.current ? rectOf(containerRef.current) : null
-            const tgt = expandContainerRef.current ? rectOf(expandContainerRef.current) : null
-            if (src && tgt) {
-                setFromRect(src)
-                setTargetRect(tgt)
-                setOverlay('open')
+    // ── Push expansion (expandContainerRef mode) ──────────────────────────────
+    // Raise flex-grow on every flex item between the container and the
+    // bounding element. Each level pushes its own siblings, so the expansion
+    // propagates through nested rows/columns — siblings shrink proportionally
+    // but never disappear from layout. flex-grow is animatable, so a CSS
+    // transition gives the same eased growth as the in-place mode.
+    const growAncestors = () => {
+        const bound = expandContainerRef?.current
+        if (!bound || !containerRef.current) return
+        const grown: GrownAncestor[] = []
+        let el: HTMLElement | null = containerRef.current.parentElement
+        while (el && el !== bound && bound.contains(el)) {
+            const parent: HTMLElement | null = el.parentElement
+            if (parent && getComputedStyle(parent).display.includes('flex')) {
+                grown.push({
+                    el,
+                    prev: {
+                        flexGrow: el.style.flexGrow,
+                        flexBasis: el.style.flexBasis,
+                        transition: el.style.transition,
+                    },
+                })
+                const grow = `flex-grow ${reduced ? 0 : 0.32}s cubic-bezier(0.16, 1, 0.3, 1), flex-basis ${reduced ? 0 : 0.32}s cubic-bezier(0.16, 1, 0.3, 1)`
+                el.style.transition = el.style.transition ? `${el.style.transition}, ${grow}` : grow
+                // A definite basis makes every level share by grow factor alone:
+                // expandRatio parts for this chain vs ~1 part per sibling — the
+                // expanded chart dominates, siblings shrink but stay visible.
+                el.style.flexBasis = '0%'
+                el.style.flexGrow = String(expandRatio)
             }
-        } else if (containerRef.current) {
-            // Animate back onto the placeholder's current position, then unmount.
-            setTargetRect(rectOf(containerRef.current))
-            setOverlay('closing')
+            el = parent
         }
-    }, [isScaled, usePortal, expandContainerRef])
+        grownRef.current = grown
+    }
 
-    // Unmount the closing overlay even if the animation callback never fires
-    // (rAF can be starved in background tabs; jsdom has no real frames).
-    useEffect(() => {
-        if (overlay !== 'closing') return
-        const t = window.setTimeout(() => setOverlay('closed'), reduced ? 0 : 360)
-        return () => window.clearTimeout(t)
-    }, [overlay, reduced])
+    const restoreAncestors = () => {
+        for (const { el, prev } of grownRef.current) {
+            el.style.flexGrow = prev.flexGrow
+            el.style.flexBasis = prev.flexBasis
+            // Drop our transition after the shrink settles so we leave the
+            // element's inline styles exactly as we found them.
+            window.setTimeout(() => {
+                el.style.transition = prev.transition
+            }, reduced ? 0 : 360)
+        }
+        grownRef.current = []
+    }
 
-    // Keep the overlay glued to the bounding element across resize/scroll.
     useEffect(() => {
-        if (overlay !== 'open' || !expandContainerRef?.current) return
-        const update = () => {
-            if (expandContainerRef.current) setTargetRect(rectOf(expandContainerRef.current))
+        if (!usePush || isScaled === prevScaled.current) return
+        prevScaled.current = isScaled
+        if (isScaled) growAncestors()
+        else restoreAncestors()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isScaled, usePush])
+
+    // Restore consumer styles if we unmount while expanded.
+    useEffect(() => () => {
+        for (const { el, prev } of grownRef.current) {
+            el.style.flexGrow = prev.flexGrow
+            el.style.flexBasis = prev.flexBasis
+            el.style.transition = prev.transition
         }
-        window.addEventListener('resize', update)
-        window.addEventListener('scroll', update, true)
-        return () => {
-            window.removeEventListener('resize', update)
-            window.removeEventListener('scroll', update, true)
-        }
-    }, [overlay, expandContainerRef])
+    }, [])
 
     const onToggle = () => {
         const next = !isScaled
         if (expanded === undefined) setInternalScaled(next)
         onExpandedChange?.(next)
         // After an in-place expand settles, scroll the container into view so
-        // the newly-grown content is fully visible. (The breakout overlay is
-        // viewport-positioned already — nothing to scroll to.)
-        if (next && !usePortal) {
+        // the newly-grown content is fully visible. (Push mode grows within
+        // the bounding section — nothing scrolls.)
+        if (next && !usePush) {
             window.setTimeout(
                 () => containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }),
                 reduced ? 0 : 340,
@@ -176,88 +198,58 @@ export default function ScalableContainer({
     }
 
     const wrapperClass = isScaled ? assignClassOnClick : undefined
-    const overlayActive = usePortal && overlay !== 'closed'
-
-    const toggleButton = (scaled: boolean) => (
-        <Tooltip placement="bottom" title={scaled ? 'Collapse' : 'Expand'}>
-            <button
-                type="button"
-                onClick={onToggle}
-                aria-label={scaled ? 'Collapse container' : 'Expand container'}
-                aria-expanded={scaled}
-                className={[
-                    'absolute z-10',
-                    TOGGLE_POSITION_CLASS[togglePosition],
-                    'w-7 h-7 inline-flex items-center justify-center',
-                    'rounded-md bg-surface/80 backdrop-blur-sm border border-border',
-                    'text-foreground-secondary hover:text-foreground hover:bg-surface',
-                    'shadow-sm transition-colors duration-150',
-                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-                ].join(' ')}
-            >
-                {scaled ? collapseIcon ?? <CollapseIcon /> : expandIcon ?? <ExpandIcon />}
-            </button>
-        </Tooltip>
-    )
 
     return (
-        <>
-            <motion.div
-                ref={containerRef}
-                animate={{
-                    // Breakout mode never grows in place — the in-flow box stays
-                    // at its resting size and acts as the collapse target.
-                    width: isScaled && !usePortal ? expandedWidth : width,
-                    height: isScaled && !usePortal ? expandedHeight : height,
-                }}
-                transition={
-                    reduced
-                        ? { duration: 0 }
-                        : {
-                              width:  { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] },
-                              height: { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] },
-                          }
-                }
-                className={cx(
-                    'relative rounded-lg overflow-hidden',
-                    // OS-window aesthetic: subtle elevation at rest, lifted shadow
-                    // when expanded. No background colour change.
-                    isScaled && !usePortal ? 'shadow-2xl' : 'shadow-md',
-                    'transition-shadow duration-300',
-                    className,
-                )}
-            >
-                {/* While the breakout overlay owns the content, the in-flow box is
-                    just a placeholder holding the wrapper's layout. */}
-                {!overlayActive && toggleButton(isScaled)}
-                {!overlayActive && <div className={wrapperClass}>{children}</div>}
-            </motion.div>
+        <motion.div
+            ref={containerRef}
+            animate={{
+                // Push mode keeps the container filling its (now growing)
+                // wrapper — the wrapper's flex-grow does the work.
+                width: isScaled && !usePush ? expandedWidth : width,
+                height: isScaled && !usePush ? expandedHeight : height,
+            }}
+            transition={
+                reduced
+                    ? { duration: 0 }
+                    : {
+                          width:  { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] },
+                          height: { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] },
+                      }
+            }
+            className={cx(
+                'relative rounded-lg overflow-hidden',
+                // OS-window aesthetic: subtle elevation at rest, lifted shadow
+                // when expanded. No background colour change.
+                isScaled ? 'shadow-2xl' : 'shadow-md',
+                'transition-shadow duration-300',
+                className,
+            )}
+        >
+            {/* Toggle button — floats over content, no background flash. */}
+            <Tooltip placement="bottom" title={isScaled ? 'Collapse' : 'Expand'}>
+                <button
+                    type="button"
+                    onClick={onToggle}
+                    aria-label={isScaled ? 'Collapse container' : 'Expand container'}
+                    aria-expanded={isScaled}
+                    className={[
+                        'absolute z-10',
+                        TOGGLE_POSITION_CLASS[togglePosition],
+                        'w-7 h-7 inline-flex items-center justify-center',
+                        'rounded-md bg-surface/80 backdrop-blur-sm border border-border',
+                        'text-foreground-secondary hover:text-foreground hover:bg-surface',
+                        'shadow-sm transition-colors duration-150',
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                    ].join(' ')}
+                >
+                    {isScaled
+                        ? collapseIcon ?? <CollapseIcon />
+                        : expandIcon ?? <ExpandIcon />}
+                </button>
+            </Tooltip>
 
-            {overlayActive && fromRect && targetRect &&
-                createPortal(
-                    <motion.div
-                        initial={{ ...fromRect }}
-                        animate={{ ...targetRect }}
-                        transition={
-                            reduced
-                                ? { duration: 0 }
-                                : { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] }
-                        }
-                        onAnimationComplete={() => {
-                            if (overlay === 'closing') setOverlay('closed')
-                        }}
-                        style={{ position: 'fixed' }}
-                        className={cx(
-                            'z-dropdown rounded-lg overflow-hidden bg-surface shadow-2xl',
-                            className,
-                        )}
-                    >
-                        {toggleButton(isScaled)}
-                        <div className={cx('h-full w-full', wrapperClass)}>{children}</div>
-                    </motion.div>,
-                    document.body,
-                )}
-        </>
+            <div className={cx('h-full w-full', wrapperClass)}>{children}</div>
+        </motion.div>
     )
 }
 

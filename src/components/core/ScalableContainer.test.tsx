@@ -31,56 +31,87 @@ describe('ScalableContainer', () => {
     })
 })
 
-describe('ScalableContainer breakout (expandContainerRef)', () => {
-    function Harness() {
-        const boundsRef = useRef<HTMLDivElement>(null)
+describe('ScalableContainer push expansion (expandContainerRef)', () => {
+    // Mirrors the consumer chart grid: section → flex row → flex-item wrappers.
+    function Harness({ ratio }: { ratio?: number }) {
+        const sectionRef = useRef<HTMLDivElement>(null)
         return (
             <TooltipProvider>
-                <div ref={boundsRef} data-testid="bounds">
-                    {/* flex-item wrapper that owns the resting size */}
-                    <div data-testid="wrapper">
-                        <ScalableContainer width="100%" height="100%" expandContainerRef={boundsRef}>
-                            <span>chart</span>
-                        </ScalableContainer>
+                <div ref={sectionRef} data-testid="section" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div data-testid="row" style={{ display: 'flex' }}>
+                        <div data-testid="wrapper-a" style={{ flex: '2 1 0%', minWidth: 0 }}>
+                            <ScalableContainer width="100%" height="100%" expandContainerRef={sectionRef} expandRatio={ratio}>
+                                <span>chart A</span>
+                            </ScalableContainer>
+                        </div>
+                        <div data-testid="wrapper-b" style={{ flex: '1 1 0%', minWidth: 0 }}>
+                            <span>chart B</span>
+                        </div>
                     </div>
                 </div>
             </TooltipProvider>
         )
     }
 
-    it('moves the content into a body portal when expanded, and back when collapsed', async () => {
+    it('raises flex-grow on the wrapper chain when expanded and restores it on collapse', () => {
         render(<Harness />)
-        const wrapper = screen.getByTestId('wrapper')
-
-        // Resting: content lives in normal flow inside the wrapper.
-        expect(wrapper.contains(screen.getByText('chart'))).toBe(true)
+        const wrapperA = screen.getByTestId('wrapper-a')
+        const row = screen.getByTestId('row')
 
         fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
 
-        // Expanded: content has broken out of the wrapper into the portal.
-        await waitFor(() => {
-            const chart = screen.getByText('chart')
-            expect(wrapper.contains(chart)).toBe(false)
-            expect(document.body.contains(chart)).toBe(true)
-        })
-        const overlay = screen.getByText('chart').closest('.z-dropdown') as HTMLElement
-        expect(overlay).not.toBeNull()
-        expect(overlay.style.position).toBe('fixed')
+        // The wrapper and its row (both flex items inside the section) grow.
+        expect(wrapperA.style.flexGrow).toBe('5')
+        expect(row.style.flexGrow).toBe('5')
+        // Siblings keep their own sizing — they shrink but stay in layout.
+        expect(screen.getByTestId('wrapper-b').style.flexGrow).toBe('1')
+        expect(screen.getByText('chart B')).toBeInTheDocument()
 
-        // Collapse: content returns to normal flow.
         fireEvent.click(screen.getByRole('button', { name: 'Collapse container' }))
-        await waitFor(() => expect(wrapper.contains(screen.getByText('chart'))).toBe(true))
+
+        // Inline styles restored to what the consumer set.
+        expect(wrapperA.style.flexGrow).toBe('2')
+        expect(row.style.flexGrow).toBe('')
     })
 
-    it('does not resize the in-flow placeholder while expanded', async () => {
-        render(<Harness />)
-        const containerEl = screen.getByTestId('wrapper').firstElementChild as HTMLElement
-
+    it('honours expandRatio', () => {
+        render(<Harness ratio={3} />)
         fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
-        await waitFor(() => expect(document.body.contains(screen.getByText('chart'))).toBe(true))
+        expect(screen.getByTestId('wrapper-a').style.flexGrow).toBe('3')
+    })
 
-        // The in-flow box must keep its resting size — the flex wrapper's
-        // layout never changes. (jsdom reports style targets, not pixels.)
-        expect(containerEl.style.width).not.toBe('')
+    it('does not touch elements outside the bounding section', () => {
+        render(
+            <TooltipProvider>
+                <div data-testid="outside" style={{ display: 'flex' }}>
+                    <HarnessInner />
+                </div>
+            </TooltipProvider>,
+        )
+        fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
+        // The section itself (a flex item of "outside") must not be grown.
+        expect(screen.getByTestId('section').style.flexGrow).toBe('')
+    })
+
+    it('restores consumer styles on unmount while expanded', async () => {
+        const { unmount } = render(<Harness />)
+        const wrapperA = screen.getByTestId('wrapper-a')
+        fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
+        expect(wrapperA.style.flexGrow).toBe('5')
+        unmount()
+        await waitFor(() => expect(wrapperA.style.flexGrow).toBe('2'))
     })
 })
+
+function HarnessInner() {
+    const sectionRef = useRef<HTMLDivElement>(null)
+    return (
+        <div ref={sectionRef} data-testid="section" style={{ display: 'flex' }}>
+            <div style={{ flex: '1 1 0%' }}>
+                <ScalableContainer width="100%" height="100%" expandContainerRef={sectionRef}>
+                    <span>chart</span>
+                </ScalableContainer>
+            </div>
+        </div>
+    )
+}

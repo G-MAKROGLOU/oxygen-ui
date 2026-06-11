@@ -124,16 +124,17 @@ export const Playground: Story = {
 
 // Replicates the consumer layout that broke expand-in-place: each chart sits in
 // a size-constrained flex item, so expanding "to 100%" changed nothing. With
-// `expandContainerRef` the expanded state breaks out into a portal overlaying
-// the whole chart section instead.
+// `expandContainerRef` the expansion PUSHES instead: the chart's wrappers grow
+// (animated flex-grow) so it dominates the section while the sibling charts
+// shrink — but stay visible. Collapse restores the original grid.
 const FakeChart = ({ label }: { label: string }) => (
     <div className="flex h-full w-full items-center justify-center rounded-lg border border-border bg-surface-raised text-sm text-foreground-secondary">
         {label}
     </div>
 )
 
-export const BreakoutInFlexLayout: Story = {
-    name: 'Breakout from flex layout (expandContainerRef)',
+export const PushExpandInFlexLayout: Story = {
+    name: 'Push expansion in flex layout (expandContainerRef)',
     render: () => {
         const Demo = () => {
             const sectionRef = React.useRef<HTMLDivElement>(null)
