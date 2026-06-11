@@ -1,3 +1,10 @@
+## [7.4.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.4.0...v7.4.1) (2026-06-11)
+
+
+### Bug Fixes
+
+* **scalable-container:** push siblings on expand instead of overlaying them ([152ccfc](https://github.com/G-MAKROGLOU/oxygen-ui/commit/152ccfcbbda302c503b4c13d2aaca7182bff6bf5))
+
 # [7.4.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.3.4...v7.4.0) (2026-06-11)
 
 
