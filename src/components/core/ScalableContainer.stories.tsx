@@ -121,3 +121,46 @@ export const Playground: Story = {
         </TooltipProvider>
     ),
 }
+
+// Replicates the consumer layout that broke expand-in-place: each chart sits in
+// a size-constrained flex item, so expanding "to 100%" changed nothing. With
+// `expandContainerRef` the expanded state breaks out into a portal overlaying
+// the whole chart section instead.
+const FakeChart = ({ label }: { label: string }) => (
+    <div className="flex h-full w-full items-center justify-center rounded-lg border border-border bg-surface-raised text-sm text-foreground-secondary">
+        {label}
+    </div>
+)
+
+export const BreakoutInFlexLayout: Story = {
+    name: 'Breakout from flex layout (expandContainerRef)',
+    render: () => {
+        const Demo = () => {
+            const sectionRef = React.useRef<HTMLDivElement>(null)
+            return (
+                <div ref={sectionRef} className="flex h-[420px] flex-col gap-2">
+                    <div className="flex min-h-0 flex-1 gap-2">
+                        <div className="min-h-0 min-w-0 flex-[2]">
+                            <ScalableContainer width="100%" height="100%" expandContainerRef={sectionRef}>
+                                <FakeChart label="Fuel consumption (flex-[2])" />
+                            </ScalableContainer>
+                        </div>
+                        <div className="min-h-0 min-w-0 flex-1">
+                            <ScalableContainer width="100%" height="100%" expandContainerRef={sectionRef}>
+                                <FakeChart label="CII rating (flex-1)" />
+                            </ScalableContainer>
+                        </div>
+                    </div>
+                    <div className="flex min-h-0 flex-1 gap-2">
+                        <div className="min-h-0 min-w-0 flex-1">
+                            <ScalableContainer width="100%" height="100%" expandContainerRef={sectionRef}>
+                                <FakeChart label="Emissions trend" />
+                            </ScalableContainer>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+        return <Demo />
+    },
+}
