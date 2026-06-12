@@ -1,3 +1,10 @@
+## [7.4.4](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.4.3...v7.4.4) (2026-06-11)
+
+
+### Bug Fixes
+
+* **inputs:** token-aware styling for browser-autofilled fields ([275388f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/275388f6747b0e0298931443053cedb8327d2028))
+
 ## [7.4.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.4.2...v7.4.3) (2026-06-11)
 
 
