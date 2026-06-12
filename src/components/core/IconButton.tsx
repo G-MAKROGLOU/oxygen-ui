@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-export type IconButtonVariant = 'primary' | 'bordered'
+export type IconButtonVariant = 'primary' | 'bordered' | 'ghost'
 
 export interface IconButtonProps {
     icon?: React.ReactNode
@@ -49,6 +49,9 @@ export default function IconButton({
         if (type === 'bordered') {
             return 'bg-surface text-foreground hover:bg-surface-raised border border-border-strong'
         }
+        if (type === 'ghost') {
+            return 'bg-transparent text-foreground-muted hover:bg-surface-raised hover:text-foreground'
+        }
         return ''
     }, [type])
 
@@ -60,7 +63,7 @@ export default function IconButton({
             title={title}
             aria-label={title}
             style={style}
-            className={`${size === 'sm' ? 'p-1' : size === 'md' ? 'p-1.5' : 'p-2'} rounded-lg shadow-md transition-colors duration-150 ${colorScheme} disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${className}`.trim()}
+            className={`${size === 'sm' ? 'p-1' : size === 'md' ? 'p-1.5' : 'p-2'} rounded-lg ${type !== 'ghost' ? 'shadow-md' : ''} transition-colors duration-150 ${colorScheme} disabled:bg-surface-raised disabled:text-foreground-muted disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${className}`.trim()}
         >
             {loading ? loadingIcon : icon}
         </button>

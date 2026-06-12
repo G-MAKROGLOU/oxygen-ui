@@ -20,13 +20,17 @@ const meta: Meta<typeof IconButton> = {
     tags: ['autodocs'],
     parameters: { layout: 'centered' },
     args: { icon: SearchIcon, type: 'primary', size: 'md' },
-    argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
+    argTypes: {
+        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+        type: { control: 'inline-radio', options: ['primary', 'bordered', 'ghost'] },
+    },
 }
 export default meta
 type Story = StoryObj<typeof IconButton>
 
 export const Primary: Story = {}
 export const Bordered: Story = { args: { type: 'bordered' } }
+export const Ghost: Story = { args: { type: 'ghost' } }
 export const Small: Story = { args: { size: 'sm' } }
 export const Large: Story = { args: { size: 'lg' } }
 export const Disabled: Story = { args: { disabled: true } }

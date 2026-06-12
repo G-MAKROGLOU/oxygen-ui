@@ -26,4 +26,16 @@ describe('IconButton', () => {
         render(<IconButton icon={<span>x</span>} buttonType="submit" />)
         expect(screen.getByRole('button')).toHaveAttribute('type', 'submit')
     })
+
+    it('ghost variant is transparent and shadowless', () => {
+        render(<IconButton icon={<span>x</span>} type="ghost" />)
+        const btn = screen.getByRole('button')
+        expect(btn).toHaveClass('bg-transparent')
+        expect(btn).not.toHaveClass('shadow-md')
+    })
+
+    it('non-ghost variants keep the shadow', () => {
+        render(<IconButton icon={<span>x</span>} type="bordered" />)
+        expect(screen.getByRole('button')).toHaveClass('shadow-md')
+    })
 })
