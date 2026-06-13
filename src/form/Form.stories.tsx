@@ -249,3 +249,32 @@ export const Playground: Story = {
         return <Demo />
     },
 }
+
+// Demonstrates that form.isSubmitting drives a Button loading state for the
+// FULL submit cycle (validation → onFinish). The onFinish here waits ~1.2s.
+export const SubmittingState: Story = {
+    name: 'isSubmitting → Button loading',
+    render: () => {
+        function Demo() {
+            const form = useForm({ initialValues: { email: '' } })
+            const [done, setDone] = useState(0)
+            return (
+                <div className="flex w-80 flex-col gap-3">
+                    <Form
+                        form={form}
+                        onFinish={async () => {
+                            await new Promise((r) => setTimeout(r, 1200))
+                            setDone((n) => n + 1)
+                        }}
+                        className="flex flex-col gap-3"
+                    >
+                        <TextInput label="Email" {...form.fieldNative('email', { required: 'Required', pattern: { value: patterns.email, message: 'Invalid email' } })} />
+                        <Button content={form.isSubmitting ? 'Saving…' : 'Save'} buttonType="submit" loading={form.isSubmitting} />
+                    </Form>
+                    <p className="text-xs text-foreground-muted" data-testid="done">Completed submits: {done}</p>
+                </div>
+            )
+        }
+        return <Demo />
+    },
+}
