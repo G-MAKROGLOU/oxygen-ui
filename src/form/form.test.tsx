@@ -2,6 +2,7 @@ import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { useForm, Form, useFieldArray, useFormField, patterns } from './index'
+import { FormStore } from './store'
 import TextInput from '../components/inputs/TextInput'
 
 describe('Form API — validation + submit', () => {
@@ -152,6 +153,18 @@ describe('Form API — isSubmitting', () => {
         expect(screen.getByRole('button')).not.toBeDisabled()
     })
 
+    it('tracks submitting on the store as a flag distinct from validating, cleared by reset', () => {
+        const store = new FormStore()
+        expect(store.submitting).toBe(false)
+        store.setSubmitting(true)
+        expect(store.submitting).toBe(true)
+        expect(store.validating).toBe(false) // independent of async validation
+        store.setSubmitting(false)
+        expect(store.submitting).toBe(false)
+        store.setSubmitting(true)
+        store.reset()
+        expect(store.submitting).toBe(false)
+    })
 })
 
 describe('Form API — reset', () => {
