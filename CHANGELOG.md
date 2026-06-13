@@ -1,3 +1,10 @@
+## [7.5.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.5.0...v7.5.1) (2026-06-13)
+
+
+### Bug Fixes
+
+* **form:** isSubmitting spans onFinish execution, not just validation ([6eb87a8](https://github.com/G-MAKROGLOU/oxygen-ui/commit/6eb87a8839169ea2d707839dc000de11d5f91b3a))
+
 # [7.5.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.4.4...v7.5.0) (2026-06-12)
 
 
