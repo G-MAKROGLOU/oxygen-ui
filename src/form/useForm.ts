@@ -77,7 +77,8 @@ export function useForm(options: FormStoreOptions = {}): UseFormReturn {
         errors: store.errors,
         touched: store.touched,
         submitted: store.submitted,
-        isSubmitting: store.validating,
+        // True for the whole submit cycle: async validation → onFinish execution.
+        isSubmitting: store.submitting || store.validating,
         isValid: store.isValid,
 
         getValue: store.getValue,

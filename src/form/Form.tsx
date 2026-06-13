@@ -64,7 +64,15 @@ export function Form({
         }
 
         if (onFinish) {
-            await onFinish(store.getValues())
+            // Mark submitting for the full handler lifecycle so consumers' loading
+            // states (e.g. <Button loading={form.isSubmitting} />) stay on while
+            // onFinish runs, not just during validation.
+            store.setSubmitting(true)
+            try {
+                await onFinish(store.getValues())
+            } finally {
+                store.setSubmitting(false)
+            }
             return
         }
 

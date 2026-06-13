@@ -121,6 +121,39 @@ describe('Form API — dynamic field arrays', () => {
     })
 })
 
+describe('Form API — isSubmitting', () => {
+    function SubmitForm({ onFinish }: { onFinish: (v: unknown) => Promise<void> }) {
+        const form = useForm({ initialValues: { name: 'ok' } })
+        return (
+            <Form form={form} onFinish={onFinish}>
+                <TextInput label="Name" {...form.fieldNative('name', { required: true })} />
+                <button type="submit" disabled={form.isSubmitting}>
+                    {form.isSubmitting ? 'Submitting…' : 'Submit'}
+                </button>
+            </Form>
+        )
+    }
+
+    it('stays true for the whole submit cycle (validation → onFinish) then resets', async () => {
+        // A deferred onFinish so we can observe the in-flight state.
+        let resolveFinish: () => void = () => {}
+        const onFinish = vi.fn(() => new Promise<void>((res) => { resolveFinish = res }))
+
+        render(<SubmitForm onFinish={onFinish} />)
+        fireEvent.click(screen.getByText('Submit'))
+
+        // While onFinish is pending, the button reflects isSubmitting.
+        await waitFor(() => expect(screen.getByText('Submitting…')).toBeInTheDocument())
+        expect(screen.getByRole('button')).toBeDisabled()
+
+        // Resolve onFinish → isSubmitting drops back to false.
+        resolveFinish()
+        await waitFor(() => expect(screen.getByText('Submit')).toBeInTheDocument())
+        expect(screen.getByRole('button')).not.toBeDisabled()
+    })
+
+})
+
 describe('Form API — reset', () => {
     it('restores initial values and clears errors', async () => {
         function ResetForm() {

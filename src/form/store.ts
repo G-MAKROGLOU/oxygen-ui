@@ -39,7 +39,10 @@ export class FormStore {
     errors: ErrorMap = {}
     touched: Record<string, boolean> = {}
     submitted = false
+    /** True while async field validation runs. */
     validating = false
+    /** True while the submit handler (`onFinish` / `action`) is executing. */
+    submitting = false
 
     readonly initialValues: FormValues
     private rules: RulesMap
@@ -126,6 +129,7 @@ export class FormStore {
     }
 
     setSubmitted = (v: boolean) => { this.submitted = v; this.emit() }
+    setSubmitting = (v: boolean) => { this.submitting = v; this.emit() }
 
     // ── validation ─────────────────────────────────────────────────────────────
     async validateField(name: string): Promise<string | undefined> {
@@ -154,6 +158,7 @@ export class FormStore {
         this.errors = {}
         this.touched = {}
         this.submitted = false
+        this.submitting = false
         this.keys = {}
         this.fieldCache.clear()
         this.emit()
