@@ -1,3 +1,10 @@
+# [7.5.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.4.4...v7.5.0) (2026-06-12)
+
+
+### Features
+
+* **icon-button:** add ghost variant ([192be94](https://github.com/G-MAKROGLOU/oxygen-ui/commit/192be9411a655f3a377be9c455e1ac2b268b09fb))
+
 ## [7.4.4](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.4.3...v7.4.4) (2026-06-11)
 
 
