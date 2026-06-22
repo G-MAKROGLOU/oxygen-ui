@@ -74,6 +74,43 @@ describe('Tree', () => {
         )
     })
 
+    // ── Expand/collapse is separate from the node click ────────────────────
+
+    it('chevron toggles WITHOUT firing onNodeClick', async () => {
+        const handler = vi.fn()
+        render(<Tree nodes={NESTED_NODES} onNodeClick={handler} />)
+        expect(screen.queryByText('Child one')).toBeNull()
+
+        fireEvent.click(screen.getByRole('button', { name: 'Toggle Parent node' }))
+
+        expect(await screen.findByText('Child one')).toBeInTheDocument() // expanded
+        expect(handler).not.toHaveBeenCalled()                            // no node click
+    })
+
+    it('label fires onNodeClick WITHOUT toggling expansion', async () => {
+        const handler = vi.fn()
+        render(<Tree nodes={NESTED_NODES} onNodeClick={handler} defaultExpandedKeys={['parent']} />)
+        expect(screen.getByText('Child one')).toBeInTheDocument() // starts expanded
+
+        fireEvent.click(screen.getByText('Parent node'))
+
+        expect(handler).toHaveBeenCalledTimes(1)
+        expect(handler).toHaveBeenCalledWith(expect.objectContaining({ key: 'parent', isParent: true }))
+        expect(screen.getByText('Child one')).toBeInTheDocument() // still expanded — label didn't collapse
+    })
+
+    // ── Leaf icons ──────────────────────────────────────────────────────────
+
+    it('renders a per-node leaf icon instead of the bullet', () => {
+        render(<Tree nodes={[{ key: 'a', label: 'Alpha', icon: <span data-testid="leaf-ic">★</span> }]} onNodeClick={vi.fn()} />)
+        expect(screen.getByTestId('leaf-ic')).toBeInTheDocument()
+    })
+
+    it('applies the tree-level leafIcon default to every leaf', () => {
+        render(<Tree nodes={LEAF_NODES} onNodeClick={vi.fn()} leafIcon={<span data-testid="dflt">•</span>} />)
+        expect(screen.getAllByTestId('dflt')).toHaveLength(2)
+    })
+
     // ── defaultExpandedKeys ───────────────────────────────────────────────
 
     it('expands specific keys via defaultExpandedKeys', () => {

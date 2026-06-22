@@ -122,14 +122,9 @@ export const Playground: Story = {
     ),
 }
 
-// Replicates the consumer layout that broke expand-in-place: each chart sits in
-// a size-constrained flex item, so expanding "to 100%" changed nothing. With
-// `expandContainerRef` the expansion PUSHES instead: the chart's wrappers grow
-// (animated flex-grow) so it dominates the section while the sibling charts
-// shrink — but stay visible. Collapse restores the original grid.
 // Mimics a real chart: re-measures on window resize (like ECharts / Chart.js)
 // and reports its current size, so you can see content adapting — not breaking —
-// as the push expansion resizes it.
+// as the container resizes it.
 const FakeChart = ({ label }: { label: string }) => {
     const ref = React.useRef<HTMLDivElement>(null)
     const [size, setSize] = React.useState('')
@@ -153,35 +148,24 @@ const FakeChart = ({ label }: { label: string }) => {
     )
 }
 
-export const PushExpandInFlexLayout: Story = {
-    name: 'Push expansion in flex layout (expandContainerRef)',
-    render: () => {
-        const Demo = () => {
-            const sectionRef = React.useRef<HTMLDivElement>(null)
-            return (
-                <div ref={sectionRef} className="flex h-[420px] flex-col gap-2">
-                    <div className="flex min-h-0 flex-1 gap-2">
-                        <div className="min-h-0 min-w-0 flex-[2]">
-                            <ScalableContainer width="100%" height="100%" expandContainerRef={sectionRef}>
-                                <FakeChart label="Fuel consumption (flex-[2])" />
-                            </ScalableContainer>
-                        </div>
-                        <div className="min-h-0 min-w-0 flex-1">
-                            <ScalableContainer width="100%" height="100%" expandContainerRef={sectionRef}>
-                                <FakeChart label="CII rating (flex-1)" />
-                            </ScalableContainer>
-                        </div>
-                    </div>
-                    <div className="flex min-h-0 flex-1 gap-2">
-                        <div className="min-h-0 min-w-0 flex-1">
-                            <ScalableContainer width="100%" height="100%" expandContainerRef={sectionRef}>
-                                <FakeChart label="Emissions trend" />
-                            </ScalableContainer>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
-        return <Demo />
-    },
+// A flex-wrap chart grid: each chart rests at ~half width; expanding one grows
+// it to a concrete bigger size (targetWidth/targetHeight) and the others reflow
+// below it at their own dimensions — pushed down, never squeezed.
+export const GridExpand: Story = {
+    name: 'Expand in a chart grid (targetWidth / targetHeight)',
+    render: () => (
+        <div className="flex w-[680px] flex-wrap gap-3">
+            {['Fuel consumption', 'CII rating', 'Emissions trend', 'Speed vs power'].map((label) => (
+                <ScalableContainer
+                    key={label}
+                    width="calc(50% - 0.375rem)"
+                    height={180}
+                    targetWidth="100%"
+                    targetHeight={420}
+                >
+                    <FakeChart label={label} />
+                </ScalableContainer>
+            ))}
+        </div>
+    ),
 }

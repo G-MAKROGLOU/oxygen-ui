@@ -130,3 +130,23 @@ export const DeeplyNested: Story = {
     args: { nodes: DEEP_NODES, defaultExpandAll: true },
     decorators: [(StoryFn) => <div className="w-80 overflow-hidden rounded-lg border border-border bg-surface p-3"><StoryFn /></div>],
 }
+
+const FileIcon = (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-3.5 w-3.5" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M14 3v4a1 1 0 0 0 1 1h4M5 3h9l5 5v13H5z" />
+    </svg>
+)
+
+// Leaf icon override + the click model: the chevron toggles expand/collapse;
+// clicking a node's label fires onNodeClick (e.g. open a report) WITHOUT
+// toggling. Open the Actions/console to see only label clicks fire.
+export const CustomLeafIcon: Story = {
+    name: 'Custom leaf icon + click separation',
+    args: {
+        nodes: NODES,
+        defaultExpandAll: true,
+        leafIcon: FileIcon,
+        onNodeClick: (payload) => console.log('node clicked (not toggle):', payload),
+    },
+    decorators: [(StoryFn) => <div style={{ width: 280 }}><StoryFn /></div>],
+}

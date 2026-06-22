@@ -430,7 +430,7 @@ function TabsTrigger({ value, icon, badge, closeable, onClose, disabled, classNa
         <TabsPrimitive.Trigger
             value={value}
             disabled={disabled}
-            className={cx(base, sz.trigger, layoutCls, closeable ? 'pr-8' : '', variantCls, className)}
+            className={cx(base, sz.trigger, layoutCls, closeable ? '!pr-8' : '', variantCls, className)}
         >
             {/* Segmented lifted pill — slides between tabs. */}
             {variant === 'segmented' && isActive && (

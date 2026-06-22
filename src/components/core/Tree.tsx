@@ -7,6 +7,9 @@ export interface TreeNode {
     nodeData?: any
     parentLabel?: string
     children?: TreeNode[]
+    /** Leading icon. On leaves it replaces the default bullet; on parents it
+     *  renders between the chevron and the label. */
+    icon?: React.ReactNode
 }
 
 export interface TreeItemClickPayload {
@@ -22,6 +25,9 @@ export interface TreeProps {
     onNodeClick: (payload: TreeItemClickPayload) => void
     defaultExpandAll?: boolean
     defaultExpandedKeys?: string[]
+    /** Default leading icon for every leaf (instead of the bullet dot). A
+     *  node's own `icon` takes precedence. */
+    leafIcon?: React.ReactNode
     /** Extra classes merged onto the tree root. */
     className?: string
     /** Inline style on the tree root. */
@@ -38,6 +44,7 @@ interface NodeProps {
     onNodeClick: TreeProps['onNodeClick']
     defaultExpandAll: boolean
     defaultExpandedKeys: string[]
+    leafIcon?: React.ReactNode
 }
 
 function TreeNodeItem({
@@ -45,8 +52,10 @@ function TreeNodeItem({
     onNodeClick,
     defaultExpandAll,
     defaultExpandedKeys,
+    leafIcon,
 }: NodeProps) {
     if (!isParent(item)) {
+        const glyph = item.icon ?? leafIcon
         return (
             <button
                 type="button"
@@ -61,8 +70,14 @@ function TreeNodeItem({
                     })
                 }
             >
-                {/* Leaf dot */}
-                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-foreground-muted group-hover:bg-accent transition-colors duration-150" />
+                {glyph != null ? (
+                    <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center text-foreground-muted group-hover:text-accent transition-colors duration-150">
+                        {glyph}
+                    </span>
+                ) : (
+                    /* Default leaf bullet */
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-foreground-muted group-hover:bg-accent transition-colors duration-150" />
+                )}
                 <span className="text-sm text-foreground-secondary group-hover:text-foreground transition-colors duration-150">
                     {item.label}
                 </span>
@@ -78,42 +93,53 @@ function TreeNodeItem({
     return (
         <Accordion.Root type="multiple" defaultValue={initialOpen}>
             <Accordion.Item value={item.key} className="border-none">
-                {/* The Trigger handles BOTH expand/collapse (via Radix) and
-                    onNodeClick — clicking anywhere on the parent row fires
-                    both, consistently. Previously only the label fired
-                    onNodeClick while the chevron only toggled — asymmetric
-                    behaviour that confused consumers. */}
-                <Accordion.Trigger
-                    onClick={() =>
-                        onNodeClick({
-                            isParent: true,
-                            key: item.key,
-                            label: item.label,
-                            data: item.nodeData,
-                            parentLabel: item.parentLabel,
-                        })
-                    }
-                    className="flex items-center gap-2 cursor-pointer py-1.5 px-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent w-full text-left rounded-md hover:bg-surface-raised transition-colors duration-150"
-                >
-                    {/* Chevron — rotates on open/close */}
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                        className="h-3.5 w-3.5 flex-shrink-0 text-foreground-muted transition-transform duration-200 group-data-[state=open]:rotate-0 group-data-[state=closed]:-rotate-90"
-                        aria-hidden="true"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M19 9l-7 7-7-7"
-                        />
-                    </svg>
-                    <span className="text-sm font-semibold text-foreground select-none">
-                        {item.label}
-                    </span>
-                </Accordion.Trigger>
+                {/* Expand/collapse and the node's own click are now SEPARATE:
+                    the chevron Trigger only toggles (it never fires onNodeClick),
+                    and the label button fires onNodeClick without toggling. So a
+                    node with a click action (e.g. open a report) no longer fires
+                    that action when the user merely expands/collapses it. */}
+                <Accordion.Header asChild>
+                    <div className="flex items-center rounded-md hover:bg-surface-raised transition-colors duration-150">
+                        <Accordion.Trigger
+                            aria-label={`Toggle ${item.label}`}
+                            className="group flex flex-shrink-0 items-center justify-center rounded-md p-1.5 cursor-pointer text-foreground-muted hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset transition-colors duration-150"
+                        >
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth={2.5}
+                                className="h-3.5 w-3.5 transition-transform duration-200 group-data-[state=open]:rotate-0 group-data-[state=closed]:-rotate-90"
+                                aria-hidden="true"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </Accordion.Trigger>
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                onNodeClick({
+                                    isParent: true,
+                                    key: item.key,
+                                    label: item.label,
+                                    data: item.nodeData,
+                                    parentLabel: item.parentLabel,
+                                })
+                            }
+                            className="flex flex-1 min-w-0 items-center gap-2 py-1.5 pr-2 text-left cursor-pointer rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset"
+                        >
+                            {item.icon != null && (
+                                <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center text-foreground-muted">
+                                    {item.icon}
+                                </span>
+                            )}
+                            <span className="truncate text-sm font-semibold text-foreground select-none">
+                                {item.label}
+                            </span>
+                        </button>
+                    </div>
+                </Accordion.Header>
 
                 <Accordion.Content className="overflow-hidden data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
                     <div className="ml-3.5 border-l border-border py-0.5">
@@ -124,6 +150,7 @@ function TreeNodeItem({
                                 onNodeClick={onNodeClick}
                                 defaultExpandAll={defaultExpandAll}
                                 defaultExpandedKeys={defaultExpandedKeys}
+                                leafIcon={leafIcon}
                             />
                         ))}
                     </div>
@@ -154,6 +181,7 @@ export default function Tree({
     onNodeClick,
     defaultExpandAll = false,
     defaultExpandedKeys = [],
+    leafIcon,
     className = '',
     style,
 }: TreeProps) {
@@ -166,6 +194,7 @@ export default function Tree({
                     onNodeClick={onNodeClick}
                     defaultExpandAll={defaultExpandAll}
                     defaultExpandedKeys={defaultExpandedKeys}
+                    leafIcon={leafIcon}
                 />
             ))}
         </div>
