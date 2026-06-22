@@ -1,3 +1,10 @@
+## [7.6.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.6.2...v7.6.3) (2026-06-22)
+
+
+### Bug Fixes
+
+* **list:** make hover/active states visible with accent tints ([5b883c2](https://github.com/G-MAKROGLOU/oxygen-ui/commit/5b883c2752c51a52b6b3af444037f16f6b059c72))
+
 ## [7.6.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.6.1...v7.6.2) (2026-06-22)
 
 
