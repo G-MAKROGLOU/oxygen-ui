@@ -49,6 +49,12 @@ const DENSITY_PAD_LEFT: Record<NonNullable<ListProps['density']>, string> = {
     'spacious':    'pl-[calc(1rem-1px)]',    // px-4  = 1rem
 }
 
+// Transient pressed (:active) feedback for interactive rows — a brief accent
+// tint, distinct from the neutral surface-raised hover. color-mix is used
+// because the accent token is var()-valued (a `/opacity` modifier emits
+// transparent CSS). The `active:` variant wins over `hover:` while pressed.
+const PRESS = 'active:bg-[color-mix(in_srgb,var(--color-accent)_14%,transparent)]'
+
 /**
  * Vertical clickable list with optional avatar / description / trailing
  * slots per item. Built on `role="listbox"` + `role="option"` so screen
@@ -123,8 +129,8 @@ export default function List({
                             isDisabled
                                 ? 'border-l-transparent opacity-50 cursor-not-allowed'
                                 : isActive
-                                ? 'border-l-accent bg-surface-raised text-foreground font-medium'
-                                : 'border-l-transparent text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
+                                ? `border-l-accent bg-surface-raised text-foreground font-medium ${PRESS}`
+                                : `border-l-transparent text-foreground-secondary hover:bg-surface-raised hover:text-foreground ${PRESS}`,
                         ].join(' ')}
                     >
                         {item.avatar && (
