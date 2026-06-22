@@ -49,11 +49,17 @@ const DENSITY_PAD_LEFT: Record<NonNullable<ListProps['density']>, string> = {
     'spacious':    'pl-[calc(1rem-1px)]',    // px-4  = 1rem
 }
 
-// Transient pressed (:active) feedback for interactive rows — a brief accent
-// tint, distinct from the neutral surface-raised hover. color-mix is used
-// because the accent token is var()-valued (a `/opacity` modifier emits
-// transparent CSS). The `active:` variant wins over `hover:` while pressed.
-const PRESS = 'active:bg-[color-mix(in_srgb,var(--color-accent)_14%,transparent)]'
+// Interaction states use translucent ACCENT tints (via color-mix) rather than
+// `bg-surface-raised`: the surface tokens blend into whatever near-surface
+// panel the List sits in, so hover/active were effectively invisible. An
+// accent wash reads clearly over any background, and the three states form a
+// visible progression: hover < selected < pressed.
+// (color-mix, not a `/opacity` modifier — the accent token is var()-valued, so
+// `bg-accent/10` would emit transparent CSS. Arbitrary classes are also unique
+// to the lib, so a consumer's Tailwind can't re-order/override them.)
+const HOVER = 'hover:bg-[color-mix(in_srgb,var(--color-accent)_8%,transparent)] hover:text-foreground'
+const ACTIVE_BG = 'bg-[color-mix(in_srgb,var(--color-accent)_15%,transparent)]'
+const PRESS = 'active:bg-[color-mix(in_srgb,var(--color-accent)_24%,transparent)]'
 
 /**
  * Vertical clickable list with optional avatar / description / trailing
@@ -129,8 +135,8 @@ export default function List({
                             isDisabled
                                 ? 'border-l-transparent opacity-50 cursor-not-allowed'
                                 : isActive
-                                ? `border-l-accent bg-surface-raised text-foreground font-medium ${PRESS}`
-                                : `border-l-transparent text-foreground-secondary hover:bg-surface-raised hover:text-foreground ${PRESS}`,
+                                ? `border-l-accent ${ACTIVE_BG} text-foreground font-medium ${PRESS}`
+                                : `border-l-transparent text-foreground-secondary ${HOVER} ${PRESS}`,
                         ].join(' ')}
                     >
                         {item.avatar && (
