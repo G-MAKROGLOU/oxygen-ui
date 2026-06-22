@@ -1,3 +1,10 @@
+## [7.7.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.7.0...v7.7.1) (2026-06-22)
+
+
+### Bug Fixes
+
+* **tabs,scalable-container,tree:** close-button gap, target-size expand, tree click separation ([ee25682](https://github.com/G-MAKROGLOU/oxygen-ui/commit/ee2568282de6a737b03683916f6fa484ad536996))
+
 # [7.7.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.6.3...v7.7.0) (2026-06-22)
 
 
