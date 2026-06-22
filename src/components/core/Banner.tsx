@@ -22,10 +22,10 @@ export interface BannerProps {
 // tokens are `var()`-valued — Tailwind's slash-opacity emits transparent CSS
 // for those, whereas color-mix tints correctly in both light and dark.
 const TONE_BG: Record<BannerTone, string> = {
-    info:    'bg-[color-mix(in_srgb,var(--color-info)_12%,transparent)]',
-    success: 'bg-[color-mix(in_srgb,var(--color-success)_12%,transparent)]',
-    warning: 'bg-[color-mix(in_srgb,var(--color-warning)_15%,transparent)]',
-    danger:  'bg-[color-mix(in_srgb,var(--color-error)_12%,transparent)]',
+    info:    'bg-[color-mix(in_srgb,var(--color-info)_20%,transparent)] border border-[color-mix(in_srgb,var(--color-info)_30%,transparent)]',
+    success: 'bg-[color-mix(in_srgb,var(--color-success)_20%,transparent)] border border-[color-mix(in_srgb,var(--color-success)_30%,transparent)]',
+    warning: 'bg-[color-mix(in_srgb,var(--color-warning)_22%,transparent)] border border-[color-mix(in_srgb,var(--color-warning)_32%,transparent)]',
+    danger:  'bg-[color-mix(in_srgb,var(--color-error)_20%,transparent)] border border-[color-mix(in_srgb,var(--color-error)_30%,transparent)]',
 }
 
 const TONE_FG: Record<BannerTone, string> = {

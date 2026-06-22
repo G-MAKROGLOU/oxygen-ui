@@ -156,12 +156,15 @@ export default function NumberInput({
             required={required}
             labelStyle={labelStyle}
         >
-            {/* `overflow-hidden` clips the stepper buttons to the rounded
-                shell; `pr-0` removes the shell's right padding so the steppers
-                sit flush against the edge. */}
+            {/* `overflow-hidden` clips the stepper buttons to the rounded shell;
+                `!pr-0` removes the shell's right padding so the steppers sit flush
+                against the edge. The `!important` is deliberate: fieldShell adds
+                `px-3`, and a consumer's own Tailwind build can re-emit `.px-3`
+                after our stylesheet — without `!important` that would win the
+                cascade and reintroduce a ~12px gap before the steppers. */}
             <div
                 style={style}
-                className={`flex items-center overflow-hidden pr-0 ${fieldShell({ size, hasError, disabled, focusWithin: true })}`}
+                className={`flex items-center overflow-hidden !pr-0 ${fieldShell({ size, hasError, disabled, focusWithin: true })}`}
             >
                 <input
                     min={min}

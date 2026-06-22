@@ -352,7 +352,9 @@ export default function Dropdown({
                             align="start"
                             sideOffset={4}
                             collisionPadding={8}
-                            style={{ width: style?.width || 240 }}
+                            // Match the trigger (input) width so the menu always lines
+                            // up with the field; a `style.width` override still wins.
+                            style={{ width: style?.width ?? 'var(--radix-popover-trigger-width)' }}
                             className="bg-surface text-foreground border border-border rounded-lg shadow-md z-popover p-2 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
                             onInteractOutside={() => setOpen(false)}
                         >

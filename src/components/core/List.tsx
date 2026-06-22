@@ -33,10 +33,20 @@ export interface ListProps {
     style?: React.CSSProperties
 }
 
+// Vertical + right padding per density. Left padding is applied separately
+// (DENSITY_PAD_LEFT) with a 1px offset so the active item's accent left-border
+// doesn't shift the text relative to inactive items.
 const DENSITY_PADDING: Record<NonNullable<ListProps['density']>, string> = {
-    'compact':     'py-1.5 px-2',
-    'comfortable': 'py-2.5 px-3',
-    'spacious':    'py-3.5 px-4',
+    'compact':     'py-1.5 pr-2',
+    'comfortable': 'py-2.5 pr-3',
+    'spacious':    'py-3.5 pr-4',
+}
+
+// Left padding = density left padding − 1px (to compensate the border-l).
+const DENSITY_PAD_LEFT: Record<NonNullable<ListProps['density']>, string> = {
+    'compact':     'pl-[calc(0.5rem-1px)]',  // px-2  = 0.5rem
+    'comfortable': 'pl-[calc(0.75rem-1px)]', // px-3  = 0.75rem
+    'spacious':    'pl-[calc(1rem-1px)]',    // px-4  = 1rem
 }
 
 /**
@@ -106,14 +116,15 @@ export default function List({
                             }
                         }}
                         className={[
-                            'flex items-center gap-3 cursor-pointer border-b border-border transition-colors duration-150',
+                            'flex items-center gap-3 cursor-pointer border-b border-border border-l transition-colors duration-150',
                             DENSITY_PADDING[density],
+                            DENSITY_PAD_LEFT[density],
                             'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset',
                             isDisabled
-                                ? 'opacity-50 cursor-not-allowed'
+                                ? 'border-l-transparent opacity-50 cursor-not-allowed'
                                 : isActive
-                                ? 'bg-surface-raised text-foreground'
-                                : 'text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
+                                ? 'border-l-accent bg-surface-raised text-foreground font-medium'
+                                : 'border-l-transparent text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
                         ].join(' ')}
                     >
                         {item.avatar && (
