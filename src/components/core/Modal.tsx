@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import Button from '../inputs/Button'
+import Button, { type ButtonProps } from '../inputs/Button'
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
@@ -34,6 +34,10 @@ export interface ModalProps {
     onCancel?: () => void
     okText?: string
     cancelText?: string
+    /** Visual variant of the Ok button. Default `'primary'`. */
+    okVariant?: ButtonProps['variant']
+    /** Visual variant of the Cancel button. Default `'ghost'`. */
+    cancelVariant?: ButtonProps['variant']
     hasFooter?: boolean
     title?: React.ReactNode
     children?: React.ReactNode
@@ -62,6 +66,8 @@ export default function Modal({
     onCancel,
     okText = 'Ok',
     cancelText = 'Cancel',
+    okVariant = 'primary',
+    cancelVariant = 'ghost',
     hasFooter = true,
     title,
     children,
@@ -145,11 +151,13 @@ export default function Modal({
                                     <div className="flex flex-shrink-0 items-center justify-end gap-3 border-t border-border px-5 py-3">
                                         <Button
                                             style={{ width: 90 }}
+                                            variant={cancelVariant}
                                             content={cancelText}
                                             onClick={onCancel}
                                         />
                                         <Button
                                             style={{ width: 90 }}
+                                            variant={okVariant}
                                             content={okText}
                                             onClick={onOk}
                                         />

@@ -55,6 +55,19 @@ describe('Modal', () => {
         expect(screen.queryByRole('button', { name: 'Cancel' })).not.toBeInTheDocument()
     })
 
+    it('defaults Ok to primary (accent) and Cancel to ghost', () => {
+        render(<Modal open title="Confirm" />)
+        expect(screen.getByRole('button', { name: 'Ok' }).className).toContain('bg-accent')
+        const cancel = screen.getByRole('button', { name: 'Cancel' })
+        expect(cancel.className).not.toContain('bg-accent')
+    })
+
+    it('honors okVariant / cancelVariant overrides', () => {
+        render(<Modal open title="Delete?" okVariant="danger" cancelVariant="secondary" />)
+        expect(screen.getByRole('button', { name: 'Ok' }).className).toContain('bg-status-error')
+        expect(screen.getByRole('button', { name: 'Cancel' }).className).toContain('border-accent')
+    })
+
     it('renders custom ok/cancel text', () => {
         render(<Modal open title="Confirm" okText="Yes, delete" cancelText="No, keep" />)
         expect(screen.getByRole('button', { name: 'Yes, delete' })).toBeInTheDocument()

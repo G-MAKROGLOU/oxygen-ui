@@ -32,4 +32,14 @@ describe('Drawer', () => {
         render(<Drawer open title="x" hasFooter={false}>body</Drawer>)
         expect(screen.queryByRole('button', { name: 'Ok' })).toBeNull()
     })
+
+    it('defaults Ok to primary and Cancel to ghost, and honors variant overrides', () => {
+        const { rerender } = render(<Drawer open title="x">body</Drawer>)
+        expect(screen.getByRole('button', { name: 'Ok' }).className).toContain('bg-accent')
+        expect(screen.getByRole('button', { name: 'Cancel' }).className).not.toContain('bg-accent')
+
+        rerender(<Drawer open title="x" okVariant="danger" cancelVariant="secondary">body</Drawer>)
+        expect(screen.getByRole('button', { name: 'Ok' }).className).toContain('bg-status-error')
+        expect(screen.getByRole('button', { name: 'Cancel' }).className).toContain('border-accent')
+    })
 })

@@ -13,6 +13,8 @@ const meta: Meta<typeof Drawer> = {
     argTypes: {
         placement: { control: 'inline-radio', options: ['left', 'right'] },
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl', 'full'] },
+        okVariant: { control: 'select', options: ['primary', 'secondary', 'outline', 'ghost', 'danger', 'warning', 'success', 'info'] },
+        cancelVariant: { control: 'select', options: ['primary', 'secondary', 'outline', 'ghost', 'danger', 'warning', 'success', 'info'] },
     },
 }
 export default meta

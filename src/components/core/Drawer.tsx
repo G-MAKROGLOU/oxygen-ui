@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import Button from '../inputs/Button'
+import Button, { type ButtonProps } from '../inputs/Button'
 
 export type DrawerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
@@ -32,6 +32,10 @@ export interface DrawerProps {
     width?: number | string
     okText?: string
     cancelText?: string
+    /** Visual variant of the Ok button. Default `'primary'`. */
+    okVariant?: ButtonProps['variant']
+    /** Visual variant of the Cancel button. Default `'ghost'`. */
+    cancelVariant?: ButtonProps['variant']
     onOk?: () => void
     onCancel?: () => void
     title?: React.ReactNode
@@ -61,6 +65,8 @@ export default function Drawer({
     width,
     okText = 'Ok',
     cancelText = 'Cancel',
+    okVariant = 'primary',
+    cancelVariant = 'ghost',
     onOk,
     onCancel,
     title,
@@ -144,8 +150,8 @@ export default function Drawer({
                                 {/* Footer */}
                                 {hasFooter && (
                                     <div className={`flex flex-shrink-0 items-center gap-3 border-t border-border px-5 py-3 ${isRight ? 'justify-start' : 'justify-end'}`}>
-                                        <Button style={{ width: 90 }} content={cancelText} onClick={onCancel} />
-                                        <Button style={{ width: 90 }} content={okText} onClick={onOk} />
+                                        <Button style={{ width: 90 }} variant={cancelVariant} content={cancelText} onClick={onCancel} />
+                                        <Button style={{ width: 90 }} variant={okVariant} content={okText} onClick={onOk} />
                                     </div>
                                 )}
                             </motion.div>
