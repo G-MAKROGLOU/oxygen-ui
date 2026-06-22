@@ -1,3 +1,10 @@
+# [7.7.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.6.3...v7.7.0) (2026-06-22)
+
+
+### Features
+
+* **modal,drawer:** okVariant / cancelVariant footer button props ([4b5b674](https://github.com/G-MAKROGLOU/oxygen-ui/commit/4b5b67493e0ade407965d3cdc2e4610e5e864a1c))
+
 ## [7.6.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.6.2...v7.6.3) (2026-06-22)
 
 
