@@ -120,6 +120,8 @@ export type { BreadcrumbsProps, BreadcrumbItem } from './components/core/Breadcr
 
 export { default as Badge } from './components/core/Badge'
 export type { BadgeProps, BadgeTone, BadgeVariant, BadgeSize } from './components/core/Badge'
+export { default as Banner } from './components/core/Banner'
+export type { BannerProps, BannerTone } from './components/core/Banner'
 
 export { default as Stepper } from './components/core/Stepper'
 export type { StepperProps, StepperStep, StepperActiveStatus } from './components/core/Stepper'
