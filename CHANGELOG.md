@@ -1,3 +1,10 @@
+## [7.6.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.6.0...v7.6.1) (2026-06-22)
+
+
+### Bug Fixes
+
+* **banner,list,dropdown,number-input:** portal UAT batch ([d9cd739](https://github.com/G-MAKROGLOU/oxygen-ui/commit/d9cd7393623daa48c3731118e0d1c427ffad2103))
+
 # [7.6.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.5.3...v7.6.0) (2026-06-22)
 
 
