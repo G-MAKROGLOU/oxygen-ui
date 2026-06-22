@@ -1,3 +1,10 @@
+## [7.5.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.5.2...v7.5.3) (2026-06-22)
+
+
+### Bug Fixes
+
+* **pop-confirm:** harden the async confirm path ([dce5942](https://github.com/G-MAKROGLOU/oxygen-ui/commit/dce594266a04e683f8a79d033507016a103b2f12))
+
 ## [7.5.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.5.1...v7.5.2) (2026-06-22)
 
 
