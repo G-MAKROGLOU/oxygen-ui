@@ -38,4 +38,11 @@ describe('IconButton', () => {
         render(<IconButton icon={<span>x</span>} type="bordered" />)
         expect(screen.getByRole('button')).toHaveClass('shadow-md')
     })
+
+    it('forwards its ref to the underlying button (Radix asChild trigger support)', () => {
+        const ref = React.createRef<HTMLButtonElement>()
+        render(<IconButton icon={<span>x</span>} ref={ref} />)
+        expect(ref.current).toBeInstanceOf(HTMLButtonElement)
+        expect(ref.current).toBe(screen.getByRole('button'))
+    })
 })

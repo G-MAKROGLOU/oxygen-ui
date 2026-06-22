@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 
 export type IconButtonVariant = 'primary' | 'bordered' | 'ghost'
 
@@ -22,23 +22,29 @@ export interface IconButtonProps {
 /**
  * Square icon-only button.
  *
+ * Uses `React.forwardRef` so it works as a Radix `asChild` trigger (Popover,
+ * PopConfirm, Tooltip, etc.) — those need a DOM ref to anchor floating content.
+ *
  * @example
  * <IconButton icon={<Icon.Search />} onClick={doSearch} />
  * <IconButton type="bordered" icon={<Icon.Edit />} />
  */
-export default function IconButton({
-    icon,
-    onClick,
-    type = 'primary',
-    buttonType = 'button',
-    disabled = false,
-    size = 'md',
-    loading = false,
-    loadingIcon,
-    title,
-    className = '',
-    style,
-}: IconButtonProps) {
+const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton(
+    {
+        icon,
+        onClick,
+        type = 'primary',
+        buttonType = 'button',
+        disabled = false,
+        size = 'md',
+        loading = false,
+        loadingIcon,
+        title,
+        className = '',
+        style,
+    },
+    ref,
+) {
     const colorScheme = useMemo(() => {
         if (type === 'primary') {
             // Single semantic palette handles both light and dark modes via
@@ -57,6 +63,7 @@ export default function IconButton({
 
     return (
         <button
+            ref={ref}
             type={buttonType}
             disabled={disabled || loading}
             onClick={onClick}
@@ -68,4 +75,7 @@ export default function IconButton({
             {loading ? loadingIcon : icon}
         </button>
     )
-}
+})
+
+IconButton.displayName = 'IconButton'
+export default IconButton

@@ -2,6 +2,7 @@ import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import PopConfirm from './PopConfirm'
 import Button from '../inputs/Button'
+import IconButton from './IconButton'
 
 const meta: Meta<typeof PopConfirm> = {
     title: 'Feedback/PopConfirm',
@@ -109,6 +110,18 @@ export const AsyncConfirm: Story = {
             onConfirm={() => new Promise((r) => setTimeout(r, 1500))}
         >
             <Button content="Delete" variant="danger" />
+        </PopConfirm>
+    ),
+}
+
+// Regression: PopConfirm anchored to an IconButton trigger. IconButton must
+// forward its ref (Popover.Trigger asChild) or the popover never anchors/opens.
+export const IconButtonTrigger: Story = {
+    name: 'IconButton trigger',
+    args: { title: 'Delete item?', description: 'This action cannot be undone.', confirmText: 'Delete', tone: 'danger' },
+    render: (args) => (
+        <PopConfirm {...args} icon={TrashIcon} onConfirm={() => {}}>
+            <IconButton type="bordered" title="Delete" icon={TrashIcon} />
         </PopConfirm>
     ),
 }
