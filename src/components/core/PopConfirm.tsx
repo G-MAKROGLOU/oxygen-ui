@@ -104,7 +104,15 @@ export default function PopConfirm({
     }
 
     return (
-        <Popover.Root open={isOpen} onOpenChange={(o) => (o ? setOpen(true) : handleCancel())}>
+        <Popover.Root
+            open={isOpen}
+            // While an async confirm is in flight, ignore close requests so the
+            // prompt can't be dismissed out from under a running operation.
+            onOpenChange={(o) => {
+                if (o) setOpen(true)
+                else if (!loading) handleCancel()
+            }}
+        >
             <Popover.Trigger asChild>{children}</Popover.Trigger>
             <Popover.Portal>
                 <Popover.Content
@@ -112,6 +120,9 @@ export default function PopConfirm({
                     sideOffset={8}
                     collisionPadding={12}
                     className={cx('z-[400] focus:outline-none', className)}
+                    // Block Escape / outside-click dismissal during the async confirm.
+                    onEscapeKeyDown={(e) => { if (loading) e.preventDefault() }}
+                    onInteractOutside={(e) => { if (loading) e.preventDefault() }}
                 >
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
@@ -135,7 +146,7 @@ export default function PopConfirm({
                             </div>
                         </div>
                         <div className="mt-3 flex justify-end gap-2">
-                            <Button content={cancelText} size="sm" variant="ghost" onClick={handleCancel} />
+                            <Button content={cancelText} size="sm" variant="ghost" disabled={loading} onClick={handleCancel} />
                             <Button
                                 content={confirmText}
                                 size="sm"
