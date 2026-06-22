@@ -1,3 +1,10 @@
+## [7.6.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.6.1...v7.6.2) (2026-06-22)
+
+
+### Bug Fixes
+
+* **list:** add pressed (:active) click feedback ([7416f7d](https://github.com/G-MAKROGLOU/oxygen-ui/commit/7416f7dcac4f306ca890239d5749446039f9d9ef))
+
 ## [7.6.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.6.0...v7.6.1) (2026-06-22)
 
 
