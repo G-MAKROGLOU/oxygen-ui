@@ -1,3 +1,10 @@
+## [7.5.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.5.1...v7.5.2) (2026-06-22)
+
+
+### Bug Fixes
+
+* **icon-button:** forward ref so it works as a Radix asChild trigger ([215ceaf](https://github.com/G-MAKROGLOU/oxygen-ui/commit/215ceaf1c61e4300c1747621f2d6b7dc104ec2b0))
+
 ## [7.5.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.5.0...v7.5.1) (2026-06-13)
 
 
