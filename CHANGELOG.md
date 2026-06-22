@@ -1,3 +1,10 @@
+# [7.6.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.5.3...v7.6.0) (2026-06-22)
+
+
+### Features
+
+* **banner:** add Banner component ([0f27f64](https://github.com/G-MAKROGLOU/oxygen-ui/commit/0f27f64913fae5e4642e3e20214c04652e2cbeeb))
+
 ## [7.5.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.5.2...v7.5.3) (2026-06-22)
 
 
