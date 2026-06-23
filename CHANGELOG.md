@@ -1,3 +1,10 @@
+## [7.7.4](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.7.3...v7.7.4) (2026-06-23)
+
+
+### Bug Fixes
+
+* **scalable-container:** respect className resting size; push neighbours on expand ([4794c2e](https://github.com/G-MAKROGLOU/oxygen-ui/commit/4794c2eba50972044c0360a974d4e196e5255b86))
+
 ## [7.7.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.7.2...v7.7.3) (2026-06-23)
 
 
