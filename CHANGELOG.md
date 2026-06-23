@@ -1,3 +1,10 @@
+# [7.8.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.7.4...v7.8.0) (2026-06-23)
+
+
+### Features
+
+* **content:** add PdfViewer and Spreadsheet/DataGrid components ([17f6422](https://github.com/G-MAKROGLOU/oxygen-ui/commit/17f6422d1c92b08d36db8d56341d5606ed726f7d))
+
 ## [7.7.4](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.7.3...v7.7.4) (2026-06-23)
 
 
