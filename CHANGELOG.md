@@ -1,3 +1,15 @@
+# [7.10.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.9.0...v7.10.0) (2026-06-23)
+
+
+### Bug Fixes
+
+* **dropdown:** make options scrollable inside a Modal/Drawer ([dae538e](https://github.com/G-MAKROGLOU/oxygen-ui/commit/dae538e0e5c95ff90ebe33b3ad18b6ffe0b39579))
+
+
+### Features
+
+* **content:** configurable size, bottom sheet tabs, column sorting ([5786a03](https://github.com/G-MAKROGLOU/oxygen-ui/commit/5786a033e6ca8ddfbd7f22d9d5b959754c3ef788))
+
 # [7.9.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.8.0...v7.9.0) (2026-06-23)
 
 
