@@ -331,7 +331,7 @@ function EditableCell<T extends Record<string, any>>({
     }, [editing, col.editor])
 
     if (editing) {
-        if (col.editor) return <div ref={editRef}>{col.editor({ value, row, commit, cancel })}</div>
+        if (col.editor) return <div ref={editRef} className="w-full">{col.editor({ value, row, commit, cancel })}</div>
         return (
             <input
                 autoFocus
