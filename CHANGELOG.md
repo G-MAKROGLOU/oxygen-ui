@@ -1,3 +1,10 @@
+# [7.9.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.8.0...v7.9.0) (2026-06-23)
+
+
+### Features
+
+* **content:** harden PdfViewer/Spreadsheet and give both a clean toolbar ([cbc8a2d](https://github.com/G-MAKROGLOU/oxygen-ui/commit/cbc8a2d0d12ab9020d82a257fd6ad8cb4fd59fd8))
+
 # [7.8.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.7.4...v7.8.0) (2026-06-23)
 
 
