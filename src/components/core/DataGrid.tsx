@@ -48,7 +48,13 @@ export interface DataGridProps {
     overscan?: number
     /** Show the left row-number gutter. Default true. */
     rowNumbers?: boolean
-    /** `row` is the index into `rows` (stable across sorting). */
+    /**
+     * Blank rows rendered below the data, like a real spreadsheet's empty grid.
+     * Default 0. When `editable`, typing into one emits `onCellEdit` with a
+     * `row` index at/after `rows.length` so the consumer can append the row.
+     */
+    trailingRows?: number
+    /** `row` is the index into `rows` (stable across sorting; may equal `rows.length`+ for a blank trailing row). */
     onCellEdit?: (e: { row: number; column: string; value: string }) => void
     className?: string
     style?: React.CSSProperties
@@ -112,6 +118,7 @@ export default function DataGrid({
     virtualize = true,
     overscan = 4,
     rowNumbers = true,
+    trailingRows = 0,
     onCellEdit,
     className = '',
     style,
@@ -155,7 +162,13 @@ export default function DataGrid({
         onSortChange?.(next)
     }
 
-    const totalHeight = rows.length * rowHeight
+    // Data rows + blank trailing rows (the spreadsheet "slack").
+    const displayRowCount = rows.length + Math.max(0, trailingRows)
+    const totalHeight = displayRowCount * rowHeight
+
+    // On-screen row → underlying data index. Data rows go through the sort
+    // order; trailing blank rows map to indices at/after rows.length.
+    const rowIndexForDisp = (disp: number) => (disp < rows.length ? order[disp] : disp)
 
     useEffect(() => {
         const el = scrollRef.current
@@ -170,7 +183,7 @@ export default function DataGrid({
     // Visible windows.
     const bodyH = (viewport.h || (typeof height === 'number' ? height : 480)) - headerHeight
     const rowStart = virtualize ? Math.max(0, Math.floor(scroll.top / rowHeight) - overscan) : 0
-    const rowEnd = virtualize ? Math.min(rows.length, Math.ceil((scroll.top + bodyH) / rowHeight) + overscan) : rows.length
+    const rowEnd = virtualize ? Math.min(displayRowCount, Math.ceil((scroll.top + bodyH) / rowHeight) + overscan) : displayRowCount
 
     let colStart = 0
     let colEnd = columns.length
@@ -191,14 +204,15 @@ export default function DataGrid({
     const commit = useCallback(() => {
         if (!editing) return
         const col = columns[editing.col]
-        onCellEdit?.({ row: order[editing.disp], column: col.key, value: draft })
+        const ri = editing.disp < rows.length ? order[editing.disp] : editing.disp
+        onCellEdit?.({ row: ri, column: col.key, value: draft })
         setEditing(null)
-    }, [editing, columns, draft, onCellEdit, order])
+    }, [editing, columns, draft, onCellEdit, order, rows.length])
 
     const startEdit = (disp: number, col: number) => {
         const c = columns[col]
         if (!(c.editable ?? editable)) return
-        setDraft(displayValue(rows[order[disp]]?.[c.key] ?? ''))
+        setDraft(displayValue(rows[rowIndexForDisp(disp)]?.[c.key] ?? ''))
         setEditing({ disp, col })
     }
 
@@ -262,9 +276,10 @@ export default function DataGrid({
                     </div>
                 ))}
 
-                {/* Body cells. `disp` = on-screen row, `ri` = original data row. */}
+                {/* Body cells. `disp` = on-screen row, `ri` = underlying data row
+                    (a blank trailing row resolves to an index ≥ rows.length). */}
                 {visibleRows.map((disp) => {
-                    const ri = order[disp]
+                    const ri = rowIndexForDisp(disp)
                     return visibleCols.map((ci) => {
                         const c = columns[ci]
                         const isEditing = editing?.disp === disp && editing?.col === ci
@@ -306,7 +321,7 @@ export default function DataGrid({
                 })}
             </div>
 
-            {rows.length === 0 && (
+            {displayRowCount === 0 && (
                 <div className="absolute inset-0 flex items-center justify-center text-foreground-muted" style={{ top: headerHeight }}>
                     {emptyState}
                 </div>

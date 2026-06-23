@@ -34,6 +34,10 @@ export interface SpreadsheetProps {
     virtualize?: boolean
     /** Click column headers to sort. Default true. */
     sortable?: boolean
+    /** Blank rows kept below the data (the spreadsheet "slack"). Default 50. */
+    emptyRows?: number
+    /** Show a “+” to add a blank sheet. Defaults to `editable`. */
+    allowAddSheet?: boolean
     /** Overall height. Default 480. */
     height?: number | string
     /** Overall width. Defaults to filling the container. */
@@ -51,6 +55,19 @@ function toColumns(cols: GridColumn[] | string[]): GridColumn[] {
 function cellValue(v: Cell | CellValue): CellValue {
     if (v != null && typeof v === 'object' && 'value' in v) return (v as Cell).value
     return v as CellValue
+}
+
+/** Spreadsheet-style column label: 0→A, 25→Z, 26→AA … */
+function columnLetter(i: number): string {
+    let s = ''
+    let n = i
+    do { s = String.fromCharCode(65 + (n % 26)) + s; n = Math.floor(n / 26) - 1 } while (n >= 0)
+    return s
+}
+
+/** A fresh empty sheet with lettered columns (used by the “+” add-sheet button). */
+function blankSheet(name: string, cols = 8): SheetData {
+    return { name, columns: Array.from({ length: cols }, (_, i) => ({ key: columnLetter(i), label: columnLetter(i) })), rows: [] }
 }
 
 function toPlainRows(sheet: SheetData, columns: GridColumn[]): Array<Record<string, CellValue>> {
@@ -100,11 +117,14 @@ export default function Spreadsheet({
     fileName,
     virtualize = true,
     sortable = true,
+    emptyRows = 50,
+    allowAddSheet,
     height = 480,
     width,
     className = '',
     style,
 }: SpreadsheetProps) {
+    const canAddSheet = allowAddSheet ?? editable
     const [sheets, setSheets] = useState<SheetData[] | null>(Array.isArray(source) ? source : null)
     const [active, setActive] = useState(0)
     const [status, setStatus] = useState<'loading' | 'ready' | 'error'>(Array.isArray(source) ? 'ready' : 'loading')
@@ -157,6 +177,8 @@ export default function Spreadsheet({
             if (!prev) return prev
             const next = prev.map((s, i) => (i === active ? { ...s, rows: s.rows.map((r) => ({ ...r })) } : s))
             const target = next[active]
+            // Editing into the blank slack appends rows up to that index.
+            while (target.rows.length <= row) target.rows.push({})
             const existing = target.rows[row]?.[column]
             const prevValue = cellValue(existing as Cell | CellValue)
             coerced = coerceToCellType(prevValue, value)
@@ -171,6 +193,19 @@ export default function Spreadsheet({
         })
         onCellEdit?.({ sheet: sheets?.[active]?.name ?? '', row, column, value: coerced })
     }, [active, onCellEdit, onChange, sheets])
+
+    const addSheet = useCallback(() => {
+        setSheets((prev) => {
+            const list = prev ?? []
+            const used = new Set(list.map((s) => s.name))
+            let n = list.length + 1
+            while (used.has(`Sheet ${n}`)) n++
+            const next = [...list, blankSheet(`Sheet ${n}`)]
+            setActive(next.length - 1)
+            onChange?.(next)
+            return next
+        })
+    }, [onChange])
 
     // ── Exports ───────────────────────────────────────────────────────────────
     const baseName = useMemo(
@@ -311,6 +346,7 @@ export default function Spreadsheet({
                     editable={editable}
                     sortable={sortable}
                     virtualize={virtualize}
+                    trailingRows={emptyRows}
                     onCellEdit={handleCellEdit}
                     height="100%"
                     className="!rounded-none !border-0"
@@ -318,26 +354,44 @@ export default function Spreadsheet({
             </div>
 
             {/* Bottom sheet tabs — Excel-style, on their own bar. */}
-            {sheets.length > 1 && (
-                <div role="tablist" aria-label="Sheets" className="flex flex-shrink-0 items-center gap-1 overflow-x-auto border-t border-border bg-surface px-2 py-1">
-                    {sheets.map((s, i) => (
+            {(sheets.length > 1 || canAddSheet) && (
+                <div className="flex flex-shrink-0 items-center gap-1 border-t border-border bg-surface px-2 py-1">
+                    <div role="tablist" aria-label="Sheets" className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
+                        {sheets.map((s, i) => {
+                            const activeTab = i === active
+                            return (
+                                <button
+                                    key={`${s.name}-${i}`}
+                                    role="tab"
+                                    type="button"
+                                    aria-selected={activeTab}
+                                    onClick={() => setActive(i)}
+                                    className={cx(
+                                        'flex-shrink-0 rounded-t-md border-t-2 px-3 py-1 text-xs transition-colors',
+                                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                                        activeTab
+                                            ? 'border-t-accent bg-surface-raised font-semibold text-foreground shadow-sm'
+                                            : 'border-t-transparent font-medium text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
+                                    )}
+                                >
+                                    {s.name || `Sheet ${i + 1}`}
+                                </button>
+                            )
+                        })}
+                    </div>
+                    {canAddSheet && (
                         <button
-                            key={`${s.name}-${i}`}
-                            role="tab"
                             type="button"
-                            aria-selected={i === active}
-                            onClick={() => setActive(i)}
-                            className={cx(
-                                'flex-shrink-0 rounded-md px-3 py-1 text-xs font-medium transition-colors',
-                                'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-                                i === active
-                                    ? 'bg-surface-raised text-foreground shadow-sm'
-                                    : 'text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
-                            )}
+                            onClick={addSheet}
+                            title="Add sheet"
+                            aria-label="Add sheet"
+                            className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md text-foreground-muted transition-colors hover:bg-surface-raised hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                         >
-                            {s.name || `Sheet ${i + 1}`}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4" aria-hidden="true">
+                                <path strokeLinecap="round" d="M12 5v14M5 12h14" />
+                            </svg>
                         </button>
-                    ))}
+                    )}
                 </div>
             )}
         </div>

@@ -46,6 +46,37 @@ describe('Spreadsheet', () => {
         expect(screen.queryByRole('button', { name: /Export/ })).not.toBeInTheDocument()
     })
 
+    it('adds a blank sheet via the “+” when editable', () => {
+        const onChange = vi.fn()
+        render(<Spreadsheet source={sheets} editable onChange={onChange} />)
+        expect(screen.getAllByRole('tab')).toHaveLength(2)
+        fireEvent.click(screen.getByRole('button', { name: 'Add sheet' }))
+        expect(screen.getAllByRole('tab')).toHaveLength(3)
+        expect(onChange).toHaveBeenCalled()
+        // The new sheet becomes active.
+        expect(screen.getByRole('tab', { name: 'Sheet 3' })).toHaveAttribute('aria-selected', 'true')
+    })
+
+    it('does not show the add-sheet control when not editable', () => {
+        render(<Spreadsheet source={sheets} />)
+        expect(screen.queryByRole('button', { name: 'Add sheet' })).not.toBeInTheDocument()
+    })
+
+    it('typing into a blank slack row appends a data row', () => {
+        const onChange = vi.fn()
+        // One sheet with two data rows (name, dwt); blank slack rows follow.
+        render(<Spreadsheet source={[sheets[0]]} editable emptyRows={20} onChange={onChange} />)
+        // 2 data rows × 2 cols = 4 data cells; cell index 4 is the first blank row, col 0.
+        fireEvent.doubleClick(screen.getAllByRole('gridcell')[4])
+        const input = screen.getByDisplayValue('')
+        fireEvent.change(input, { target: { value: 'MV Crux' } })
+        fireEvent.keyDown(input, { key: 'Enter' })
+        // The sheet grew from 2 data rows to 3.
+        const grown = onChange.mock.calls.at(-1)?.[0]
+        expect(grown?.[0].rows).toHaveLength(3)
+        expect(grown?.[0].rows[2].name).toBe('MV Crux')
+    })
+
     it('edits a numeric value, coerces it to a number, and emits onCellEdit + onChange', () => {
         const onCellEdit = vi.fn()
         const onChange = vi.fn()
