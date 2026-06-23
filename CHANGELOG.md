@@ -1,3 +1,10 @@
+# [7.13.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.12.0...v7.13.0) (2026-06-23)
+
+
+### Features
+
+* **spreadsheet:** File/Sheet menus, row & cell context menus, highlighting ([25969f7](https://github.com/G-MAKROGLOU/oxygen-ui/commit/25969f709b1fdc73f4d6477f25bf118c61f5a722))
+
 # [7.12.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.11.0...v7.12.0) (2026-06-23)
 
 
