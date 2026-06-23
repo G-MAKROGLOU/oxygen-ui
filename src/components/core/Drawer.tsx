@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Button, { type ButtonProps } from '../inputs/Button'
+import { DialogContainerContext } from './dialogContainerContext'
 
 export type DrawerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
@@ -74,6 +75,9 @@ export default function Drawer({
     className = '',
 }: DrawerProps) {
     const reduced = useReducedMotion()
+    // Expose the panel node so nested portals (Dropdown menus) can render inside
+    // the dialog's scroll-lock subtree and stay wheel-scrollable.
+    const [panelEl, setPanelEl] = useState<HTMLElement | null>(null)
     const isRight = placement === 'right'
     const hiddenX = isRight ? '100%' : '-100%'
     // Explicit `width` wins; otherwise resolve the named size scale.
@@ -103,6 +107,7 @@ export default function Drawer({
                     {open && (
                         <Dialog.Content asChild>
                             <motion.div
+                                ref={setPanelEl}
                                 className={`fixed top-0 bottom-0 ${isRight ? 'right-0' : 'left-0'} z-modal flex flex-col bg-surface shadow-xl focus:outline-none ${className}`.trim()}
                                 style={{ width: `min(calc(100vw - 1rem), ${widthCss})` }}
                                 initial={{ x: reduced ? 0 : hiddenX, opacity: reduced ? 0 : 1 }}
@@ -144,7 +149,9 @@ export default function Drawer({
                                     children the moment open flipped to false,
                                     losing form state mid-close. */}
                                 <div className="flex-1 overflow-y-auto p-5">
-                                    {children}
+                                    <DialogContainerContext.Provider value={panelEl}>
+                                        {children}
+                                    </DialogContainerContext.Provider>
                                 </div>
 
                                 {/* Footer */}

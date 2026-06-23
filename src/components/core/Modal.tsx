@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Button, { type ButtonProps } from '../inputs/Button'
+import { DialogContainerContext } from './dialogContainerContext'
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
@@ -74,6 +75,9 @@ export default function Modal({
     className = '',
 }: ModalProps) {
     const reduced = useReducedMotion()
+    // Expose the panel node so nested portals (Dropdown menus) can render inside
+    // the dialog's scroll-lock subtree and stay wheel-scrollable.
+    const [panelEl, setPanelEl] = useState<HTMLElement | null>(null)
     // Explicit `width` wins; otherwise resolve the named size scale.
     const maxWidth = width ?? SIZE_MAP[size]
 
@@ -100,6 +104,7 @@ export default function Modal({
                     {open && (
                         <Dialog.Content asChild>
                             <motion.div
+                                ref={setPanelEl}
                                 className={`fixed left-1/2 top-1/2 z-modal flex flex-col w-[calc(100%-2rem)] max-h-[90dvh] bg-surface rounded-2xl shadow-xl overflow-hidden focus:outline-none ${className}`.trim()}
                                 style={{
                                     maxWidth,
@@ -143,7 +148,9 @@ export default function Modal({
                                     children the moment open flipped to false,
                                     losing form state mid-close. */}
                                 <div className={`flex-1 overflow-y-auto p-5 ${hasFooter ? '' : 'pb-5'}`}>
-                                    {children}
+                                    <DialogContainerContext.Provider value={panelEl}>
+                                        {children}
+                                    </DialogContainerContext.Provider>
                                 </div>
 
                                 {/* Footer */}

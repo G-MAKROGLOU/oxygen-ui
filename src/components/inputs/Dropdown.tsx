@@ -3,6 +3,7 @@ import * as Popover from '@radix-ui/react-popover'
 import SearchInput from './SearchInput'
 import Tag from './_tag'
 import { fieldShell, FieldLabel } from './_field'
+import { useDialogContainer } from '../core/dialogContainerContext'
 
 export interface DropdownItem {
     key: string | number
@@ -61,6 +62,12 @@ export interface DropdownProps {
     size?: import('./_field').FieldSize
     /** Extra classes merged onto the component root. */
     className?: string
+    /**
+     * DOM node to portal the options menu into. Defaults to the nearest
+     * Modal/Drawer content (so the list scrolls inside a dialog's scroll-lock),
+     * falling back to `document.body`. Set explicitly to override.
+     */
+    container?: HTMLElement
 }
 
 /**
@@ -208,7 +215,12 @@ export default function Dropdown({
     placeholder,
     size = 'md',
     className = '',
+    container,
 }: DropdownProps) {
+    // Inside a Modal/Drawer, portal the menu into the dialog content so its
+    // scroll area is exempt from the dialog's scroll-lock; otherwise body.
+    const dialogContainer = useDialogContainer()
+    const portalContainer = container ?? dialogContainer ?? undefined
     const [open, setOpen] = useState(false)
     const [selectedItems, setSelectedItems] = useState<(string | number)[]>([])
     const [searchTerm, setSearchTerm] = useState('')
@@ -347,7 +359,7 @@ export default function Dropdown({
                         </div>
                     </Popover.Trigger>
 
-                    <Popover.Portal>
+                    <Popover.Portal container={portalContainer}>
                         <Popover.Content
                             align="start"
                             sideOffset={4}
