@@ -1,3 +1,10 @@
+## [7.7.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.7.1...v7.7.2) (2026-06-23)
+
+
+### Bug Fixes
+
+* **table:** dismiss custom cell editors on outside click / Escape ([b065852](https://github.com/G-MAKROGLOU/oxygen-ui/commit/b065852fd263008bc63975215b9b34346eeea164))
+
 ## [7.7.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.7.0...v7.7.1) (2026-06-22)
 
 
