@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DataGrid, { type GridColumn, type CellValue } from './DataGrid'
 import Button from '../inputs/Button'
 import MenuButton from './MenuButton'
@@ -68,6 +68,26 @@ function columnLetter(i: number): string {
 /** A fresh empty sheet with lettered columns (used by the “+” add-sheet button). */
 function blankSheet(name: string, cols = 8): SheetData {
     return { name, columns: Array.from({ length: cols }, (_, i) => ({ key: columnLetter(i), label: columnLetter(i) })), rows: [] }
+}
+
+/** Parse a SheetJS workbook (bytes already read) into our SheetData[] shape. */
+function parseWorkbook(XLSX: any, bytes: Uint8Array): SheetData[] {
+    const wb = XLSX.read(bytes, { type: 'array' })
+    return wb.SheetNames.map((name: string) => {
+        const ws = wb.Sheets[name]
+        const aoa: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false, defval: null })
+        const headerRow = aoa[0] ?? []
+        const columns: GridColumn[] = headerRow.map((h: any, i: number) => ({
+            key: h != null && String(h).length ? String(h) : `col_${i}`,
+            label: h != null && String(h).length ? String(h) : `Column ${i + 1}`,
+        }))
+        const rows = aoa.slice(1).map((r) => {
+            const rec: Record<string, CellValue> = {}
+            columns.forEach((c, i) => { rec[c.key] = (r[i] ?? null) as CellValue })
+            return rec
+        })
+        return { name, columns, rows }
+    })
 }
 
 function toPlainRows(sheet: SheetData, columns: GridColumn[]): Array<Record<string, CellValue>> {
@@ -140,22 +160,7 @@ export default function Spreadsheet({
             try {
                 const bytes = await sourceToBytes(source, remote)
                 const XLSX = await loadXlsx()
-                const wb = XLSX.read(bytes, { type: 'array' })
-                const parsed: SheetData[] = wb.SheetNames.map((name: string) => {
-                    const ws = wb.Sheets[name]
-                    const aoa: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false, defval: null })
-                    const headerRow = aoa[0] ?? []
-                    const columns: GridColumn[] = headerRow.map((h: any, i: number) => ({
-                        key: h != null && String(h).length ? String(h) : `col_${i}`,
-                        label: h != null && String(h).length ? String(h) : `Column ${i + 1}`,
-                    }))
-                    const rows = aoa.slice(1).map((r) => {
-                        const rec: Record<string, CellValue> = {}
-                        columns.forEach((c, i) => { rec[c.key] = (r[i] ?? null) as CellValue })
-                        return rec
-                    })
-                    return { name, columns, rows }
-                })
+                const parsed = parseWorkbook(XLSX, bytes)
                 if (cancelled) return
                 setSheets(parsed); setActive(0); setStatus('ready')
             } catch (err) {
@@ -214,6 +219,56 @@ export default function Spreadsheet({
         setActive((a) => Math.max(0, Math.min(index < a ? a - 1 : a, next.length - 1)))
         onChange?.(next)
     }, [sheets, onChange])
+
+    const add100Rows = useCallback(() => {
+        setSheets((prev) => {
+            if (!prev) return prev
+            const next = prev.map((s, i) => (i === active ? { ...s, rows: [...s.rows, ...Array.from({ length: 100 }, () => ({})) ] } : s))
+            onChange?.(next)
+            return next
+        })
+    }, [active, onChange])
+
+    const insertRow = useCallback((index: number) => {
+        setSheets((prev) => {
+            if (!prev) return prev
+            const next = prev.map((s, i) => {
+                if (i !== active) return s
+                const rows = [...s.rows]
+                rows.splice(Math.max(0, Math.min(index, rows.length)), 0, {})
+                return { ...s, rows }
+            })
+            onChange?.(next)
+            return next
+        })
+    }, [active, onChange])
+
+    const deleteRow = useCallback((index: number) => {
+        setSheets((prev) => {
+            if (!prev) return prev
+            const next = prev.map((s, i) => (i === active && index < s.rows.length ? { ...s, rows: s.rows.filter((_, r) => r !== index) } : s))
+            onChange?.(next)
+            return next
+        })
+    }, [active, onChange])
+
+    // ── Open a local .xlsx/.csv via the OS file picker (File ▸ Open) ───────────
+    const fileInputRef = useRef<HTMLInputElement>(null)
+    const openFile = () => fileInputRef.current?.click()
+    const onFilePicked = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        e.target.value = '' // allow re-picking the same file
+        if (!file) return
+        setStatus('loading'); setError(null)
+        try {
+            const bytes = new Uint8Array(await file.arrayBuffer())
+            const XLSX = await loadXlsx()
+            const parsed = parseWorkbook(XLSX, bytes)
+            setSheets(parsed); setActive(0); setStatus('ready'); onChange?.(parsed)
+        } catch (err) {
+            setError(err as Error); setStatus('error')
+        }
+    }, [onChange])
 
     // ── Exports ───────────────────────────────────────────────────────────────
     const baseName = useMemo(
@@ -311,29 +366,43 @@ export default function Spreadsheet({
 
     const formats = exportFormats || []
     const exportLabels: Record<'xlsx' | 'csv' | 'pdf', string> = {
-        xlsx: 'Export to Excel (.xlsx)',
-        csv: 'Export to CSV (.csv)',
-        pdf: 'Export to PDF (.pdf)',
+        xlsx: 'Excel (.xlsx)',
+        csv: 'CSV (.csv)',
+        pdf: 'PDF (.pdf)',
     }
 
-    // Excel-style menu bar. File → exports; Sheet → insert / delete.
-    const fileItems = formats.map((fmt) => ({ key: fmt, label: exportLabels[fmt], onSelect: () => runExport(fmt) }))
-    const sheetItems = [
-        { key: 'insert', label: 'Insert sheet', onSelect: addSheet },
-        { key: 'delete', label: 'Delete sheet', danger: true, disabled: sheets.length <= 1, separatorBefore: true, onSelect: () => deleteSheet(active) },
+    // Excel-style menu bar. File → Open / Export▸; Sheet → add / delete / rows.
+    const fileItems = [
+        { key: 'open', label: 'Open', onSelect: openFile },
+        ...(formats.length > 0
+            ? [{ key: 'export', label: 'Export', separatorBefore: true, children: formats.map((fmt) => ({ key: fmt, label: exportLabels[fmt], onSelect: () => runExport(fmt) })) }]
+            : []),
     ]
-    const showMenuBar = fileItems.length > 0 || editable
+    const sheetItems = [
+        { key: 'add', label: 'Add Sheet', onSelect: addSheet },
+        { key: 'delete', label: 'Delete Sheet', danger: true, disabled: sheets.length <= 1, onSelect: () => deleteSheet(active) },
+        { key: 'add100', label: 'Add 100 rows', separatorBefore: true, onSelect: add100Rows },
+    ]
     const canDeleteSheet = editable && sheets.length > 1
 
     return (
         <div className={cx('flex flex-col overflow-hidden rounded-lg border border-border bg-surface-raised', className)} style={{ height, width, ...style }}>
             {/* Menu bar — File / Sheet menus, like a spreadsheet app. */}
-            {showMenuBar && (
-                <div className="flex flex-shrink-0 items-center gap-0.5 border-b border-border bg-surface px-1.5 py-1">
-                    {fileItems.length > 0 && <MenuButton label="File" variant="ghost" size="sm" hideChevron items={fileItems} />}
-                    {editable && <MenuButton label="Sheet" variant="ghost" size="sm" hideChevron items={sheetItems} />}
-                </div>
-            )}
+            <div className="flex flex-shrink-0 items-center gap-0.5 border-b border-border bg-surface px-1.5 py-1">
+                <MenuButton label="File" variant="ghost" size="sm" hideChevron items={fileItems} />
+                {editable && <MenuButton label="Sheet" variant="ghost" size="sm" hideChevron items={sheetItems} />}
+            </div>
+
+            {/* Hidden picker backing File ▸ Open. */}
+            <input
+                ref={fileInputRef}
+                type="file"
+                accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                onChange={onFilePicked}
+                className="hidden"
+                aria-hidden="true"
+                tabIndex={-1}
+            />
 
             {/* Grid fills the space between the toolbar and the sheet tabs. */}
             <div className="min-h-0 flex-1">
@@ -345,6 +414,9 @@ export default function Spreadsheet({
                     sortable={sortable}
                     virtualize={virtualize}
                     trailingRows={emptyRows}
+                    contextMenu
+                    onInsertRow={editable ? insertRow : undefined}
+                    onDeleteRow={editable ? deleteRow : undefined}
                     onCellEdit={handleCellEdit}
                     height="100%"
                     className="!rounded-none !border-0"

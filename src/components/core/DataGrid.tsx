@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { cx } from '../../utils/cx'
+import ContextMenu, { type ContextMenuActionItem } from './ContextMenu'
 
 export type CellValue = string | number | boolean | null
 
@@ -56,6 +57,12 @@ export interface DataGridProps {
     trailingRows?: number
     /** `row` is the index into `rows` (stable across sorting; may equal `rows.length`+ for a blank trailing row). */
     onCellEdit?: (e: { row: number; column: string; value: string }) => void
+    /** Enable right-click menus: Copy/Cut/Paste on cells, Add/Delete on rows. Default false. */
+    contextMenu?: boolean
+    /** Insert a blank row at `index` (from the row right-click menu). */
+    onInsertRow?: (index: number) => void
+    /** Delete the row at `index` (from the row right-click menu). */
+    onDeleteRow?: (index: number) => void
     className?: string
     style?: React.CSSProperties
     /** Shown when there are no rows. */
@@ -120,6 +127,9 @@ export default function DataGrid({
     rowNumbers = true,
     trailingRows = 0,
     onCellEdit,
+    contextMenu = false,
+    onInsertRow,
+    onDeleteRow,
     className = '',
     style,
     emptyState = 'No data',
@@ -127,6 +137,11 @@ export default function DataGrid({
     const scrollRef = useRef<HTMLDivElement>(null)
     const [scroll, setScroll] = useState({ top: 0, left: 0 })
     const [viewport, setViewport] = useState({ w: 0, h: 0 })
+    // Cell selection (for highlight + clipboard) and hovered row (for highlight).
+    const [selected, setSelected] = useState<{ disp: number; col: number } | null>(null)
+    const [hoveredRow, setHoveredRow] = useState<number | null>(null)
+    // What the open context menu targets — a cell or a row.
+    const [ctxTarget, setCtxTarget] = useState<{ kind: 'cell' | 'row'; disp: number } | null>(null)
     // `editing.disp` is the on-screen position; the emitted/sourced row is the
     // original index (`order[disp]`), stable across sorting.
     const [editing, setEditing] = useState<{ disp: number; col: number } | null>(null)
@@ -216,110 +231,175 @@ export default function DataGrid({
         setEditing({ disp, col })
     }
 
+    // ── Clipboard (single selected cell) ──────────────────────────────────────
+    const cellText = (sel: { disp: number; col: number }) =>
+        displayValue(rows[rowIndexForDisp(sel.disp)]?.[columns[sel.col].key] ?? '')
+
+    const copyCell = useCallback(async () => {
+        if (!selected) return
+        try { await navigator.clipboard?.writeText(cellText(selected)) } catch { /* clipboard unavailable */ }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selected, rows, columns, order])
+
+    const cutCell = useCallback(async () => {
+        if (!selected) return
+        await copyCell()
+        onCellEdit?.({ row: rowIndexForDisp(selected.disp), column: columns[selected.col].key, value: '' })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selected, copyCell, onCellEdit, columns, order, rows.length])
+
+    const pasteCell = useCallback(async () => {
+        if (!selected) return
+        let text = ''
+        try { text = (await navigator.clipboard?.readText()) ?? '' } catch { return }
+        onCellEdit?.({ row: rowIndexForDisp(selected.disp), column: columns[selected.col].key, value: text })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selected, onCellEdit, columns, order, rows.length])
+
+    // ── Right-click menu items (cell vs row) ──────────────────────────────────
+    const ctxItems = useMemo<ContextMenuActionItem[]>(() => {
+        if (ctxTarget?.kind === 'row') {
+            const ri = rowIndexForDisp(ctxTarget.disp)
+            const isData = ctxTarget.disp < rows.length
+            return [
+                { key: 'above', value: 'Add row above', disabled: !onInsertRow, onClick: () => onInsertRow?.(ri) },
+                { key: 'below', value: 'Add row below', disabled: !onInsertRow, onClick: () => onInsertRow?.(Math.min(rows.length, ri + 1)) },
+                { key: 'delete', value: 'Delete row', disabled: !isData || !onDeleteRow, onClick: () => onDeleteRow?.(ri) },
+            ]
+        }
+        return [
+            { key: 'copy', value: 'Copy', onClick: () => void copyCell() },
+            { key: 'cut', value: 'Cut', disabled: !editable, onClick: () => void cutCell() },
+            { key: 'paste', value: 'Paste', disabled: !editable, onClick: () => void pasteCell() },
+        ]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ctxTarget, rows.length, editable, onInsertRow, onDeleteRow, copyCell, cutCell, pasteCell, order])
+
+    const rowHighlighted = (disp: number) => hoveredRow === disp || selected?.disp === disp
+
+    const gridInner = (
+        <div style={{ position: 'relative', width: gutter + totalWidth + END_PAD, height: headerHeight + totalHeight + END_PAD }}>
+            {/* Corner (pinned top-left). */}
+            {rowNumbers && (
+                <div
+                    className="border-b border-r border-border bg-surface"
+                    style={{ position: 'absolute', top: scroll.top, left: scroll.left, width: gutter, height: headerHeight, zIndex: 3 }}
+                />
+            )}
+
+            {/* Header (pinned top, scrolls horizontally). */}
+            {visibleCols.map((ci) => {
+                const c = columns[ci]
+                const sortDir = sort?.key === c.key ? sort.dir : null
+                const canSort = colSortable(c)
+                return (
+                    <div
+                        key={`h-${c.key}`}
+                        role="columnheader"
+                        aria-sort={sortDir ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined}
+                        onClick={canSort ? () => toggleSort(c.key) : undefined}
+                        className={cx(
+                            'flex items-center gap-1 border-b border-r border-border bg-surface px-3 font-medium text-foreground-secondary',
+                            canSort && 'cursor-pointer select-none hover:text-foreground',
+                        )}
+                        style={{
+                            position: 'absolute', top: scroll.top, left: gutter + offsets[ci],
+                            width: widths[ci], height: headerHeight, zIndex: 2,
+                            justifyContent: c.align === 'right' ? 'flex-end' : c.align === 'center' ? 'center' : 'flex-start',
+                        }}
+                    >
+                        <span className="truncate">{c.label ?? c.key}</span>
+                        {canSort && <SortCaret dir={sortDir} />}
+                    </div>
+                )
+            })}
+
+            {/* Row-number gutter (pinned left, scrolls vertically). Shows the
+                on-screen position, like a spreadsheet. */}
+            {rowNumbers && visibleRows.map((disp) => {
+                const hi = rowHighlighted(disp)
+                return (
+                    <div
+                        key={`g-${disp}`}
+                        onMouseEnter={() => setHoveredRow(disp)}
+                        onContextMenu={contextMenu ? () => setCtxTarget({ kind: 'row', disp }) : undefined}
+                        className={cx(
+                            'flex items-center justify-center border-b border-r border-border bg-surface text-xs tabular-nums',
+                            hi ? 'font-medium text-foreground' : 'text-foreground-muted',
+                        )}
+                        style={{ position: 'absolute', left: scroll.left, top: headerHeight + disp * rowHeight, width: gutter, height: rowHeight, zIndex: 1, backgroundColor: hi ? HILITE : undefined }}
+                    >
+                        {disp + 1}
+                    </div>
+                )
+            })}
+
+            {/* Body cells. `disp` = on-screen row, `ri` = underlying data row
+                (a blank trailing row resolves to an index ≥ rows.length). */}
+            {visibleRows.map((disp) => {
+                const ri = rowIndexForDisp(disp)
+                const hi = rowHighlighted(disp)
+                return visibleCols.map((ci) => {
+                    const c = columns[ci]
+                    const isEditing = editing?.disp === disp && editing?.col === ci
+                    const isSelected = selected?.disp === disp && selected?.col === ci
+                    const canEdit = c.editable ?? editable
+                    return (
+                        <div
+                            key={`${disp}-${c.key}`}
+                            role="gridcell"
+                            aria-selected={isSelected || undefined}
+                            onClick={() => setSelected({ disp, col: ci })}
+                            onDoubleClick={() => startEdit(disp, ci)}
+                            onMouseEnter={() => setHoveredRow(disp)}
+                            onContextMenu={contextMenu ? () => { setSelected({ disp, col: ci }); setCtxTarget({ kind: 'cell', disp }) } : undefined}
+                            className={cx(
+                                'flex items-center border-b border-r border-border px-3',
+                                disp % 2 ? 'bg-surface-raised' : 'bg-surface',
+                                canEdit ? 'cursor-text' : 'cursor-default',
+                            )}
+                            style={{
+                                position: 'absolute', top: headerHeight + disp * rowHeight, left: gutter + offsets[ci],
+                                width: widths[ci], height: rowHeight, zIndex: isSelected ? 1 : undefined,
+                                backgroundColor: isSelected ? SELECT_BG : hi ? HILITE : undefined,
+                                boxShadow: isSelected ? SELECT_RING : undefined,
+                                justifyContent: c.align === 'right' ? 'flex-end' : c.align === 'center' ? 'center' : 'flex-start',
+                            }}
+                        >
+                            {isEditing ? (
+                                <input
+                                    autoFocus
+                                    value={draft}
+                                    onChange={(e) => setDraft(e.target.value)}
+                                    onBlur={commit}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') commit()
+                                        else if (e.key === 'Escape') setEditing(null)
+                                    }}
+                                    className="h-full w-full bg-transparent text-foreground outline-none"
+                                />
+                            ) : (
+                                <span className="truncate text-foreground">{displayValue(rows[ri]?.[c.key] ?? '')}</span>
+                            )}
+                        </div>
+                    )
+                })
+            })}
+        </div>
+    )
+
     return (
         <div
             ref={scrollRef}
             onScroll={(e) => setScroll({ top: e.currentTarget.scrollTop, left: e.currentTarget.scrollLeft })}
+            onMouseLeave={() => setHoveredRow(null)}
             className={cx('relative overflow-auto rounded-lg border border-border bg-surface-raised text-sm', className)}
             style={{ height, width, ...style }}
             role="grid"
             aria-rowcount={rows.length}
             aria-colcount={columns.length}
         >
-            {/* Spacer establishes the full scrollable area (+ END_PAD so the last
-                column/row clears the scrollbar track). */}
-            <div style={{ position: 'relative', width: gutter + totalWidth + END_PAD, height: headerHeight + totalHeight + END_PAD }}>
-                {/* Corner (pinned top-left). */}
-                {rowNumbers && (
-                    <div
-                        className="border-b border-r border-border bg-surface"
-                        style={{ position: 'absolute', top: scroll.top, left: scroll.left, width: gutter, height: headerHeight, zIndex: 3 }}
-                    />
-                )}
-
-                {/* Header (pinned top, scrolls horizontally). */}
-                {visibleCols.map((ci) => {
-                    const c = columns[ci]
-                    const sortDir = sort?.key === c.key ? sort.dir : null
-                    const canSort = colSortable(c)
-                    return (
-                        <div
-                            key={`h-${c.key}`}
-                            role="columnheader"
-                            aria-sort={sortDir ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined}
-                            onClick={canSort ? () => toggleSort(c.key) : undefined}
-                            className={cx(
-                                'flex items-center gap-1 border-b border-r border-border bg-surface px-3 font-medium text-foreground-secondary',
-                                canSort && 'cursor-pointer select-none hover:text-foreground',
-                            )}
-                            style={{
-                                position: 'absolute', top: scroll.top, left: gutter + offsets[ci],
-                                width: widths[ci], height: headerHeight, zIndex: 2,
-                                justifyContent: c.align === 'right' ? 'flex-end' : c.align === 'center' ? 'center' : 'flex-start',
-                            }}
-                        >
-                            <span className="truncate">{c.label ?? c.key}</span>
-                            {canSort && <SortCaret dir={sortDir} />}
-                        </div>
-                    )
-                })}
-
-                {/* Row-number gutter (pinned left, scrolls vertically). Shows the
-                    on-screen position, like a spreadsheet. */}
-                {rowNumbers && visibleRows.map((disp) => (
-                    <div
-                        key={`g-${disp}`}
-                        className="flex items-center justify-center border-b border-r border-border bg-surface text-xs tabular-nums text-foreground-muted"
-                        style={{ position: 'absolute', left: scroll.left, top: headerHeight + disp * rowHeight, width: gutter, height: rowHeight, zIndex: 1 }}
-                    >
-                        {disp + 1}
-                    </div>
-                ))}
-
-                {/* Body cells. `disp` = on-screen row, `ri` = underlying data row
-                    (a blank trailing row resolves to an index ≥ rows.length). */}
-                {visibleRows.map((disp) => {
-                    const ri = rowIndexForDisp(disp)
-                    return visibleCols.map((ci) => {
-                        const c = columns[ci]
-                        const isEditing = editing?.disp === disp && editing?.col === ci
-                        const canEdit = c.editable ?? editable
-                        return (
-                            <div
-                                key={`${disp}-${c.key}`}
-                                role="gridcell"
-                                onDoubleClick={() => startEdit(disp, ci)}
-                                className={cx(
-                                    'flex items-center border-b border-r border-border px-3',
-                                    disp % 2 ? 'bg-surface-raised' : 'bg-surface',
-                                    canEdit && 'cursor-text',
-                                )}
-                                style={{
-                                    position: 'absolute', top: headerHeight + disp * rowHeight, left: gutter + offsets[ci],
-                                    width: widths[ci], height: rowHeight,
-                                    justifyContent: c.align === 'right' ? 'flex-end' : c.align === 'center' ? 'center' : 'flex-start',
-                                }}
-                            >
-                                {isEditing ? (
-                                    <input
-                                        autoFocus
-                                        value={draft}
-                                        onChange={(e) => setDraft(e.target.value)}
-                                        onBlur={commit}
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') commit()
-                                            else if (e.key === 'Escape') setEditing(null)
-                                        }}
-                                        className="h-full w-full bg-transparent text-foreground outline-none"
-                                    />
-                                ) : (
-                                    <span className="truncate text-foreground">{displayValue(rows[ri]?.[c.key] ?? '')}</span>
-                                )}
-                            </div>
-                        )
-                    })
-                })}
-            </div>
+            {contextMenu ? <ContextMenu items={ctxItems}>{gridInner}</ContextMenu> : gridInner}
 
             {displayRowCount === 0 && (
                 <div className="absolute inset-0 flex items-center justify-center text-foreground-muted" style={{ top: headerHeight }}>
@@ -329,6 +409,12 @@ export default function DataGrid({
         </div>
     )
 }
+
+// Accent tints (color-mix keeps them valid against the semantic token in both
+// themes). Row hover is faint; the selected cell is stronger + an inset ring.
+const HILITE = 'color-mix(in srgb, var(--color-accent) 9%, transparent)'
+const SELECT_BG = 'color-mix(in srgb, var(--color-accent) 16%, transparent)'
+const SELECT_RING = 'inset 0 0 0 2px var(--color-accent)'
 
 /** Sort direction indicator — both carets dimmed when unsorted, active one lit. */
 function SortCaret({ dir }: { dir: GridSortDirection | null }) {

@@ -95,6 +95,30 @@ describe('DataGrid', () => {
         expect(onCellEdit).toHaveBeenCalledWith({ row: 1, column: 'score', value: '99' })
     })
 
+    it('selects a cell on click (aria-selected)', () => {
+        render(<DataGrid columns={columns} rows={makeRows(3)} />)
+        const cell = screen.getByText('Row 1').closest('[role="gridcell"]') as HTMLElement
+        fireEvent.click(cell)
+        expect(cell).toHaveAttribute('aria-selected', 'true')
+    })
+
+    it('shows a Copy/Cut/Paste menu when a cell is right-clicked', async () => {
+        render(<DataGrid columns={columns} rows={makeRows(3)} editable contextMenu virtualize={false} onCellEdit={vi.fn()} />)
+        fireEvent.contextMenu(screen.getByText('Row 0'))
+        expect(await screen.findByRole('menuitem', { name: 'Copy' })).toBeInTheDocument()
+        expect(screen.getByRole('menuitem', { name: 'Cut' })).toBeInTheDocument()
+        expect(screen.getByRole('menuitem', { name: 'Paste' })).toBeInTheDocument()
+    })
+
+    it('right-clicking a row gutter offers add/delete and fires onInsertRow', async () => {
+        const onInsertRow = vi.fn()
+        render(<DataGrid columns={columns} rows={makeRows(3)} editable contextMenu virtualize={false} onCellEdit={vi.fn()} onInsertRow={onInsertRow} onDeleteRow={vi.fn()} />)
+        // '3' is unique to the gutter (row 3) for this data.
+        fireEvent.contextMenu(screen.getByText('3'))
+        fireEvent.click(await screen.findByRole('menuitem', { name: 'Add row below' }))
+        expect(onInsertRow).toHaveBeenCalledWith(3)
+    })
+
     it('does not edit a non-editable column', () => {
         const onCellEdit = vi.fn()
         render(<DataGrid columns={columns} rows={makeRows(3)} editable onCellEdit={onCellEdit} />)

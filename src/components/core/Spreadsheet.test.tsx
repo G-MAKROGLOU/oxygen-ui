@@ -41,9 +41,9 @@ describe('Spreadsheet', () => {
         expect(screen.getByRole('button', { name: 'File' })).toBeInTheDocument()
     })
 
-    it('hides the menu bar when not editable and export={false}', () => {
+    it('always shows the File menu (Open) and hides Sheet when not editable', () => {
         render(<Spreadsheet source={sheets} export={false} />)
-        expect(screen.queryByRole('button', { name: 'File' })).not.toBeInTheDocument()
+        expect(screen.getByRole('button', { name: 'File' })).toBeInTheDocument()
         expect(screen.queryByRole('button', { name: 'Sheet' })).not.toBeInTheDocument()
     })
 
@@ -89,7 +89,7 @@ describe('Spreadsheet', () => {
         render(<Spreadsheet source={[sheets[0]]} editable emptyRows={20} onChange={onChange} />)
         // 2 data rows × 2 cols = 4 data cells; cell index 4 is the first blank row, col 0.
         fireEvent.doubleClick(screen.getAllByRole('gridcell')[4])
-        const input = screen.getByDisplayValue('')
+        const input = screen.getByRole('textbox') // the cell editor
         fireEvent.change(input, { target: { value: 'MV Crux' } })
         fireEvent.keyDown(input, { key: 'Enter' })
         // The sheet grew from 2 data rows to 3.

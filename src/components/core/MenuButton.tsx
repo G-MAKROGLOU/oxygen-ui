@@ -16,6 +16,8 @@ export interface MenuButtonItem {
     danger?: boolean
     /** Render a divider above this item. */
     separatorBefore?: boolean
+    /** Nested sub-menu items. When set, this row opens a sub-menu instead of firing `onSelect`. */
+    children?: MenuButtonItem[]
 }
 
 export interface MenuButtonProps {
@@ -51,6 +53,59 @@ const Chevron = () => (
         <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
     </svg>
 )
+
+const ChevronRight = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true" className="ml-auto h-4 w-4">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+    </svg>
+)
+
+const ITEM_CLASS = [
+    'flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm outline-none cursor-pointer select-none transition-colors',
+    'data-[disabled]:opacity-50 data-[disabled]:pointer-events-none',
+].join(' ')
+const itemTone = (danger?: boolean) =>
+    danger ? 'text-status-error data-[highlighted]:bg-status-error/10' : 'text-foreground data-[highlighted]:bg-surface-raised'
+
+const Label = ({ item }: { item: MenuButtonItem }) => (
+    <>
+        {item.icon && <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center">{item.icon}</span>}
+        <span className="flex-1 truncate">{item.label}</span>
+    </>
+)
+
+/** Render a leaf item, or a sub-menu when the item has `children`. */
+function renderItem(item: MenuButtonItem) {
+    if (item.children && item.children.length > 0) {
+        return (
+            <DropdownMenu.Sub>
+                <DropdownMenu.SubTrigger disabled={item.disabled} className={`${ITEM_CLASS} ${itemTone(item.danger)}`}>
+                    <Label item={item} />
+                    <ChevronRight />
+                </DropdownMenu.SubTrigger>
+                <DropdownMenu.Portal>
+                    <DropdownMenu.SubContent
+                        sideOffset={4}
+                        collisionPadding={8}
+                        className="z-[400] min-w-[10rem] rounded-lg border border-border bg-surface p-1 shadow-lg data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
+                    >
+                        {item.children.map((sub) => (
+                            <React.Fragment key={sub.key}>
+                                {sub.separatorBefore && <DropdownMenu.Separator className="my-1 h-px bg-border" />}
+                                {renderItem(sub)}
+                            </React.Fragment>
+                        ))}
+                    </DropdownMenu.SubContent>
+                </DropdownMenu.Portal>
+            </DropdownMenu.Sub>
+        )
+    }
+    return (
+        <DropdownMenu.Item disabled={item.disabled} onSelect={() => item.onSelect?.()} className={`${ITEM_CLASS} ${itemTone(item.danger)}`}>
+            <Label item={item} />
+        </DropdownMenu.Item>
+    )
+}
 
 /**
  * A {@link Button} that opens a dropdown menu of actions, built on Radix
@@ -112,20 +167,7 @@ export default function MenuButton({
                     {items.map((item) => (
                         <React.Fragment key={item.key}>
                             {item.separatorBefore && <DropdownMenu.Separator className="my-1 h-px bg-border" />}
-                            <DropdownMenu.Item
-                                disabled={item.disabled}
-                                onSelect={() => item.onSelect?.()}
-                                className={[
-                                    'flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm outline-none cursor-pointer select-none transition-colors',
-                                    'data-[disabled]:opacity-50 data-[disabled]:pointer-events-none',
-                                    item.danger
-                                        ? 'text-status-error data-[highlighted]:bg-status-error/10'
-                                        : 'text-foreground data-[highlighted]:bg-surface-raised',
-                                ].join(' ')}
-                            >
-                                {item.icon && <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center">{item.icon}</span>}
-                                <span className="flex-1 truncate">{item.label}</span>
-                            </DropdownMenu.Item>
+                            {renderItem(item)}
                         </React.Fragment>
                     ))}
                 </DropdownMenu.Content>
