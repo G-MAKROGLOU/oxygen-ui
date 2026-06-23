@@ -36,14 +36,35 @@ describe('Spreadsheet', () => {
         expect(screen.getByText('Jan')).toBeInTheDocument()
     })
 
-    it('shows an export menu when formats are configured', () => {
+    it('shows a File menu when formats are configured', () => {
         render(<Spreadsheet source={sheets} export={['csv', 'xlsx']} />)
-        expect(screen.getByRole('button', { name: /Export/ })).toBeInTheDocument()
+        expect(screen.getByRole('button', { name: 'File' })).toBeInTheDocument()
     })
 
-    it('hides export when export={false}', () => {
+    it('hides the menu bar when not editable and export={false}', () => {
         render(<Spreadsheet source={sheets} export={false} />)
-        expect(screen.queryByRole('button', { name: /Export/ })).not.toBeInTheDocument()
+        expect(screen.queryByRole('button', { name: 'File' })).not.toBeInTheDocument()
+        expect(screen.queryByRole('button', { name: 'Sheet' })).not.toBeInTheDocument()
+    })
+
+    it('shows a Sheet menu when editable', () => {
+        render(<Spreadsheet source={sheets} editable />)
+        expect(screen.getByRole('button', { name: 'Sheet' })).toBeInTheDocument()
+    })
+
+    it('deletes a sheet via its tab × and clamps the active sheet', () => {
+        const onChange = vi.fn()
+        render(<Spreadsheet source={sheets} editable onChange={onChange} />)
+        expect(screen.getAllByRole('tab')).toHaveLength(2)
+        fireEvent.click(screen.getByRole('button', { name: 'Delete Emissions' }))
+        expect(screen.getAllByRole('tab')).toHaveLength(1)
+        expect(screen.queryByRole('tab', { name: 'Emissions' })).not.toBeInTheDocument()
+        expect(onChange).toHaveBeenCalled()
+    })
+
+    it('never offers to delete the last remaining sheet', () => {
+        render(<Spreadsheet source={[sheets[0]]} editable />)
+        expect(screen.queryByRole('button', { name: /^Delete / })).not.toBeInTheDocument()
     })
 
     it('adds a blank sheet via the “+” when editable', () => {

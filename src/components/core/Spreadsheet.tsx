@@ -207,6 +207,14 @@ export default function Spreadsheet({
         })
     }, [onChange])
 
+    const deleteSheet = useCallback((index: number) => {
+        if (!sheets || sheets.length <= 1) return // a workbook keeps at least one sheet
+        const next = sheets.filter((_, i) => i !== index)
+        setSheets(next)
+        setActive((a) => Math.max(0, Math.min(index < a ? a - 1 : a, next.length - 1)))
+        onChange?.(next)
+    }, [sheets, onChange])
+
     // ── Exports ───────────────────────────────────────────────────────────────
     const baseName = useMemo(
         () => (fileName || (typeof source === 'object' && 'name' in (source as any) ? sourceName(source as any) : null) || 'spreadsheet').replace(/\.[^.]+$/, ''),
@@ -303,39 +311,29 @@ export default function Spreadsheet({
 
     const formats = exportFormats || []
     const exportLabels: Record<'xlsx' | 'csv' | 'pdf', string> = {
-        xlsx: 'Excel workbook (.xlsx)',
-        csv: 'CSV — this sheet (.csv)',
-        pdf: 'PDF table (.pdf)',
+        xlsx: 'Export to Excel (.xlsx)',
+        csv: 'Export to CSV (.csv)',
+        pdf: 'Export to PDF (.pdf)',
     }
+
+    // Excel-style menu bar. File → exports; Sheet → insert / delete.
+    const fileItems = formats.map((fmt) => ({ key: fmt, label: exportLabels[fmt], onSelect: () => runExport(fmt) }))
+    const sheetItems = [
+        { key: 'insert', label: 'Insert sheet', onSelect: addSheet },
+        { key: 'delete', label: 'Delete sheet', danger: true, disabled: sheets.length <= 1, separatorBefore: true, onSelect: () => deleteSheet(active) },
+    ]
+    const showMenuBar = fileItems.length > 0 || editable
+    const canDeleteSheet = editable && sheets.length > 1
 
     return (
         <div className={cx('flex flex-col overflow-hidden rounded-lg border border-border bg-surface-raised', className)} style={{ height, width, ...style }}>
-            {/* Top toolbar: active sheet name + row/col meta + export menu. */}
-            <div className="flex flex-shrink-0 items-center gap-2 border-b border-border bg-surface px-3 py-1.5">
-                <span className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground">{sheet?.name || 'Sheet 1'}</span>
-
-                <span className="hidden flex-shrink-0 text-xs tabular-nums text-foreground-muted sm:inline">
-                    {plainRows.length.toLocaleString()} {plainRows.length === 1 ? 'row' : 'rows'} · {columns.length} cols
-                </span>
-
-                {formats.length > 0 && (
-                    <>
-                        <span className="h-5 w-px flex-shrink-0 bg-border" aria-hidden="true" />
-                        <MenuButton
-                            label="Export"
-                            size="sm"
-                            variant="outline"
-                            align="end"
-                            icon={<DownloadIcon />}
-                            items={formats.map((fmt) => ({
-                                key: fmt,
-                                label: exportLabels[fmt],
-                                onSelect: () => runExport(fmt),
-                            }))}
-                        />
-                    </>
-                )}
-            </div>
+            {/* Menu bar — File / Sheet menus, like a spreadsheet app. */}
+            {showMenuBar && (
+                <div className="flex flex-shrink-0 items-center gap-0.5 border-b border-border bg-surface px-1.5 py-1">
+                    {fileItems.length > 0 && <MenuButton label="File" variant="ghost" size="sm" hideChevron items={fileItems} />}
+                    {editable && <MenuButton label="Sheet" variant="ghost" size="sm" hideChevron items={sheetItems} />}
+                </div>
+            )}
 
             {/* Grid fills the space between the toolbar and the sheet tabs. */}
             <div className="min-h-0 flex-1">
@@ -353,32 +351,48 @@ export default function Spreadsheet({
                 />
             </div>
 
-            {/* Bottom sheet tabs — Excel-style, on their own bar. */}
-            {(sheets.length > 1 || canAddSheet) && (
-                <div className="flex flex-shrink-0 items-center gap-1 border-t border-border bg-surface px-2 py-1">
-                    <div role="tablist" aria-label="Sheets" className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
-                        {sheets.map((s, i) => {
-                            const activeTab = i === active
-                            return (
-                                <button
-                                    key={`${s.name}-${i}`}
-                                    role="tab"
-                                    type="button"
-                                    aria-selected={activeTab}
-                                    onClick={() => setActive(i)}
-                                    className={cx(
-                                        'flex-shrink-0 rounded-t-md border-t-2 px-3 py-1 text-xs transition-colors',
-                                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-                                        activeTab
-                                            ? 'border-t-accent bg-surface-raised font-semibold text-foreground shadow-sm'
-                                            : 'border-t-transparent font-medium text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
-                                    )}
-                                >
-                                    {s.name || `Sheet ${i + 1}`}
-                                </button>
-                            )
-                        })}
-                    </div>
+            {/* Status bar: sheet tabs (with add / delete) on the left, row·col meta on the right. */}
+            <div className="flex flex-shrink-0 items-center gap-2 border-t border-border bg-surface px-2 py-1">
+                <div role="tablist" aria-label="Sheets" className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
+                    {sheets.map((s, i) => {
+                        const activeTab = i === active
+                        const name = s.name || `Sheet ${i + 1}`
+                        return (
+                            <div
+                                key={`${s.name}-${i}`}
+                                role="tab"
+                                tabIndex={0}
+                                aria-selected={activeTab}
+                                onClick={() => setActive(i)}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(i) } }}
+                                className={cx(
+                                    'group flex flex-shrink-0 cursor-pointer items-center gap-1 rounded-t-md border-t-2 px-3 py-1 text-xs transition-colors',
+                                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                                    activeTab
+                                        ? 'border-t-accent bg-surface-raised font-semibold text-foreground shadow-sm'
+                                        : 'border-t-transparent font-medium text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
+                                )}
+                            >
+                                <span className="max-w-[160px] truncate">{name}</span>
+                                {canDeleteSheet && (
+                                    <button
+                                        type="button"
+                                        title="Delete sheet"
+                                        aria-label={`Delete ${name}`}
+                                        onClick={(e) => { e.stopPropagation(); deleteSheet(i) }}
+                                        className={cx(
+                                            'flex h-4 w-4 items-center justify-center rounded text-foreground-muted transition-opacity hover:text-status-error',
+                                            activeTab ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+                                        )}
+                                    >
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-3 w-3" aria-hidden="true">
+                                            <path strokeLinecap="round" d="M6 6l12 12M18 6 6 18" />
+                                        </svg>
+                                    </button>
+                                )}
+                            </div>
+                        )
+                    })}
                     {canAddSheet && (
                         <button
                             type="button"
@@ -393,13 +407,11 @@ export default function Spreadsheet({
                         </button>
                     )}
                 </div>
-            )}
+
+                <span className="hidden flex-shrink-0 text-xs tabular-nums text-foreground-muted sm:inline">
+                    {plainRows.length.toLocaleString()} {plainRows.length === 1 ? 'row' : 'rows'} · {columns.length} cols
+                </span>
+            </div>
         </div>
     )
 }
-
-const DownloadIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16" />
-    </svg>
-)
