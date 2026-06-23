@@ -229,6 +229,21 @@ export type {
 export { default as VirtualList } from './components/core/VirtualList'
 export type { VirtualListProps } from './components/core/VirtualList'
 
+/** Shared file-source contract for content components (PdfViewer, Spreadsheet) */
+export type { FileSource, RemoteSourceOptions } from './utils/fileSource'
+
+/** Virtualized PDF viewer (lazy pdfjs-dist; URL / File / bytes sources) */
+export { default as PdfViewer } from './components/core/PdfViewer'
+export type { PdfViewerProps } from './components/core/PdfViewer'
+
+/** Both-axes virtualized editable data grid primitive */
+export { default as DataGrid } from './components/core/DataGrid'
+export type { DataGridProps, GridColumn, CellValue } from './components/core/DataGrid'
+
+/** Multi-sheet spreadsheet (lazy SheetJS parse; xlsx/csv/pdf export) */
+export { default as Spreadsheet } from './components/core/Spreadsheet'
+export type { SpreadsheetProps, Cell, SheetData, GridSource } from './components/core/Spreadsheet'
+
 /** Theme-toggle switch (moon/sun icons, accent track) */
 export { default as ThemeSwitch } from './components/core/Switch'
 export type { ThemeSwitchProps } from './components/core/Switch'
