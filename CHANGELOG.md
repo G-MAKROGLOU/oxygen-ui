@@ -1,3 +1,10 @@
+# [7.11.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.10.0...v7.11.0) (2026-06-23)
+
+
+### Features
+
+* **spreadsheet:** bottom sheet tabs with add-sheet, slack rows, clearer active tab ([075b509](https://github.com/G-MAKROGLOU/oxygen-ui/commit/075b509ebb872164a593656c0986b55f85e8297d))
+
 # [7.10.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.9.0...v7.10.0) (2026-06-23)
 
 
