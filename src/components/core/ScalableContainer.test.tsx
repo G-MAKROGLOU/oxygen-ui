@@ -71,6 +71,26 @@ describe('ScalableContainer', () => {
         expect(neighbour.getAttribute('style')).toBe(before)
     })
 
+    it('leaves resting size to className (no inline width/height) and only writes it when expanded', () => {
+        renderWithTooltips(
+            <ScalableContainer className="w-[calc(50%-6px)]" height={180} targetWidth="100%" targetHeight={420}>
+                <span>chart</span>
+            </ScalableContainer>,
+        )
+        const box = screen.getByText('chart').closest('.rounded-lg') as HTMLElement
+        // Resting: no inline width (className owns it); only the explicit height is inline.
+        expect(box.style.width).toBe('')
+        expect(box.style.height).toBe('180px')
+
+        fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
+        expect(box.style.width).toBe('100%')
+        expect(box.style.height).toBe('420px')
+
+        fireEvent.click(screen.getByRole('button', { name: 'Collapse container' }))
+        // Collapsed again → inline width removed, className takes back over.
+        expect(box.style.width).toBe('')
+    })
+
     it('falls back to expandedWidth/expandedHeight when no target is given', () => {
         renderWithTooltips(
             <ScalableContainer width={300} height={150} expandedWidth={700} expandedHeight={450}>

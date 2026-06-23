@@ -148,17 +148,20 @@ const FakeChart = ({ label }: { label: string }) => {
     )
 }
 
-// A flex-wrap chart grid: each chart rests at ~half width; expanding one grows
-// it to a concrete bigger size (targetWidth/targetHeight) and the others reflow
-// below it at their own dimensions — pushed down, never squeezed.
+// A flex-wrap chart grid, sized by className (the real consumer pattern): each
+// chart rests at ~half width via `w-[calc(50%-6px)]`, height set by the `height`
+// prop. Expanding one grows it to targetWidth/targetHeight and the others reflow
+// below at their own dimensions — pushed down, never squeezed. No `width` prop,
+// so the className controls resting size (inline width is only written when
+// expanded).
 export const GridExpand: Story = {
-    name: 'Expand in a chart grid (targetWidth / targetHeight)',
+    name: 'Expand in a chart grid (className-sized)',
     render: () => (
         <div className="flex w-[680px] flex-wrap gap-3">
             {['Fuel consumption', 'CII rating', 'Emissions trend', 'Speed vs power'].map((label) => (
                 <ScalableContainer
                     key={label}
-                    width="calc(50% - 0.375rem)"
+                    className="w-[calc(50%-6px)] bg-surface-raised"
                     height={180}
                     targetWidth="100%"
                     targetHeight={420}

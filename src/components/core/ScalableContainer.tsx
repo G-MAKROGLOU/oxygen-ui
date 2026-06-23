@@ -1,25 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { useReducedMotion } from 'framer-motion'
 import Tooltip from './Tooltip'
 import { cx } from '../../utils/cx'
 
 export interface ScalableContainerProps {
-    /** Resting width. Any CSS length / percent. Default `'100%'`. */
+    /**
+     * Resting width. Optional — when omitted, the resting size is left to your
+     * own `className` / parent layout (so the container can sit in a fluid grid
+     * sized by `w-[…]` classes). Only set this if you want an inline width.
+     */
     width?: React.CSSProperties['width']
-    /** Resting height. Any CSS length / percent. Default `'auto'`. */
+    /** Resting height. Optional — see {@link ScalableContainerProps.width}. */
     height?: React.CSSProperties['height']
     /**
-     * Width when expanded. A concrete value (e.g. `900` or `'60rem'`) makes the
-     * container grow even when its resting width is `'100%'` inside a flex/grid
-     * cell. Falls back to {@link ScalableContainerProps.expandedWidth}, then
-     * `'100%'`.
+     * Width when expanded. Default `'100%'`. Use `'100%'` to span the full row
+     * of a flex/grid so the container pushes its neighbours onto the next
+     * row(s); a concrete value (e.g. `900`) grows it to that exact width.
      */
     targetWidth?: React.CSSProperties['width']
-    /**
-     * Height when expanded. A concrete value (e.g. `600`) lets the container
-     * grow taller and push whatever sits below it further down. Falls back to
-     * {@link ScalableContainerProps.expandedHeight}, then `'100%'`.
-     */
+    /** Height when expanded. Default `'100%'`. A concrete value (e.g. `580`)
+     *  grows the container taller and pushes whatever follows further down. */
     targetHeight?: React.CSSProperties['height']
     /** @deprecated Use `targetWidth`. */
     expandedWidth?: React.CSSProperties['width']
@@ -58,32 +58,39 @@ const TOGGLE_POSITION_CLASS: Record<NonNullable<ScalableContainerProps['togglePo
 }
 
 /**
- * Container that smoothly grows to a target size on click and collapses back.
- * Reads like an OS window resize — subtle elevation lift, smooth scale, no
- * colour change.
+ * Container that grows to a target size on click and collapses back. Reads like
+ * an OS window resize — subtle elevation lift, smooth size transition.
  *
- * Expansion grows the container's OWN box to `targetWidth` × `targetHeight` and
- * makes it `flex-none` while expanded, so it holds that size and simply pushes
- * its neighbours along the flow — they keep their own dimensions and reflow
- * (e.g. wrap onto the next row / move down) rather than being squeezed. Nothing
- * on sibling elements is mutated, so layouts restore exactly on collapse. For
- * neighbours to reflow *below*, give the parent room to wrap (e.g. a
- * `flex flex-wrap` row, or block/auto-rows-grid flow).
+ * **Resting size comes from your layout, not from props.** Leave `width`/`height`
+ * unset and size the container with your own `className` (e.g. a fluid grid:
+ * `w-full lg:w-[calc(50%-6px)]`). Only when expanded does the container write an
+ * inline `width`/`height` (= `targetWidth`/`targetHeight`) and go `flex: none`,
+ * so it grows to that size and simply **pushes its neighbours along the flow** —
+ * they keep their own dimensions and reflow (wrap / move down). On collapse the
+ * inline sizing is removed and your className layout takes back over. No sibling
+ * styles are ever touched.
+ *
+ * For neighbours to reflow *below* the expanded one, the parent must be able to
+ * wrap — a `flex flex-wrap` row is the simplest; with `targetWidth="100%"` the
+ * expanded item takes a full row and everything after it moves down.
  *
  * @example
  * ```tsx
- * // In a flex-wrap chart grid — expands to a concrete size and pushes the rest down.
- * <div className="flex flex-wrap gap-2">
- *   <ScalableContainer width="100%" height={240} targetWidth="100%" targetHeight={520}>
- *     <Chart data={metrics} />
+ * <div className="flex flex-wrap gap-3">
+ *   <ScalableContainer
+ *     className="w-full lg:w-[calc(50%-6px)]"   // resting size — your grid
+ *     height={300}                              // resting height
+ *     targetWidth="100%" targetHeight={580}     // expanded size
+ *   >
+ *     <Chart … />
  *   </ScalableContainer>
  *   …
  * </div>
  * ```
  */
 export default function ScalableContainer({
-    width = '100%',
-    height = 'auto',
+    width,
+    height,
     targetWidth,
     targetHeight,
     expandedWidth = '100%',
@@ -106,11 +113,10 @@ export default function ScalableContainer({
     const expandW = targetWidth ?? expandedWidth
     const expandH = targetHeight ?? expandedHeight
 
-    // Charts and other measure-once content don't notice their container being
-    // resized by a CSS/transform transition. Most chart libraries DO listen to
-    // window resize, so emit resize kicks while the transition runs and once it
-    // settles — both the expanded chart and any reflowed neighbours re-render at
-    // their new sizes instead of staying malformed.
+    // Chart libraries (Chart.js, ECharts, …) measure once and don't notice a CSS
+    // size change. Most listen to window resize, so emit resize kicks across the
+    // transition and once it settles — both the grown chart and any reflowed
+    // neighbours re-render at their new sizes. Also scroll the grown box into view.
     useEffect(() => {
         if (isScaled === prevScaled.current) return
         prevScaled.current = isScaled
@@ -118,7 +124,6 @@ export default function ScalableContainer({
         const kick = () => window.dispatchEvent(new Event('resize'))
         const interval = window.setInterval(kick, 80)
         const stop = window.setTimeout(() => { window.clearInterval(interval); kick() }, reduced ? 0 : 420)
-        // Bring the grown container fully into view (only when expanding).
         if (isScaled) {
             window.setTimeout(
                 () => containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }),
@@ -137,33 +142,25 @@ export default function ScalableContainer({
     const wrapperClass = isScaled ? assignClassOnClick : undefined
 
     return (
-        <motion.div
+        <div
             ref={containerRef}
-            // Base style mirrors the animation target so layout is correct from
-            // the first paint (and in frame-starved environments); framer tweens
-            // between the values on toggle. `flex: none` while expanded keeps the
-            // target size from being shrunk/grown by a flex parent, so the box
-            // holds its size and pushes neighbours along the flow instead.
+            // Resting (collapsed): only emit inline width/height if the consumer
+            // explicitly passed them — otherwise leave sizing to className/parent
+            // so the container fits its fluid grid. Expanded: write the target
+            // size + `flex:none` so it holds that size and pushes neighbours
+            // (which keep their own dimensions and reflow) instead of shrinking
+            // them. The CSS transition animates the size change both ways.
             style={{
                 width:  isScaled ? expandW : width,
                 height: isScaled ? expandH : height,
-                flex:   isScaled ? 'none' : undefined,
+                ...(isScaled ? { flex: 'none' } : null),
             }}
-            animate={{ width: isScaled ? expandW : width, height: isScaled ? expandH : height }}
-            transition={
-                reduced
-                    ? { duration: 0 }
-                    : {
-                          width:  { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] },
-                          height: { type: 'tween', duration: 0.32, ease: [0.16, 1, 0.3, 1] },
-                      }
-            }
             className={cx(
                 'relative rounded-lg overflow-hidden',
+                'transition-[width,height,box-shadow] duration-[320ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none',
                 // OS-window aesthetic: subtle elevation at rest, lifted shadow +
                 // raised stacking when expanded so it sits above neighbours.
                 isScaled ? 'z-raised shadow-2xl' : 'shadow-md',
-                'transition-shadow duration-300',
                 className,
             )}
         >
@@ -191,7 +188,7 @@ export default function ScalableContainer({
             </Tooltip>
 
             <div className={cx('h-full w-full', wrapperClass)}>{children}</div>
-        </motion.div>
+        </div>
     )
 }
 
