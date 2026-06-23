@@ -296,6 +296,7 @@ function EditableCell<T extends Record<string, any>>({
     onCellEdit?: (info: CellEditInfo<T>) => void
 }) {
     const [editing, setEditing] = useState(false)
+    const editRef = useRef<HTMLDivElement>(null)
     const value = row[col.keyBind] as T[keyof T]
     const commit = (next: string) => {
         setEditing(false)
@@ -303,8 +304,34 @@ function EditableCell<T extends Record<string, any>>({
     }
     const cancel = () => setEditing(false)
 
+    // Custom editors (col.editor) get no native blur/Escape — and components
+    // like Temporal/Dropdown open portaled popups so blur never bubbles up.
+    // Dismiss the editor on outside click or Escape while editing.
+    useEffect(() => {
+        if (!editing || !col.editor) return
+        const onMouseDown = (e: MouseEvent) => {
+            const target = e.target as Node
+            if (editRef.current && editRef.current.contains(target)) return
+            // Editors like Temporal/Dropdown open Radix popups portaled to
+            // <body> — clicks there are outside editRef but still part of the
+            // edit. Treat them as inside, or selecting a value would unmount the
+            // editor before it commits.
+            if (target instanceof Element && target.closest('[data-radix-popper-content-wrapper],[data-radix-portal]')) return
+            cancel()
+        }
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') cancel()
+        }
+        document.addEventListener('mousedown', onMouseDown)
+        document.addEventListener('keydown', onKeyDown)
+        return () => {
+            document.removeEventListener('mousedown', onMouseDown)
+            document.removeEventListener('keydown', onKeyDown)
+        }
+    }, [editing, col.editor])
+
     if (editing) {
-        if (col.editor) return <>{col.editor({ value, row, commit, cancel })}</>
+        if (col.editor) return <div ref={editRef}>{col.editor({ value, row, commit, cancel })}</div>
         return (
             <input
                 autoFocus

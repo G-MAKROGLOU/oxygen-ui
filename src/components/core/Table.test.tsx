@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import Table, { TableColumn } from './Table'
@@ -239,6 +240,56 @@ describe('Table', () => {
         fireEvent.change(input, { target: { value: 'Alicia' } })
         fireEvent.keyDown(input, { key: 'Enter' })
         expect(onCellEdit).toHaveBeenCalledWith(expect.objectContaining({ key: 'name', value: 'Alicia', rowIndex: 0 }))
+    })
+
+    // ── Custom editor dismissal (col.editor) ───────────────────────────────
+    const editorCols = (): TableColumn[] => [
+        {
+            key: 'name', label: 'Name', keyBind: 'name', editable: true,
+            editor: ({ value }) => <div data-testid="custom-editor">editing {String(value)}</div>,
+        },
+        ...COLUMNS.slice(1),
+    ]
+
+    it('opens a custom editor and dismisses it on outside click', () => {
+        render(<Table columns={editorCols()} rows={ROWS} pagination={{ enabled: false }} onCellEdit={vi.fn()} />)
+        fireEvent.click(screen.getByRole('button', { name: 'Alice' }))
+        expect(screen.getByTestId('custom-editor')).toBeInTheDocument()
+        fireEvent.mouseDown(document.body)
+        expect(screen.queryByTestId('custom-editor')).not.toBeInTheDocument()
+    })
+
+    it('dismisses a custom editor on Escape', () => {
+        render(<Table columns={editorCols()} rows={ROWS} pagination={{ enabled: false }} onCellEdit={vi.fn()} />)
+        fireEvent.click(screen.getByRole('button', { name: 'Alice' }))
+        expect(screen.getByTestId('custom-editor')).toBeInTheDocument()
+        fireEvent.keyDown(document, { key: 'Escape' })
+        expect(screen.queryByTestId('custom-editor')).not.toBeInTheDocument()
+    })
+
+    it('keeps a custom editor open when clicking inside its portaled popup', () => {
+        const cols: TableColumn[] = [
+            {
+                key: 'name', label: 'Name', keyBind: 'name', editable: true,
+                editor: () => (
+                    <div data-testid="custom-editor">
+                        {ReactDOM.createPortal(
+                            <div data-radix-popper-content-wrapper="">
+                                <button data-testid="popup-option">option</button>
+                            </div>,
+                            document.body,
+                        )}
+                    </div>
+                ),
+            },
+            ...COLUMNS.slice(1),
+        ]
+        render(<Table columns={cols} rows={ROWS} pagination={{ enabled: false }} onCellEdit={vi.fn()} />)
+        fireEvent.click(screen.getByRole('button', { name: 'Alice' }))
+        expect(screen.getByTestId('custom-editor')).toBeInTheDocument()
+        // Click inside the portaled popup — must NOT cancel the edit.
+        fireEvent.mouseDown(screen.getByTestId('popup-option'))
+        expect(screen.getByTestId('custom-editor')).toBeInTheDocument()
     })
 
     // ── Search options ─────────────────────────────────────────────────────
