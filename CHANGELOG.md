@@ -1,3 +1,10 @@
+## [7.7.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.7.2...v7.7.3) (2026-06-23)
+
+
+### Bug Fixes
+
+* **table:** keep cell width stable when a custom editor opens ([0d43a58](https://github.com/G-MAKROGLOU/oxygen-ui/commit/0d43a5810945ff7fb3c1906bb089c0ac967264a5))
+
 ## [7.7.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.7.1...v7.7.2) (2026-06-23)
 
 
