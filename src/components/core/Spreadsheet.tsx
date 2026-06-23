@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import DataGrid, { type GridColumn, type CellValue } from './DataGrid'
 import Button from '../inputs/Button'
+import MenuButton from './MenuButton'
 import { SkeletonBox } from './Skeleton'
 import { cx } from '../../utils/cx'
-import { type RemoteSourceOptions, sourceToBytes, sourceName } from '../../utils/fileSource'
+import { type RemoteSourceOptions, sourceToBytes, sourceName, downloadBlob } from '../../utils/fileSource'
 
 export interface Cell {
     value: CellValue
@@ -60,13 +61,18 @@ const loadXlsx = () => (xlsxPromise ??= import('xlsx'))
 let jspdfPromise: Promise<any> | null = null
 const loadJspdf = () => (jspdfPromise ??= import('jspdf'))
 
-function download(blob: Blob, name: string) {
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = name
-    a.click()
-    setTimeout(() => URL.revokeObjectURL(url), 1000)
+// Keep the edited value in the same primitive type as the cell it replaces, so
+// a number column round-trips to xlsx as a number (not text) after editing.
+function coerceToCellType(prev: CellValue, next: string): CellValue {
+    if (typeof prev === 'number') {
+        const n = Number(next)
+        return next.trim() !== '' && Number.isFinite(n) ? n : next
+    }
+    if (typeof prev === 'boolean') {
+        if (/^(true|false)$/i.test(next.trim())) return next.trim().toLowerCase() === 'true'
+        return next
+    }
+    return next
 }
 
 /**
@@ -137,21 +143,24 @@ export default function Spreadsheet({
 
     // ── Editing ───────────────────────────────────────────────────────────────
     const handleCellEdit = useCallback(({ row, column, value }: { row: number; column: string; value: string }) => {
+        let coerced: CellValue = value
         setSheets((prev) => {
             if (!prev) return prev
             const next = prev.map((s, i) => (i === active ? { ...s, rows: s.rows.map((r) => ({ ...r })) } : s))
             const target = next[active]
             const existing = target.rows[row]?.[column]
+            const prevValue = cellValue(existing as Cell | CellValue)
+            coerced = coerceToCellType(prevValue, value)
             // Preserve the Cell/formula shape if the original used it.
             if (existing != null && typeof existing === 'object' && 'value' in existing) {
-                target.rows[row][column] = { ...(existing as Cell), value }
+                target.rows[row][column] = { ...(existing as Cell), value: coerced }
             } else {
-                target.rows[row][column] = value
+                target.rows[row][column] = coerced
             }
             onChange?.(next)
             return next
         })
-        onCellEdit?.({ sheet: sheets?.[active]?.name ?? '', row, column, value })
+        onCellEdit?.({ sheet: sheets?.[active]?.name ?? '', row, column, value: coerced })
     }, [active, onCellEdit, onChange, sheets])
 
     // ── Exports ───────────────────────────────────────────────────────────────
@@ -176,7 +185,7 @@ export default function Spreadsheet({
             XLSX.utils.book_append_sheet(wb, ws, (s.name || 'Sheet').slice(0, 31))
         })
         const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
-        download(new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), `${baseName}.xlsx`)
+        downloadBlob(new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), `${baseName}.xlsx`)
     }, [sheets, sheetAoa, baseName])
 
     const exportCsv = useCallback(() => {
@@ -187,7 +196,7 @@ export default function Spreadsheet({
             return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
         }
         const csv = aoa.map((row) => row.map(esc).join(',')).join('\r\n')
-        download(new Blob([`﻿${csv}`], { type: 'text/csv;charset=utf-8' }), `${baseName}.csv`)
+        downloadBlob(new Blob([`﻿${csv}`], { type: 'text/csv;charset=utf-8' }), `${baseName}.csv`)
     }, [sheet, sheetAoa, baseName])
 
     const exportPdf = useCallback(async () => {
@@ -249,39 +258,63 @@ export default function Spreadsheet({
     }
 
     const formats = exportFormats || []
+    const exportLabels: Record<'xlsx' | 'csv' | 'pdf', string> = {
+        xlsx: 'Excel workbook (.xlsx)',
+        csv: 'CSV — this sheet (.csv)',
+        pdf: 'PDF table (.pdf)',
+    }
 
     return (
-        <div className={cx('flex flex-col gap-2', className)} style={style}>
-            {(sheets.length > 1 || formats.length > 0) && (
-                <div className="flex flex-wrap items-center gap-2">
-                    {sheets.length > 1 && (
-                        <div role="tablist" className="flex flex-wrap items-center gap-1 rounded-lg border border-border bg-surface p-1">
-                            {sheets.map((s, i) => (
-                                <button
-                                    key={`${s.name}-${i}`}
-                                    role="tab"
-                                    type="button"
-                                    aria-selected={i === active}
-                                    onClick={() => setActive(i)}
-                                    className={cx(
-                                        'rounded-md px-3 py-1 text-sm transition-colors',
-                                        i === active ? 'bg-accent text-accent-fg' : 'text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
-                                    )}
-                                >
-                                    {s.name || `Sheet ${i + 1}`}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-                    {formats.length > 0 && (
-                        <div className="ml-auto flex items-center gap-1.5">
-                            {formats.map((fmt) => (
-                                <Button key={fmt} content={fmt.toUpperCase()} size="sm" variant="outline" onClick={() => runExport(fmt)} />
-                            ))}
-                        </div>
-                    )}
-                </div>
-            )}
+        <div className={cx('flex flex-col overflow-hidden rounded-lg border border-border bg-surface-raised', className)} style={style}>
+            {/* Toolbar: sheet switcher on the left, sheet meta + export menu on the right. */}
+            <div className="flex flex-shrink-0 items-center gap-2 border-b border-border bg-surface px-2 py-1.5">
+                {sheets.length > 1 ? (
+                    <div role="tablist" aria-label="Sheets" className="flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto">
+                        {sheets.map((s, i) => (
+                            <button
+                                key={`${s.name}-${i}`}
+                                role="tab"
+                                type="button"
+                                aria-selected={i === active}
+                                onClick={() => setActive(i)}
+                                className={cx(
+                                    'flex-shrink-0 rounded-md px-3 py-1 text-sm font-medium transition-colors',
+                                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                                    i === active
+                                        ? 'bg-accent text-accent-fg shadow-sm'
+                                        : 'text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
+                                )}
+                            >
+                                {s.name || `Sheet ${i + 1}`}
+                            </button>
+                        ))}
+                    </div>
+                ) : (
+                    <span className="flex-1 truncate px-1 text-sm font-medium text-foreground">{sheet?.name || 'Sheet 1'}</span>
+                )}
+
+                <span className="hidden flex-shrink-0 px-1 text-xs tabular-nums text-foreground-muted sm:inline">
+                    {plainRows.length.toLocaleString()} {plainRows.length === 1 ? 'row' : 'rows'} · {columns.length} cols
+                </span>
+
+                {formats.length > 0 && (
+                    <>
+                        <span className="h-5 w-px flex-shrink-0 bg-border" aria-hidden="true" />
+                        <MenuButton
+                            label="Export"
+                            size="sm"
+                            variant="outline"
+                            align="end"
+                            icon={<DownloadIcon />}
+                            items={formats.map((fmt) => ({
+                                key: fmt,
+                                label: exportLabels[fmt],
+                                onSelect: () => runExport(fmt),
+                            }))}
+                        />
+                    </>
+                )}
+            </div>
 
             <DataGrid
                 columns={columns}
@@ -289,7 +322,14 @@ export default function Spreadsheet({
                 editable={editable}
                 virtualize={virtualize}
                 onCellEdit={handleCellEdit}
+                className="!rounded-none !border-0"
             />
         </div>
     )
 }
+
+const DownloadIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16" />
+    </svg>
+)

@@ -47,6 +47,19 @@ describe('DataGrid', () => {
         expect(onCellEdit).toHaveBeenCalledWith({ row: 2, column: 'score', value: '42' })
     })
 
+    it('falls back to the default width for relative units instead of truncating to px', () => {
+        // '50%' must NOT become a 50px column; it falls back to the 140px default.
+        render(<DataGrid columns={[{ key: 'a', label: 'A', width: '50%' }]} rows={[{ a: 'x' }]} virtualize={false} />)
+        const cell = screen.getByText('x').closest('[role="gridcell"]') as HTMLElement
+        expect(cell.style.width).toBe('140px')
+    })
+
+    it('honours px-string widths', () => {
+        render(<DataGrid columns={[{ key: 'a', label: 'A', width: '90px' }]} rows={[{ a: 'x' }]} virtualize={false} />)
+        const cell = screen.getByText('x').closest('[role="gridcell"]') as HTMLElement
+        expect(cell.style.width).toBe('90px')
+    })
+
     it('does not edit a non-editable column', () => {
         const onCellEdit = vi.fn()
         render(<DataGrid columns={columns} rows={makeRows(3)} editable onCellEdit={onCellEdit} />)

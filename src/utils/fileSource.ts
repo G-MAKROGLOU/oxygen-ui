@@ -51,6 +51,21 @@ export async function sourceToBytes(source: FileSource, remote?: RemoteSourceOpt
     throw new Error('Unsupported source type')
 }
 
+/**
+ * Trigger a browser download of a Blob under `name`. Shared by the content
+ * components so the object-URL lifecycle (revoke after the click) lives in one
+ * place. No-op when there is no DOM (SSR).
+ */
+export function downloadBlob(blob: Blob, name: string): void {
+    if (typeof document === 'undefined') return
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = name
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+}
+
 /** A short human label for a source (used as a default download filename hint). */
 export function sourceName(source: FileSource): string | undefined {
     if (typeof File !== 'undefined' && source instanceof File) return source.name

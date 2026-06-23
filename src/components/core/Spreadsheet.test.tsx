@@ -36,19 +36,17 @@ describe('Spreadsheet', () => {
         expect(screen.getByText('Jan')).toBeInTheDocument()
     })
 
-    it('offers the configured export formats', () => {
+    it('shows an export menu when formats are configured', () => {
         render(<Spreadsheet source={sheets} export={['csv', 'xlsx']} />)
-        expect(screen.getByRole('button', { name: 'CSV' })).toBeInTheDocument()
-        expect(screen.getByRole('button', { name: 'XLSX' })).toBeInTheDocument()
-        expect(screen.queryByRole('button', { name: 'PDF' })).not.toBeInTheDocument()
+        expect(screen.getByRole('button', { name: /Export/ })).toBeInTheDocument()
     })
 
     it('hides export when export={false}', () => {
         render(<Spreadsheet source={sheets} export={false} />)
-        expect(screen.queryByRole('button', { name: 'CSV' })).not.toBeInTheDocument()
+        expect(screen.queryByRole('button', { name: /Export/ })).not.toBeInTheDocument()
     })
 
-    it('edits a value and emits onCellEdit + onChange', () => {
+    it('edits a numeric value, coerces it to a number, and emits onCellEdit + onChange', () => {
         const onCellEdit = vi.fn()
         const onChange = vi.fn()
         render(<Spreadsheet source={sheets} editable onCellEdit={onCellEdit} onChange={onChange} />)
@@ -56,7 +54,8 @@ describe('Spreadsheet', () => {
         const input = screen.getByDisplayValue('81200') as HTMLInputElement
         fireEvent.change(input, { target: { value: '90000' } })
         fireEvent.keyDown(input, { key: 'Enter' })
-        expect(onCellEdit).toHaveBeenCalledWith({ sheet: 'Fleet', row: 0, column: 'dwt', value: '90000' })
+        // Original cell was a number, so the edit round-trips as a number, not a string.
+        expect(onCellEdit).toHaveBeenCalledWith({ sheet: 'Fleet', row: 0, column: 'dwt', value: 90000 })
         expect(onChange).toHaveBeenCalled()
     })
 })

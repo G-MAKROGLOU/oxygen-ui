@@ -6,7 +6,11 @@ export type CellValue = string | number | boolean | null
 export interface GridColumn {
     key: string
     label?: React.ReactNode
-    /** Pixel width. Strings are parsed to px (non-numeric → default). Default 140. */
+    /**
+     * Column width in pixels. Accepts a number or a px string (`120`, `'120px'`).
+     * Relative units (`'50%'`, `'1fr'`, `'auto'`) aren't supported by the
+     * virtualizer and fall back to the default. Default 140.
+     */
     width?: number | string
     align?: 'left' | 'center' | 'right'
     /** Per-column override of the grid-wide `editable`. */
@@ -41,11 +45,15 @@ export interface DataGridProps {
 const DEFAULT_COL_WIDTH = 140
 const GUTTER = 52
 
+// The grid virtualizes by computing pixel offsets, so it needs a concrete px
+// width per column. Numbers and bare/px strings ('120', '120px') are honoured;
+// relative units the grid can't position against ('50%', '1fr', 'auto') fall
+// back to the default rather than being silently truncated to a few pixels.
 function resolveWidth(w: GridColumn['width']): number {
-    if (typeof w === 'number') return w
+    if (typeof w === 'number' && Number.isFinite(w)) return w
     if (typeof w === 'string') {
-        const n = parseFloat(w)
-        if (!Number.isNaN(n) && /^\d/.test(w.trim())) return n
+        const m = /^\s*(\d+(?:\.\d+)?)(px)?\s*$/.exec(w)
+        if (m) return parseFloat(m[1])
     }
     return DEFAULT_COL_WIDTH
 }
