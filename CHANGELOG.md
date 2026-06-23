@@ -1,3 +1,10 @@
+# [7.12.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.11.0...v7.12.0) (2026-06-23)
+
+
+### Features
+
+* **spreadsheet:** add a File/Sheet menu bar and delete-sheet support ([63769c1](https://github.com/G-MAKROGLOU/oxygen-ui/commit/63769c1225d4b1e7ce76207885de70a44e02072a))
+
 # [7.11.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.10.0...v7.11.0) (2026-06-23)
 
 
