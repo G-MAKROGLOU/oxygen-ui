@@ -32,6 +32,12 @@ export interface SpreadsheetProps {
     fileName?: string
     /** Default true. */
     virtualize?: boolean
+    /** Click column headers to sort. Default true. */
+    sortable?: boolean
+    /** Overall height. Default 480. */
+    height?: number | string
+    /** Overall width. Defaults to filling the container. */
+    width?: number | string
     // formulaEngine?: FormulaEngineAdapter // RESERVED FOR FUTURE — design seam only.
     className?: string
     style?: React.CSSProperties
@@ -93,6 +99,9 @@ export default function Spreadsheet({
     export: exportFormats = ['xlsx', 'csv', 'pdf'],
     fileName,
     virtualize = true,
+    sortable = true,
+    height = 480,
+    width,
     className = '',
     style,
 }: SpreadsheetProps) {
@@ -240,7 +249,7 @@ export default function Spreadsheet({
     // ── States ───────────────────────────────────────────────────────────────
     if (status === 'error') {
         return (
-            <div className={cx('flex flex-col items-center justify-center gap-3 rounded-lg border border-border bg-surface p-8 text-center', className)} style={style}>
+            <div className={cx('flex flex-col items-center justify-center gap-3 rounded-lg border border-border bg-surface p-8 text-center', className)} style={{ height, width, ...style }}>
                 <p className="text-sm font-medium text-status-error">Couldn’t load the spreadsheet</p>
                 {error?.message && <p className="max-w-md text-xs text-foreground-muted">{error.message}</p>}
                 <Button content="Retry" size="sm" variant="outline" onClick={() => setReloadKey((k) => k + 1)} />
@@ -250,9 +259,9 @@ export default function Spreadsheet({
 
     if (status === 'loading' || !sheets) {
         return (
-            <div className={cx('rounded-lg border border-border bg-surface-raised p-4', className)} style={style}>
+            <div className={cx('overflow-hidden rounded-lg border border-border bg-surface-raised p-4', className)} style={{ height, width, ...style }}>
                 <SkeletonBox height={32} className="mb-3 rounded" />
-                <SkeletonBox height={360} className="rounded" />
+                <SkeletonBox height="calc(100% - 44px)" className="rounded" />
             </div>
         )
     }
@@ -265,35 +274,12 @@ export default function Spreadsheet({
     }
 
     return (
-        <div className={cx('flex flex-col overflow-hidden rounded-lg border border-border bg-surface-raised', className)} style={style}>
-            {/* Toolbar: sheet switcher on the left, sheet meta + export menu on the right. */}
-            <div className="flex flex-shrink-0 items-center gap-2 border-b border-border bg-surface px-2 py-1.5">
-                {sheets.length > 1 ? (
-                    <div role="tablist" aria-label="Sheets" className="flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto">
-                        {sheets.map((s, i) => (
-                            <button
-                                key={`${s.name}-${i}`}
-                                role="tab"
-                                type="button"
-                                aria-selected={i === active}
-                                onClick={() => setActive(i)}
-                                className={cx(
-                                    'flex-shrink-0 rounded-md px-3 py-1 text-sm font-medium transition-colors',
-                                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-                                    i === active
-                                        ? 'bg-accent text-accent-fg shadow-sm'
-                                        : 'text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
-                                )}
-                            >
-                                {s.name || `Sheet ${i + 1}`}
-                            </button>
-                        ))}
-                    </div>
-                ) : (
-                    <span className="flex-1 truncate px-1 text-sm font-medium text-foreground">{sheet?.name || 'Sheet 1'}</span>
-                )}
+        <div className={cx('flex flex-col overflow-hidden rounded-lg border border-border bg-surface-raised', className)} style={{ height, width, ...style }}>
+            {/* Top toolbar: active sheet name + row/col meta + export menu. */}
+            <div className="flex flex-shrink-0 items-center gap-2 border-b border-border bg-surface px-3 py-1.5">
+                <span className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground">{sheet?.name || 'Sheet 1'}</span>
 
-                <span className="hidden flex-shrink-0 px-1 text-xs tabular-nums text-foreground-muted sm:inline">
+                <span className="hidden flex-shrink-0 text-xs tabular-nums text-foreground-muted sm:inline">
                     {plainRows.length.toLocaleString()} {plainRows.length === 1 ? 'row' : 'rows'} · {columns.length} cols
                 </span>
 
@@ -316,14 +302,44 @@ export default function Spreadsheet({
                 )}
             </div>
 
-            <DataGrid
-                columns={columns}
-                rows={plainRows}
-                editable={editable}
-                virtualize={virtualize}
-                onCellEdit={handleCellEdit}
-                className="!rounded-none !border-0"
-            />
+            {/* Grid fills the space between the toolbar and the sheet tabs. */}
+            <div className="min-h-0 flex-1">
+                <DataGrid
+                    key={active}
+                    columns={columns}
+                    rows={plainRows}
+                    editable={editable}
+                    sortable={sortable}
+                    virtualize={virtualize}
+                    onCellEdit={handleCellEdit}
+                    height="100%"
+                    className="!rounded-none !border-0"
+                />
+            </div>
+
+            {/* Bottom sheet tabs — Excel-style, on their own bar. */}
+            {sheets.length > 1 && (
+                <div role="tablist" aria-label="Sheets" className="flex flex-shrink-0 items-center gap-1 overflow-x-auto border-t border-border bg-surface px-2 py-1">
+                    {sheets.map((s, i) => (
+                        <button
+                            key={`${s.name}-${i}`}
+                            role="tab"
+                            type="button"
+                            aria-selected={i === active}
+                            onClick={() => setActive(i)}
+                            className={cx(
+                                'flex-shrink-0 rounded-md px-3 py-1 text-xs font-medium transition-colors',
+                                'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                                i === active
+                                    ? 'bg-surface-raised text-foreground shadow-sm'
+                                    : 'text-foreground-secondary hover:bg-surface-raised hover:text-foreground',
+                            )}
+                        >
+                            {s.name || `Sheet ${i + 1}`}
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     )
 }

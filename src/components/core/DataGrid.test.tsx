@@ -60,6 +60,41 @@ describe('DataGrid', () => {
         expect(cell.style.width).toBe('90px')
     })
 
+    it('sorts on header click (asc → desc → off) and keeps edits pointed at the original row', () => {
+        const onCellEdit = vi.fn()
+        const sortCols: GridColumn[] = [
+            { key: 'name', label: 'Name', sortable: true },
+            { key: 'score', label: 'Score', sortable: true, editable: true },
+        ]
+        // Scores avoid 1/2/3 so they don't collide with the row-number gutter.
+        const sortRows: Array<Record<string, CellValue>> = [
+            { name: 'C', score: 30 },
+            { name: 'A', score: 10 },
+            { name: 'B', score: 20 },
+        ]
+        render(<DataGrid columns={sortCols} rows={sortRows} sortable editable virtualize={false} onCellEdit={onCellEdit} />)
+
+        const firstName = () => (screen.getAllByRole('gridcell')[0].textContent || '').trim()
+        expect(firstName()).toBe('C') // unsorted: original order
+
+        fireEvent.click(screen.getByText('Name'))
+        expect(firstName()).toBe('A') // asc
+
+        fireEvent.click(screen.getByText('Name'))
+        expect(firstName()).toBe('C') // desc
+
+        fireEvent.click(screen.getByText('Name'))
+        expect(firstName()).toBe('C') // cleared → original order
+
+        // Sort asc again, then edit the top row's score (display 'A' = original row 1).
+        fireEvent.click(screen.getByText('Name'))
+        fireEvent.doubleClick(screen.getByText('10'))
+        const input = screen.getByDisplayValue('10') as HTMLInputElement
+        fireEvent.change(input, { target: { value: '99' } })
+        fireEvent.keyDown(input, { key: 'Enter' })
+        expect(onCellEdit).toHaveBeenCalledWith({ row: 1, column: 'score', value: '99' })
+    })
+
     it('does not edit a non-editable column', () => {
         const onCellEdit = vi.fn()
         render(<DataGrid columns={columns} rows={makeRows(3)} editable onCellEdit={onCellEdit} />)

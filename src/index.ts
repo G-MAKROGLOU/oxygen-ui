@@ -238,7 +238,7 @@ export type { PdfViewerProps } from './components/core/PdfViewer'
 
 /** Both-axes virtualized editable data grid primitive */
 export { default as DataGrid } from './components/core/DataGrid'
-export type { DataGridProps, GridColumn, CellValue } from './components/core/DataGrid'
+export type { DataGridProps, GridColumn, CellValue, GridSortState, GridSortDirection } from './components/core/DataGrid'
 
 /** Multi-sheet spreadsheet (lazy SheetJS parse; xlsx/csv/pdf export) */
 export { default as Spreadsheet } from './components/core/Spreadsheet'

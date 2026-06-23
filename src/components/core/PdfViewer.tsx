@@ -26,6 +26,10 @@ export interface PdfViewerProps {
     onLoad?: (info: { numPages: number }) => void
     onError?: (err: Error) => void
     onPageChange?: (page: number) => void
+    /** Overall height. Default 600. */
+    height?: number | string
+    /** Overall width. Defaults to filling the container. */
+    width?: number | string
     className?: string
     style?: React.CSSProperties
 }
@@ -96,6 +100,8 @@ export default function PdfViewer({
     onLoad,
     onError,
     onPageChange,
+    height = 600,
+    width,
     className = '',
     style,
 }: PdfViewerProps) {
@@ -340,7 +346,7 @@ export default function PdfViewer({
     const ready = status === 'ready'
 
     return (
-        <div className={cx('flex flex-col overflow-hidden rounded-lg border border-border bg-surface-raised', className)} style={{ height: 600, ...style }}>
+        <div className={cx('flex flex-col overflow-hidden rounded-lg border border-border bg-surface-raised', className)} style={{ height, width, ...style }}>
             {toolbar !== false && (
                 <div className="flex flex-shrink-0 flex-col border-b border-border bg-surface">
                     <div className="flex items-center gap-1 px-2 py-1.5">
