@@ -1,3 +1,15 @@
+# [7.17.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.16.0...v7.17.0) (2026-06-24)
+
+
+### Bug Fixes
+
+* **tests:** update useExcel/usePdf tests for useDownload refactor ([9f2ace2](https://github.com/G-MAKROGLOU/oxygen-ui/commit/9f2ace210e4a2f77c5ea4d48719cc8cb8e11d7aa))
+
+
+### Features
+
+* **hooks:** add useDownload; consolidate blob-download logic ([feab590](https://github.com/G-MAKROGLOU/oxygen-ui/commit/feab5903a8c20930f8467b7e6d76c57f7c371589))
+
 # [7.16.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.15.0...v7.16.0) (2026-06-24)
 
 
