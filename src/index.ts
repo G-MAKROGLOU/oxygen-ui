@@ -402,6 +402,10 @@ export { useMediaQuery, useBreakpoint } from './hooks/useMediaQuery'
 export type { Breakpoint, BreakpointState } from './hooks/useMediaQuery'
 export { useJwt } from './hooks/useJwt'
 export type { JwtResult } from './hooks/useJwt'
+export { useExcel } from './hooks/useExcel'
+export type { ExportSaveOptions, ExcelSheetInput, ParsedSheet, UseExcelReturn } from './hooks/useExcel'
+export { usePdf } from './hooks/usePdf'
+export type { PdfPage, PdfExportOptions, UsePdfReturn } from './hooks/usePdf'
 
 // ── Marketing ─────────────────────────────────────────────────────────────────
 export { default as Jumbotron } from './components/marketing/Jumbotron'
