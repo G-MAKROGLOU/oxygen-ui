@@ -1,3 +1,10 @@
+# [7.14.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.13.0...v7.14.0) (2026-06-24)
+
+
+### Features
+
+* **spreadsheet:** column slack, Add 10 columns, and add-column on header right-click ([b45edf9](https://github.com/G-MAKROGLOU/oxygen-ui/commit/b45edf9ea60245e51c6db69949ec24d3e42e0146))
+
 # [7.13.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.12.0...v7.13.0) (2026-06-23)
 
 
