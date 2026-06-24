@@ -67,6 +67,8 @@ export interface DataGridProps {
     onDeleteRow?: (index: number) => void
     /** Insert a column at `index` (from the column-header right-click menu). */
     onInsertColumn?: (index: number) => void
+    /** Rename a column. When set, headers become editable (double-click / Rename menu). */
+    onHeaderEdit?: (index: number, label: string) => void
     className?: string
     style?: React.CSSProperties
     /** Shown when there are no rows. */
@@ -144,6 +146,7 @@ export default function DataGrid({
     onInsertRow,
     onDeleteRow,
     onInsertColumn,
+    onHeaderEdit,
     className = '',
     style,
     emptyState = 'No data',
@@ -160,6 +163,8 @@ export default function DataGrid({
     // original index (`order[disp]`), stable across sorting.
     const [editing, setEditing] = useState<{ disp: number; col: number } | null>(null)
     const [draft, setDraft] = useState('')
+    const [editingHeader, setEditingHeader] = useState<number | null>(null)
+    const [headerDraft, setHeaderDraft] = useState('')
     const [internalSort, setInternalSort] = useState<GridSortState | null>(null)
     const sort = sortProp !== undefined ? sortProp : internalSort
 
@@ -256,6 +261,19 @@ export default function DataGrid({
         setEditing({ disp, col })
     }
 
+    // ── Header rename ─────────────────────────────────────────────────────────
+    const startHeaderEdit = (col: number) => {
+        if (!onHeaderEdit) return
+        const c = cols[col]
+        setHeaderDraft(typeof c.label === 'string' ? c.label : String(c.key))
+        setEditingHeader(col)
+    }
+    const commitHeader = () => {
+        if (editingHeader == null) return
+        onHeaderEdit?.(editingHeader, headerDraft)
+        setEditingHeader(null)
+    }
+
     // ── Clipboard (single selected cell) ──────────────────────────────────────
     const cellText = (sel: { disp: number; col: number }) =>
         displayValue(rows[rowIndexForDisp(sel.disp)]?.[cols[sel.col].key] ?? '')
@@ -286,7 +304,8 @@ export default function DataGrid({
         if (ctxTarget?.kind === 'header') {
             const ci = ctxTarget.col
             return [
-                { key: 'left', value: 'Add column to the left', disabled: !onInsertColumn, onClick: () => onInsertColumn?.(ci) },
+                { key: 'rename', value: 'Rename column', disabled: !onHeaderEdit, onClick: () => startHeaderEdit(ci) },
+                { key: 'left', value: 'Add column to the left', disabled: !onInsertColumn, separatorBefore: true, onClick: () => onInsertColumn?.(ci) },
                 { key: 'right', value: 'Add column to the right', disabled: !onInsertColumn, onClick: () => onInsertColumn?.(ci + 1) },
             ]
         }
@@ -305,7 +324,7 @@ export default function DataGrid({
             { key: 'paste', value: 'Paste', disabled: !editable, onClick: () => void pasteCell() },
         ]
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ctxTarget, rows.length, editable, onInsertRow, onDeleteRow, onInsertColumn, copyCell, cutCell, pasteCell, order])
+    }, [ctxTarget, rows.length, editable, onInsertRow, onDeleteRow, onInsertColumn, onHeaderEdit, copyCell, cutCell, pasteCell, order])
 
     const rowHighlighted = (disp: number) => hoveredRow === disp || selected?.disp === disp
 
@@ -324,16 +343,22 @@ export default function DataGrid({
                 const c = cols[ci]
                 const sortDir = sort?.key === c.key ? sort.dir : null
                 const canSort = colSortable(c)
+                const renamable = !!onHeaderEdit
+                const isEditingHeader = editingHeader === ci
                 return (
                     <div
                         key={`h-${c.key}`}
                         role="columnheader"
                         aria-sort={sortDir ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined}
-                        onClick={canSort ? () => toggleSort(c.key) : undefined}
+                        // When headers are renamable, the whole-header click is reserved
+                        // for editing (double-click); sorting moves to the caret button.
+                        onClick={canSort && !renamable ? () => toggleSort(c.key) : undefined}
+                        onDoubleClick={renamable ? () => startHeaderEdit(ci) : undefined}
                         onContextMenu={contextMenu ? () => setCtxTarget({ kind: 'header', col: ci }) : undefined}
                         className={cx(
                             'flex items-center gap-1 border-b border-r border-border bg-surface px-3 font-medium text-foreground-secondary',
-                            canSort && 'cursor-pointer select-none hover:text-foreground',
+                            canSort && !renamable && 'cursor-pointer select-none hover:text-foreground',
+                            renamable && 'cursor-default select-none',
                         )}
                         style={{
                             position: 'absolute', top: scroll.top, left: gutter + offsets[ci],
@@ -341,8 +366,33 @@ export default function DataGrid({
                             justifyContent: c.align === 'right' ? 'flex-end' : c.align === 'center' ? 'center' : 'flex-start',
                         }}
                     >
-                        <span className="truncate">{c.label ?? c.key}</span>
-                        {canSort && <SortCaret dir={sortDir} />}
+                        {isEditingHeader ? (
+                            <input
+                                autoFocus
+                                value={headerDraft}
+                                onChange={(e) => setHeaderDraft(e.target.value)}
+                                onBlur={commitHeader}
+                                onClick={(e) => e.stopPropagation()}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') commitHeader()
+                                    else if (e.key === 'Escape') setEditingHeader(null)
+                                }}
+                                className="h-full w-full bg-transparent font-medium text-foreground outline-none"
+                            />
+                        ) : (
+                            <>
+                                <span className="truncate">{c.label ?? c.key}</span>
+                                {canSort && (
+                                    renamable ? (
+                                        <button type="button" title="Sort" onClick={(e) => { e.stopPropagation(); toggleSort(c.key) }} className="flex-shrink-0 rounded hover:text-foreground">
+                                            <SortCaret dir={sortDir} />
+                                        </button>
+                                    ) : (
+                                        <SortCaret dir={sortDir} />
+                                    )
+                                )}
+                            </>
+                        )}
                     </div>
                 )
             })}

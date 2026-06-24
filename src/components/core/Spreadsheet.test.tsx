@@ -109,6 +109,32 @@ describe('Spreadsheet', () => {
         expect(screen.queryByRole('columnheader', { name: 'C' })).not.toBeInTheDocument()
     })
 
+    it('typing into a blank slack column promotes it to a real column', () => {
+        const onChange = vi.fn()
+        // Fleet: 2 data cols (Vessel, DWT) + slack starting at 'C'. Edit the
+        // 'C' cell of the first row → 'C' becomes a real column with that value.
+        render(<Spreadsheet source={[sheets[0]]} editable emptyRows={0} emptyCols={3} onChange={onChange} />)
+        // Row 0 cells: Vessel, DWT, C, D, E → index 2 is the 'C' cell.
+        fireEvent.doubleClick(screen.getAllByRole('gridcell')[2])
+        const input = screen.getByRole('textbox')
+        fireEvent.change(input, { target: { value: 'hi' } })
+        fireEvent.keyDown(input, { key: 'Enter' })
+        const grown = onChange.mock.calls.at(-1)?.[0]
+        expect(grown?.[0].columns.map((c: { key: string }) => c.key)).toContain('C')
+        expect(grown?.[0].rows[0].C).toBe('hi')
+    })
+
+    it('renames a column by editing its header', () => {
+        const onChange = vi.fn()
+        render(<Spreadsheet source={[sheets[0]]} editable emptyCols={0} onChange={onChange} />)
+        fireEvent.doubleClick(screen.getByRole('columnheader', { name: 'Vessel' }))
+        const input = screen.getByRole('textbox')
+        fireEvent.change(input, { target: { value: 'Ship' } })
+        fireEvent.keyDown(input, { key: 'Enter' })
+        expect(screen.getByRole('columnheader', { name: 'Ship' })).toBeInTheDocument()
+        expect(onChange).toHaveBeenCalled()
+    })
+
     it('right-clicking a column header offers add-left/right and inserts a column', async () => {
         const onChange = vi.fn()
         render(<Spreadsheet source={[sheets[0]]} editable emptyCols={0} onChange={onChange} />)

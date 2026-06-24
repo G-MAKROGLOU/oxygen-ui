@@ -190,15 +190,27 @@ export default function Spreadsheet({
     const sheet = sheets?.[active]
     const columns = useMemo(() => (sheet ? toColumns(sheet.columns) : []), [sheet])
     const plainRows = useMemo(() => (sheet ? toPlainRows(sheet, columns) : []), [sheet, columns])
+    // Real columns + blank letter-labelled slack columns. Slack columns are
+    // promoted into the sheet the moment one is edited or renamed.
+    const displayColumns = useMemo<GridColumn[]>(
+        () => [...columns, ...makeColumns(columns, Math.max(0, emptyCols)).map((c) => ({ ...c, sortable: false }))],
+        [columns, emptyCols],
+    )
+    const isSlackKey = (key: string) => !columns.some((c) => c.key === key)
 
     // ── Editing ───────────────────────────────────────────────────────────────
     const handleCellEdit = useCallback(({ row, column, value }: { row: number; column: string; value: string }) => {
         let coerced: CellValue = value
         setSheets((prev) => {
             if (!prev) return prev
-            const next = prev.map((s, i) => (i === active ? { ...s, rows: s.rows.map((r) => ({ ...r })) } : s))
+            const next = prev.map((s, i) => (i === active ? { ...s, columns: toColumns(s.columns), rows: s.rows.map((r) => ({ ...r })) } : s))
             const target = next[active]
-            // Editing into the blank slack appends rows up to that index.
+            // Typing into a blank slack column promotes it (and any before it) to
+            // real columns; typing into a blank slack row appends rows.
+            if (isSlackKey(column)) {
+                const j = displayColumns.findIndex((c) => c.key === column)
+                if (j >= 0) target.columns = displayColumns.slice(0, j + 1).map((c) => ({ key: c.key, label: c.label }))
+            }
             while (target.rows.length <= row) target.rows.push({})
             const existing = target.rows[row]?.[column]
             const prevValue = cellValue(existing as Cell | CellValue)
@@ -213,7 +225,26 @@ export default function Spreadsheet({
             return next
         })
         onCellEdit?.({ sheet: sheets?.[active]?.name ?? '', row, column, value: coerced })
-    }, [active, onCellEdit, onChange, sheets])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [active, onCellEdit, onChange, sheets, displayColumns, columns])
+
+    // Rename a column by header index. A slack header promotes its column first.
+    const renameColumn = useCallback((index: number, label: string) => {
+        setSheets((prev) => {
+            if (!prev) return prev
+            const next = prev.map((s, i) => (i === active ? { ...s, columns: toColumns(s.columns) } : s))
+            const target = next[active]
+            let tcols = target.columns as GridColumn[]
+            if (index >= tcols.length) {
+                // Promote slack columns up to this one, then rename it.
+                tcols = displayColumns.slice(0, index + 1).map((c) => ({ key: c.key, label: c.label }))
+                target.columns = tcols
+            }
+            if (tcols[index]) tcols[index] = { ...tcols[index], label }
+            onChange?.(next)
+            return next
+        })
+    }, [active, onChange, displayColumns])
 
     const addSheet = useCallback(() => {
         setSheets((prev) => {
@@ -454,17 +485,17 @@ export default function Spreadsheet({
             <div className="min-h-0 flex-1">
                 <DataGrid
                     key={active}
-                    columns={columns}
+                    columns={displayColumns}
                     rows={plainRows}
                     editable={editable}
                     sortable={sortable}
                     virtualize={virtualize}
                     trailingRows={emptyRows}
-                    trailingCols={emptyCols}
                     contextMenu
                     onInsertRow={editable ? insertRow : undefined}
                     onDeleteRow={editable ? deleteRow : undefined}
                     onInsertColumn={editable ? insertColumn : undefined}
+                    onHeaderEdit={editable ? renameColumn : undefined}
                     onCellEdit={handleCellEdit}
                     height="100%"
                     className="!rounded-none !border-0"
