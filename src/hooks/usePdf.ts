@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import type { ExportSaveOptions } from './useExcel'
+import { useDownload } from './useDownload'
 
 export interface PdfPage {
     canvas: HTMLCanvasElement
@@ -21,6 +22,7 @@ const loadJspdf = () => (jspdfPromise ??= import('jspdf'))
 
 export function usePdf(): UsePdfReturn {
     const [isExporting, setIsExporting] = useState(false)
+    const { saveBlob } = useDownload()
 
     const exportCanvases = useCallback(async (pages: PdfPage[], options: PdfExportOptions = {}) => {
         const { fileName = 'report', onSave, orientation = 'landscape' } = options
@@ -67,17 +69,12 @@ export function usePdf(): UsePdfReturn {
             if (onSave) {
                 await onSave(blob, name)
             } else {
-                const url = URL.createObjectURL(blob)
-                const a = document.createElement('a')
-                a.href = url
-                a.download = name
-                a.click()
-                URL.revokeObjectURL(url)
+                saveBlob(blob, name)
             }
         } finally {
             setIsExporting(false)
         }
-    }, [])
+    }, [saveBlob])
 
     return { exportCanvases, isExporting }
 }

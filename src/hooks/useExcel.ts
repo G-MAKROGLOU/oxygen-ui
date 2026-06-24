@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import type { CellValue } from '../components/core/DataGrid'
-import { downloadBlob } from '../utils/fileSource'
+import { useDownload } from './useDownload'
 
 export interface ExportSaveOptions {
     /** File name WITHOUT extension. Default: 'export' (Excel) / 'report' (PDF). */
@@ -38,6 +38,7 @@ const loadXlsx = () => (xlsxPromise ??= import('xlsx'))
 
 export function useExcel(): UseExcelReturn {
     const [isExporting, setIsExporting] = useState(false)
+    const { saveBlob } = useDownload()
 
     const exportSheets = useCallback(async (sheets: ExcelSheetInput[], options: ExportSaveOptions = {}) => {
         const { fileName = 'export', onSave } = options
@@ -102,12 +103,12 @@ export function useExcel(): UseExcelReturn {
             if (onSave) {
                 await onSave(blob, name)
             } else {
-                downloadBlob(blob, name)
+                saveBlob(blob, name)
             }
         } finally {
             setIsExporting(false)
         }
-    }, [])
+    }, [saveBlob])
 
     const readWorkbook = useCallback(async (source: File | Blob | ArrayBuffer | Uint8Array): Promise<ParsedSheet[]> => {
         const XLSX = await loadXlsx()
