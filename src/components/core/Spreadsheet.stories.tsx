@@ -5,7 +5,7 @@ import Spreadsheet, { type SheetData } from './Spreadsheet'
 const meta: Meta<typeof Spreadsheet> = {
     title: 'Data Display/Spreadsheet',
     component: Spreadsheet,
-    tags: ['autodocs'],
+
     parameters: { layout: 'padded' },
     argTypes: {
         editable: { control: 'boolean' },

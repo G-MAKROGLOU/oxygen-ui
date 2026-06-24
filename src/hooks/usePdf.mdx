@@ -1,0 +1,245 @@
+{/* usePdf.mdx — primary docs page for the usePdf hook */}
+import { Meta, Canvas } from '@storybook/blocks'
+import * as UsePdfStories from './usePdf.stories'
+
+<Meta of={UsePdfStories} />
+
+# usePdf
+
+A hook that wraps [jsPDF](https://github.com/parallax/jsPDF) to export one or more
+`HTMLCanvasElement` objects as a multi-page PDF. The library already bundles jsPDF as a
+dependency; `usePdf` adds orientation handling, aspect-ratio-preserving scaling, title headers,
+and browser-download wiring.
+
+**jsPDF is lazy-loaded** — the import happens on the first `exportCanvases` call. It is not
+part of the initial bundle.
+
+```tsx
+import { usePdf } from '@geomak/ui'
+```
+
+---
+
+## API
+
+```ts
+function usePdf(): UsePdfReturn
+
+interface UsePdfReturn {
+  exportCanvases(pages: PdfPage[], options?: PdfExportOptions): Promise<void>
+  isExporting: boolean
+}
+```
+
+---
+
+## Types
+
+### PdfPage
+
+```ts
+interface PdfPage {
+  canvas: HTMLCanvasElement
+  title?: string
+}
+```
+
+| Field | Description |
+|---|---|
+| `canvas` | The source canvas. Canvases with `width === 0` or `height === 0` are silently skipped. |
+| `title` | Optional page title. Rendered as a bold centered heading, reserving 28 px at the top of the page. |
+
+### PdfExportOptions
+
+```ts
+interface PdfExportOptions {
+  fileName?: string
+  orientation?: 'landscape' | 'portrait'
+  onSave?: (blob: Blob, name: string) => void | Promise<void>
+}
+```
+
+| Field | Default | Description |
+|---|---|---|
+| `fileName` | `'export'` | File name without extension. `.pdf` is appended automatically. |
+| `orientation` | `'landscape'` | Page orientation. Portrait works well for tall canvases (reports, tables). |
+| `onSave` | `undefined` | When provided, receives the Blob instead of triggering a download. |
+
+---
+
+## exportCanvases
+
+```ts
+exportCanvases(pages: PdfPage[], options?: PdfExportOptions): Promise<void>
+```
+
+Converts an array of canvases into a PDF document — one page per canvas — then either triggers a
+browser download or calls `onSave`.
+
+**Per page:**
+
+1. Calls `canvas.toDataURL('image/png')` to capture the current pixel content.
+2. If `title` is set, reserves 28 px at the top of the page for a bold centered heading.
+3. Scales the canvas image to fill the remaining page area, preserving the canvas aspect ratio
+   (letterboxed — never stretched or cropped).
+4. Adds the image to the jsPDF document.
+
+**Canvases with zero dimensions** (`width === 0` or `height === 0`) are skipped without error.
+This handles the common case where a canvas exists in the DOM but has not been drawn yet.
+
+```tsx
+const { exportCanvases, isExporting } = usePdf()
+
+const canvas = document.createElement('canvas')
+canvas.width = 800
+canvas.height = 500
+// ... draw your chart ...
+
+await exportCanvases(
+  [{ canvas, title: 'Fleet CO₂ Emissions 2024' }],
+  { fileName: 'emissions', orientation: 'landscape' }
+)
+```
+
+---
+
+## Canvas sources
+
+`exportCanvases` accepts any `HTMLCanvasElement`, regardless of how it was created or whether it
+is in the DOM.
+
+**Off-screen canvas (no DOM):**
+
+```tsx
+const canvas = document.createElement('canvas')
+canvas.width = 1200
+canvas.height = 800
+const ctx = canvas.getContext('2d')!
+// draw charts, diagrams, tables...
+await exportCanvases([{ canvas }])
+```
+
+**Canvas from a charting library (Chart.js, D3, ApexCharts):**
+
+```tsx
+const canvasRef = useRef<HTMLCanvasElement>(null)
+
+// After the chart renders:
+await exportCanvases([{ canvas: canvasRef.current!, title: 'Revenue' }])
+```
+
+The hook calls `canvas.toDataURL()` at export time, so it captures whatever the canvas holds at
+that moment — including animations at their current frame.
+
+---
+
+## Multi-page documents
+
+Pass multiple `PdfPage` objects to create a multi-page PDF:
+
+```tsx
+await exportCanvases(
+  [
+    { canvas: emissionsCanvas, title: 'CO₂ Emissions' },
+    { canvas: fuelCanvas, title: 'Fuel Consumption' },
+    { canvas: distanceCanvas, title: 'Distance Sailed' },
+  ],
+  { fileName: 'fleet-report' }
+)
+```
+
+Each canvas becomes its own page. Pages are added in array order.
+
+---
+
+## Orientation
+
+The default orientation is `'landscape'` — best for wide charts and dashboards. Use `'portrait'`
+for tall content such as data tables, vessel lists, or report summaries:
+
+```tsx
+await exportCanvases(
+  [{ canvas, title: 'Vessel Register' }],
+  { orientation: 'portrait', fileName: 'vessel-list' }
+)
+```
+
+The canvas is always scaled to fill the page on the dominant axis while preserving its aspect ratio.
+
+---
+
+## Upload instead of download
+
+Pass `onSave` to receive the Blob:
+
+```tsx
+await exportCanvases([{ canvas }], {
+  onSave: async (blob, name) => {
+    const form = new FormData()
+    form.append('file', blob, name)
+    await fetch('/api/reports', { method: 'POST', body: form })
+  },
+})
+```
+
+---
+
+## isExporting
+
+`isExporting` is `true` while `exportCanvases` is running — from the jsPDF lazy-load through to
+the final download or `onSave` call:
+
+```tsx
+const { exportCanvases, isExporting } = usePdf()
+
+<Button disabled={isExporting} onClick={() => exportCanvases(pages)}>
+  {isExporting ? 'Generating…' : 'Export PDF'}
+</Button>
+```
+
+---
+
+## Lazy loading
+
+jsPDF is a large library. `usePdf` defers the import until the first export call:
+
+```ts
+let jsPdfPromise: Promise<typeof jsPdfModule> | null = null
+const loadJsPdf = () => (jsPdfPromise ??= import('jspdf'))
+```
+
+The module is fetched at most once per page lifetime. Subsequent calls reuse the resolved module.
+
+---
+
+## Caveats
+
+- **Canvas content must be drawn before export.** `canvas.toDataURL()` returns a blank image if
+  no pixels have been painted. Make sure the chart or diagram has finished rendering before calling
+  `exportCanvases`.
+- **CORS for external images.** If the canvas draws `<img>` elements from cross-origin URLs, the
+  canvas becomes *tainted* and `toDataURL()` throws. Use a CORS-enabled image server or draw from
+  a proxy.
+- **No text layer.** The PDF output is purely image-based — the text inside a canvas is rasterized
+  and not selectable. For text-searchable PDFs, use the `PdfViewer` component with a server-generated
+  PDF that includes a text layer.
+
+---
+
+## Examples
+
+### Single canvas
+
+<Canvas of={UsePdfStories.SingleCanvas} />
+
+### Multi-page PDF
+
+<Canvas of={UsePdfStories.MultiPage} />
+
+### Portrait orientation
+
+<Canvas of={UsePdfStories.PortraitOrientation} />
+
+### Export a live canvas ref
+
+<Canvas of={UsePdfStories.LiveCanvas} />

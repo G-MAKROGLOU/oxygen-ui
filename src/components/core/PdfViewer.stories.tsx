@@ -5,7 +5,7 @@ import PdfViewer from './PdfViewer'
 const meta: Meta<typeof PdfViewer> = {
     title: 'Data Display/PdfViewer',
     component: PdfViewer,
-    tags: ['autodocs'],
+
     parameters: { layout: 'padded' },
     argTypes: {
         zoom: { control: { type: 'range', min: 0.5, max: 3, step: 0.1 } },

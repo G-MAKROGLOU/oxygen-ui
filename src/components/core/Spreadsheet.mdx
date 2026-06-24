@@ -1,0 +1,323 @@
+{/* Spreadsheet.mdx — primary docs page for the Spreadsheet component */}
+import { Meta, Canvas, ArgTypes } from '@storybook/blocks'
+import * as SpreadsheetStories from './Spreadsheet.stories'
+
+<Meta of={SpreadsheetStories} />
+
+# Spreadsheet
+
+A virtualized, multi-sheet spreadsheet component. Accepts in-memory data or user-opened files,
+supports inline editing with type coercion, sortable columns, context menus, and Export/Open
+via a File menu. All heavy lifting (xlsx, PDF export) is lazy-loaded — the initial bundle
+impact is near-zero.
+
+```tsx
+import { Spreadsheet } from '@geomak/ui'
+```
+
+---
+
+## Data model
+
+### SheetData
+
+The primary data structure. An array of `SheetData` objects maps directly to worksheet tabs.
+
+```ts
+interface SheetData {
+  name: string
+  columns: GridColumn[]
+  rows: Record<string, CellValue>[]
+}
+
+type CellValue = string | number | boolean | null | undefined | Date
+```
+
+### GridColumn
+
+```ts
+interface GridColumn {
+  key: string
+  label: string
+  width?: number
+  align?: 'left' | 'center' | 'right'
+  editable?: boolean
+  type?: 'text' | 'number' | 'date' | 'boolean'
+}
+```
+
+| Field | Default | Description |
+|---|---|---|
+| `key` | required | The row-object key this column reads from. |
+| `label` | required | Display text in the header row. |
+| `width` | `120` | Column width in pixels. Resizable by the user. |
+| `align` | `'left'` | Cell text alignment. |
+| `editable` | inherits `Spreadsheet.editable` | Override editability per column. |
+| `type` | `'text'` | Controls input type during editing and sort comparisons. |
+
+---
+
+## Props
+
+<ArgTypes of={SpreadsheetStories} />
+
+---
+
+## Source types
+
+`Spreadsheet` accepts data from two sources:
+
+| Prop | Description |
+|---|---|
+| `data: SheetData[]` | In-memory data. No network, no file I/O. |
+| `file: File \| null` | A `.xlsx` or `.csv` file. Parsed lazily on first render. |
+
+When both are provided, `data` takes precedence. When `file` is set and `data` is absent, the
+component parses the file internally using the bundled xlsx dependency.
+
+For purely programmatic use, `data` is the recommended approach:
+
+```tsx
+<Spreadsheet
+  data={[
+    {
+      name: 'Fleet',
+      columns: [
+        { key: 'name', label: 'Vessel', width: 200 },
+        { key: 'dwt', label: 'DWT (t)', width: 120, align: 'right' },
+        { key: 'cii', label: 'CII', width: 80, align: 'center' },
+      ],
+      rows: [
+        { name: 'MV Aurora', dwt: 81200, cii: 'B' },
+        { name: 'MV Borealis', dwt: 115000, cii: 'C' },
+      ],
+    },
+  ]}
+/>
+```
+
+---
+
+## Editing
+
+Enable editing with the `editable` prop. When a user edits a cell, the component calls
+`onCellEdit` with the updated cell and the updated full sheet data:
+
+```ts
+onCellEdit?: (edit: CellEdit, updatedData: SheetData[]) => void
+
+interface CellEdit {
+  sheetIndex: number
+  rowIndex: number
+  columnKey: string
+  value: CellValue
+  previousValue: CellValue
+}
+```
+
+Controlled-mode pattern:
+
+```tsx
+const [data, setData] = useState(initialData)
+
+<Spreadsheet
+  data={data}
+  editable
+  onCellEdit={(edit, updated) => setData(updated)}
+/>
+```
+
+### Value coercion
+
+When the column `type` is set, the raw string from the input is coerced before the edit event fires:
+
+| Column type | Coercion |
+|---|---|
+| `'number'` | `parseFloat` — invalid strings become `null` |
+| `'boolean'` | `'true'` / `'1'` / `'yes'` → `true`; everything else → `false` |
+| `'date'` | `new Date(value)` — invalid strings become `null` |
+| `'text'` | No coercion — value is used as-is |
+
+---
+
+## Sorting
+
+Enable column sorting with the `sortable` prop. Clicking a column header toggles
+ascending → descending → unsorted. Sort state is internal unless you also provide `onSortChange`:
+
+```tsx
+<Spreadsheet data={data} sortable />
+```
+
+Numeric columns sort numerically; date columns sort chronologically; all other types sort
+lexicographically. Sort does not mutate the `data` prop — the original order is preserved and
+restored when sorting is cleared.
+
+---
+
+## Slack rows and columns
+
+`emptyRows` and `emptyCols` append extra blank rows/columns at the end of each sheet. This gives
+users a spreadsheet-like feel where they can tab into empty space:
+
+```tsx
+<Spreadsheet data={data} editable emptyRows={10} emptyCols={3} />
+```
+
+Empty rows and columns are not included in `onCellEdit` events or export output. They are
+display-only.
+
+---
+
+## Sheet management
+
+Sheets can be added, renamed, and deleted at runtime when `onSheetsChange` is provided:
+
+```ts
+onSheetsChange?: (sheets: SheetData[]) => void
+```
+
+When `onSheetsChange` is set, the sheet tab bar shows a `+` button (add sheet) and each tab gets
+a right-click context menu with rename and delete options. Calling the callback with the updated
+array is all that's required — the component re-renders from the new data:
+
+```tsx
+<Spreadsheet
+  data={sheets}
+  onSheetsChange={(updated) => setSheets(updated)}
+/>
+```
+
+---
+
+## File menu (Open and Export)
+
+The toolbar File menu provides:
+
+| Action | Formats | Notes |
+|---|---|---|
+| **Open** | `.xlsx`, `.csv` | Parses the file with xlsx and replaces the current data. |
+| **Export** | `.xlsx`, `.csv`, `.pdf` | Builds the file lazily from current in-memory data. |
+
+All exports go through the same lazy-loaded xlsx / jsPDF modules that `useExcel` and `usePdf`
+use. The first export in a session triggers the chunk download; subsequent exports are instant.
+
+**Export to PDF** renders each sheet's current view to an off-screen canvas and produces one
+PDF page per sheet.
+
+---
+
+## Virtualization
+
+When `virtualize` is `true` (the default for large datasets), only the rows inside the visible
+viewport are rendered to the DOM. Row heights are uniform (the value of the `rowHeight` prop,
+default `32`), so the virtual scroller can compute offsets without measuring.
+
+Virtualization is automatically enabled when the row count exceeds 500. Set `virtualize={false}`
+to force all rows into the DOM (useful for printing or accessibility tools that need the full
+table).
+
+---
+
+## Context menus
+
+When `contextMenus` is `true`, right-clicking a row shows an insert/delete row menu. When
+combined with `editable`, users can build and edit multi-row datasets entirely within the
+component.
+
+---
+
+## Recipes
+
+### Read-only display with export
+
+```tsx
+<Spreadsheet data={sheets} />
+```
+
+### Editable, controlled
+
+```tsx
+const [data, setData] = useState(initialSheets)
+
+<Spreadsheet
+  data={data}
+  editable
+  onCellEdit={(_, updated) => setData(updated)}
+/>
+```
+
+### File picker with parse
+
+```tsx
+const [file, setFile] = useState<File | null>(null)
+
+<input
+  type="file"
+  accept=".xlsx,.csv"
+  onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+/>
+{file && <Spreadsheet file={file} />}
+```
+
+### Fixed size inside a panel
+
+```tsx
+<Spreadsheet data={sheets} height={480} width="100%" />
+```
+
+---
+
+## Caveats
+
+- **Large PDFs:** The PDF export renders each sheet to canvas and calls `canvas.toDataURL()`. For
+  sheets with thousands of rows, only the virtualized visible rows are captured. Export the full
+  data as `.xlsx` instead if you need all rows in a portable format.
+- **CSV multi-sheet:** CSV is inherently single-sheet. Exporting a multi-sheet workbook to CSV
+  exports only the active sheet.
+- **Column resize:** Column widths changed by the user are local state. They are not reflected
+  back through any prop.
+
+---
+
+## Examples
+
+### Default — multi-sheet, read-only
+
+<Canvas of={SpreadsheetStories.Default} />
+
+### Sortable columns
+
+<Canvas of={SpreadsheetStories.Sortable} />
+
+### Editable (controlled)
+
+<Canvas of={SpreadsheetStories.Editable} />
+
+### Editable with context menus
+
+<Canvas of={SpreadsheetStories.EditableWithContextMenus} />
+
+### Slack rows and columns
+
+<Canvas of={SpreadsheetStories.SlackRowsAndColumns} />
+
+### Live sheet management
+
+<Canvas of={SpreadsheetStories.SheetManagement} />
+
+### Open a file
+
+<Canvas of={SpreadsheetStories.FileOpen} />
+
+### Export formats
+
+<Canvas of={SpreadsheetStories.ExportFormats} />
+
+### Custom dimensions
+
+<Canvas of={SpreadsheetStories.CustomDimensions} />
+
+### Large dataset (virtualized)
+
+<Canvas of={SpreadsheetStories.LargeDataset} />

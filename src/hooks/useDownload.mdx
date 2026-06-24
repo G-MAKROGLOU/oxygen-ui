@@ -1,0 +1,157 @@
+{/* useDownload.mdx — primary docs page for the useDownload hook */}
+import { Meta, Canvas, Source } from '@storybook/blocks'
+import * as UseDownloadStories from './useDownload.stories'
+
+<Meta of={UseDownloadStories} />
+
+# useDownload
+
+A stateless hook that provides the single, canonical implementation of the
+**blob → object-URL → anchor → click → deferred revoke** pattern.
+
+`useDownload` is the shared download primitive inside this library. Both `useExcel` and `usePdf`
+delegate their browser-download step here, so there is exactly one place where object-URL
+allocation, anchor creation, and revocation live.
+
+```tsx
+import { useDownload } from '@geomak/ui'
+```
+
+---
+
+## API
+
+```ts
+function useDownload(): UseDownloadReturn
+
+interface UseDownloadReturn {
+  saveBlob(blob: Blob, fileName: string): void
+  saveFromBase64(base64: string, fileName: string, mimeType?: string): void
+}
+```
+
+Both functions are **stable across renders** (`useCallback` with empty deps for `saveBlob`,
+`[saveBlob]` for `saveFromBase64`). They are safe to pass as event-handler props without
+triggering downstream re-renders.
+
+---
+
+## saveBlob
+
+```ts
+saveBlob(blob: Blob, fileName: string): void
+```
+
+Triggers a browser download for any `Blob`.
+
+**Behavior:**
+
+1. `URL.createObjectURL(blob)` — allocates a one-time URL for the blob.
+2. Creates a transient `<a download="fileName">` anchor (never appended to the DOM).
+3. Calls `.click()` — the browser initiates the download immediately.
+4. `setTimeout(() => URL.revokeObjectURL(url), 0)` — revokes after one event-loop tick,
+   guaranteeing the click registers before the URL is released.
+
+**SSR:** the function checks `typeof window === 'undefined'` and returns early. Calling it
+during server rendering is a no-op, not an error.
+
+```tsx
+const { saveBlob } = useDownload()
+
+const handleDownload = () => {
+  const csv = 'vessel,imo\nMV Aurora,9876543\n'
+  saveBlob(
+    new Blob([csv], { type: 'text/csv;charset=utf-8' }),
+    'fleet.csv'
+  )
+}
+```
+
+---
+
+## saveFromBase64
+
+```ts
+saveFromBase64(base64: string, fileName: string, mimeType?: string): void
+```
+
+Decodes a base64 string and downloads the result as a file. Handles two input shapes:
+
+| Input | MIME resolution |
+|---|---|
+| `data:<mime>;base64,<payload>` (data URI) | Extracted from the `data:` prefix automatically |
+| `<payload>` (raw base64, no prefix) | Must be supplied via the `mimeType` argument |
+
+When neither the prefix nor `mimeType` is present, the blob falls back to
+`'application/octet-stream'`.
+
+```tsx
+const { saveFromBase64 } = useDownload()
+
+// Data URI — MIME inferred automatically
+saveFromBase64(dataUri, 'image.png')
+
+// Raw base64 — MIME supplied explicitly
+saveFromBase64(rawBase64, 'report.pdf', 'application/pdf')
+```
+
+**How it works:**
+
+1. If the string starts with `data:`, parse the MIME out of the prefix and strip it.
+2. `atob(payload)` — binary string.
+3. Copy bytes into a `Uint8Array`.
+4. `new Blob([bytes], { type: ... })` — typed blob.
+5. Delegate to `saveBlob`.
+
+---
+
+## Function stability
+
+Both `saveBlob` and `saveFromBase64` are stable references:
+
+```tsx
+const { saveBlob } = useDownload()
+
+// Safe to use as a stable prop — won't cause re-renders of child
+<DownloadButton onDownload={saveBlob} />
+```
+
+If you call `useDownload()` in multiple components, each invocation returns its own stable pair.
+The hooks share no state — `useDownload` has no `useState` or `useRef`.
+
+---
+
+## Integration with useExcel and usePdf
+
+You don't need to call `useDownload` directly if you're using the higher-level hooks. Both
+`useExcel.exportSheets` and `usePdf.exportCanvases` call `saveBlob` internally when no `onSave`
+callback is passed:
+
+```tsx
+// useExcel delegates to saveBlob internally:
+const { exportSheets } = useExcel()
+exportSheets([sheet], { fileName: 'report' }) // → triggers download
+
+// useDownload directly:
+const { saveBlob } = useDownload()
+saveBlob(blob, 'custom.bin') // same underlying logic
+```
+
+Use `useDownload` directly when you have a raw `Blob` from a `fetch` response, a WebSocket
+frame, or any source outside of Excel / PDF generation.
+
+---
+
+## Examples
+
+### Save any Blob (CSV and JSON)
+
+<Canvas of={UseDownloadStories.SaveBlob} />
+
+### Save from a data URI (MIME inferred)
+
+<Canvas of={UseDownloadStories.SaveFromBase64DataUri} />
+
+### Save raw base64 with explicit MIME
+
+<Canvas of={UseDownloadStories.SaveFromBase64RawPayload} />
