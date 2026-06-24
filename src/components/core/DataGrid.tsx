@@ -55,14 +55,18 @@ export interface DataGridProps {
      * `row` index at/after `rows.length` so the consumer can append the row.
      */
     trailingRows?: number
+    /** Blank, letter-labelled columns rendered after the data columns (spreadsheet slack). Default 0. */
+    trailingCols?: number
     /** `row` is the index into `rows` (stable across sorting; may equal `rows.length`+ for a blank trailing row). */
     onCellEdit?: (e: { row: number; column: string; value: string }) => void
-    /** Enable right-click menus: Copy/Cut/Paste on cells, Add/Delete on rows. Default false. */
+    /** Enable right-click menus: Copy/Cut/Paste on cells, Add/Delete on rows, Add column on headers. Default false. */
     contextMenu?: boolean
     /** Insert a blank row at `index` (from the row right-click menu). */
     onInsertRow?: (index: number) => void
     /** Delete the row at `index` (from the row right-click menu). */
     onDeleteRow?: (index: number) => void
+    /** Insert a column at `index` (from the column-header right-click menu). */
+    onInsertColumn?: (index: number) => void
     className?: string
     style?: React.CSSProperties
     /** Shown when there are no rows. */
@@ -100,6 +104,14 @@ function displayValue(v: CellValue): string {
     return String(v)
 }
 
+/** Spreadsheet-style column label for a 0-based index: 0→A, 25→Z, 26→AA … */
+function colLetter(i: number): string {
+    let s = ''
+    let n = i
+    do { s = String.fromCharCode(65 + (n % 26)) + s; n = Math.floor(n / 26) - 1 } while (n >= 0)
+    return s
+}
+
 /**
  * Virtualized (both axes) data grid primitive. Renders only the cells inside
  * the viewport plus an overscan margin, so it stays smooth at tens of thousands
@@ -126,10 +138,12 @@ export default function DataGrid({
     overscan = 4,
     rowNumbers = true,
     trailingRows = 0,
+    trailingCols = 0,
     onCellEdit,
     contextMenu = false,
     onInsertRow,
     onDeleteRow,
+    onInsertColumn,
     className = '',
     style,
     emptyState = 'No data',
@@ -140,8 +154,8 @@ export default function DataGrid({
     // Cell selection (for highlight + clipboard) and hovered row (for highlight).
     const [selected, setSelected] = useState<{ disp: number; col: number } | null>(null)
     const [hoveredRow, setHoveredRow] = useState<number | null>(null)
-    // What the open context menu targets — a cell or a row.
-    const [ctxTarget, setCtxTarget] = useState<{ kind: 'cell' | 'row'; disp: number } | null>(null)
+    // What the open context menu targets — a cell, a row, or a column header.
+    const [ctxTarget, setCtxTarget] = useState<{ kind: 'cell' | 'row'; disp: number } | { kind: 'header'; col: number } | null>(null)
     // `editing.disp` is the on-screen position; the emitted/sourced row is the
     // original index (`order[disp]`), stable across sorting.
     const [editing, setEditing] = useState<{ disp: number; col: number } | null>(null)
@@ -152,14 +166,25 @@ export default function DataGrid({
     const gutter = rowNumbers ? GUTTER : 0
     const colSortable = (c: GridColumn) => c.sortable ?? sortable
 
+    // Data columns + blank letter-labelled trailing columns (the spreadsheet
+    // "slack"). Slack columns are display-only — add real ones via onInsertColumn.
+    const cols = useMemo<GridColumn[]>(() => {
+        if (trailingCols <= 0) return columns
+        const extra = Array.from({ length: trailingCols }, (_, k) => {
+            const idx = columns.length + k
+            return { key: `__c${idx}`, label: colLetter(idx), editable: false, sortable: false } as GridColumn
+        })
+        return [...columns, ...extra]
+    }, [columns, trailingCols])
+
     // Column geometry — resolved widths + prefix offsets.
     const { widths, offsets, totalWidth } = useMemo(() => {
-        const widths = columns.map((c) => resolveWidth(c.width))
+        const widths = cols.map((c) => resolveWidth(c.width))
         const offsets: number[] = []
         let acc = 0
         for (const w of widths) { offsets.push(acc); acc += w }
         return { widths, offsets, totalWidth: acc }
-    }, [columns])
+    }, [cols])
 
     // Display order: original row indices, reordered when a sort is active.
     const order = useMemo(() => {
@@ -201,16 +226,16 @@ export default function DataGrid({
     const rowEnd = virtualize ? Math.min(displayRowCount, Math.ceil((scroll.top + bodyH) / rowHeight) + overscan) : displayRowCount
 
     let colStart = 0
-    let colEnd = columns.length
+    let colEnd = cols.length
     if (virtualize && viewport.w) {
         const viewLeft = scroll.left
         const viewRight = scroll.left + (viewport.w - gutter)
         colStart = Math.max(0, offsets.findIndex((o, i) => o + widths[i] > viewLeft))
         if (colStart < 0) colStart = 0
         colEnd = offsets.findIndex((o) => o > viewRight)
-        colEnd = colEnd === -1 ? columns.length : Math.min(columns.length, colEnd + 1)
+        colEnd = colEnd === -1 ? cols.length : Math.min(cols.length, colEnd + 1)
         colStart = Math.max(0, colStart - overscan)
-        colEnd = Math.min(columns.length, colEnd + overscan)
+        colEnd = Math.min(cols.length, colEnd + overscan)
     }
 
     const visibleRows = Array.from({ length: Math.max(0, rowEnd - rowStart) }, (_, i) => rowStart + i)
@@ -218,14 +243,14 @@ export default function DataGrid({
 
     const commit = useCallback(() => {
         if (!editing) return
-        const col = columns[editing.col]
+        const col = cols[editing.col]
         const ri = editing.disp < rows.length ? order[editing.disp] : editing.disp
         onCellEdit?.({ row: ri, column: col.key, value: draft })
         setEditing(null)
-    }, [editing, columns, draft, onCellEdit, order, rows.length])
+    }, [editing, cols, draft, onCellEdit, order, rows.length])
 
     const startEdit = (disp: number, col: number) => {
-        const c = columns[col]
+        const c = cols[col]
         if (!(c.editable ?? editable)) return
         setDraft(displayValue(rows[rowIndexForDisp(disp)]?.[c.key] ?? ''))
         setEditing({ disp, col })
@@ -233,31 +258,38 @@ export default function DataGrid({
 
     // ── Clipboard (single selected cell) ──────────────────────────────────────
     const cellText = (sel: { disp: number; col: number }) =>
-        displayValue(rows[rowIndexForDisp(sel.disp)]?.[columns[sel.col].key] ?? '')
+        displayValue(rows[rowIndexForDisp(sel.disp)]?.[cols[sel.col].key] ?? '')
 
     const copyCell = useCallback(async () => {
         if (!selected) return
         try { await navigator.clipboard?.writeText(cellText(selected)) } catch { /* clipboard unavailable */ }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selected, rows, columns, order])
+    }, [selected, rows, cols, order])
 
     const cutCell = useCallback(async () => {
         if (!selected) return
         await copyCell()
-        onCellEdit?.({ row: rowIndexForDisp(selected.disp), column: columns[selected.col].key, value: '' })
+        onCellEdit?.({ row: rowIndexForDisp(selected.disp), column: cols[selected.col].key, value: '' })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selected, copyCell, onCellEdit, columns, order, rows.length])
+    }, [selected, copyCell, onCellEdit, cols, order, rows.length])
 
     const pasteCell = useCallback(async () => {
         if (!selected) return
         let text = ''
         try { text = (await navigator.clipboard?.readText()) ?? '' } catch { return }
-        onCellEdit?.({ row: rowIndexForDisp(selected.disp), column: columns[selected.col].key, value: text })
+        onCellEdit?.({ row: rowIndexForDisp(selected.disp), column: cols[selected.col].key, value: text })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selected, onCellEdit, columns, order, rows.length])
+    }, [selected, onCellEdit, cols, order, rows.length])
 
-    // ── Right-click menu items (cell vs row) ──────────────────────────────────
+    // ── Right-click menu items (cell / row / column header) ───────────────────
     const ctxItems = useMemo<ContextMenuActionItem[]>(() => {
+        if (ctxTarget?.kind === 'header') {
+            const ci = ctxTarget.col
+            return [
+                { key: 'left', value: 'Add column to the left', disabled: !onInsertColumn, onClick: () => onInsertColumn?.(ci) },
+                { key: 'right', value: 'Add column to the right', disabled: !onInsertColumn, onClick: () => onInsertColumn?.(ci + 1) },
+            ]
+        }
         if (ctxTarget?.kind === 'row') {
             const ri = rowIndexForDisp(ctxTarget.disp)
             const isData = ctxTarget.disp < rows.length
@@ -273,7 +305,7 @@ export default function DataGrid({
             { key: 'paste', value: 'Paste', disabled: !editable, onClick: () => void pasteCell() },
         ]
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ctxTarget, rows.length, editable, onInsertRow, onDeleteRow, copyCell, cutCell, pasteCell, order])
+    }, [ctxTarget, rows.length, editable, onInsertRow, onDeleteRow, onInsertColumn, copyCell, cutCell, pasteCell, order])
 
     const rowHighlighted = (disp: number) => hoveredRow === disp || selected?.disp === disp
 
@@ -289,7 +321,7 @@ export default function DataGrid({
 
             {/* Header (pinned top, scrolls horizontally). */}
             {visibleCols.map((ci) => {
-                const c = columns[ci]
+                const c = cols[ci]
                 const sortDir = sort?.key === c.key ? sort.dir : null
                 const canSort = colSortable(c)
                 return (
@@ -298,6 +330,7 @@ export default function DataGrid({
                         role="columnheader"
                         aria-sort={sortDir ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined}
                         onClick={canSort ? () => toggleSort(c.key) : undefined}
+                        onContextMenu={contextMenu ? () => setCtxTarget({ kind: 'header', col: ci }) : undefined}
                         className={cx(
                             'flex items-center gap-1 border-b border-r border-border bg-surface px-3 font-medium text-foreground-secondary',
                             canSort && 'cursor-pointer select-none hover:text-foreground',
@@ -340,7 +373,7 @@ export default function DataGrid({
                 const ri = rowIndexForDisp(disp)
                 const hi = rowHighlighted(disp)
                 return visibleCols.map((ci) => {
-                    const c = columns[ci]
+                    const c = cols[ci]
                     const isEditing = editing?.disp === disp && editing?.col === ci
                     const isSelected = selected?.disp === disp && selected?.col === ci
                     const canEdit = c.editable ?? editable

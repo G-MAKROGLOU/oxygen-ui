@@ -86,7 +86,7 @@ describe('Spreadsheet', () => {
     it('typing into a blank slack row appends a data row', () => {
         const onChange = vi.fn()
         // One sheet with two data rows (name, dwt); blank slack rows follow.
-        render(<Spreadsheet source={[sheets[0]]} editable emptyRows={20} onChange={onChange} />)
+        render(<Spreadsheet source={[sheets[0]]} editable emptyRows={20} emptyCols={0} onChange={onChange} />)
         // 2 data rows × 2 cols = 4 data cells; cell index 4 is the first blank row, col 0.
         fireEvent.doubleClick(screen.getAllByRole('gridcell')[4])
         const input = screen.getByRole('textbox') // the cell editor
@@ -96,6 +96,28 @@ describe('Spreadsheet', () => {
         const grown = onChange.mock.calls.at(-1)?.[0]
         expect(grown?.[0].rows).toHaveLength(3)
         expect(grown?.[0].rows[2].name).toBe('MV Crux')
+    })
+
+    it('renders blank slack columns to the right of the data', () => {
+        // Fleet has 2 data columns (Vessel, DWT); the first slack column is 'C' (index 2).
+        render(<Spreadsheet source={sheets} emptyCols={3} />)
+        expect(screen.getByRole('columnheader', { name: 'C' })).toBeInTheDocument()
+    })
+
+    it('does not show slack columns when emptyCols={0}', () => {
+        render(<Spreadsheet source={sheets} emptyCols={0} />)
+        expect(screen.queryByRole('columnheader', { name: 'C' })).not.toBeInTheDocument()
+    })
+
+    it('right-clicking a column header offers add-left/right and inserts a column', async () => {
+        const onChange = vi.fn()
+        render(<Spreadsheet source={[sheets[0]]} editable emptyCols={0} onChange={onChange} />)
+        const before = screen.getAllByRole('columnheader').length
+        fireEvent.contextMenu(screen.getByRole('columnheader', { name: 'Vessel' }))
+        expect(await screen.findByRole('menuitem', { name: 'Add column to the left' })).toBeInTheDocument()
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Add column to the right' }))
+        expect(screen.getAllByRole('columnheader').length).toBe(before + 1)
+        expect(onChange).toHaveBeenCalled()
     })
 
     it('edits a numeric value, coerces it to a number, and emits onCellEdit + onChange', () => {

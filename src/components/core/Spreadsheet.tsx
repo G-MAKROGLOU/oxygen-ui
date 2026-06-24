@@ -36,6 +36,8 @@ export interface SpreadsheetProps {
     sortable?: boolean
     /** Blank rows kept below the data (the spreadsheet "slack"). Default 50. */
     emptyRows?: number
+    /** Blank letter-labelled columns kept to the right of the data. Default 6. */
+    emptyCols?: number
     /** Show a “+” to add a blank sheet. Defaults to `editable`. */
     allowAddSheet?: boolean
     /** Overall height. Default 480. */
@@ -65,9 +67,22 @@ function columnLetter(i: number): string {
     return s
 }
 
+/** `count` new columns with unique letter keys/labels that don't clash with `existing`. */
+function makeColumns(existing: GridColumn[], count: number): GridColumn[] {
+    const used = new Set(existing.map((c) => c.key))
+    const out: GridColumn[] = []
+    let n = existing.length
+    for (let k = 0; k < count; k++) {
+        let key = columnLetter(n)
+        while (used.has(key)) { n++; key = columnLetter(n) }
+        used.add(key); out.push({ key, label: key }); n++
+    }
+    return out
+}
+
 /** A fresh empty sheet with lettered columns (used by the “+” add-sheet button). */
 function blankSheet(name: string, cols = 8): SheetData {
-    return { name, columns: Array.from({ length: cols }, (_, i) => ({ key: columnLetter(i), label: columnLetter(i) })), rows: [] }
+    return { name, columns: makeColumns([], cols), rows: [] }
 }
 
 /** Parse a SheetJS workbook (bytes already read) into our SheetData[] shape. */
@@ -138,6 +153,7 @@ export default function Spreadsheet({
     virtualize = true,
     sortable = true,
     emptyRows = 50,
+    emptyCols = 6,
     allowAddSheet,
     height = 480,
     width,
@@ -224,6 +240,35 @@ export default function Spreadsheet({
         setSheets((prev) => {
             if (!prev) return prev
             const next = prev.map((s, i) => (i === active ? { ...s, rows: [...s.rows, ...Array.from({ length: 100 }, () => ({})) ] } : s))
+            onChange?.(next)
+            return next
+        })
+    }, [active, onChange])
+
+    const add10Columns = useCallback(() => {
+        setSheets((prev) => {
+            if (!prev) return prev
+            const next = prev.map((s, i) => {
+                if (i !== active) return s
+                const cols = toColumns(s.columns)
+                return { ...s, columns: [...cols, ...makeColumns(cols, 10)] }
+            })
+            onChange?.(next)
+            return next
+        })
+    }, [active, onChange])
+
+    const insertColumn = useCallback((index: number) => {
+        setSheets((prev) => {
+            if (!prev) return prev
+            const next = prev.map((s, i) => {
+                if (i !== active) return s
+                const cols = toColumns(s.columns)
+                const at = Math.max(0, Math.min(index, cols.length))
+                const out = [...cols]
+                out.splice(at, 0, makeColumns(cols, 1)[0])
+                return { ...s, columns: out }
+            })
             onChange?.(next)
             return next
         })
@@ -382,6 +427,7 @@ export default function Spreadsheet({
         { key: 'add', label: 'Add Sheet', onSelect: addSheet },
         { key: 'delete', label: 'Delete Sheet', danger: true, disabled: sheets.length <= 1, onSelect: () => deleteSheet(active) },
         { key: 'add100', label: 'Add 100 rows', separatorBefore: true, onSelect: add100Rows },
+        { key: 'add10cols', label: 'Add 10 columns', onSelect: add10Columns },
     ]
     const canDeleteSheet = editable && sheets.length > 1
 
@@ -414,9 +460,11 @@ export default function Spreadsheet({
                     sortable={sortable}
                     virtualize={virtualize}
                     trailingRows={emptyRows}
+                    trailingCols={emptyCols}
                     contextMenu
                     onInsertRow={editable ? insertRow : undefined}
                     onDeleteRow={editable ? deleteRow : undefined}
+                    onInsertColumn={editable ? insertColumn : undefined}
                     onCellEdit={handleCellEdit}
                     height="100%"
                     className="!rounded-none !border-0"
