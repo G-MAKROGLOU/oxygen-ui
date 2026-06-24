@@ -1,3 +1,10 @@
+# [7.15.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.14.0...v7.15.0) (2026-06-24)
+
+
+### Features
+
+* **spreadsheet:** promote slack columns on type, editable (renamable) headers ([dea9028](https://github.com/G-MAKROGLOU/oxygen-ui/commit/dea9028d6d0ef3e23d4b9556b405df637263cda9))
+
 # [7.14.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.13.0...v7.14.0) (2026-06-24)
 
 
