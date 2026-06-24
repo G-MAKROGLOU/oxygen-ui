@@ -3,10 +3,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useExcel } from './useExcel'
 
 // Use the real xlsx (works in Node.js / jsdom) to validate real round-trip.
-// Only stub downloadBlob to avoid triggering a DOM anchor click in tests.
-vi.mock('../utils/fileSource', async (importOriginal) => {
-    const actual = await importOriginal<typeof import('../utils/fileSource')>()
-    return { ...actual, downloadBlob: vi.fn() }
+// Stub the URL/anchor browser APIs so saveBlob (via useDownload) doesn't error in jsdom.
+vi.stubGlobal('URL', {
+    createObjectURL: vi.fn(() => 'blob:excel-test'),
+    revokeObjectURL: vi.fn(),
 })
 
 describe('useExcel', () => {

@@ -180,8 +180,9 @@ describe('usePdf', () => {
             await result.current.exportCanvases([{ canvas: makeCanvas() }], { fileName: 'dl' })
         })
 
+        // Anchor was clicked — revoke timing is useDownload's concern, tested separately.
         expect(clickSpy).toHaveBeenCalledOnce()
-        expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:fake')
+        expect(URL.createObjectURL).toHaveBeenCalledOnce()
         clickSpy.mockRestore()
     })
 })
