@@ -1,3 +1,10 @@
+# [7.16.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.15.0...v7.16.0) (2026-06-24)
+
+
+### Features
+
+* **hooks:** add useExcel and usePdf hooks ([b7c297d](https://github.com/G-MAKROGLOU/oxygen-ui/commit/b7c297dd5be01309a215f02652f93b4fdbcd9964))
+
 # [7.15.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.14.0...v7.15.0) (2026-06-24)
 
 
