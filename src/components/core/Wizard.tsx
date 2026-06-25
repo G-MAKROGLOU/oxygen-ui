@@ -269,6 +269,11 @@ export default function Wizard({
     const tooltipBodyId  = useId()
     const reduced = useReducedMotion()
 
+    // Open the wizard only when not previously dismissed and there is
+    // actually at least one step.
+    const [open, setOpen] = useState(() => steps.length > 0 && !readDismissed(storageKey))
+    const [activeIndex, setActiveIndex] = useState(0)
+
     // Measured height of the tooltip so the clamp function has an accurate value.
     // Reruns on step change and open toggle — the only events that alter the
     // tooltip's rendered content and thus its height. The functional updater
@@ -278,11 +283,6 @@ export default function Wizard({
         const h = tooltipRef.current?.offsetHeight ?? 0
         if (h > 0) setTooltipHeight((prev) => (prev === h ? prev : h))
     }, [activeIndex, open])
-
-    // Open the wizard only when not previously dismissed and there is
-    // actually at least one step.
-    const [open, setOpen] = useState(() => steps.length > 0 && !readDismissed(storageKey))
-    const [activeIndex, setActiveIndex] = useState(0)
 
     const step = steps[activeIndex]
     const bbox = useTargetBbox(step?.stepRef)
