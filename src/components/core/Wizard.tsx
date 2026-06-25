@@ -269,15 +269,15 @@ export default function Wizard({
     const tooltipBodyId  = useId()
     const reduced = useReducedMotion()
 
-    // Measured height of the tooltip so the clamp can account for its size.
-    // The functional updater prevents re-render loops: React bails out when the
-    // value hasn't changed. Runs after every paint (no deps) so it stays in
-    // sync after step changes, scroll, or resize.
+    // Measured height of the tooltip so the clamp function has an accurate value.
+    // Reruns on step change and open toggle — the only events that alter the
+    // tooltip's rendered content and thus its height. The functional updater
+    // prevents re-render loops: React bails out when the value is unchanged.
     const [tooltipHeight, setTooltipHeight] = useState(0)
     useLayoutEffect(() => {
         const h = tooltipRef.current?.offsetHeight ?? 0
         if (h > 0) setTooltipHeight((prev) => (prev === h ? prev : h))
-    })
+    }, [activeIndex, open])
 
     // Open the wizard only when not previously dismissed and there is
     // actually at least one step.
