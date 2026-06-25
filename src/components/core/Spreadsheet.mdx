@@ -2,6 +2,11 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Spreadsheet/Guide" />
 
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
 # Spreadsheet
 
 A virtualized, multi-sheet spreadsheet component. Accepts in-memory data or user-opened files, supports inline editing with type coercion, sortable columns, context menus, and Export/Open via a File menu. xlsx and PDF export are lazy-loaded, so the initial bundle impact is near-zero.
@@ -41,44 +46,39 @@ interface GridColumn {
 }
 ```
 
-| Field | Default | Description |
-|---|---|---|
-| `key` | required | The row-object key this column reads from. |
-| `label` | required | Display text in the header row. |
-| `width` | `120` | Column width in pixels. User-resizable. |
-| `align` | `'left'` | Cell text alignment. |
-| `editable` | inherits `Spreadsheet.editable` | Per-column editability override. |
-| `type` | `'text'` | Controls input type during editing and sort comparison. |
+<table style={tbl}>
+  <thead><tr><th style={th}>Field</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>key</td><td style={td(true)}>required</td><td style={td(false)}>The row-object key this column reads from.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>required</td><td style={td(false)}>Display text in the header row.</td></tr>
+    <tr><td style={td0}>width</td><td style={td(true)}>120</td><td style={td(false)}>Column width in pixels. User-resizable.</td></tr>
+    <tr><td style={td0}>align</td><td style={td(true)}>'left'</td><td style={td(false)}>Cell text alignment.</td></tr>
+    <tr><td style={td0}>editable</td><td style={td(true)}>inherits Spreadsheet.editable</td><td style={td(false)}>Per-column editability override.</td></tr>
+    <tr><td style={td0}>type</td><td style={td(true)}>'text'</td><td style={td(false)}>Controls input type during editing and sort comparison.</td></tr>
+  </tbody>
+</table>
 
 ---
 
 ## Props
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `data` | `SheetData[]` | none | In-memory data. No network, no file I/O. |
-| `file` | `File` \| `null` | none | A `.xlsx` or `.csv` file to parse and display. `data` takes precedence when both are provided. |
-| `editable` | `boolean` | `false` | Enable inline cell editing. |
-| `sortable` | `boolean` | `false` | Enable column sorting. |
-| `virtualize` | `boolean` | `true` | Virtualize rendering for large datasets (auto-enabled above 500 rows). |
-| `height` | `number` \| `string` | `'100%'` | Container height. |
-| `width` | `number` \| `string` | `'100%'` | Container width. |
-| `emptyRows` | `number` | `0` | Append blank rows for spreadsheet-like feel. Display-only. |
-| `emptyCols` | `number` | `0` | Append blank columns. Display-only. |
-| `contextMenus` | `boolean` | `false` | Right-click row context menu (insert/delete rows). |
-| `rowHeight` | `number` | `32` | Row height in pixels. Uniform; required for virtual scroll. |
-| `onCellEdit` | `(edit: CellEdit, updated: SheetData[]) => void` | none | Called on every cell change. |
-| `onChange` | `(data: SheetData[]) => void` | none | Called with the full updated data after any edit. |
-| `onSheetsChange` | `(sheets: SheetData[]) => void` | none | Enables sheet add/rename/delete UI when provided. |
-
----
-
-## Source types
-
-| Prop | Description |
-|---|---|
-| `data: SheetData[]` | In-memory data. Recommended for programmatic use. |
-| `file: File` | A `.xlsx` or `.csv` file. Parsed lazily on first render using the bundled xlsx library. |
+<table style={tbl}>
+  <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>source</td><td style={td(true)}>SheetData[]</td><td style={td(true)}>none</td><td style={td(false)}>In-memory worksheet data.</td></tr>
+    <tr><td style={td0}>editable</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Enable inline cell editing.</td></tr>
+    <tr><td style={td0}>sortable</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Enable column sorting.</td></tr>
+    <tr><td style={td0}>virtualize</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Virtualize rendering for large datasets (auto-enabled above 500 rows).</td></tr>
+    <tr><td style={td0}>height</td><td style={td(true)}>number | string</td><td style={td(true)}>'100%'</td><td style={td(false)}>Container height.</td></tr>
+    <tr><td style={td0}>width</td><td style={td(true)}>number | string</td><td style={td(true)}>'100%'</td><td style={td(false)}>Container width.</td></tr>
+    <tr><td style={td0}>emptyRows</td><td style={td(true)}>number</td><td style={td(true)}>0</td><td style={td(false)}>Append blank rows for spreadsheet-like feel. Display-only.</td></tr>
+    <tr><td style={td0}>emptyCols</td><td style={td(true)}>number</td><td style={td(true)}>0</td><td style={td(false)}>Append blank columns. Display-only.</td></tr>
+    <tr><td style={td0}>rowHeight</td><td style={td(true)}>number</td><td style={td(true)}>32</td><td style={td(false)}>Row height in pixels. Uniform; required for virtual scroll.</td></tr>
+    <tr><td style={td0}>export</td><td style={td(true)}>{'\'xlsx\' | \'csv\' | \'pdf\''} | false</td><td style={td(true)}>all</td><td style={td(false)}>Controls which export formats appear in the File menu, or hides it entirely.</td></tr>
+    <tr><td style={td0}>onCellEdit</td><td style={td(true)}>{'(edit: CellEdit) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Called on every cell change.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(data: SheetData[]) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Called with the full updated data after any edit.</td></tr>
+  </tbody>
+</table>
 
 ---
 
@@ -102,9 +102,10 @@ Controlled pattern:
 const [data, setData] = useState(initialData)
 
 <Spreadsheet
-  data={data}
+  source={data}
   editable
-  onCellEdit={(edit, updated) => setData(updated)}
+  onCellEdit={(edit) => console.log(edit)}
+  onChange={(next) => setData(next)}
 />
 ```
 
@@ -112,18 +113,21 @@ const [data, setData] = useState(initialData)
 
 When a column has a `type` set, the raw input string is coerced before the edit event fires:
 
-| Column type | Coercion |
-|---|---|
-| `'number'` | `parseFloat`; invalid strings become `null` |
-| `'boolean'` | `'true'`, `'1'`, `'yes'` become `true`; everything else becomes `false` |
-| `'date'` | `new Date(value)`; invalid strings become `null` |
-| `'text'` | No coercion |
+<table style={tbl}>
+  <thead><tr><th style={th}>Column type</th><th style={th}>Coercion</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>'number'</td><td style={td(false)}>parseFloat; invalid strings become null</td></tr>
+    <tr><td style={td0}>'boolean'</td><td style={td(false)}>'true', '1', 'yes' become true; everything else becomes false</td></tr>
+    <tr><td style={td0}>'date'</td><td style={td(false)}>new Date(value); invalid strings become null</td></tr>
+    <tr><td style={td0}>'text'</td><td style={td(false)}>No coercion</td></tr>
+  </tbody>
+</table>
 
 ---
 
 ## Sorting
 
-`sortable` enables column sorting. Click a header to toggle ascending/descending/off. Sort does not mutate the `data` prop; the original order is restored when sorting is cleared.
+`sortable` enables column sorting. Click a header to toggle ascending/descending/off. Sort does not mutate the `source` prop; the original order is restored when sorting is cleared.
 
 Numeric columns sort numerically, date columns sort chronologically, and all other types sort lexicographically.
 
@@ -131,14 +135,7 @@ Numeric columns sort numerically, date columns sort chronologically, and all oth
 
 ## Sheet management
 
-When `onSheetsChange` is provided, the tab bar shows an Add button and each tab gets a right-click context menu with rename and delete options:
-
-```tsx
-<Spreadsheet
-  data={sheets}
-  onSheetsChange={setSheets}
-/>
-```
+When `editable` is true and `allowAddSheet` is not explicitly disabled, a **+** button appears next to the sheet tabs. Click the **x** on a tab to delete it (the last sheet cannot be deleted). Right-click a tab for rename and delete options.
 
 ---
 
@@ -146,10 +143,13 @@ When `onSheetsChange` is provided, the tab bar shows an Add button and each tab 
 
 The toolbar File menu provides:
 
-| Action | Formats | Notes |
-|---|---|---|
-| Open | `.xlsx`, `.csv` | Parses the file with xlsx and replaces current data |
-| Export | `.xlsx`, `.csv`, `.pdf` | Builds the file lazily from current in-memory data |
+<table style={tbl}>
+  <thead><tr><th style={th}>Action</th><th style={th}>Formats</th><th style={th}>Notes</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>Open</td><td style={td(true)}>.xlsx, .csv</td><td style={td(false)}>Parses the file with xlsx and replaces current data</td></tr>
+    <tr><td style={td0}>Export</td><td style={td(true)}>.xlsx, .csv, .pdf</td><td style={td(false)}>Builds the file lazily from current in-memory data</td></tr>
+  </tbody>
+</table>
 
 All exports use the same lazy-loaded xlsx and jsPDF modules that `useExcel` and `usePdf` use. The first export fetches the chunk; subsequent exports are instant.
 
@@ -170,7 +170,7 @@ Set `virtualize={false}` to render all rows (useful for printing or accessibilit
 ### Read-only display with export
 
 ```tsx
-<Spreadsheet data={sheets} />
+<Spreadsheet source={sheets} />
 ```
 
 ### Editable controlled
@@ -178,7 +178,7 @@ Set `virtualize={false}` to render all rows (useful for printing or accessibilit
 ```tsx
 const [data, setData] = useState(initialSheets)
 
-<Spreadsheet data={data} editable onCellEdit={(_, updated) => setData(updated)} />
+<Spreadsheet source={data} editable onChange={(next) => setData(next)} />
 ```
 
 ### File picker
@@ -187,13 +187,13 @@ const [data, setData] = useState(initialSheets)
 const [file, setFile] = useState<File | null>(null)
 
 <input type="file" accept=".xlsx,.csv" onChange={e => setFile(e.target.files?.[0] ?? null)} />
-{file && <Spreadsheet file={file} />}
+{file && <Spreadsheet source={file} />}
 ```
 
 ### Fixed size inside a panel
 
 ```tsx
-<Spreadsheet data={sheets} height={480} width="100%" />
+<Spreadsheet source={sheets} height={480} width="100%" />
 ```
 
 ---
