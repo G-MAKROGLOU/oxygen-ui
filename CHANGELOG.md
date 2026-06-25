@@ -1,3 +1,12 @@
+## [7.17.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.17.0...v7.17.1) (2026-06-25)
+
+
+### Bug Fixes
+
+* **Wizard:** add deps array to useLayoutEffect to satisfy react-hooks/exhaustive-deps ([f2d1874](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f2d1874f2d93d5217c0d599db9ec29b539e5ce24))
+* **Wizard:** clamp tooltip to viewport — auto-flip + final edge clamp ([e000f13](https://github.com/G-MAKROGLOU/oxygen-ui/commit/e000f130dcd333de7a13193c756c3b7019b582e5))
+* **Wizard:** move tooltipHeight state below open/activeIndex declarations ([20b36e1](https://github.com/G-MAKROGLOU/oxygen-ui/commit/20b36e1c8d518e9fd57e6a5470a4cfef548a3514))
+
 # [7.17.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.16.0...v7.17.0) (2026-06-24)
 
 
