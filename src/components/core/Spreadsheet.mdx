@@ -57,12 +57,12 @@ interface GridColumn {
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `data` | `SheetData[]` | none | In-memory data. No network, no file I/O. |
-| `file` | `File \| null` | none | A `.xlsx` or `.csv` file to parse and display. `data` takes precedence when both are provided. |
+| `file` | `File` \| `null` | none | A `.xlsx` or `.csv` file to parse and display. `data` takes precedence when both are provided. |
 | `editable` | `boolean` | `false` | Enable inline cell editing. |
 | `sortable` | `boolean` | `false` | Enable column sorting. |
 | `virtualize` | `boolean` | `true` | Virtualize rendering for large datasets (auto-enabled above 500 rows). |
-| `height` | `number \| string` | `'100%'` | Container height. |
-| `width` | `number \| string` | `'100%'` | Container width. |
+| `height` | `number` \| `string` | `'100%'` | Container height. |
+| `width` | `number` \| `string` | `'100%'` | Container width. |
 | `emptyRows` | `number` | `0` | Append blank rows for spreadsheet-like feel. Display-only. |
 | `emptyCols` | `number` | `0` | Append blank columns. Display-only. |
 | `contextMenus` | `boolean` | `false` | Right-click row context menu (insert/delete rows). |

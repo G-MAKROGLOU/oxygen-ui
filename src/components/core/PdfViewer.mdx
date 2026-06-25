@@ -50,14 +50,14 @@ For remote sources, pass HTTP headers or credentials via the `remote` prop:
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `source` | `string \| URL \| File \| Blob \| ArrayBuffer \| Uint8Array` | required | The document source. |
-| `toolbar` | `boolean \| ToolbarConfig` | `true` | Show or configure the toolbar. |
+| `source` | `string` \| `URL` \| `File` \| `Blob` \| `ArrayBuffer` \| `Uint8Array` | required | The document source. |
+| `toolbar` | `boolean` \| `ToolbarConfig` | `true` | Show or configure the toolbar. |
 | `textLayer` | `boolean` | `true` | Render selectable text spans over each page. Required for search. |
 | `thumbnails` | `boolean` | `false` | Show a collapsible thumbnail rail on the left. |
 | `initialPage` | `number` | `1` | 1-based page number to scroll to on first load. |
 | `zoom` | `number` | fit-width | Initial scale factor (1 = 100%). |
-| `height` | `number \| string` | `'100%'` | Container height. |
-| `width` | `number \| string` | `'100%'` | Container width. |
+| `height` | `number` \| `string` | `'100%'` | Container height. |
+| `width` | `number` \| `string` | `'100%'` | Container width. |
 | `workerSrc` | `string` | CDN URL | Custom pdfjs worker URL (see Worker configuration). |
 | `remote` | `object` | none | Options passed to pdfjs for remote sources (headers, credentials, range requests). |
 | `overscan` | `number` | `2` | Pages to render above and below the viewport. |
