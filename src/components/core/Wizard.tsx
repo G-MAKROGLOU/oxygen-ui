@@ -106,13 +106,73 @@ function useTargetBbox(ref: React.RefObject<HTMLElement | null> | undefined) {
 const TOOLTIP_WIDTH = 280
 const TOOLTIP_GAP = 12
 
-function tooltipStyleFor(bbox: DOMRect, placement: WizardStep['placement']): React.CSSProperties {
-    const pl = placement ?? 'right'
-    if (pl === 'right')  return { left: bbox.right + TOOLTIP_GAP,         top: bbox.top + bbox.height / 2, transform: 'translateY(-50%)', width: TOOLTIP_WIDTH }
-    if (pl === 'left')   return { left: bbox.left - TOOLTIP_WIDTH - TOOLTIP_GAP, top: bbox.top + bbox.height / 2, transform: 'translateY(-50%)', width: TOOLTIP_WIDTH }
-    if (pl === 'bottom') return { left: bbox.left + bbox.width / 2,       top: bbox.bottom + TOOLTIP_GAP, transform: 'translateX(-50%)', width: TOOLTIP_WIDTH }
-    // top
-    return { left: bbox.left + bbox.width / 2, top: bbox.top - TOOLTIP_GAP, transform: 'translate(-50%, -100%)', width: TOOLTIP_WIDTH }
+function tooltipStyleFor(
+    bbox: DOMRect,
+    placement: WizardStep['placement'],
+    tooltipHeight: number,
+): React.CSSProperties {
+    const GAP = TOOLTIP_GAP
+    const W   = TOOLTIP_WIDTH
+    const H   = tooltipHeight
+    const vw  = window.innerWidth
+    const vh  = window.innerHeight
+
+    // ── 1. Auto-flip when the preferred side overflows ──────────────────────
+    let side = placement ?? 'right'
+
+    if (side === 'right'  && bbox.right  + GAP + W > vw) side = 'left'
+    if (side === 'left'   && bbox.left   - W   - GAP < 0) side = 'right'
+    if (side === 'bottom' && bbox.bottom + GAP + H > vh)  side = 'top'
+    if (side === 'top'    && bbox.top    - GAP - H < 0)   side = 'bottom'
+
+    // ── 2. Unclamped position for the (possibly flipped) side ───────────────
+    let left: number
+    let top: number
+    let transform: string
+
+    if (side === 'right') {
+        left = bbox.right + GAP
+        top  = bbox.top + bbox.height / 2
+        transform = 'translateY(-50%)'
+    } else if (side === 'left') {
+        left = bbox.left - W - GAP
+        top  = bbox.top + bbox.height / 2
+        transform = 'translateY(-50%)'
+    } else if (side === 'bottom') {
+        left = bbox.left + bbox.width / 2
+        top  = bbox.bottom + GAP
+        transform = 'translateX(-50%)'
+    } else {
+        // top
+        left = bbox.left + bbox.width / 2
+        top  = bbox.top - GAP
+        transform = 'translate(-50%, -100%)'
+    }
+
+    // ── 3. Final clamp — keep tooltip fully within the viewport ─────────────
+    // Horizontal: for left/right the rendered x-range is [left, left+W].
+    // For top/bottom (centered) the rendered x-range is [left-W/2, left+W/2].
+    if (side === 'top' || side === 'bottom') {
+        left = Math.max(GAP + W / 2, Math.min(left, vw - W / 2 - GAP))
+    } else {
+        left = Math.max(GAP, Math.min(left, vw - W - GAP))
+    }
+
+    // Vertical: accounts for how each transform offsets the rendered rect.
+    if (H > 0) {
+        if (side === 'right' || side === 'left') {
+            // translateY(-50%) → rendered top = top - H/2
+            top = Math.max(GAP + H / 2, Math.min(top, vh - GAP - H / 2))
+        } else if (side === 'bottom') {
+            // no vertical transform → rendered top = top
+            top = Math.max(GAP, Math.min(top, vh - GAP - H))
+        } else {
+            // translate(-50%, -100%) → rendered top = top - H
+            top = Math.max(GAP + H, Math.min(top, vh - GAP))
+        }
+    }
+
+    return { left, top, transform, width: W }
 }
 
 // ── Focus trap — cycles Tab within the tooltip's focusable buttons ─────────
@@ -209,6 +269,16 @@ export default function Wizard({
     const tooltipBodyId  = useId()
     const reduced = useReducedMotion()
 
+    // Measured height of the tooltip so the clamp can account for its size.
+    // The functional updater prevents re-render loops: React bails out when the
+    // value hasn't changed. Runs after every paint (no deps) so it stays in
+    // sync after step changes, scroll, or resize.
+    const [tooltipHeight, setTooltipHeight] = useState(0)
+    useLayoutEffect(() => {
+        const h = tooltipRef.current?.offsetHeight ?? 0
+        if (h > 0) setTooltipHeight((prev) => (prev === h ? prev : h))
+    })
+
     // Open the wizard only when not previously dismissed and there is
     // actually at least one step.
     const [open, setOpen] = useState(() => steps.length > 0 && !readDismissed(storageKey))
@@ -295,7 +365,7 @@ export default function Wizard({
           }
         : { display: 'none' }
 
-    const tooltipStyle = bbox ? tooltipStyleFor(bbox, step?.placement) : { display: 'none' }
+    const tooltipStyle = bbox ? tooltipStyleFor(bbox, step?.placement, tooltipHeight) : { display: 'none' }
 
     const isLast = activeIndex === steps.length - 1
 
