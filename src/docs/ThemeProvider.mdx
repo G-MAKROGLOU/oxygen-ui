@@ -1,4 +1,4 @@
-{/* src/docs/ThemeProvider.mdx */}
+﻿{/* src/docs/ThemeProvider.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Themes/ThemeProvider/Guide" />
@@ -21,9 +21,9 @@ them at runtime. `theme` overrides tokens in both modes; `darkTheme` layers
 dark-only overrides via a scoped `<style>` on the `.dark` class. `colorScheme`
 controls how that class is applied:
 
-- `'light'` / `'dark'` — force the mode
-- `'system'` — follow `prefers-color-scheme`
-- `'auto'` (default) — inherit from an ancestor (you toggle `.dark` yourself, e.g. via ThemeSwitch)
+- `'light'` / `'dark'`: force the mode
+- `'system'`: follow `prefers-color-scheme`
+- `'auto'` (default): inherit from an ancestor (you toggle `.dark` yourself, e.g. via ThemeSwitch)
 
 ## Quick start
 
@@ -57,11 +57,11 @@ import { ThemeProvider } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>theme</td><td style={td(true)}>ThemeConfig</td><td style={td(true)}>—</td><td style={td(false)}>Token overrides for both modes.</td></tr>
-    <tr><td style={td0}>darkTheme</td><td style={td(true)}>ThemeConfig</td><td style={td(true)}>—</td><td style={td(false)}>Dark-only token overrides.</td></tr>
+    <tr><td style={td0}>theme</td><td style={td(true)}>ThemeConfig</td><td style={td(true)}>none</td><td style={td(false)}>Token overrides for both modes.</td></tr>
+    <tr><td style={td0}>darkTheme</td><td style={td(true)}>ThemeConfig</td><td style={td(true)}>none</td><td style={td(false)}>Dark-only token overrides.</td></tr>
     <tr><td style={td0}>colorScheme</td><td style={td(true)}>'light'|'dark'|'system'|'auto'</td><td style={td(true)}>'auto'</td><td style={td(false)}>How the .dark class is managed.</td></tr>
-    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Your app subtree.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Wrapper overrides.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Your app subtree.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Wrapper overrides.</td></tr>
   </tbody>
 </table>
 

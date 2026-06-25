@@ -1,4 +1,4 @@
-{/* src/docs/Button.mdx */}
+﻿{/* src/docs/Button.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Buttons/Button/Guide" />
@@ -15,7 +15,7 @@ a built-in loading state.
 
 ## Mental model
 
-Content goes in `content` (text or nodes). `variant` sets intent — `primary`
+Content goes in `content` (text or nodes). `variant` sets intent: `primary`
 (filled accent), `secondary` (accent outline), `outline` (neutral hairline
 outline), `ghost` (quiet), plus four status variants: `danger` (destructive),
 `warning`, `success`, and `info`.
@@ -45,15 +45,15 @@ import { Button } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>content</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Button label / nodes.</td></tr>
+    <tr><td style={td0}>content</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Button label / nodes.</td></tr>
     <tr><td style={td0}>variant</td><td style={td(true)}>'primary'|'secondary'|'outline'|'ghost'|'danger'|'warning'|'success'|'info'</td><td style={td(true)}>'primary'</td><td style={td(false)}>Visual intent.</td></tr>
     <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md' | 'lg'</td><td style={td(true)}>'md'</td><td style={td(false)}>Height / padding / font.</td></tr>
     <tr><td style={td0}>buttonType</td><td style={td(true)}>'button'|'submit'|'reset'</td><td style={td(true)}>'button'</td><td style={td(false)}>Native button type.</td></tr>
     <tr><td style={td0}>loading</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Spinner + disabled.</td></tr>
     <tr><td style={td0}>disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Dim + non-interactive.</td></tr>
-    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Leading icon.</td></tr>
-    <tr><td style={td0}>onClick</td><td style={td(true)}>MouseEventHandler</td><td style={td(true)}>—</td><td style={td(false)}>Click handler.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Overrides (set width via style).</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Leading icon.</td></tr>
+    <tr><td style={td0}>onClick</td><td style={td(true)}>MouseEventHandler</td><td style={td(true)}>none</td><td style={td(false)}>Click handler.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Overrides (set width via style).</td></tr>
   </tbody>
 </table>
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react'
+﻿import React, { useRef, useState, useCallback } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { usePdf } from './usePdf'
 import type { PdfPage } from './usePdf'
@@ -74,13 +74,13 @@ function makeCanvas(title: string, color: string, bars: number[]): HTMLCanvasEle
 // ── Single canvas ─────────────────────────────────────────────────────────────
 
 export const SingleCanvas: Story = {
-    name: 'exportCanvases — single page',
+    name: 'exportCanvases: single page',
     parameters: {
         docs: {
             description: {
                 story:
                     'Draws a sample chart onto an `HTMLCanvasElement`, then exports it as a one-page PDF. ' +
-                    'Pass `onSave` to receive the `Blob` without triggering a download — useful for upload pipelines.',
+                    'Pass `onSave` to receive the `Blob` without triggering a download: useful for upload pipelines.',
             },
         },
     },
@@ -90,11 +90,11 @@ export const SingleCanvas: Story = {
             const [info, setInfo] = useState<string | null>(null)
 
             const handleExport = useCallback(async () => {
-                const canvas = makeCanvas('Fleet CO₂ Emissions — 2024', '#2563eb', [1240, 1180, 1320, 1095, 1410, 1290])
+                const canvas = makeCanvas('Fleet CO₂ Emissions: 2024', '#2563eb', [1240, 1180, 1320, 1095, 1410, 1290])
                 await exportCanvases([{ canvas, title: 'Fleet CO₂ Emissions 2024' }], {
                     fileName: 'emissions',
                     onSave: async (blob, name) => {
-                        setInfo(`PDF ready: "${name}" — ${blob.size.toLocaleString()} bytes`)
+                        setInfo(`PDF ready: "${name}": ${blob.size.toLocaleString()} bytes`)
                         // In a real app: trigger a download or upload the blob.
                     },
                 })
@@ -129,12 +129,12 @@ export const SingleCanvas: Story = {
 // ── Multi-page ────────────────────────────────────────────────────────────────
 
 export const MultiPage: Story = {
-    name: 'exportCanvases — multiple pages',
+    name: 'exportCanvases: multiple pages',
     parameters: {
         docs: {
             description: {
                 story:
-                    'Pass an array of `PdfPage` objects — each becomes a separate page. ' +
+                    'Pass an array of `PdfPage` objects: each becomes a separate page. ' +
                     'Canvases with `width === 0` or `height === 0` are silently skipped.',
             },
         },
@@ -145,15 +145,15 @@ export const MultiPage: Story = {
 
             const pages: PdfPage[] = [
                 {
-                    canvas: makeCanvas('CO₂ Emissions (t) — 2024', '#2563eb', [1240, 1180, 1320, 1095, 1410, 1290]),
+                    canvas: makeCanvas('CO₂ Emissions (t): 2024', '#2563eb', [1240, 1180, 1320, 1095, 1410, 1290]),
                     title: 'CO₂ Emissions',
                 },
                 {
-                    canvas: makeCanvas('Fuel Consumption (t) — 2024', '#16a34a', [396, 377, 421, 350, 450, 412]),
+                    canvas: makeCanvas('Fuel Consumption (t): 2024', '#16a34a', [396, 377, 421, 350, 450, 412]),
                     title: 'Fuel Consumption',
                 },
                 {
-                    canvas: makeCanvas('Distance Sailed (nm) — 2024', '#9333ea', [8200, 7900, 8600, 7200, 9100, 8450]),
+                    canvas: makeCanvas('Distance Sailed (nm): 2024', '#9333ea', [8200, 7900, 8600, 7200, 9100, 8450]),
                     title: 'Distance Sailed',
                 },
             ]
@@ -182,7 +182,7 @@ export const MultiPage: Story = {
 // ── Portrait orientation ──────────────────────────────────────────────────────
 
 export const PortraitOrientation: Story = {
-    name: 'exportCanvases — portrait orientation',
+    name: 'exportCanvases: portrait orientation',
     parameters: {
         docs: {
             description: {
@@ -209,11 +209,11 @@ export const PortraitOrientation: Story = {
                 ctx.font = '16px sans-serif'
                 ctx.fillStyle = '#555e7a'
                 const lines = [
-                    'MV Aurora — Bulk Carrier — DWT 81,200',
-                    'MV Borealis — Tanker — DWT 115,000',
-                    'MV Calypso — Container — DWT 64,000',
-                    'MV Dorado — Bulk Carrier — DWT 93,400',
-                    'MV Eos — Tanker — DWT 72,100',
+                    'MV Aurora: Bulk Carrier: DWT 81,200',
+                    'MV Borealis: Tanker: DWT 115,000',
+                    'MV Calypso: Container: DWT 64,000',
+                    'MV Dorado: Bulk Carrier: DWT 93,400',
+                    'MV Eos: Tanker: DWT 72,100',
                 ]
                 lines.forEach((line, i) => ctx.fillText(line, 40, 120 + i * 36))
 
@@ -228,7 +228,7 @@ export const PortraitOrientation: Story = {
                     <div className="w-full rounded-lg border border-border bg-surface p-4 text-sm">
                         <p className="font-medium text-foreground">Portrait A4 page</p>
                         <p className="mt-1 text-xs text-foreground-muted">
-                            <code>orientation: 'portrait'</code> — the canvas is scaled to fill the narrower portrait page while preserving aspect ratio.
+                            <code>orientation: 'portrait'</code>: the canvas is scaled to fill the narrower portrait page while preserving aspect ratio.
                         </p>
                     </div>
                     <Button
@@ -246,12 +246,12 @@ export const PortraitOrientation: Story = {
 // ── Canvas with a real chart (via canvas ref) ─────────────────────────────────
 
 export const LiveCanvas: Story = {
-    name: 'exportCanvases — from a rendered canvas element',
+    name: 'exportCanvases: from a rendered canvas element',
     parameters: {
         docs: {
             description: {
                 story:
-                    'Pass a ref to a canvas that is already in the DOM — e.g. a Chart.js or D3 chart. ' +
+                    'Pass a ref to a canvas that is already in the DOM: e.g. a Chart.js or D3 chart. ' +
                     'The hook reads `canvas.toDataURL()` at the moment of export, so the image captures whatever is currently rendered.',
             },
         },

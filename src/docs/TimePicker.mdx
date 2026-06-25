@@ -1,4 +1,4 @@
-{/* src/docs/TimePicker.mdx */}
+﻿{/* src/docs/TimePicker.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Inputs/TimePicker/Guide" />
@@ -46,15 +46,15 @@ const [time, setTime] = useState<string | null>('09:30')
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>value</td><td style={td(true)}>string | null</td><td style={td(true)}>—</td><td style={td(false)}>24h "HH:mm" (or "HH:mm:ss").</td></tr>
-    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(value: string | null) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Next time string.</td></tr>
+    <tr><td style={td0}>value</td><td style={td(true)}>string | null</td><td style={td(true)}>none</td><td style={td(false)}>24h "HH:mm" (or "HH:mm:ss").</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(value: string | null) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Next time string.</td></tr>
     <tr><td style={td0}>use12Hours</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>AM/PM display (value stays 24h).</td></tr>
     <tr><td style={td0}>withSeconds</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Add a seconds column.</td></tr>
     <tr><td style={td0}>minuteStep</td><td style={td(true)}>number</td><td style={td(true)}>1</td><td style={td(false)}>Minute increment.</td></tr>
-    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'horizontal' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
-    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
-    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
-    <tr><td style={td0}>placeholder / name / htmlFor / className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Placeholder / form name / id / classes.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>none / 'horizontal' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>none</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>placeholder / name / htmlFor / className</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Placeholder / form name / id / classes.</td></tr>
   </tbody>
 </table>
 

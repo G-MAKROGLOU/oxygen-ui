@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import PdfViewer from './PdfViewer'
 
@@ -6,6 +6,7 @@ const meta: Meta<typeof PdfViewer> = {
     title: 'Data Display/PdfViewer',
     component: PdfViewer,
 
+    tags: ['autodocs'],
     parameters: { layout: 'padded' },
     argTypes: {
         zoom: { control: { type: 'range', min: 0.5, max: 3, step: 0.1 } },
@@ -47,7 +48,7 @@ function useGeneratedPdf({ pages, withText = true }: PdfSpec) {
                 doc.setTextColor(255, 255, 255)
                 doc.setFontSize(16)
                 doc.setFont('helvetica', 'bold')
-                doc.text(`Chapter ${i} — Vessel Performance Report`, 32, 30)
+                doc.text(`Chapter ${i}: Vessel Performance Report`, 32, 30)
 
                 // Body
                 doc.setTextColor(30, 41, 59)
@@ -105,7 +106,7 @@ function useGeneratedPdf({ pages, withText = true }: PdfSpec) {
                 doc.setFontSize(9)
                 doc.setTextColor(148, 163, 184)
                 doc.setFont('helvetica', 'normal')
-                doc.text(`Confidential — ${new Date().getFullYear()} Fleet Operations Report — Page ${i}`, 32, 820)
+                doc.text(`Confidential: ${new Date().getFullYear()} Fleet Operations Report: Page ${i}`, 32, 820)
                 doc.setDrawColor(203, 213, 225)
                 doc.line(32, 808, W - 32, 808)
             }
@@ -134,7 +135,7 @@ const PdfLoader = ({
 // ── Stories ───────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-    name: 'Default — continuous scroll, fit-width',
+    name: 'Default: continuous scroll, fit-width',
     parameters: {
         docs: {
             description: {
@@ -183,7 +184,7 @@ export const InitialPageAndZoom: Story = {
             description: {
                 story:
                     '`initialPage` (1-based) scrolls the viewer to that page on first load. ' +
-                    '`zoom` sets the starting scale factor — here 1.4 (140%).',
+                    '`zoom` sets the starting scale factor: here 1.4 (140%).',
             },
         },
     },
@@ -210,13 +211,13 @@ export const CustomDimensions: Story = {
 }
 
 export const MinimalPager: Story = {
-    name: 'Toolbar — pager only',
+    name: 'Toolbar: pager only',
     parameters: {
         docs: {
             description: {
                 story:
                     'Pass a `toolbar` object to show only the controls you need. ' +
-                    'Here only `pager` and `zoom` are enabled — ideal for embed contexts where the full toolbar would be intrusive.',
+                    'Here only `pager` and `zoom` are enabled: ideal for embed contexts where the full toolbar would be intrusive.',
             },
         },
     },
@@ -224,13 +225,13 @@ export const MinimalPager: Story = {
 }
 
 export const NoToolbar: Story = {
-    name: 'No toolbar — embed mode',
+    name: 'No toolbar: embed mode',
     parameters: {
         docs: {
             description: {
                 story:
                     'Set `toolbar={false}` to hide the toolbar entirely. ' +
-                    'The viewer becomes a pure reading surface — no controls, no chrome. ' +
+                    'The viewer becomes a pure reading surface: no controls, no chrome. ' +
                     'Navigation is still available via keyboard (arrow keys, Page Up/Down).',
             },
         },
@@ -239,7 +240,7 @@ export const NoToolbar: Story = {
 }
 
 export const ManyPages: Story = {
-    name: 'Virtualized — 250 pages',
+    name: 'Virtualized: 250 pages',
     parameters: {
         docs: {
             description: {
@@ -247,7 +248,7 @@ export const ManyPages: Story = {
                     'Only the pages inside the viewport are rendered to canvas. ' +
                     'Off-screen pages are represented by empty placeholder divs that match their actual height, ' +
                     'so the scrollbar behaves correctly even for large documents. ' +
-                    'Scroll to any page — rendering is instant.',
+                    'Scroll to any page: rendering is instant.',
             },
         },
     },
@@ -255,7 +256,7 @@ export const ManyPages: Story = {
 }
 
 export const ErrorState: Story = {
-    name: 'Error state — unreachable source',
+    name: 'Error state: unreachable source',
     parameters: {
         docs: {
             description: {

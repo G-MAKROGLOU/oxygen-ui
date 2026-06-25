@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useLocalStorage } from './useLocalStorage'
 import TextInput from '../components/inputs/TextInput'
@@ -44,7 +44,7 @@ export const Playground: Story = {
                 <div className="flex w-72 flex-col gap-2">
                     <TextInput label={`localStorage["${args.storageKey}"]`} value={value} onChange={(e) => setValue(e.target.value)} />
                     <Button content="Reset to initial" variant="outline" onClick={remove} />
-                    <p className="text-xs text-foreground-muted">Edit, then refresh — it persists. Change the key/initial value in Controls.</p>
+                    <p className="text-xs text-foreground-muted">Edit, then refresh: it persists. Change the key/initial value in Controls.</p>
                 </div>
             )
         }

@@ -1,4 +1,4 @@
-{/* src/docs/Tooltip.mdx */}
+﻿{/* src/docs/Tooltip.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Feedback/Tooltip/Guide" />
@@ -45,15 +45,15 @@ import { Tooltip, TooltipProvider } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>The trigger element.</td></tr>
-    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip content.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>The trigger element.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Tooltip content.</td></tr>
     <tr><td style={td0}>placement</td><td style={td(true)}>'top'|'right'|'bottom'|'left'</td><td style={td(true)}>'top'</td><td style={td(false)}>Side of the trigger.</td></tr>
     <tr><td style={td0}>delayDuration</td><td style={td(true)}>number</td><td style={td(true)}>300</td><td style={td(false)}>Show delay in ms.</td></tr>
     <tr><td style={td0}>sideOffset</td><td style={td(true)}>number</td><td style={td(true)}>8</td><td style={td(false)}>Gap from the trigger in px.</td></tr>
-    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the bubble.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Classes merged onto the bubble.</td></tr>
   </tbody>
 </table>
 
-`TooltipProvider` is a re-export of Radix's provider — wrap it high in the tree.
+`TooltipProvider` is a re-export of Radix's provider: wrap it high in the tree.
 
 See the **Feedback → Tooltip** stories.

@@ -1,4 +1,4 @@
-{/* src/docs/Checkout.mdx */}
+﻿{/* src/docs/Checkout.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="E-Commerce/Checkout/Guide" />
@@ -11,7 +11,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 # Checkout
 
 A complete, two-column checkout page: the `Cart` summary on the left and the
-`CreditCardForm` on the right. It composes the whole flow off the cart store —
+`CreditCardForm` on the right. It composes the whole flow off the cart store none
 drop it inside a `CartProvider` and it just works.
 
 ## Mental model
@@ -19,7 +19,7 @@ drop it inside a `CartProvider` and it just works.
 `Checkout` reads live items from `useCart()` (so it must be inside a
 `CartProvider`) and wires the cart's quantity / remove controls back to the
 store. The total is the cart subtotal plus your `summaryRows` (shipping, tax,
-discounts). The pay button is **disabled whenever the cart is empty** — via the
+discounts). The pay button is **disabled whenever the cart is empty**: via the
 form's `submitDisabled`, so the card fields stay editable but payment can't be
 submitted with nothing to buy. It defaults its label to `Pay <total>` and stacks
 to one column below the `lg` breakpoint.
@@ -52,8 +52,8 @@ import { CartProvider, Checkout } from '@geomak/ui'
     <tr><td style={td0}>formatPrice</td><td style={td(true)}>{'(n) => string'}</td><td style={td(true)}>$0.00</td><td style={td(false)}>Price formatter (cart + button total).</td></tr>
     <tr><td style={td0}>paymentTitle</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Payment'</td><td style={td(false)}>Heading above the card form.</td></tr>
     <tr><td style={td0}>submitLabel</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Pay &lt;total&gt;'</td><td style={td(false)}>Pay button label. Always disabled while the cart is empty.</td></tr>
-    <tr><td style={td0}>onPaid</td><td style={td(true)}>{'(card: CreditCardValue) => void | Promise<void>'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires once the card validates and the cart is non-empty.</td></tr>
-    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+    <tr><td style={td0}>onPaid</td><td style={td(true)}>{'(card: CreditCardValue) => void | Promise<void>'}</td><td style={td(true)}>none</td><td style={td(false)}>Fires once the card validates and the cart is non-empty.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Root overrides.</td></tr>
   </tbody>
 </table>
 

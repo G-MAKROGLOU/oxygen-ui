@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+﻿import React, { useRef, useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useExcel } from './useExcel'
 import type { ParsedSheet } from './useExcel'
@@ -37,17 +37,17 @@ const EMISSIONS_SHEET = {
     ],
 }
 
-// ── exportSheets — single sheet ───────────────────────────────────────────────
+// ── exportSheets: single sheet ───────────────────────────────────────────────
 
 export const ExportSingleSheet: Story = {
-    name: 'exportSheets — single sheet',
+    name: 'exportSheets: single sheet',
     parameters: {
         docs: {
             description: {
                 story:
                     'Builds a `.xlsx` workbook from an array of `ExcelSheetInput` objects and triggers a browser download. ' +
                     'Columns can be passed as an explicit `string[]` (used for the header row and for mapping object rows) ' +
-                    'or omitted — the hook infers them from the union of all row-object keys.',
+                    'or omitted: the hook infers them from the union of all row-object keys.',
             },
         },
     },
@@ -75,10 +75,10 @@ export const ExportSingleSheet: Story = {
     },
 }
 
-// ── exportSheets — multi-sheet ────────────────────────────────────────────────
+// ── exportSheets: multi-sheet ────────────────────────────────────────────────
 
 export const ExportMultiSheet: Story = {
-    name: 'exportSheets — multiple worksheets',
+    name: 'exportSheets: multiple worksheets',
     parameters: {
         docs: {
             description: {
@@ -112,10 +112,10 @@ export const ExportMultiSheet: Story = {
     },
 }
 
-// ── exportSheets — array rows ─────────────────────────────────────────────────
+// ── exportSheets: array rows ─────────────────────────────────────────────────
 
 export const ExportArrayRows: Story = {
-    name: 'exportSheets — positional array rows',
+    name: 'exportSheets: positional array rows',
     parameters: {
         docs: {
             description: {
@@ -163,7 +163,7 @@ export const ExportArrayRows: Story = {
 // ── onSave callback ───────────────────────────────────────────────────────────
 
 export const OnSaveCallback: Story = {
-    name: 'exportSheets — onSave (receive the Blob)',
+    name: 'exportSheets: onSave (receive the Blob)',
     parameters: {
         docs: {
             description: {
@@ -182,7 +182,7 @@ export const OnSaveCallback: Story = {
                 await exportSheets([FLEET_SHEET], {
                     fileName: 'fleet',
                     onSave: async (blob, name) => {
-                        setInfo(`onSave received: "${name}" — ${blob.size.toLocaleString()} bytes, type: ${blob.type}`)
+                        setInfo(`onSave received: "${name}": ${blob.size.toLocaleString()} bytes, type: ${blob.type}`)
                         // In a real app: await fetch('/api/upload', { method: 'POST', body: blob })
                     },
                 })
@@ -216,7 +216,7 @@ export const OnSaveCallback: Story = {
 // ── readWorkbook ──────────────────────────────────────────────────────────────
 
 export const ReadWorkbook: Story = {
-    name: 'readWorkbook — parse an uploaded .xlsx',
+    name: 'readWorkbook: parse an uploaded .xlsx',
     parameters: {
         docs: {
             description: {
@@ -252,7 +252,7 @@ export const ReadWorkbook: Story = {
                     <div className="rounded-lg border border-border bg-surface p-4 text-sm">
                         <p className="font-medium text-foreground">readWorkbook(file)</p>
                         <p className="mt-1 text-xs text-foreground-muted">
-                            Pick any <code>.xlsx</code> file — each worksheet is parsed into header-keyed rows.
+                            Pick any <code>.xlsx</code> file: each worksheet is parsed into header-keyed rows.
                         </p>
                     </div>
                     <input ref={inputRef} type="file" accept=".xlsx" className="hidden" onChange={handleFile} />
@@ -266,7 +266,7 @@ export const ReadWorkbook: Story = {
                             {sheets.map((sheet) => (
                                 <div key={sheet.name} className="rounded-lg border border-border bg-surface overflow-hidden">
                                     <div className="border-b border-border bg-surface-raised px-3 py-2 text-xs font-semibold text-foreground">
-                                        {sheet.name} — {sheet.rows.length} rows
+                                        {sheet.name}: {sheet.rows.length} rows
                                     </div>
                                     <div className="overflow-x-auto">
                                         <table className="w-full text-xs">
@@ -305,13 +305,13 @@ export const ReadWorkbook: Story = {
 // ── Round-trip ────────────────────────────────────────────────────────────────
 
 export const RoundTrip: Story = {
-    name: 'Round-trip — export then re-import',
+    name: 'Round-trip: export then re-import',
     parameters: {
         docs: {
             description: {
                 story:
                     'Exports a workbook in memory (via `onSave`), then immediately re-parses it with `readWorkbook`. ' +
-                    'Demonstrates that the export and parse steps compose cleanly — useful for testing pipelines that generate and consume xlsx.',
+                    'Demonstrates that the export and parse steps compose cleanly: useful for testing pipelines that generate and consume xlsx.',
             },
         },
     },
@@ -350,7 +350,7 @@ export const RoundTrip: Story = {
                     {result && (
                         <div className="rounded-lg border border-border bg-surface overflow-hidden">
                             <div className="border-b border-border bg-surface-raised px-3 py-2 text-xs font-semibold text-foreground">
-                                Parsed: "{result.name}" — {result.rows.length} rows
+                                Parsed: "{result.name}": {result.rows.length} rows
                             </div>
                             <table className="w-full text-xs">
                                 <thead>

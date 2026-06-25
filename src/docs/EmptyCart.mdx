@@ -1,4 +1,4 @@
-{/* src/docs/EmptyCart.mdx */}
+﻿{/* src/docs/EmptyCart.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="E-Commerce/EmptyCart/Guide" />
@@ -27,10 +27,10 @@ art (or `null` to hide it), and override `title` / `description` / `action`.
 ```tsx
 import { Cart, EmptyCart, Button } from '@geomak/ui'
 
-// Default — Cart shows <EmptyCart /> automatically when empty
+// Default: Cart shows <EmptyCart /> automatically when empty
 <Cart items={[]} />
 
-// Configured — pass it into Cart's emptyState slot
+// Configured: pass it into Cart's emptyState slot
 <Cart
   items={[]}
   emptyState={
@@ -53,9 +53,9 @@ import { Cart, EmptyCart, Button } from '@geomak/ui'
   <tbody>
     <tr><td style={td0}>illustration</td><td style={td(true)}>ReactNode</td><td style={td(true)}>line-art cart</td><td style={td(false)}>Art above the text. Pass your own node to replace it, or <code>null</code> to hide.</td></tr>
     <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Your cart is empty'</td><td style={td(false)}>Headline.</td></tr>
-    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Secondary line under the title.</td></tr>
-    <tr><td style={td0}>action</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Call-to-action (e.g. a "Browse" button).</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Secondary line under the title.</td></tr>
+    <tr><td style={td0}>action</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Call-to-action (e.g. a "Browse" button).</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Root overrides.</td></tr>
   </tbody>
 </table>
 

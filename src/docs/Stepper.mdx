@@ -1,4 +1,4 @@
-{/* src/docs/Stepper.mdx */}
+﻿{/* src/docs/Stepper.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Stepper/Guide" />
@@ -10,7 +10,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 # Stepper
 
-A configurable steps indicator for multi-step flows — wizards, onboarding,
+A configurable steps indicator for multi-step flows: wizards, onboarding,
 checkout, async pipelines. Horizontal or vertical, with a responsive collapse
 to vertical on small screens.
 
@@ -58,12 +58,12 @@ const next = async () => {
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>steps</td><td style={td(true)}>StepperStep[]</td><td style={td(true)}>—</td><td style={td(false)}>The steps (key, title, description?, icon?).</td></tr>
-    <tr><td style={td0}>current</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>Active step index (0-based).</td></tr>
+    <tr><td style={td0}>steps</td><td style={td(true)}>StepperStep[]</td><td style={td(true)}>none</td><td style={td(false)}>The steps (key, title, description?, icon?).</td></tr>
+    <tr><td style={td0}>current</td><td style={td(true)}>number</td><td style={td(true)}>none</td><td style={td(false)}>Active step index (0-based).</td></tr>
     <tr><td style={td0}>status</td><td style={td(true)}>'active' | 'loading' | 'error'</td><td style={td(true)}>'active'</td><td style={td(false)}>State of the active step.</td></tr>
     <tr><td style={td0}>orientation</td><td style={td(true)}>'horizontal' | 'vertical'</td><td style={td(true)}>'horizontal'</td><td style={td(false)}>Layout.</td></tr>
     <tr><td style={td0}>responsive</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Collapse horizontal → vertical below md.</td></tr>
-    <tr><td style={td0}>onStepClick</td><td style={td(true)}>{'(index) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Make visited steps clickable.</td></tr>
+    <tr><td style={td0}>onStepClick</td><td style={td(true)}>{'(index) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Make visited steps clickable.</td></tr>
     <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md'</td><td style={td(true)}>'md'</td><td style={td(false)}>Indicator / text size.</td></tr>
   </tbody>
 </table>

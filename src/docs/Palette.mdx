@@ -1,15 +1,15 @@
-{/* src/docs/Palette.mdx */}
+﻿{/* src/docs/Palette.mdx */}
 import { Meta, ColorPalette, ColorItem } from '@storybook/addon-docs/blocks'
 
 <Meta title="Docs/Palette" />
 
 # Color Palette
 
-Two categories: **brand palette** (raw hex values, never used directly in components) and **semantic tokens** (assigned roles — these are what components consume).
+Two categories: **brand palette** (raw hex values, never used directly in components) and **semantic tokens** (assigned roles: these are what components consume).
 
 ---
 
-## Semantic tokens — Light mode
+## Semantic tokens: Light mode
 
 <ColorPalette>
   <ColorItem title="background" subtitle="--color-background · Page-level shell" colors={{ background: '#eef4fa' }} />
@@ -24,7 +24,7 @@ Two categories: **brand palette** (raw hex values, never used directly in compon
   <ColorItem title="accent-foreground" subtitle="--color-accent-foreground · Text on accent backgrounds" colors={{ 'accent-foreground': '#ffffff' }} />
 </ColorPalette>
 
-## Semantic tokens — Dark mode
+## Semantic tokens: Dark mode
 
 <ColorPalette>
   <ColorItem title="background" subtitle="--color-background" colors={{ background: '#060f1a' }} />
@@ -51,7 +51,7 @@ Two categories: **brand palette** (raw hex values, never used directly in compon
 
 ## Brand palette (raw)
 
-These are the raw brand hex values in `palette.json`. **Do not use these directly in component styles** — use semantic tokens instead. These exist as a reference for picking accent overrides.
+These are the raw brand hex values in `palette.json`. **Do not use these directly in component styles**: use semantic tokens instead. These exist as a reference for picking accent overrides.
 
 <ColorPalette>
   <ColorItem
@@ -91,20 +91,20 @@ These are the raw brand hex values in `palette.json`. **Do not use these directl
 ## Usage
 
 ```css
-/* Runtime override — affects all children */
+/* Runtime override: affects all children */
 :root {
   --color-accent:       #e63946;
   --color-accent-hover: #c1121f;
 }
 
-/* Scoped override — only within a section */
+/* Scoped override: only within a section */
 .my-section {
   --color-accent: #7209b7;
 }
 ```
 
 ```tsx
-// ThemeProvider — React tree scoped
+// ThemeProvider: React tree scoped
 <ThemeProvider theme={{ colors: { accent: '#e63946', 'accent-hover': '#c1121f' } }}>
   <App />
 </ThemeProvider>

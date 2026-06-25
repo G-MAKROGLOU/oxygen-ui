@@ -1,4 +1,4 @@
-{/* src/docs/DateRangePicker.mdx */}
+﻿{/* src/docs/DateRangePicker.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Inputs/DateRangePicker/Guide" />
@@ -57,15 +57,15 @@ const [range, setRange] = useState({ start: null, end: null })
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>value</td><td style={td(true)}>{'{ start: Date | null, end: Date | null }'}</td><td style={td(true)}>—</td><td style={td(false)}>Selected range.</td></tr>
-    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(range) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Next range.</td></tr>
-    <tr><td style={td0}>presets</td><td style={td(true)}>{'{ label, range: () => DateRange }[]'}</td><td style={td(true)}>—</td><td style={td(false)}>Quick-select ranges.</td></tr>
-    <tr><td style={td0}>min / max</td><td style={td(true)}>Date</td><td style={td(true)}>—</td><td style={td(false)}>Selectable bounds.</td></tr>
-    <tr><td style={td0}>weekStartsOn / format</td><td style={td(true)}>0|1 / {'(d) => string'}</td><td style={td(true)}>0 / —</td><td style={td(false)}>Week start + trigger formatter.</td></tr>
-    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'horizontal' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
-    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
-    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
-    <tr><td style={td0}>placeholder / name / style</td><td style={td(true)}>various</td><td style={td(true)}>—</td><td style={td(false)}>Placeholder / form name / trigger width.</td></tr>
+    <tr><td style={td0}>value</td><td style={td(true)}>{'{ start: Date | null, end: Date | null }'}</td><td style={td(true)}>none</td><td style={td(false)}>Selected range.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(range) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Next range.</td></tr>
+    <tr><td style={td0}>presets</td><td style={td(true)}>{'{ label, range: () => DateRange }[]'}</td><td style={td(true)}>none</td><td style={td(false)}>Quick-select ranges.</td></tr>
+    <tr><td style={td0}>min / max</td><td style={td(true)}>Date</td><td style={td(true)}>none</td><td style={td(false)}>Selectable bounds.</td></tr>
+    <tr><td style={td0}>weekStartsOn / format</td><td style={td(true)}>0|1 / {'(d) => string'}</td><td style={td(true)}>0 / none</td><td style={td(false)}>Week start + trigger formatter.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>none / 'horizontal' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>none</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>placeholder / name / style</td><td style={td(true)}>various</td><td style={td(true)}>none</td><td style={td(false)}>Placeholder / form name / trigger width.</td></tr>
   </tbody>
 </table>
 

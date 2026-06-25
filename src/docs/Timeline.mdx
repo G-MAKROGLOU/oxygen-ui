@@ -1,4 +1,4 @@
-{/* src/docs/Timeline.mdx */}
+﻿{/* src/docs/Timeline.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Timeline/Guide" />
@@ -10,7 +10,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 # Timeline
 
-A vertical timeline of ordered events — order tracking (Order placed → Packed →
+A vertical timeline of ordered events: order tracking (Order placed → Packed →
 Shipped → Out for delivery → Delivered), audit trails, activity feeds: anything
 sequential.
 
@@ -19,7 +19,7 @@ sequential.
 Each event has a `title`, optional `description`, `timestamp`, and `icon`. Drive
 statuses one of two ways: set each event's `status` explicitly
 (`complete | current | upcoming | error`), or pass `current` and let them
-derive — events before it are `complete`, the one at it is `current` (a pulsing
+derive: events before it are `complete`, the one at it is `current` (a pulsing
 node), and later ones are `upcoming` (muted). The connecting rail fills through
 completed events.
 
@@ -52,8 +52,8 @@ import { Timeline } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>events</td><td style={td(true)}>TimelineEvent[]</td><td style={td(true)}>—</td><td style={td(false)}>The ordered events.</td></tr>
-    <tr><td style={td0}>current</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>In-progress index; derives statuses when an event has none.</td></tr>
+    <tr><td style={td0}>events</td><td style={td(true)}>TimelineEvent[]</td><td style={td(true)}>none</td><td style={td(false)}>The ordered events.</td></tr>
+    <tr><td style={td0}>current</td><td style={td(true)}>number</td><td style={td(true)}>none</td><td style={td(false)}>In-progress index; derives statuses when an event has none.</td></tr>
   </tbody>
 </table>
 

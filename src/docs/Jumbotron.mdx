@@ -1,4 +1,4 @@
-{/* src/docs/Jumbotron.mdx */}
+﻿{/* src/docs/Jumbotron.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Marketing/Jumbotron/Guide" />
@@ -11,7 +11,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 # Jumbotron
 
 The landing-page hero: an eyebrow, a large headline, a supporting line, and CTAs
-— optionally paired with media.
+none optionally paired with media.
 
 ## Mental model
 
@@ -41,10 +41,10 @@ import { Jumbotron, Button, Badge } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>The headline (required).</td></tr>
-    <tr><td style={td0}>eyebrow / description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Kicker above / paragraph below the title.</td></tr>
-    <tr><td style={td0}>actions</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>CTA row (your Buttons).</td></tr>
-    <tr><td style={td0}>media</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Image / illustration; beside copy in split, below in centered.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>The headline (required).</td></tr>
+    <tr><td style={td0}>eyebrow / description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Kicker above / paragraph below the title.</td></tr>
+    <tr><td style={td0}>actions</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>CTA row (your Buttons).</td></tr>
+    <tr><td style={td0}>media</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Image / illustration; beside copy in split, below in centered.</td></tr>
     <tr><td style={td0}>layout</td><td style={td(true)}>'centered' | 'split'</td><td style={td(true)}>'centered'</td><td style={td(false)}>Stacked & centred vs copy + media.</td></tr>
     <tr><td style={td0}>background</td><td style={td(true)}>'none' | 'surface' | 'gradient'</td><td style={td(true)}>'none'</td><td style={td(false)}>Backdrop.</td></tr>
   </tbody>

@@ -1,4 +1,4 @@
-{/* src/docs/Card.mdx */}
+﻿{/* src/docs/Card.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Card/Guide" />
@@ -18,7 +18,7 @@ A surface container with optional header, media, body, and footer sections.
 with `Card.Media` (full-bleed visual), `Card.Header` (title / subtitle / avatar /
 trailing action), `Card.Body`, and `Card.Footer` (divided action row). Those
 sections bring their own padding, so leave the root `padding="none"` (default)
-when using them — set `padding` only for a quick flat card. `interactive` turns
+when using them: set `padding` only for a quick flat card. `interactive` turns
 the whole surface into a hover-lifting button (with `onClick`, it's
 keyboard-activatable); `flush` drops the border + shadow.
 
@@ -52,10 +52,10 @@ import { Card } from '@geomak/ui'
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
     <tr><td style={td0}>interactive</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Hover lift + button semantics.</td></tr>
-    <tr><td style={td0}>onClick</td><td style={td(true)}>MouseEventHandler</td><td style={td(true)}>—</td><td style={td(false)}>Activates on click / Enter / Space when interactive.</td></tr>
+    <tr><td style={td0}>onClick</td><td style={td(true)}>MouseEventHandler</td><td style={td(true)}>none</td><td style={td(false)}>Activates on click / Enter / Space when interactive.</td></tr>
     <tr><td style={td0}>padding</td><td style={td(true)}>'none'|'sm'|'md'|'lg'</td><td style={td(true)}>'none'</td><td style={td(false)}>Root padding (leave none with sections).</td></tr>
     <tr><td style={td0}>flush</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Drop border + shadow.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Root overrides.</td></tr>
   </tbody>
 </table>
 

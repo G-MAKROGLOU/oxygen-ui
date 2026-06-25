@@ -1,4 +1,4 @@
-{/* src/docs/Statistic.mdx */}
+﻿{/* src/docs/Statistic.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Statistic/Guide" />
@@ -50,15 +50,15 @@ import { Statistic } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Caption above the value.</td></tr>
-    <tr><td style={td0}>value</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>The metric.</td></tr>
-    <tr><td style={td0}>prefix / suffix</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Around the value.</td></tr>
-    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Leading tinted icon (left align).</td></tr>
-    <tr><td style={td0}>delta</td><td style={td(true)}>StatisticDelta</td><td style={td(true)}>—</td><td style={td(false)}>Trend indicator.</td></tr>
-    <tr><td style={td0}>helpText</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Secondary line.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Caption above the value.</td></tr>
+    <tr><td style={td0}>value</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>The metric.</td></tr>
+    <tr><td style={td0}>prefix / suffix</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Around the value.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Leading tinted icon (left align).</td></tr>
+    <tr><td style={td0}>delta</td><td style={td(true)}>StatisticDelta</td><td style={td(true)}>none</td><td style={td(false)}>Trend indicator.</td></tr>
+    <tr><td style={td0}>helpText</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Secondary line.</td></tr>
     <tr><td style={td0}>size</td><td style={td(true)}>'sm'|'md'|'lg'</td><td style={td(true)}>'md'</td><td style={td(false)}>Value scale.</td></tr>
     <tr><td style={td0}>align</td><td style={td(true)}>'left' | 'center'</td><td style={td(true)}>'left'</td><td style={td(false)}>Alignment.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Overrides.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Overrides.</td></tr>
   </tbody>
 </table>
 
@@ -67,10 +67,10 @@ import { Statistic } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>value</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>The change shown by the arrow.</td></tr>
+    <tr><td style={td0}>value</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>The change shown by the arrow.</td></tr>
     <tr><td style={td0}>direction</td><td style={td(true)}>'up' | 'down' | 'neutral'</td><td style={td(true)}>'neutral'</td><td style={td(false)}>Arrow + colour.</td></tr>
     <tr><td style={td0}>positiveIsGood</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>false → a rise reads red.</td></tr>
-    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Trailing context.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Trailing context.</td></tr>
   </tbody>
 </table>
 

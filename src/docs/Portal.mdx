@@ -1,4 +1,4 @@
-{/* src/docs/Portal.mdx */}
+﻿{/* src/docs/Portal.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Layout/Portal/Guide" />
@@ -17,7 +17,7 @@ viewport.
 ## Mental model
 
 Per the CSS spec, any ancestor with `transform`, `filter`, `perspective`,
-`will-change`, or `contain` becomes the containing block for fixed descendants —
+`will-change`, or `contain` becomes the containing block for fixed descendants none
 silently breaking overlays, toasts, and drawers. Portal escapes that by mounting
 its children on `document.body` (or a target you choose), making them immune to
 ancestor styling. It renders `null` during SSR and the first client render, then
@@ -60,7 +60,7 @@ import { Portal } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Content to relocate.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Content to relocate.</td></tr>
     <tr><td style={td0}>target</td><td style={td(true)}>HTMLElement | {'(() => HTMLElement | null)'} | null</td><td style={td(true)}>document.body</td><td style={td(false)}>Mount node. null disables (renders nothing).</td></tr>
   </tbody>
 </table>

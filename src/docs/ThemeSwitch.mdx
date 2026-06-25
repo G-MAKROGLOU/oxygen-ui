@@ -1,4 +1,4 @@
-{/* src/docs/ThemeSwitch.mdx */}
+﻿{/* src/docs/ThemeSwitch.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Themes/ThemeSwitch/Guide" />
@@ -16,7 +16,7 @@ in light, slate in dark.
 ## Mental model
 
 A controlled switch: you own `checked` (true = dark) and react to `onChange`,
-which is **target-shaped** — `{ target: { checked } }` — so it drops into native
+which is **target-shaped**: `{ target: { checked } }`: so it drops into native
 form handlers. The switch itself only reports intent; you decide what to do with
 it, typically toggling `.dark` on a `ThemeProvider` running `colorScheme="auto"`.
 It renders inline with no external margins; layout is the parent's job.
@@ -50,10 +50,10 @@ function Shell() {
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>checked</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>true = dark mode.</td></tr>
-    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { checked } }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Read e.target.checked.</td></tr>
+    <tr><td style={td0}>checked</td><td style={td(true)}>boolean</td><td style={td(true)}>none</td><td style={td(false)}>true = dark mode.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { checked } }) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Read e.target.checked.</td></tr>
     <tr><td style={td0}>label</td><td style={td(true)}>string</td><td style={td(true)}>'Toggle dark mode'</td><td style={td(false)}>Accessible label.</td></tr>
-    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the root label.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Classes merged onto the root label.</td></tr>
   </tbody>
 </table>
 

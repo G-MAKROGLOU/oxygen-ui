@@ -1,4 +1,4 @@
-{/* src/docs/Wizard.mdx */}
+﻿{/* src/docs/Wizard.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Feedback/Wizard/Guide" />
@@ -21,7 +21,7 @@ and supplies the tooltip `description`, optional `title`, and `placement`. The
 component highlights `steps[i].stepRef`, dims the rest, and advances on Next.
 
 Completion is remembered in `localStorage` under `storageKey` so the tour won't
-reopen — pass `storageKey={null}` to always run it (tests, replayable tours).
+reopen: pass `storageKey={null}` to always run it (tests, replayable tours).
 
 ## Quick start
 
@@ -57,12 +57,12 @@ const dashRef    = useRef<HTMLElement>(null)
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Subtree the step refs point into.</td></tr>
-    <tr><td style={td0}>steps</td><td style={td(true)}>WizardStep[]</td><td style={td(true)}>—</td><td style={td(false)}>Ordered tour steps.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Subtree the step refs point into.</td></tr>
+    <tr><td style={td0}>steps</td><td style={td(true)}>WizardStep[]</td><td style={td(true)}>none</td><td style={td(false)}>Ordered tour steps.</td></tr>
     <tr><td style={td0}>storageKey</td><td style={td(true)}>string | null</td><td style={td(true)}>'oxygen.wizard.completed'</td><td style={td(false)}>localStorage dismissal key; null disables.</td></tr>
     <tr><td style={td0}>dismissible</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Show Skip + allow Esc.</td></tr>
-    <tr><td style={td0}>onComplete</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Reached the final Done.</td></tr>
-    <tr><td style={td0}>onSkip</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Skipped / Esc before completing.</td></tr>
+    <tr><td style={td0}>onComplete</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Reached the final Done.</td></tr>
+    <tr><td style={td0}>onSkip</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Skipped / Esc before completing.</td></tr>
   </tbody>
 </table>
 

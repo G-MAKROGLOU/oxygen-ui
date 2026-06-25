@@ -1,4 +1,4 @@
-{/* src/docs/Table.mdx */}
+﻿{/* src/docs/Table.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Table/Guide" />
@@ -15,7 +15,7 @@ rows, search, and a built-in skeleton loading state.
 
 ## Mental model
 
-`Table<T>` is generic over your row type. Describe the shape with `columns` — each
+`Table<T>` is generic over your row type. Describe the shape with `columns`: each
 column reads a property via `keyBind` and may render a custom cell with
 `component(value, row)`. Pass `rows` for the data. Pagination, expand, search, and
 loading are opt-in feature blocks, so a plain table is just `columns` + `rows`.
@@ -81,19 +81,19 @@ const columns: TableColumn<Vessel>[] = [
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>columns</td><td style={td(true)}>TableColumn&lt;T&gt;[]</td><td style={td(true)}>—</td><td style={td(false)}>Column definitions.</td></tr>
-    <tr><td style={td0}>rows</td><td style={td(true)}>T[]</td><td style={td(true)}>—</td><td style={td(false)}>Row data.</td></tr>
+    <tr><td style={td0}>columns</td><td style={td(true)}>TableColumn&lt;T&gt;[]</td><td style={td(true)}>none</td><td style={td(false)}>Column definitions.</td></tr>
+    <tr><td style={td0}>rows</td><td style={td(true)}>T[]</td><td style={td(true)}>none</td><td style={td(false)}>Row data.</td></tr>
     <tr><td style={td0}>getRowKey</td><td style={td(true)}>{'(row, i) => React.Key'}</td><td style={td(true)}>index</td><td style={td(false)}>Stable key; pass for mutable lists.</td></tr>
-    <tr><td style={td0}>pagination</td><td style={td(true)}>PaginationOptions</td><td style={td(true)}>—</td><td style={td(false)}>Client or server pagination.</td></tr>
-    <tr><td style={td0}>expandRow</td><td style={td(true)}>ExpandRowOptions&lt;T&gt;</td><td style={td(true)}>—</td><td style={td(false)}>Per-row expand panel (animated height + fade, reduced-motion aware).</td></tr>
+    <tr><td style={td0}>pagination</td><td style={td(true)}>PaginationOptions</td><td style={td(true)}>none</td><td style={td(false)}>Client or server pagination.</td></tr>
+    <tr><td style={td0}>expandRow</td><td style={td(true)}>ExpandRowOptions&lt;T&gt;</td><td style={td(true)}>none</td><td style={td(false)}>Per-row expand panel (animated height + fade, reduced-motion aware).</td></tr>
     <tr><td style={td0}>hasSearch</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Show the built-in search field.</td></tr>
-    <tr><td style={td0}>search</td><td style={td(true)}>SearchOptions&lt;T&gt;</td><td style={td(true)}>—</td><td style={td(false)}>Tune search: keys, matchMode ('contains'|'startsWith'|'equals'), caseSensitive, debounceMs, placeholder, predicate.</td></tr>
+    <tr><td style={td0}>search</td><td style={td(true)}>SearchOptions&lt;T&gt;</td><td style={td(true)}>none</td><td style={td(false)}>Tune search: keys, matchMode ('contains'|'startsWith'|'equals'), caseSensitive, debounceMs, placeholder, predicate.</td></tr>
     <tr><td style={td0}>defaultSort</td><td style={td(true)}>{'{ key, direction } | null'}</td><td style={td(true)}>null</td><td style={td(false)}>Initial sort (uncontrolled).</td></tr>
-    <tr><td style={td0}>onSortChange</td><td style={td(true)}>{'(sort | null) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Sort changed/cleared. Use for server-side sorting.</td></tr>
-    <tr><td style={td0}>onCellEdit</td><td style={td(true)}>{'({ row, key, value, rowIndex }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>An editable cell committed a value (update your rows here).</td></tr>
+    <tr><td style={td0}>onSortChange</td><td style={td(true)}>{'(sort | null) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Sort changed/cleared. Use for server-side sorting.</td></tr>
+    <tr><td style={td0}>onCellEdit</td><td style={td(true)}>{'({ row, key, value, rowIndex }) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>An editable cell committed a value (update your rows here).</td></tr>
     <tr><td style={td0}>loading / loadingRowCount</td><td style={td(true)}>boolean / number</td><td style={td(true)}>false / 8</td><td style={td(false)}>Skeleton rows during fetch.</td></tr>
-    <tr><td style={td0}>header / footer</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Slots above / below the table.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Wrapper overrides.</td></tr>
+    <tr><td style={td0}>header / footer</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Slots above / below the table.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Wrapper overrides.</td></tr>
   </tbody>
 </table>
 

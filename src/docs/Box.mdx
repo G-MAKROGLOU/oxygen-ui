@@ -1,4 +1,4 @@
-{/* src/docs/Box.mdx */}
+﻿{/* src/docs/Box.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Layout/Box/Guide" />
@@ -15,8 +15,8 @@ The polymorphic layout primitive. A token-styled `<div>` (or any element via
 
 ## Mental model
 
-Box maps prop shortcuts to the design system's token scales — spacing (padding /
-margin), background, border, radius, shadow — emitting Tailwind classes so there's
+Box maps prop shortcuts to the design system's token scales: spacing (padding /
+margin), background, border, radius, shadow: emitting Tailwind classes so there's
 no runtime style cost. Spacing props take the shared scale (`none`→`2xl`). Use
 `as` when the semantic element should differ from a `div`.
 
@@ -40,14 +40,14 @@ import { Box } from '@geomak/ui'
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
     <tr><td style={td0}>as</td><td style={td(true)}>keyof JSX.IntrinsicElements</td><td style={td(true)}>'div'</td><td style={td(false)}>Rendered element.</td></tr>
-    <tr><td style={td0}>p / px / py / pt / pr / pb / pl</td><td style={td(true)}>Spacing</td><td style={td(true)}>—</td><td style={td(false)}>Padding (token scale).</td></tr>
-    <tr><td style={td0}>m / mx / my / mt / mr / mb / ml</td><td style={td(true)}>Spacing</td><td style={td(true)}>—</td><td style={td(false)}>Margin (token scale).</td></tr>
+    <tr><td style={td0}>p / px / py / pt / pr / pb / pl</td><td style={td(true)}>Spacing</td><td style={td(true)}>none</td><td style={td(false)}>Padding (token scale).</td></tr>
+    <tr><td style={td0}>m / mx / my / mt / mr / mb / ml</td><td style={td(true)}>Spacing</td><td style={td(true)}>none</td><td style={td(false)}>Margin (token scale).</td></tr>
     <tr><td style={td0}>background</td><td style={td(true)}>'none'|'background'|'surface'|'surface-raised'|'accent'</td><td style={td(true)}>'none'</td><td style={td(false)}>Surface token.</td></tr>
     <tr><td style={td0}>border</td><td style={td(true)}>'none'|'border'|'border-strong'|'accent'|'status-error'</td><td style={td(true)}>'none'</td><td style={td(false)}>Border token.</td></tr>
-    <tr><td style={td0}>radius</td><td style={td(true)}>'none'|'sm'|'md'|'lg'|'xl'|'2xl'|'full'</td><td style={td(true)}>—</td><td style={td(false)}>Corner radius.</td></tr>
+    <tr><td style={td0}>radius</td><td style={td(true)}>'none'|'sm'|'md'|'lg'|'xl'|'2xl'|'full'</td><td style={td(true)}>none</td><td style={td(false)}>Corner radius.</td></tr>
     <tr><td style={td0}>shadow</td><td style={td(true)}>'none'|'sm'|'md'|'lg'|'xl'</td><td style={td(true)}>'none'</td><td style={td(false)}>Elevation.</td></tr>
-    <tr><td style={td0}>width / height</td><td style={td(true)}>string | number</td><td style={td(true)}>—</td><td style={td(false)}>Dimensions (number → px).</td></tr>
-    <tr><td style={td0}>onClick / className / style</td><td style={td(true)}>various</td><td style={td(true)}>—</td><td style={td(false)}>Handler + overrides.</td></tr>
+    <tr><td style={td0}>width / height</td><td style={td(true)}>string | number</td><td style={td(true)}>none</td><td style={td(false)}>Dimensions (number → px).</td></tr>
+    <tr><td style={td0}>onClick / className / style</td><td style={td(true)}>various</td><td style={td(true)}>none</td><td style={td(false)}>Handler + overrides.</td></tr>
   </tbody>
 </table>
 

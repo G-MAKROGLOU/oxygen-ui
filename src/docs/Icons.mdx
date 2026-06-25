@@ -1,4 +1,4 @@
-{/* src/docs/Icons.mdx */}
+﻿{/* src/docs/Icons.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Icons/Usage/Guide" />
@@ -17,7 +17,7 @@ icon to copy its usage).
 ## Mental model
 
 Every icon is a small React component drawn on a 24×24 grid. It has **no hard-coded
-colour or size** — it inherits the surrounding text colour via `currentColor`
+colour or size**: it inherits the surrounding text colour via `currentColor`
 and defaults to 24px. Most icons are outline (stroked); a few are solid (carets,
 dots, `StarFilled`). Icons are **decorative by default** (`aria-hidden`); pass a
 `title` only when the icon is the sole meaning of a control.
@@ -25,12 +25,12 @@ dots, `StarFilled`). Icons are **decorative by default** (`aria-hidden`); pass a
 There are **two ways to import**, by design:
 
 ```tsx
-// 1) Tree-shakeable named imports from the /icons subpath — ship only what you
+// 1) Tree-shakeable named imports from the /icons subpath: ship only what you
 //    use. Best for app code. Every icon is available here (no name clashes).
 import { Search, Trash, Plus } from '@geomak/ui/icons'
 <Search />
 
-// 2) The Icon.* namespace from the root entry — quick and discoverable. Lives
+// 2) The Icon.* namespace from the root entry: quick and discoverable. Lives
 //    on the root so it never clashes with component names (there's both a
 //    `Table` component and a `Table` icon).
 import { Icon } from '@geomak/ui'
@@ -65,7 +65,7 @@ Size is a pixel number (or any CSS length). Outline icons accept `strokeWidth`
 <Icon.Settings size={28} strokeWidth={2} />
 ```
 
-The `Spinner` icon is static markup — add `className="animate-spin"` to rotate it.
+The `Spinner` icon is static markup: add `className="animate-spin"` to rotate it.
 
 ## Accessibility
 
@@ -86,7 +86,7 @@ Every icon accepts these plus any native `<svg>` prop (`className`, `style`,
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
     <tr><td style={td0}>size</td><td style={td(true)}>number | string</td><td style={td(true)}>24</td><td style={td(false)}>Width + height (px, or any CSS length).</td></tr>
-    <tr><td style={td0}>title</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Accessible label; without it the icon is aria-hidden.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Accessible label; without it the icon is aria-hidden.</td></tr>
     <tr><td style={td0}>strokeWidth</td><td style={td(true)}>number</td><td style={td(true)}>1.5</td><td style={td(false)}>Outline weight (ignored by solid icons).</td></tr>
   </tbody>
 </table>
@@ -94,7 +94,7 @@ Every icon accepts these plus any native `<svg>` prop (`className`, `style`,
 ## Extending the pack
 
 Use `createIcon(name, content, options?)` to make your own icons that match the
-built-ins exactly — same sizing, `currentColor`, ref forwarding, and a11y. Draw
+built-ins exactly: same sizing, `currentColor`, ref forwarding, and a11y. Draw
 the artwork on a 24×24 grid (or set a custom `viewBox`).
 
 ```tsx

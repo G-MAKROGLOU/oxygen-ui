@@ -1,4 +1,4 @@
-{/* src/docs/AppShell.mdx */}
+﻿{/* src/docs/AppShell.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Layout/AppShell/Guide" />
@@ -41,16 +41,16 @@ import { AppShell, TopBar } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>topBar</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Top bar slot (usually a TopBar).</td></tr>
+    <tr><td style={td0}>topBar</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Top bar slot (usually a TopBar).</td></tr>
     <tr><td style={td0}>sidebarSections</td><td style={td(true)}>SidebarSection[]</td><td style={td(true)}>[]</td><td style={td(false)}>Sidebar nav data.</td></tr>
     <tr><td style={td0}>sidebarExpandedWidth / sidebarCollapsedWidth</td><td style={td(true)}>number</td><td style={td(true)}>220 / 52</td><td style={td(false)}>Sidebar widths.</td></tr>
     <tr><td style={td0}>sidebarDefaultExpanded</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Start expanded.</td></tr>
-    <tr><td style={td0}>sidebarFooter</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Sidebar bottom slot.</td></tr>
-    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Main page content.</td></tr>
-    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Root className.</td></tr>
+    <tr><td style={td0}>sidebarFooter</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Sidebar bottom slot.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Main page content.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Root className.</td></tr>
   </tbody>
 </table>
 
-Pairs with **Menu → Sidebar** and **Menu → TopBar** — AppShell wires them together.
+Pairs with **Menu → Sidebar** and **Menu → TopBar**: AppShell wires them together.
 
 See the **Layout → AppShell** stories.

@@ -1,4 +1,4 @@
-{/* src/docs/LoadingSpinner.mdx */}
+﻿{/* src/docs/LoadingSpinner.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Progress/LoadingSpinner/Guide" />
@@ -45,16 +45,16 @@ import { LoadingSpinner } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>prompt</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Caption revealed letter-by-letter.</td></tr>
+    <tr><td style={td0}>prompt</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Caption revealed letter-by-letter.</td></tr>
     <tr><td style={td0}>size</td><td style={td(true)}>'xs' | 'sm' | 'md' | 'lg'</td><td style={td(true)}>'md'</td><td style={td(false)}>Ring + caption scale.</td></tr>
     <tr><td style={td0}>inline</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Render in place, no overlay/portal.</td></tr>
     <tr><td style={td0}>spinnerColor</td><td style={td(true)}>string</td><td style={td(true)}>--color-accent</td><td style={td(false)}>Ring color override.</td></tr>
     <tr><td style={td0}>textColor</td><td style={td(true)}>string</td><td style={td(true)}>--color-foreground</td><td style={td(false)}>Caption color override.</td></tr>
     <tr><td style={td0}>backdropOpacity</td><td style={td(true)}>number</td><td style={td(true)}>0.8</td><td style={td(false)}>Overlay backdrop (0–1); ignored when inline.</td></tr>
-    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the root.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Classes merged onto the root.</td></tr>
   </tbody>
 </table>
 
-Respects `prefers-reduced-motion` — the caption stays visible without the stagger.
+Respects `prefers-reduced-motion`: the caption stays visible without the stagger.
 
 See the **Progress → LoadingSpinner** stories.

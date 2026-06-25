@@ -1,29 +1,24 @@
-{/* useExcel.mdx — primary docs page for the useExcel hook */}
-import { Meta, Canvas } from '@storybook/blocks'
-import * as UseExcelStories from './useExcel.stories'
+import { Meta } from '@storybook/addon-docs/blocks'
 
-<Meta of={UseExcelStories} />
+<Meta title="Hooks/useExcel/Guide" />
 
 # useExcel
 
-A hook that wraps [SheetJS (xlsx)](https://sheetjs.com/) to provide ergonomic Excel export
-and parse operations. The library already bundles xlsx as a dependency; `useExcel` adds a
-thin layer of type safety, worksheet sanitization, and browser-download wiring on top of it.
+A hook that wraps [SheetJS (xlsx)](https://sheetjs.com/) to provide ergonomic Excel export and parse operations. The library already bundles xlsx; `useExcel` adds type safety, worksheet name sanitization, and browser-download wiring.
 
-**xlsx is lazy-loaded** — the import happens on the first call to `exportSheets` or
-`readWorkbook`. It does not appear in your initial bundle.
+**xlsx is lazy-loaded.** The import happens on the first call to `exportSheets` or `readWorkbook` and is not included in the initial bundle.
 
 ```tsx
 import { useExcel } from '@geomak/ui'
+
+const { exportSheets, readWorkbook, isExporting } = useExcel()
 ```
 
 ---
 
-## API
+## Return type
 
 ```ts
-function useExcel(): UseExcelReturn
-
 interface UseExcelReturn {
   exportSheets(sheets: ExcelSheetInput[], options?: ExportSaveOptions): Promise<void>
   readWorkbook(source: File | Blob | ArrayBuffer | Uint8Array): Promise<ParsedSheet[]>
@@ -49,9 +44,9 @@ type CellValue = string | number | boolean | null | undefined | Date
 
 | Field | Description |
 |---|---|
-| `name` | Worksheet name. Sanitized automatically (≤31 chars, restricted chars replaced with `_`). |
-| `columns` | Optional explicit column order. Used as the bold header row. Inferred from row-object keys when omitted. |
-| `rows` | Array of key-value objects **or** positional `CellValue` arrays. Both shapes work; they can be mixed. |
+| `name` | Worksheet name. Sanitized automatically (max 31 chars, restricted chars replaced with `_`). |
+| `columns` | Optional explicit column order used as the bold header row. Inferred from row-object keys when omitted. |
+| `rows` | Array of key-value objects or positional `CellValue` arrays. Both shapes are supported and can be mixed across sheets. |
 
 ### ExportSaveOptions
 
@@ -65,7 +60,7 @@ interface ExportSaveOptions {
 | Field | Default | Description |
 |---|---|---|
 | `fileName` | `'export'` | File name without extension. `.xlsx` is appended automatically. |
-| `onSave` | `undefined` | When provided, receives the Blob instead of triggering a download. |
+| `onSave` | none | When provided, receives the Blob instead of triggering a download. |
 
 ### ParsedSheet
 
@@ -80,23 +75,19 @@ interface ParsedSheet {
 
 ## exportSheets
 
-```ts
-exportSheets(sheets: ExcelSheetInput[], options?: ExportSaveOptions): Promise<void>
-```
-
 Builds a `.xlsx` workbook and either triggers a browser download or calls `onSave`.
 
-**What it does per worksheet:**
+Per worksheet:
 
-1. Header row — bold, written from `columns` or derived from the union of all row-object keys.
-2. Data rows — object rows are mapped by key order; array rows are written positionally.
-3. Column auto-sizing — widths are computed from the longest cell value, capped at 40 characters.
-4. Worksheet name sanitization — names longer than 31 characters are truncated; the characters
-   `\ / ? * [ ] :` are replaced with `_`.
+1. Header row is written bold, from `columns` or derived from the union of all row-object keys.
+2. Object rows are mapped by key order; array rows are written positionally.
+3. Column widths are auto-sized from the longest cell value, capped at 40 characters.
+4. Worksheet names longer than 31 characters are truncated; the characters `\ / ? * [ ] :` are replaced with `_`.
 
 ```tsx
 const { exportSheets, isExporting } = useExcel()
 
+// Object rows with explicit column order
 await exportSheets(
   [
     {
@@ -110,39 +101,27 @@ await exportSheets(
   ],
   { fileName: 'fleet' }
 )
+
+// Positional array rows
+await exportSheets(
+  [
+    {
+      name: 'Cargo',
+      columns: ['Port', 'Cargo (t)', 'ETD'],
+      rows: [
+        ['Rotterdam', 42000, '2024-03-12'],
+        ['Singapore', 38500, '2024-03-28'],
+      ],
+    },
+  ],
+  { fileName: 'cargo' }
+)
 ```
-
-### Object rows vs. array rows
-
-Object rows map each key to a column. The `columns` array controls header labels and row order:
-
-```tsx
-// Object rows
-rows: [
-  { Vessel: 'MV Aurora', IMO: 9876543, CII: 'B' },
-]
-```
-
-Array rows write values positionally. The `columns` array provides the header labels:
-
-```tsx
-// Array rows
-columns: ['Port', 'Cargo (t)', 'ETD'],
-rows: [
-  ['Rotterdam', 42000, '2024-03-12'],
-  ['Singapore', 38500, '2024-03-28'],
-]
-```
-
-Both shapes can appear in the same workbook across different sheets.
 
 ### Upload instead of download
 
-Pass `onSave` to receive the Blob without triggering a browser download:
-
 ```tsx
 await exportSheets([sheet], {
-  fileName: 'report',
   onSave: async (blob, name) => {
     await fetch('/api/upload', { method: 'POST', body: blob })
   },
@@ -153,102 +132,39 @@ await exportSheets([sheet], {
 
 ## readWorkbook
 
-```ts
-readWorkbook(source: File | Blob | ArrayBuffer | Uint8Array): Promise<ParsedSheet[]>
-```
-
-Parses any Excel workbook. Returns one `ParsedSheet` per worksheet.
-
-**Convention:** the first row of each worksheet is treated as column headers. All subsequent rows
-become `Record<header, CellValue>` objects.
+Parses any Excel workbook. Returns one `ParsedSheet` per worksheet. The first row of each worksheet becomes the header keys; all subsequent rows become `Record<header, CellValue>`.
 
 ```tsx
 const { readWorkbook } = useExcel()
 
 // From a file picker
 const [parsed] = await readWorkbook(event.target.files[0])
-console.log(parsed.name) // worksheet name
-console.log(parsed.rows) // [{ Vessel: 'MV Aurora', IMO: 9876543, ... }, ...]
+console.log(parsed.name)  // worksheet name
+console.log(parsed.rows)  // [{ Vessel: 'MV Aurora', ... }]
 
 // From a fetch response
-const arrayBuffer = await fetch('/api/data.xlsx').then((r) => r.arrayBuffer())
-const sheets = await readWorkbook(arrayBuffer)
+const buf = await fetch('/api/data.xlsx').then(r => r.arrayBuffer())
+const sheets = await readWorkbook(buf)
 ```
 
-**Empty sheets:** worksheets with no rows (or only a header row) return `rows: []`. They are
-not skipped — you receive an entry for every worksheet in the file.
+Empty worksheets return `rows: []`. They are not skipped.
 
 ---
 
 ## isExporting
 
-`isExporting` is `true` while `exportSheets` is running — from the xlsx lazy-load through to the
-final download or `onSave` call. Use it to disable buttons and show loading state:
+`isExporting` is `true` while `exportSheets` is running. Use it to disable buttons and show loading indicators:
 
 ```tsx
-const { exportSheets, isExporting } = useExcel()
-
-<Button
-  disabled={isExporting}
-  onClick={() => exportSheets([sheet], { fileName: 'report' })}
->
-  {isExporting ? 'Building…' : 'Download .xlsx'}
+<Button disabled={isExporting} onClick={() => exportSheets([sheet])}>
+  {isExporting ? 'Building...' : 'Download .xlsx'}
 </Button>
 ```
 
-`readWorkbook` does not set `isExporting` — only export operations do.
+`readWorkbook` does not set `isExporting`.
 
 ---
 
-## Lazy loading
+## Live examples
 
-xlsx is a large library (~900 kB unminified). `useExcel` defers the import until the first call:
-
-```ts
-// Module-level singleton — loaded at most once per page lifetime
-let xlsxPromise: Promise<typeof xlsx> | null = null
-const loadXlsx = () => (xlsxPromise ??= import('xlsx'))
-```
-
-The first call to `exportSheets` or `readWorkbook` fetches the chunk. All subsequent calls reuse
-the resolved module from the same promise. No dynamic import runs more than once.
-
----
-
-## Worksheet name sanitization
-
-Excel imposes strict rules on worksheet names:
-
-- Maximum 31 characters
-- Cannot contain: `\ / ? * [ ] :`
-
-`useExcel` enforces both automatically. A name like `"Fleet Data / 2024 [Q1]"` becomes
-`"Fleet Data _ 2024 _Q1_"` and is truncated to 31 characters.
-
----
-
-## Examples
-
-### Single-sheet download
-
-<Canvas of={UseExcelStories.ExportSingleSheet} />
-
-### Multi-sheet workbook
-
-<Canvas of={UseExcelStories.ExportMultiSheet} />
-
-### Positional array rows
-
-<Canvas of={UseExcelStories.ExportArrayRows} />
-
-### onSave — receive the Blob
-
-<Canvas of={UseExcelStories.OnSaveCallback} />
-
-### readWorkbook — parse an uploaded file
-
-<Canvas of={UseExcelStories.ReadWorkbook} />
-
-### Round-trip — export then re-import
-
-<Canvas of={UseExcelStories.RoundTrip} />
+See the stories under **Hooks > useExcel**.

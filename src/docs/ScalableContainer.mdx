@@ -1,4 +1,4 @@
-{/* src/docs/ScalableContainer.mdx */}
+﻿{/* src/docs/ScalableContainer.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Layout/ScalableContainer/Guide" />
@@ -11,7 +11,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 # ScalableContainer
 
 A container that smoothly expands to fill its parent on click and collapses back,
-with an OS-window aesthetic — a subtle elevation lift, no color flash.
+with an OS-window aesthetic: a subtle elevation lift, no color flash.
 
 ## Mental model
 
@@ -55,12 +55,12 @@ const [open, setOpen] = useState(false)
   <tbody>
     <tr><td style={td0}>width / height</td><td style={td(true)}>CSS length</td><td style={td(true)}>'100%' / 'auto'</td><td style={td(false)}>Resting size.</td></tr>
     <tr><td style={td0}>expandedWidth / expandedHeight</td><td style={td(true)}>CSS length</td><td style={td(true)}>'100%' / '100%'</td><td style={td(false)}>Expanded size (set concrete height to push siblings).</td></tr>
-    <tr><td style={td0}>expanded</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Controlled expanded state.</td></tr>
-    <tr><td style={td0}>onExpandedChange</td><td style={td(true)}>{'(expanded: boolean) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Toggle callback.</td></tr>
+    <tr><td style={td0}>expanded</td><td style={td(true)}>boolean</td><td style={td(true)}>none</td><td style={td(false)}>Controlled expanded state.</td></tr>
+    <tr><td style={td0}>onExpandedChange</td><td style={td(true)}>{'(expanded: boolean) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Toggle callback.</td></tr>
     <tr><td style={td0}>togglePosition</td><td style={td(true)}>'top-left'|'top-right'|'bottom-left'|'bottom-right'</td><td style={td(true)}>'top-right'</td><td style={td(false)}>Toggle-button corner.</td></tr>
-    <tr><td style={td0}>expandIcon / collapseIcon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Override toggle icons.</td></tr>
-    <tr><td style={td0}>assignClassOnClick</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Class added to children wrapper when expanded.</td></tr>
-    <tr><td style={td0}>children / className</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>—</td><td style={td(false)}>Content + root overrides.</td></tr>
+    <tr><td style={td0}>expandIcon / collapseIcon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Override toggle icons.</td></tr>
+    <tr><td style={td0}>assignClassOnClick</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Class added to children wrapper when expanded.</td></tr>
+    <tr><td style={td0}>children / className</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>none</td><td style={td(false)}>Content + root overrides.</td></tr>
   </tbody>
 </table>
 

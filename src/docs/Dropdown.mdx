@@ -1,4 +1,4 @@
-{/* src/docs/Dropdown.mdx */}
+﻿{/* src/docs/Dropdown.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Inputs/Dropdown/Guide" />
@@ -63,16 +63,16 @@ Bind with `fieldTarget`:
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>items</td><td style={td(true)}>{'{ key, label, icon? }[]'}</td><td style={td(true)}>—</td><td style={td(false)}>The selectable items.</td></tr>
-    <tr><td style={td0}>value</td><td style={td(true)}>key | key[]</td><td style={td(true)}>—</td><td style={td(false)}>Selected key (single) or keys (multi).</td></tr>
-    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { value } }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Read <code>e.target.value</code>.</td></tr>
+    <tr><td style={td0}>items</td><td style={td(true)}>{'{ key, label, icon? }[]'}</td><td style={td(true)}>none</td><td style={td(false)}>The selectable items.</td></tr>
+    <tr><td style={td0}>value</td><td style={td(true)}>key | key[]</td><td style={td(true)}>none</td><td style={td(false)}>Selected key (single) or keys (multi).</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { value } }) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Read <code>e.target.value</code>.</td></tr>
     <tr><td style={td0}>isMultiselect</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Multi-select (value becomes an array).</td></tr>
     <tr><td style={td0}>hasSearch</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Show the in-panel search box.</td></tr>
-    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>— / 'vertical' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
-    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
-    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
-    <tr><td style={td0}>placeholder / name / htmlFor</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Placeholder / form name / id link.</td></tr>
-    <tr><td style={td0}>style / className</td><td style={td(true)}>CSSProperties / string</td><td style={td(true)}>—</td><td style={td(false)}>Trigger width (<code>{'{ width }'}</code>) / root classes.</td></tr>
+    <tr><td style={td0}>label / layout / size</td><td style={td(true)}>ReactNode / union / union</td><td style={td(true)}>none / 'vertical' / 'md'</td><td style={td(false)}>Shared field props.</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>none</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>placeholder / name / htmlFor</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Placeholder / form name / id link.</td></tr>
+    <tr><td style={td0}>style / className</td><td style={td(true)}>CSSProperties / string</td><td style={td(true)}>none</td><td style={td(false)}>Trigger width (<code>{'{ width }'}</code>) / root classes.</td></tr>
   </tbody>
 </table>
 

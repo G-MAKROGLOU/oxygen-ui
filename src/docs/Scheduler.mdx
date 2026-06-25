@@ -1,4 +1,4 @@
-{/* src/docs/Scheduler.mdx */}
+﻿{/* src/docs/Scheduler.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Scheduler/Guide" />
@@ -10,7 +10,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 # Scheduler
 
-An event scheduler with **month** and **week** views — the agenda-style calendar
+An event scheduler with **month** and **week** views: the agenda-style calendar
 for dashboards and ops tools. For single-date selection use the
 [DatePicker](/docs/inputs-datepicker--docs) input instead.
 
@@ -21,8 +21,8 @@ pages and toggles them. Click the month/year title to open a quick jump picker
 (month grid + year stepper) for moving across the calendar fast, rather than
 paging one step at a time. Feed it data one of two ways:
 
-- **Controlled** — pass `events` directly (you fetch / manage them).
-- **Async** — pass `loadEvents(range, view)`; it's called whenever the visible
+- **Controlled**: pass `events` directly (you fetch / manage them).
+- **Async**: pass `loadEvents(range, view)`; it's called whenever the visible
   range or view changes, and the Scheduler shows a loading indicator around it.
 
 Events span a `start`–`end` (ISO strings or `Date`s). In **month** view they
@@ -34,7 +34,7 @@ sit at their real time, sized by duration, inside a scrollable hour grid.
 ```tsx
 import { Scheduler } from '@geomak/ui'
 
-// Async — fetch per visible range
+// Async: fetch per visible range
 <Scheduler
   loadEvents={async ({ from, to }) => api.events(from, to)}
   onSelectEvent={(e) => openEvent(e)}
@@ -52,9 +52,9 @@ owns no event form or persistence (your API, validation, and modals stay yours).
 Wire the callbacks to your own flow, then update `events` (or let `loadEvents`
 refetch):
 
-- **Create** — `onSelectSlot(date)` fires when an empty day cell (month) or time
+- **Create**: `onSelectSlot(date)` fires when an empty day cell (month) or time
   slot (week) is clicked; `onNewEvent()` fires from the toolbar button.
-- **Edit / delete** — `onSelectEvent(event)` fires when an event is clicked; open
+- **Edit / delete**: `onSelectEvent(event)` fires when an event is clicked; open
   your editor (e.g. a `Modal`) and mutate from there.
 
 ```tsx
@@ -86,16 +86,16 @@ See the **Async error + retry** story.
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>events</td><td style={td(true)}>SchedulerEvent[]</td><td style={td(true)}>—</td><td style={td(false)}>Controlled events.</td></tr>
-    <tr><td style={td0}>loadEvents</td><td style={td(true)}>{'(range, view) => Promise<SchedulerEvent[]>'}</td><td style={td(true)}>—</td><td style={td(false)}>Async loader, called on range/view change.</td></tr>
+    <tr><td style={td0}>events</td><td style={td(true)}>SchedulerEvent[]</td><td style={td(true)}>none</td><td style={td(false)}>Controlled events.</td></tr>
+    <tr><td style={td0}>loadEvents</td><td style={td(true)}>{'(range, view) => Promise<SchedulerEvent[]>'}</td><td style={td(true)}>none</td><td style={td(false)}>Async loader, called on range/view change.</td></tr>
     <tr><td style={td0}>defaultView</td><td style={td(true)}>'month' | 'week'</td><td style={td(true)}>'month'</td><td style={td(false)}>Initial view.</td></tr>
     <tr><td style={td0}>defaultDate</td><td style={td(true)}>Date</td><td style={td(true)}>today</td><td style={td(false)}>Initial focused date.</td></tr>
     <tr><td style={td0}>weekStartsOn</td><td style={td(true)}>0 | 1</td><td style={td(true)}>0</td><td style={td(false)}>First column: Sunday (0) or Monday (1).</td></tr>
     <tr><td style={td0}>dayHours</td><td style={td(true)}>[number, number]</td><td style={td(true)}>[0, 24]</td><td style={td(false)}>Hours shown in the week view.</td></tr>
     <tr><td style={td0}>hourHeight</td><td style={td(true)}>number</td><td style={td(true)}>48</td><td style={td(false)}>Px height of one hour row (week view).</td></tr>
-    <tr><td style={td0}>onSelectSlot</td><td style={td(true)}>{'(date) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Empty day cell / time slot clicked.</td></tr>
-    <tr><td style={td0}>onSelectEvent</td><td style={td(true)}>{'(event) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Event chip clicked.</td></tr>
-    <tr><td style={td0}>onNewEvent</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>"New event" button (hidden if unset).</td></tr>
+    <tr><td style={td0}>onSelectSlot</td><td style={td(true)}>{'(date) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Empty day cell / time slot clicked.</td></tr>
+    <tr><td style={td0}>onSelectEvent</td><td style={td(true)}>{'(event) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Event chip clicked.</td></tr>
+    <tr><td style={td0}>onNewEvent</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>none</td><td style={td(false)}>"New event" button (hidden if unset).</td></tr>
   </tbody>
 </table>
 

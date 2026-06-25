@@ -1,4 +1,4 @@
-{/* src/docs/Switch.mdx */}
+﻿{/* src/docs/Switch.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Inputs/Switch/Guide" />
@@ -41,7 +41,7 @@ Bind with `fieldChecked`:
 ## Per-state labels & icons
 
 ```tsx
-{/* "Monthly ▮ Yearly" pattern — each side highlights when active */}
+{/* "Monthly ▮ Yearly" pattern: each side highlights when active */}
 <Switch offLabel="Monthly" onLabel="Yearly" checked={yearly} onChange={…} />
 
 {/* Thumb icons for the two states */}
@@ -56,15 +56,15 @@ Bind with `fieldChecked`:
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>checked / defaultChecked</td><td style={td(true)}>boolean</td><td style={td(true)}>—/false</td><td style={td(false)}>Controlled / uncontrolled state.</td></tr>
-    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { checked, name } }) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Read <code>target.checked</code>.</td></tr>
-    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Central field label (positioned by layout).</td></tr>
-    <tr><td style={td0}>offLabel / onLabel</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Labels flanking the track, active-state emphasised.</td></tr>
-    <tr><td style={td0}>checkedIcon / uncheckedIcon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Thumb icons per state.</td></tr>
+    <tr><td style={td0}>checked / defaultChecked</td><td style={td(true)}>boolean</td><td style={td(true)}>none/false</td><td style={td(false)}>Controlled / uncontrolled state.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(e: { target: { checked, name } }) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Read <code>target.checked</code>.</td></tr>
+    <tr><td style={td0}>label</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Central field label (positioned by layout).</td></tr>
+    <tr><td style={td0}>offLabel / onLabel</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Labels flanking the track, active-state emphasised.</td></tr>
+    <tr><td style={td0}>checkedIcon / uncheckedIcon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Thumb icons per state.</td></tr>
     <tr><td style={td0}>layout</td><td style={td(true)}>'horizontal' | 'vertical'</td><td style={td(true)}>'horizontal'</td><td style={td(false)}>Label placement.</td></tr>
-    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
-    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
-    <tr><td style={td0}>name</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Native form field (hidden input).</td></tr>
+    <tr><td style={td0}>helperText / errorMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Tooltip help / validation message.</td></tr>
+    <tr><td style={td0}>required / disabled</td><td style={td(true)}>boolean</td><td style={td(true)}>none</td><td style={td(false)}>Asterisk / dimmed.</td></tr>
+    <tr><td style={td0}>name</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Native form field (hidden input).</td></tr>
   </tbody>
 </table>
 

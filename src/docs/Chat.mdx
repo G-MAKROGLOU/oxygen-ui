@@ -1,4 +1,4 @@
-{/* src/docs/Chat.mdx */}
+﻿{/* src/docs/Chat.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Chat/Guide" />
@@ -14,7 +14,7 @@ A messaging surface: a scrollable transcript of message bubbles plus a composer.
 
 ## Mental model
 
-Chat is **controlled** — you own the `messages` array; the composer reports text
+Chat is **controlled**: you own the `messages` array; the composer reports text
 via `onSend` (you append and re-render). Each message carries an `authorId`;
 those matching `currentUserId` align right in the accent colour, everyone else
 aligns left on a raised surface with an avatar (image or initials of
@@ -47,7 +47,7 @@ transcript.
 
 ## Loading history
 
-Chat doesn't fetch — you do — but it gives you a transcript **skeleton** for the
+Chat doesn't fetch: you do: but it gives you a transcript **skeleton** for the
 first load via `loading`. Show it while a history request is in flight, then
 hand over the messages:
 
@@ -65,7 +65,7 @@ useEffect(() => {
 <Chat currentUserId="me" messages={messages} loading={loading} onSend={send} />
 ```
 
-See the **Async history — MSW (HTTP)** story (mocked with Mock Service Worker).
+See the **Async history: MSW (HTTP)** story (mocked with Mock Service Worker).
 
 ## Real-time with a WebSocket
 
@@ -96,7 +96,7 @@ const send = (text: string) => {
 ```
 
 The same shape works for socket.io / SSE / any push transport. See the
-**Real-time — WebSocket (MSW ws)** story (a live `WebSocket` mocked end-to-end
+**Real-time: WebSocket (MSW ws)** story (a live `WebSocket` mocked end-to-end
 by MSW).
 
 ## API reference
@@ -104,12 +104,12 @@ by MSW).
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>messages</td><td style={td(true)}>ChatMessage[]</td><td style={td(true)}>—</td><td style={td(false)}>The transcript.</td></tr>
-    <tr><td style={td0}>currentUserId</td><td style={td(true)}>string | number</td><td style={td(true)}>—</td><td style={td(false)}>Messages with this authorId align right (accent).</td></tr>
-    <tr><td style={td0}>onSend</td><td style={td(true)}>{'(text: string) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired with the trimmed composer text.</td></tr>
+    <tr><td style={td0}>messages</td><td style={td(true)}>ChatMessage[]</td><td style={td(true)}>none</td><td style={td(false)}>The transcript.</td></tr>
+    <tr><td style={td0}>currentUserId</td><td style={td(true)}>string | number</td><td style={td(true)}>none</td><td style={td(false)}>Messages with this authorId align right (accent).</td></tr>
+    <tr><td style={td0}>onSend</td><td style={td(true)}>{'(text: string) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Fired with the trimmed composer text.</td></tr>
     <tr><td style={td0}>typingNames</td><td style={td(true)}>string[]</td><td style={td(true)}>[]</td><td style={td(false)}>Shows an animated typing indicator.</td></tr>
-    <tr><td style={td0}>title / subtitle / avatar / headerActions</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>—</td><td style={td(false)}>Optional header. Omit all for no header.</td></tr>
-    <tr><td style={td0}>placeholder / disabled / hideComposer</td><td style={td(true)}>string / boolean</td><td style={td(true)}>—</td><td style={td(false)}>Composer config; hideComposer = read-only.</td></tr>
+    <tr><td style={td0}>title / subtitle / avatar / headerActions</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>none</td><td style={td(false)}>Optional header. Omit all for no header.</td></tr>
+    <tr><td style={td0}>placeholder / disabled / hideComposer</td><td style={td(true)}>string / boolean</td><td style={td(true)}>none</td><td style={td(false)}>Composer config; hideComposer = read-only.</td></tr>
     <tr><td style={td0}>loading</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Shows a transcript skeleton (while loading history, before messages arrive).</td></tr>
     <tr><td style={td0}>emptyState</td><td style={td(true)}>ReactNode</td><td style={td(true)}>"No messages yet…"</td><td style={td(false)}>Shown with no messages.</td></tr>
     <tr><td style={td0}>height</td><td style={td(true)}>number | string</td><td style={td(true)}>480</td><td style={td(false)}>Overall height; the transcript scrolls within it.</td></tr>

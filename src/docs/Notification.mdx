@@ -1,4 +1,4 @@
-{/* src/docs/Notification.mdx */}
+﻿{/* src/docs/Notification.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Feedback/Notification/Guide" />
@@ -17,8 +17,8 @@ viewport corner; a hook fires type-specific toasts from anywhere.
 
 Two pieces. Wrap your app once in `NotificationProvider` (it owns the stack,
 animations, auto-dismiss, and viewport `position`). Then call `useNotification()`
-inside any descendant to get four show functions — `info`, `success`, `warning`,
-`danger` — each taking `{ title, description?, duration? }`. Toasts auto-dismiss
+inside any descendant to get four show functions: `info`, `success`, `warning`,
+`danger`: each taking `{ title, description?, duration? }`. Toasts auto-dismiss
 after `duration` ms (default 4000); pass `Infinity` to make one sticky.
 
 ## Setup
@@ -60,7 +60,7 @@ function SaveButton() {
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
     <tr><td style={td0}>position</td><td style={td(true)}>'top-right'|'top-left'|'top-center'|'bottom-right'|'bottom-left'|'bottom-center'</td><td style={td(true)}>'top-right'</td><td style={td(false)}>Viewport corner for the stack.</td></tr>
-    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Your app subtree.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Your app subtree.</td></tr>
   </tbody>
 </table>
 
@@ -69,13 +69,13 @@ function SaveButton() {
 <table style={tbl}>
   <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Toast heading (required).</td></tr>
-    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Secondary line.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Toast heading (required).</td></tr>
+    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Secondary line.</td></tr>
     <tr><td style={td0}>duration</td><td style={td(true)}>number</td><td style={td(true)}>4000</td><td style={td(false)}>Auto-dismiss ms; Infinity = sticky.</td></tr>
   </tbody>
 </table>
 
 The four functions (`info` / `success` / `warning` / `danger`) set the `type`
-for you — you never pass it yourself.
+for you: you never pass it yourself.
 
 See the **Feedback → Notification** stories.

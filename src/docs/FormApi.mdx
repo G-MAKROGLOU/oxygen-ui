@@ -1,4 +1,4 @@
-{/* src/docs/FormApi.mdx */}
+﻿{/* src/docs/FormApi.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Forms/Form API" />
@@ -11,19 +11,19 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 # Form API
 
 A complete, **zero-dependency** form layer. No React Hook Form, no Formik, no Zod
-requirement — just React 18+ and native browser features (constraint-style
+requirement: just React 18+ and native browser features (constraint-style
 validators, regexes, promises, `FormData`, `useSyncExternalStore`).
 
 It is built around three ideas:
 
 1. **State + validation live at the form level.** Inputs never validate
-   themselves — they only *receive* a value and an error. `useForm` owns
+   themselves: they only *receive* a value and an error. `useForm` owns
    everything.
 2. **Spread-to-bind.** Connect any input by spreading one helper:
    `<TextInput {...form.fieldNative('email')} />`. The binder injects the value,
    a normalised `onChange`, the error, `name`/`id`, and the `required` flag.
 3. **SPA and SSR.** `onFinish(values)` for client apps; a native/`action`
-   function for server actions — both validate before they fire.
+   function for server actions: both validate before they fire.
 
 ---
 
@@ -68,7 +68,7 @@ types.
 The store holds `values`, `errors`, `touched`, and the `submitted` flag, and
 notifies React through `useSyncExternalStore`.
 
-- Reading bindings off `useForm()` re-renders the component on every change —
+- Reading bindings off `useForm()` re-renders the component on every change none
   perfect for small/medium forms.
 - For large or dynamic forms, isolate a field's re-renders with
   [`useFormField` / `<FormField>`](#isolating-re-renders-useformfield--formfield),
@@ -84,7 +84,7 @@ submitted, so the form never shouts before the user has typed.
 ## Binding inputs
 
 Every oxygen input reports changes in one of four shapes. Pick the matching
-binder — they all take `(name, rules?)` and return the same
+binder: they all take `(name, rules?)` and return the same
 [bindings object](#field-bindings).
 
 <table style={tbl}>
@@ -134,7 +134,7 @@ Per-input cheat sheet (value type stored in the form):
 ### Field width
 
 Text-style inputs (TextInput, Password, NumberInput, TextArea, SearchInput) are
-**full-width by default** — they fill their container, so wrap the form in a
+**full-width by default**: they fill their container, so wrap the form in a
 sized column (`className="w-80"`, a grid cell, etc.) and they all line up.
 Pickers (Dropdown, DatePicker, TimePicker, ColorPicker, DateRangePicker) default
 to a **fixed trigger width**; pass `style={{ width: '100%' }}` (or any width) to
@@ -149,7 +149,7 @@ make them fill the column too:
 
 ### Field bindings
 
-Every binder returns the same object — spread it onto the control:
+Every binder returns the same object: spread it onto the control:
 
 <table style={tbl}>
   <thead><tr><th style={th}>Key</th><th style={th}>Type</th><th style={th}>Meaning</th></tr></thead>
@@ -158,7 +158,7 @@ Every binder returns the same object — spread it onto the control:
     <tr><td style={td0}>onChange</td><td style={td(true)}>{'(arg) => void'}</td><td style={td(false)}>Normalises the control's change into a stored value + marks touched.</td></tr>
     <tr><td style={td0}>onBlur</td><td style={td(true)}>{'() => void'}</td><td style={td(false)}>Marks the field touched (and revalidates if `onBlur` is in `validateOn`).</td></tr>
     <tr><td style={td0}>errorMessage</td><td style={td(true)}>ReactNode | undefined</td><td style={td(false)}>The field's error, gated until touched / submitted.</td></tr>
-    <tr><td style={td0}>required</td><td style={td(true)}>boolean | undefined</td><td style={td(false)}>Derived from the field's rules — drives the `*` asterisk.</td></tr>
+    <tr><td style={td0}>required</td><td style={td(true)}>boolean | undefined</td><td style={td(false)}>Derived from the field's rules: drives the `*` asterisk.</td></tr>
     <tr><td style={td0}>name / id / htmlFor</td><td style={td(true)}>string</td><td style={td(false)}>All set to the field name for label linkage + `FormData` serialisation.</td></tr>
   </tbody>
 </table>
@@ -187,7 +187,7 @@ const form = useForm({ initialValues, rules, validateOn })
 <table style={tbl}>
   <thead><tr><th style={th}>Member</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>store</td><td style={td(true)}>FormStore</td><td style={td(false)}>The underlying store — pass to <code>&lt;Form form&gt;</code>; also for imperative/advanced use.</td></tr>
+    <tr><td style={td0}>store</td><td style={td(true)}>FormStore</td><td style={td(false)}>The underlying store: pass to <code>&lt;Form form&gt;</code>; also for imperative/advanced use.</td></tr>
     <tr><td style={td0}>values</td><td style={td(true)}>Record&lt;string, unknown&gt;</td><td style={td(false)}>Live values.</td></tr>
     <tr><td style={td0}>errors</td><td style={td(true)}>Record&lt;string, string?&gt;</td><td style={td(false)}>Live errors by field name.</td></tr>
     <tr><td style={td0}>touched</td><td style={td(true)}>Record&lt;string, boolean&gt;</td><td style={td(false)}>Which fields have been interacted with.</td></tr>
@@ -229,7 +229,7 @@ It renders a real `<form noValidate>` (so input `name`s serialise into
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
   <tbody>
     <tr><td style={td0}>form</td><td style={td(true)}>UseFormReturn</td><td style={td(false)}>Required. The instance from <code>useForm()</code>.</td></tr>
-    <tr><td style={td0}>onFinish</td><td style={td(true)}>{'(values) => void | Promise<void>'}</td><td style={td(false)}>SPA submit — called with validated values.</td></tr>
+    <tr><td style={td0}>onFinish</td><td style={td(true)}>{'(values) => void | Promise<void>'}</td><td style={td(false)}>SPA submit: called with validated values.</td></tr>
     <tr><td style={td0}>onFinishFailed</td><td style={td(true)}>{'(errors, values) => void'}</td><td style={td(false)}>Called when a submit attempt fails validation.</td></tr>
     <tr><td style={td0}>action</td><td style={td(true)}>{'string | ((fd: FormData) => void | Promise<void>)'}</td><td style={td(false)}>SSR / server action. Validates first, then dispatches.</td></tr>
     <tr><td style={td0}>method</td><td style={td(true)}>'get' | 'post'</td><td style={td(false)}>Native method for a string <code>action</code>.</td></tr>
@@ -274,14 +274,14 @@ form.fieldNative('confirm', {
 })
 ```
 
-Optional-and-empty fields short-circuit to valid — only `required` fires on an
+Optional-and-empty fields short-circuit to valid: only `required` fires on an
 empty value, so non-required fields don't error until the user types something
 invalid.
 
-**Ready-made patterns** — `import { patterns } from '@geomak/ui'`:
+**Ready-made patterns**: `import { patterns } from '@geomak/ui'`:
 `patterns.email`, `patterns.url`, `patterns.phone`, `patterns.digits`.
 
-**Zod / Valibot** — no integration needed; wrap a schema in `validate`:
+**Zod / Valibot**: no integration needed; wrap a schema in `validate`:
 
 ```tsx
 import { z } from 'zod'
@@ -294,8 +294,8 @@ form.fieldNative('email', {
 ### Validation timing
 
 `validateOn` (default `['onChange', 'onBlur', 'onSubmit']`) controls *when* a
-field revalidates. Errors are still **gated** — hidden until the field is
-touched or the form is submitted — so:
+field revalidates. Errors are still **gated**: hidden until the field is
+touched or the form is submitted: so:
 
 - Type into a field → it validates on change, but the message only shows once
   it's touched.
@@ -309,7 +309,7 @@ Want "validate only on submit, then live after the first attempt"? Use
 ## Isolating re-renders: `useFormField` / `<FormField>`
 
 Reading binders off `useForm()` re-renders the whole form on each change. For
-large forms — or any field inside a dynamic array — subscribe a single field
+large forms: or any field inside a dynamic array: subscribe a single field
 instead. Both forms register their `rules` on the store and **clean them up on
 unmount** (essential for field arrays).
 
@@ -365,11 +365,11 @@ function Contacts() {
 ```
 
 Initialise the array in `initialValues` (`{ contacts: [{ name: '', email: '' }] }`)
-and read it back as `values.contacts` — a real array of objects.
+and read it back as `values.contacts`: a real array of objects.
 
 > Build row field names from `f.name` (`` `${f.name}.email` ``). Because the
 > per-row `useFormField` registers and unregisters its rule, removing a row also
-> removes its validation — no stale errors.
+> removes its validation: no stale errors.
 
 ---
 
@@ -394,7 +394,7 @@ async function saveProfile(formData: FormData) { /* … */ }
   natively (`method` honoured); async rules are awaited first.
 
 Either way, invalid submits are blocked client-side and your existing messages
-render — progressive enhancement without giving up the validation UX.
+render: progressive enhancement without giving up the validation UX.
 
 ---
 
@@ -409,7 +409,7 @@ const onFinish = async (values) => {
 }
 ```
 
-**Dependent fields** — read other values in a validator or `setValue` reaction:
+**Dependent fields**: read other values in a validator or `setValue` reaction:
 
 ```tsx
 form.field('country', { /* … */ })
@@ -451,11 +451,11 @@ typed helper per form.
 
 ## Credit-card form
 
-`<CreditCardForm>` is a ready-made composite built on this Form API — one
+`<CreditCardForm>` is a ready-made composite built on this Form API: one
 component owning all four fields and their cross-field rules: card number
 (brand detection + grouping + Luhn), expiry (`MM/YY`, real month, not past), CVV
 (brand-aware length), and cardholder name. It is intentionally **not** four
-separate inputs — a CVV or expiry field has no meaning on its own.
+separate inputs: a CVV or expiry field has no meaning on its own.
 
 ```tsx
 import { CreditCardForm } from '@geomak/ui'

@@ -1,4 +1,4 @@
-{/* src/docs/FeatureGrid.mdx */}
+﻿{/* src/docs/FeatureGrid.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Marketing/FeatureGrid/Guide" />
@@ -10,7 +10,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 # FeatureGrid
 
-A responsive grid of product features — icon, title, blurb — with an optional
+A responsive grid of product features: icon, title, blurb: with an optional
 section header.
 
 ## Quick start
@@ -37,8 +37,8 @@ Each feature icon sits in an accent-tinted tile.
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>features</td><td style={td(true)}>Feature[]</td><td style={td(true)}>—</td><td style={td(false)}>{'{ icon?, title, description? }'} per cell.</td></tr>
-    <tr><td style={td0}>eyebrow / title / description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Optional section header.</td></tr>
+    <tr><td style={td0}>features</td><td style={td(true)}>Feature[]</td><td style={td(true)}>none</td><td style={td(false)}>{'{ icon?, title, description? }'} per cell.</td></tr>
+    <tr><td style={td0}>eyebrow / title / description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Optional section header.</td></tr>
     <tr><td style={td0}>columns</td><td style={td(true)}>2 | 3 | 4</td><td style={td(true)}>3</td><td style={td(false)}>Widest-breakpoint column count.</td></tr>
     <tr><td style={td0}>centeredHeader</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Centre vs left-align the header.</td></tr>
   </tbody>

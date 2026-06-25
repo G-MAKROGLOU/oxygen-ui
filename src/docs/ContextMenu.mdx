@@ -1,4 +1,4 @@
-{/* src/docs/ContextMenu.mdx */}
+﻿{/* src/docs/ContextMenu.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Menu/ContextMenu/Guide" />
@@ -16,7 +16,7 @@ keyboard support, and viewport-edge-aware positioning.
 ## Mental model
 
 Wrap the element that should respond to right-click; its entire subtree becomes
-the trigger area. The menu itself is **data-driven** from `items` — each is a
+the trigger area. The menu itself is **data-driven** from `items`: each is a
 `{ key, value, icon?, onClick? }`, and any item may carry `children` to become a
 sub-menu (its own `onClick` is then ignored). Radix owns positioning, focus,
 portalling, and keyboard nav (↑↓ move, → opens sub-menu, ← closes, Enter
@@ -61,9 +61,9 @@ import { Pencil, Trash } from 'lucide-react'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>items</td><td style={td(true)}>ContextMenuActionItem[]</td><td style={td(true)}>—</td><td style={td(false)}>Top-level items; nest via children.</td></tr>
-    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>The right-clickable trigger subtree.</td></tr>
-    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the menu panel.</td></tr>
+    <tr><td style={td0}>items</td><td style={td(true)}>ContextMenuActionItem[]</td><td style={td(true)}>none</td><td style={td(false)}>Top-level items; nest via children.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>The right-clickable trigger subtree.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Classes merged onto the menu panel.</td></tr>
   </tbody>
 </table>
 

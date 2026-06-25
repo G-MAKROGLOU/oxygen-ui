@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+﻿import React, { useMemo, useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import Spreadsheet, { type SheetData } from './Spreadsheet'
 
@@ -6,6 +6,7 @@ const meta: Meta<typeof Spreadsheet> = {
     title: 'Data Display/Spreadsheet',
     component: Spreadsheet,
 
+    tags: ['autodocs'],
     parameters: { layout: 'padded' },
     argTypes: {
         editable: { control: 'boolean' },
@@ -73,7 +74,7 @@ export const Default: Story = {
         docs: {
             description: {
                 story:
-                    'In-memory `SheetData[]` source — zero network requests. ' +
+                    'In-memory `SheetData[]` source: zero network requests. ' +
                     'Sheet tabs at the bottom switch between worksheets. ' +
                     'The File menu offers Open and Export (xlsx, csv, pdf) options.',
             },
@@ -89,7 +90,7 @@ export const Sortable: Story = {
             description: {
                 story:
                     'Click any column header to sort ascending, click again for descending, a third click clears the sort. ' +
-                    'Sorting is client-side and stable — row objects are never mutated. ' +
+                    'Sorting is client-side and stable: row objects are never mutated. ' +
                     'Sorting is enabled by default; pass `sortable={false}` to disable.',
             },
         },
@@ -98,7 +99,7 @@ export const Sortable: Story = {
 }
 
 export const Editable: Story = {
-    name: 'Editable — double-click to edit',
+    name: 'Editable: double-click to edit',
     parameters: {
         docs: {
             description: {
@@ -129,7 +130,7 @@ export const Editable: Story = {
 }
 
 export const EditableWithContextMenus: Story = {
-    name: 'Editable — context menus (right-click)',
+    name: 'Editable: context menus (right-click)',
     parameters: {
         docs: {
             description: {
@@ -156,7 +157,7 @@ export const SlackRowsAndColumns: Story = {
         docs: {
             description: {
                 story:
-                    'Slack rows (controlled by `emptyRows`) and slack columns (`emptyCols`) appear as blank padding below and to the right of the data — exactly like Excel. ' +
+                    'Slack rows (controlled by `emptyRows`) and slack columns (`emptyCols`) appear as blank padding below and to the right of the data: exactly like Excel. ' +
                     'Typing into a slack cell **promotes** it to a real row or column automatically: the key is materialised and `onChange` fires with the updated sheet.',
             },
         },
@@ -173,7 +174,7 @@ export const SlackRowsAndColumns: Story = {
 }
 
 export const SheetManagement: Story = {
-    name: 'Sheet management — add, rename, delete tabs',
+    name: 'Sheet management: add, rename, delete tabs',
     parameters: {
         docs: {
             description: {
@@ -195,7 +196,7 @@ export const SheetManagement: Story = {
                         onChange={(next) => setSheets(next)}
                     />
                     <p className="text-xs text-foreground-muted">
-                        Active sheets: {sheets.map((s) => `"${s.name}"`).join(', ')} — {sheets.reduce((s, sh) => s + sh.rows.length, 0)} total rows.
+                        Active sheets: {sheets.map((s) => `"${s.name}"`).join(', ')}: {sheets.reduce((s, sh) => s + sh.rows.length, 0)} total rows.
                     </p>
                 </div>
             )
@@ -246,7 +247,7 @@ export const CustomDimensions: Story = {
             description: {
                 story:
                     '`height` and `width` accept a pixel number or any CSS length string. ' +
-                    'The grid scrolls internally — the outer container stays exactly the size you specify.',
+                    'The grid scrolls internally: the outer container stays exactly the size you specify.',
             },
         },
     },
@@ -254,13 +255,13 @@ export const CustomDimensions: Story = {
 }
 
 export const LargeDataset: Story = {
-    name: 'Virtualized — 50,000 rows × 30 columns',
+    name: 'Virtualized: 50,000 rows × 30 columns',
     parameters: {
         docs: {
             description: {
                 story:
                     'Both axes are windowed: only the visible rows **and** columns are in the DOM. ' +
-                    'Scroll horizontally and vertically — frame rate stays stable regardless of dataset size. ' +
+                    'Scroll horizontally and vertically: frame rate stays stable regardless of dataset size. ' +
                     'The `virtualize` prop is `true` by default; set it to `false` for small datasets or when you need `position: sticky` on headers.',
             },
         },

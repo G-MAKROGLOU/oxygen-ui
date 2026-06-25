@@ -1,4 +1,4 @@
-{/* src/docs/LeadCapture.mdx */}
+﻿{/* src/docs/LeadCapture.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Marketing/LeadCapture/Guide" />
@@ -10,7 +10,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 # LeadCapture
 
-A footer call-to-action band with an inline email-capture form — title,
+A footer call-to-action band with an inline email-capture form: title,
 supporting copy, an email field and a submit button.
 
 ## Mental model
@@ -39,9 +39,9 @@ import { LeadCapture } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Headline (required).</td></tr>
-    <tr><td style={td0}>description / note</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Supporting copy / small print.</td></tr>
-    <tr><td style={td0}>onSubmit</td><td style={td(true)}>{'(email: string) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fired with the entered email.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Headline (required).</td></tr>
+    <tr><td style={td0}>description / note</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Supporting copy / small print.</td></tr>
+    <tr><td style={td0}>onSubmit</td><td style={td(true)}>{'(email: string) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Fired with the entered email.</td></tr>
     <tr><td style={td0}>buttonLabel / placeholder / inputLabel</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>'Subscribe' / …</td><td style={td(false)}>Submit text, field placeholder, a11y label.</td></tr>
     <tr><td style={td0}>successMessage</td><td style={td(true)}>ReactNode</td><td style={td(true)}>(default)</td><td style={td(false)}>Shown in place of the form after submit.</td></tr>
     <tr><td style={td0}>background</td><td style={td(true)}>'surface' | 'gradient'</td><td style={td(true)}>'gradient'</td><td style={td(false)}>Backdrop treatment.</td></tr>

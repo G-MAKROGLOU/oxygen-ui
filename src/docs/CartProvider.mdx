@@ -1,4 +1,4 @@
-{/* src/docs/CartProvider.mdx */}
+﻿{/* src/docs/CartProvider.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="E-Commerce/Cart Provider/Guide" />
@@ -11,13 +11,13 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 # Cart Provider
 
 An app-wide cart store. Wrap your tree in `CartProvider` once, then call
-`useCart()` from anywhere — a product grid, the cart drawer, a TopBar badge, and
+`useCart()` from anywhere: a product grid, the cart drawer, a TopBar badge, and
 the checkout page all read and mutate the same state with no prop-drilling.
 
 ## Mental model
 
 `CartProvider` owns the items array (uncontrolled, seeded by `initialItems`).
-Components don't pass the cart around — they pull exactly what they need from
+Components don't pass the cart around: they pull exactly what they need from
 `useCart()`. Mutations are immutable and quantity-safe: `addToCart` merges into
 an existing line and every quantity is clamped to `1..max`. Subscribe to changes
 via `onChange` to persist (e.g. `localStorage`) or sync to a backend.
@@ -52,9 +52,9 @@ function AddButton({ product }) {
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Subtree with access to the store.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Subtree with access to the store.</td></tr>
     <tr><td style={td0}>initialItems</td><td style={td(true)}>CartLineItem[]</td><td style={td(true)}>[]</td><td style={td(false)}>Seed the cart.</td></tr>
-    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(items: CartLineItem[]) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires on every mutation — persist / sync here.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(items: CartLineItem[]) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Fires on every mutation: persist / sync here.</td></tr>
   </tbody>
 </table>
 
@@ -72,13 +72,13 @@ function AddButton({ product }) {
     <tr><td style={td0}>clearCart</td><td style={td(true)}>{'() => void'}</td><td style={td(false)}>Empty the cart.</td></tr>
     <tr><td style={td0}>isInCart</td><td style={td(true)}>{'(id: string | number) => boolean'}</td><td style={td(false)}>Whether a line with this id exists.</td></tr>
     <tr><td style={td0}>getItemCount</td><td style={td(true)}>{'() => number'}</td><td style={td(false)}>Total units across all lines (sum of quantities).</td></tr>
-    <tr><td style={td0}>getCartTotal</td><td style={td(true)}>{'() => number'}</td><td style={td(false)}>Subtotal — sum of <code>price × quantity</code>.</td></tr>
+    <tr><td style={td0}>getCartTotal</td><td style={td(true)}>{'() => number'}</td><td style={td(false)}>Subtotal: sum of <code>price × quantity</code>.</td></tr>
   </tbody>
 </table>
 
 ### CartItemInput
 
-The shape accepted by `addToCart` — a `CartLineItem` with an **optional**
+The shape accepted by `addToCart`: a `CartLineItem` with an **optional**
 `quantity` (defaults to 1):
 
 ```ts
@@ -87,7 +87,7 @@ type CartItemInput = Omit<CartLineItem, 'quantity'> & { quantity?: number }
 
 ## Recipes
 
-**Persist across reloads** — wire `onChange` + `initialItems`:
+**Persist across reloads**: wire `onChange` + `initialItems`:
 
 ```tsx
 <CartProvider
@@ -98,7 +98,7 @@ type CartItemInput = Omit<CartLineItem, 'quantity'> & { quantity?: number }
 </CartProvider>
 ```
 
-**Cart count anywhere** — the badge in the TopBar:
+**Cart count anywhere**: the badge in the TopBar:
 
 ```tsx
 const { getItemCount } = useCart()

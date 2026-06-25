@@ -1,4 +1,4 @@
-{/* src/docs/Cart.mdx */}
+﻿{/* src/docs/Cart.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="E-Commerce/Cart/Guide" />
@@ -15,9 +15,9 @@ plus a totalled summary and an optional checkout button.
 
 ## Mental model
 
-Cart is **stateless and controlled** — you own the `items` array and react to
+Cart is **stateless and controlled**: you own the `items` array and react to
 `onQuantityChange` (clamped to `1..max`) and `onRemove`. It computes the subtotal
-from `price × quantity`; `summaryRows` (shipping, tax, discount — use a negative
+from `price × quantity`; `summaryRows` (shipping, tax, discount: use a negative
 value for discounts) are added on top for the total. `formatPrice` overrides the
 default `$0.00` formatting. With no items it shows `emptyState`.
 
@@ -45,14 +45,14 @@ const [items, setItems] = useState(initialItems)
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>items</td><td style={td(true)}>CartLineItem[]</td><td style={td(true)}>—</td><td style={td(false)}>Line items.</td></tr>
-    <tr><td style={td0}>onQuantityChange</td><td style={td(true)}>{'(id, quantity) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Stepper change (clamped 1..max).</td></tr>
-    <tr><td style={td0}>onRemove</td><td style={td(true)}>{'(id) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Remove a line (hides button if unset).</td></tr>
+    <tr><td style={td0}>items</td><td style={td(true)}>CartLineItem[]</td><td style={td(true)}>none</td><td style={td(false)}>Line items.</td></tr>
+    <tr><td style={td0}>onQuantityChange</td><td style={td(true)}>{'(id, quantity) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Stepper change (clamped 1..max).</td></tr>
+    <tr><td style={td0}>onRemove</td><td style={td(true)}>{'(id) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Remove a line (hides button if unset).</td></tr>
     <tr><td style={td0}>summaryRows</td><td style={td(true)}>CartSummaryRow[]</td><td style={td(true)}>[]</td><td style={td(false)}>Extra rows added to the total.</td></tr>
     <tr><td style={td0}>formatPrice</td><td style={td(true)}>{'(n) => string'}</td><td style={td(true)}>$0.00</td><td style={td(false)}>Price formatter.</td></tr>
-    <tr><td style={td0}>onCheckout / checkoutLabel</td><td style={td(true)}>fn / ReactNode</td><td style={td(true)}>— / 'Checkout'</td><td style={td(false)}>Checkout button (hidden if no handler).</td></tr>
+    <tr><td style={td0}>onCheckout / checkoutLabel</td><td style={td(true)}>fn / ReactNode</td><td style={td(true)}>none / 'Checkout'</td><td style={td(false)}>Checkout button (hidden if no handler).</td></tr>
     <tr><td style={td0}>emptyState</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Your cart is empty.'</td><td style={td(false)}>Shown with no items.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Root overrides.</td></tr>
   </tbody>
 </table>
 
@@ -72,7 +72,7 @@ const [items, setItems] = useState(initialItems)
 ## Cart API (context)
 
 For an app-wide cart you can drive from anywhere, wrap your tree in
-`CartProvider` and call `useCart()` — no prop-drilling of the items array:
+`CartProvider` and call `useCart()`: no prop-drilling of the items array:
 
 ```tsx
 import { CartProvider, useCart, CartButton, Checkout } from '@geomak/ui'
@@ -86,8 +86,8 @@ const { items, addToCart, removeFromCart, updateQuantity, clearCart,
         isInCart, getItemCount, getCartTotal } = useCart()
 ```
 
-- `CartButton` — a TopBar cart trigger with a live item-count badge.
-- `Checkout` — a two-column checkout page (cart + credit-card form).
-- `EmptyCart` — the configurable empty-state illustration used by `Cart`.
+- `CartButton`: a TopBar cart trigger with a live item-count badge.
+- `Checkout`: a two-column checkout page (cart + credit-card form).
+- `EmptyCart`: the configurable empty-state illustration used by `Cart`.
 
 See the **E-Commerce** stories (Cart, Cart in AppShell, Checkout).

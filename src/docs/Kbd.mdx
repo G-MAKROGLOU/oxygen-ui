@@ -1,4 +1,4 @@
-{/* src/docs/Kbd.mdx */}
+﻿{/* src/docs/Kbd.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Kbd/Guide" />
@@ -10,13 +10,13 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 # Kbd
 
-Renders keyboard keys as styled caps — for documenting shortcuts and hints.
+Renders keyboard keys as styled caps: for documenting shortcuts and hints.
 
 ## Mental model
 
 Pass a single key as `children`, or a combination as `keys` (each entry becomes
 its own `<kbd>` cap, joined by `separator`). The single form renders one `<kbd>`;
-the combo form wraps caps in a `<span>`. Inline-friendly — drop it straight into
+the combo form wraps caps in a `<span>`. Inline-friendly: drop it straight into
 sentences.
 
 ## Quick start
@@ -40,11 +40,11 @@ import { Kbd } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Single key label.</td></tr>
-    <tr><td style={td0}>keys</td><td style={td(true)}>string[]</td><td style={td(true)}>—</td><td style={td(false)}>Combo — one cap per entry.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Single key label.</td></tr>
+    <tr><td style={td0}>keys</td><td style={td(true)}>string[]</td><td style={td(true)}>none</td><td style={td(false)}>Combo: one cap per entry.</td></tr>
     <tr><td style={td0}>separator</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'+'</td><td style={td(false)}>Joiner between caps.</td></tr>
     <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md'</td><td style={td(true)}>'md'</td><td style={td(false)}>Cap size.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Overrides.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Overrides.</td></tr>
   </tbody>
 </table>
 

@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useDownload } from './useDownload'
 import Button from '../components/inputs/Button'
@@ -13,13 +13,13 @@ type Story = StoryObj
 // ── SaveBlob ──────────────────────────────────────────────────────────────────
 
 export const SaveBlob: Story = {
-    name: 'saveBlob — download any Blob',
+    name: 'saveBlob: download any Blob',
     parameters: {
         docs: {
             description: {
                 story:
                     'Wraps a Blob in a transient `<a download>` anchor, clicks it, then revokes the object-URL after one tick. ' +
-                    'Both `saveBlob` and `saveFromBase64` are stable across renders — safe to pass as event-handler props.',
+                    'Both `saveBlob` and `saveFromBase64` are stable across renders: safe to pass as event-handler props.',
             },
         },
     },
@@ -62,10 +62,10 @@ export const SaveBlob: Story = {
     },
 }
 
-// ── SaveFromBase64 — data URI ─────────────────────────────────────────────────
+// ── SaveFromBase64: data URI ─────────────────────────────────────────────────
 
 export const SaveFromBase64DataUri: Story = {
-    name: 'saveFromBase64 — data-URI (MIME inferred)',
+    name: 'saveFromBase64: data-URI (MIME inferred)',
     parameters: {
         docs: {
             description: {
@@ -78,7 +78,7 @@ export const SaveFromBase64DataUri: Story = {
     render: () => {
         const Demo = () => {
             const { saveFromBase64 } = useDownload()
-            // A valid 1×1 red PNG as a data URI — no network required.
+            // A valid 1×1 red PNG as a data URI: no network required.
             const dataUri =
                 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1Pe' +
                 'AAAADklEQVQI12P4z8BQDwADhQGAWjR9awAAAABJRU5ErkJggg=='
@@ -88,7 +88,7 @@ export const SaveFromBase64DataUri: Story = {
                     <div className="w-full rounded-lg border border-border bg-surface p-4 text-sm">
                         <p className="font-medium text-foreground">saveFromBase64(dataUri, 'image.png')</p>
                         <p className="mt-1 text-xs text-foreground-muted">
-                            No explicit <code>mimeType</code> argument — it's inferred from the{' '}
+                            No explicit <code>mimeType</code> argument: it's inferred from the{' '}
                             <code>data:image/png;base64,</code> prefix.
                         </p>
                     </div>
@@ -103,10 +103,10 @@ export const SaveFromBase64DataUri: Story = {
     },
 }
 
-// ── SaveFromBase64 — raw payload ──────────────────────────────────────────────
+// ── SaveFromBase64: raw payload ──────────────────────────────────────────────
 
 export const SaveFromBase64RawPayload: Story = {
-    name: 'saveFromBase64 — raw payload with explicit MIME',
+    name: 'saveFromBase64: raw payload with explicit MIME',
     parameters: {
         docs: {
             description: {

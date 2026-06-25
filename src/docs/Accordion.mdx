@@ -1,4 +1,4 @@
-{/* src/docs/Accordion.mdx */}
+﻿{/* src/docs/Accordion.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Accordion/Guide" />
@@ -17,7 +17,7 @@ and full keyboard support.
 
 `Accordion` is **compositional**: the root holds `Accordion.Item` children, each
 with a unique `value` and a `title` (the always-visible trigger). `type="single"`
-(default) keeps one panel open at a time — `collapsible` lets that one close;
+(default) keeps one panel open at a time: `collapsible` lets that one close;
 `type="multiple"` allows any number open. Open state is uncontrolled via
 `defaultValue` or controlled via `value` + `onChange`. Radix supplies the
 height var that the `accordion-down` / `accordion-up` keyframes animate.
@@ -32,7 +32,7 @@ import { Accordion } from '@geomak/ui'
     Everything in Starter, plus unlimited projects and priority support.
   </Accordion.Item>
   <Accordion.Item value="b" title="Can I cancel anytime?">
-    Yes — cancel from billing settings, no questions asked.
+    Yes: cancel from billing settings, no questions asked.
   </Accordion.Item>
 </Accordion>
 ```
@@ -64,11 +64,11 @@ const [open, setOpen] = useState('a')
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
     <tr><td style={td0}>type</td><td style={td(true)}>'single' | 'multiple'</td><td style={td(true)}>'single'</td><td style={td(false)}>One open panel vs many.</td></tr>
-    <tr><td style={td0}>defaultValue / value</td><td style={td(true)}>string | string[]</td><td style={td(true)}>—</td><td style={td(false)}>Uncontrolled / controlled open set.</td></tr>
-    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(v: string | string[]) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Open-set change handler.</td></tr>
+    <tr><td style={td0}>defaultValue / value</td><td style={td(true)}>string | string[]</td><td style={td(true)}>none</td><td style={td(false)}>Uncontrolled / controlled open set.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(v: string | string[]) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Open-set change handler.</td></tr>
     <tr><td style={td0}>collapsible</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>(single) Allow the open item to close.</td></tr>
     <tr><td style={td0}>variant</td><td style={td(true)}>'separated' | 'contained'</td><td style={td(true)}>'separated'</td><td style={td(false)}>Bordered cards vs one divided surface.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Root overrides.</td></tr>
   </tbody>
 </table>
 

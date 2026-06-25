@@ -1,4 +1,4 @@
-{/* src/docs/Parameterization.mdx */}
+﻿{/* src/docs/Parameterization.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Docs/Parameterization" />
@@ -18,7 +18,7 @@ Three ways to customize the design system, in increasing order of depth.
 
 The simplest and most flexible method. Works at any CSS scope, no build dependency.
 
-**Global override** — affects the entire app:
+**Global override**: affects the entire app:
 
 ```css
 /* After importing @geomak/ui/styles */
@@ -36,7 +36,7 @@ The simplest and most flexible method. Works at any CSS scope, no build dependen
 }
 ```
 
-**Scoped override** — only inside a section:
+**Scoped override**: only inside a section:
 
 ```css
 .admin-panel {
@@ -165,7 +165,7 @@ interface ThemeConfig {
 
 ## 3. SCSS compile-time override (advanced)
 
-Override `!default` variables before the token partial compiles — useful for eliminating the CSS var runtime layer entirely.
+Override `!default` variables before the token partial compiles: useful for eliminating the CSS var runtime layer entirely.
 
 ```scss
 // your-app/src/styles/theme.scss
@@ -186,7 +186,7 @@ Override `!default` variables before the token partial compiles — useful for e
 @tailwind utilities;
 ```
 
-All `_config.scss` variables carry `!default` — only the variables you specify are overridden; the rest use system defaults.
+All `_config.scss` variables carry `!default`: only the variables you specify are overridden; the rest use system defaults.
 
 ---
 

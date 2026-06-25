@@ -1,4 +1,4 @@
-{/* src/docs/Breadcrumbs.mdx */}
+﻿{/* src/docs/Breadcrumbs.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Menu/Breadcrumbs/Guide" />
@@ -19,7 +19,7 @@ Data-driven from an ordered `items` array (root → current). Each item is a
 `{ label, href?, icon?, onClick? }`. The **last** item is treated as the current
 page: it renders as static text with `aria-current="page"`, never a link. Set
 `maxItems` to collapse the middle of a long trail into a clickable ellipsis that
-expands inline. Router-agnostic — wire `href`/`onClick` to your router.
+expands inline. Router-agnostic: wire `href`/`onClick` to your router.
 
 ## Quick start
 
@@ -48,11 +48,11 @@ import { Breadcrumbs } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>items</td><td style={td(true)}>BreadcrumbItem[]</td><td style={td(true)}>—</td><td style={td(false)}>Trail, root → current.</td></tr>
+    <tr><td style={td0}>items</td><td style={td(true)}>BreadcrumbItem[]</td><td style={td(true)}>none</td><td style={td(false)}>Trail, root → current.</td></tr>
     <tr><td style={td0}>separator</td><td style={td(true)}>ReactNode</td><td style={td(true)}>chevron</td><td style={td(false)}>Divider between crumbs.</td></tr>
     <tr><td style={td0}>maxItems</td><td style={td(true)}>number</td><td style={td(true)}>0</td><td style={td(false)}>Collapse middle past this count (0 = never).</td></tr>
     <tr><td style={td0}>aria-label</td><td style={td(true)}>string</td><td style={td(true)}>'Breadcrumb'</td><td style={td(false)}>Nav landmark name.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Root overrides.</td></tr>
   </tbody>
 </table>
 

@@ -1,4 +1,4 @@
-{/* src/docs/Sidebar.mdx */}
+﻿{/* src/docs/Sidebar.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Menu/Sidebar/Guide" />
@@ -68,12 +68,12 @@ parent is responsible for shifting content:
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>sections</td><td style={td(true)}>SidebarSection[]</td><td style={td(true)}>—</td><td style={td(false)}>Groups of nav items.</td></tr>
-    <tr><td style={td0}>isExpanded</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Controlled expand state.</td></tr>
-    <tr><td style={td0}>onToggle</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires on the collapse/expand control.</td></tr>
+    <tr><td style={td0}>sections</td><td style={td(true)}>SidebarSection[]</td><td style={td(true)}>none</td><td style={td(false)}>Groups of nav items.</td></tr>
+    <tr><td style={td0}>isExpanded</td><td style={td(true)}>boolean</td><td style={td(true)}>none</td><td style={td(false)}>Controlled expand state.</td></tr>
+    <tr><td style={td0}>onToggle</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Fires on the collapse/expand control.</td></tr>
     <tr><td style={td0}>expandedWidth / collapsedWidth</td><td style={td(true)}>number</td><td style={td(true)}>220 / 52</td><td style={td(false)}>Width in px per state.</td></tr>
-    <tr><td style={td0}>footer</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Bottom slot (theme switch, avatar…).</td></tr>
-    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the {'<aside>'}.</td></tr>
+    <tr><td style={td0}>footer</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Bottom slot (theme switch, avatar…).</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Classes merged onto the {'<aside>'}.</td></tr>
   </tbody>
 </table>
 
@@ -83,7 +83,7 @@ parent is responsible for shifting content:
   <thead><tr><th style={th}>Field</th><th style={th}>Type</th><th style={th}>Description</th></tr></thead>
   <tbody>
     <tr><td style={td0}>key</td><td style={td(true)}>string</td><td style={td(false)}>Stable React key.</td></tr>
-    <tr><td style={td0}>title</td><td style={td(true)}>string</td><td style={td(false)}>Group heading — shown only when expanded.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>string</td><td style={td(false)}>Group heading: shown only when expanded.</td></tr>
     <tr><td style={td0}>items</td><td style={td(true)}>SidebarItem[]</td><td style={td(false)}>Nav items in the group.</td></tr>
   </tbody>
 </table>

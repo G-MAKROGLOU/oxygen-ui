@@ -1,4 +1,4 @@
-{/* src/docs/MegaMenu.mdx */}
+﻿{/* src/docs/MegaMenu.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Menu/MegaMenu/Guide" />
@@ -22,14 +22,14 @@ tap-friendly hamburger accordion.
 `MegaMenu` is **compositional**. The bar holds top-level items; each item is
 either a **panel item** (opens a dropdown) or a **plain link**.
 
-- `MegaMenu.Item label` — a top-level entry. With children → opens a panel.
+- `MegaMenu.Item label`: a top-level entry. With children → opens a panel.
   With only `href` → a plain top-level link.
-- `MegaMenu.Panel` — the dropdown layout (a grid of sections + an optional
+- `MegaMenu.Panel`: the dropdown layout (a grid of sections + an optional
   featured column).
-- `MegaMenu.Section title` — a titled column of links.
-- `MegaMenu.Link` — a rich link: icon (in a tinted square) + title +
+- `MegaMenu.Section title`: a titled column of links.
+- `MegaMenu.Link`: a rich link: icon (in a tinted square) + title +
   description.
-- `MegaMenu.Featured` — a highlighted promo column (raised surface).
+- `MegaMenu.Featured`: a highlighted promo column (raised surface).
 
 The library is **router-agnostic**: links take `href` and/or `onClick`. Wire
 them to your router (e.g. wrap with your `<Link>` or call `navigate` in
@@ -91,7 +91,7 @@ anything (heading, copy, a CTA).
 Each panel lays its sections out on a grid with a *definite* width, so sections
 spread to fill rather than shrink-wrapping to their text. By default a panel is
 `min(92vw, 760px)` wide and auto-fits its sections into equal columns. Set
-`columns` (1–4) to pin the column count and width — useful when you want a tidy
+`columns` (1–4) to pin the column count and width: useful when you want a tidy
 two-up or three-up layout:
 
 ```tsx
@@ -102,7 +102,7 @@ two-up or three-up layout:
 ## Responsive (mobile fallback)
 
 Hover-driven mega panels don't work on touch, so below the `md` breakpoint
-`MegaMenu` automatically swaps the bar for a hamburger **disclosure** — a vertical
+`MegaMenu` automatically swaps the bar for a hamburger **disclosure**: a vertical
 accordion built from the very same items (panel items expand in place; plain
 links navigate directly). No extra markup: it reads your compound children and
 re-renders them as plain anchors.
@@ -110,7 +110,7 @@ re-renders them as plain anchors.
 ```tsx
 <MegaMenu aria-label="Main" mobileLabel="Browse">…</MegaMenu>
 
-{/* opt out — keep the desktop bar at every width (you provide your own mobile nav) */}
+{/* opt out: keep the desktop bar at every width (you provide your own mobile nav) */}
 <MegaMenu responsive={false}>…</MegaMenu>
 ```
 
@@ -142,8 +142,8 @@ selected. The panel honours `prefers-reduced-motion`.
     <tr><td style={td0}>delayDuration</td><td style={td(true)}>number</td><td style={td(true)}>200</td><td style={td(false)}>Hover delay (ms) before an item opens.</td></tr>
     <tr><td style={td0}>responsive</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Collapse to a hamburger accordion below `md`.</td></tr>
     <tr><td style={td0}>mobileLabel</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Menu'</td><td style={td(false)}>Label for the mobile disclosure toggle.</td></tr>
-    <tr><td style={td0}>aria-label</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Accessible name for the nav landmark.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Merged onto the bar root.</td></tr>
+    <tr><td style={td0}>aria-label</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Accessible name for the nav landmark.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Merged onto the bar root.</td></tr>
   </tbody>
 </table>
 
@@ -164,7 +164,7 @@ selected. The panel honours `prefers-reduced-motion`.
 <table style={tbl}>
   <thead><tr><th style={th}>Component</th><th style={th}>Key props</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>Panel</td><td style={td(false)}><code>columns</code> (1–4; pins the column count + width — default auto-fit at <code>min(92vw, 760px)</code>), <code>className</code>, <code>style</code>.</td></tr>
+    <tr><td style={td0}>Panel</td><td style={td(false)}><code>columns</code> (1–4; pins the column count + width: default auto-fit at <code>min(92vw, 760px)</code>), <code>className</code>, <code>style</code>.</td></tr>
     <tr><td style={td0}>Section</td><td style={td(false)}><code>title</code> (eyebrow heading), <code>className</code>.</td></tr>
     <tr><td style={td0}>Link</td><td style={td(false)}><code>href</code>, <code>onClick</code>, <code>icon</code>, <code>description</code>, <code>active</code>, <code>className</code>.</td></tr>
     <tr><td style={td0}>Featured</td><td style={td(false)}>Free-form children (heading, copy, CTA), <code>className</code>.</td></tr>

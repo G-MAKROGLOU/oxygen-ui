@@ -1,4 +1,4 @@
-{/* src/docs/Modal.mdx */}
+﻿{/* src/docs/Modal.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Feedback/Modal/Guide" />
@@ -15,7 +15,7 @@ escape-to-close, scale + fade animation, reduced-motion aware.
 
 ## Mental model
 
-Fully **controlled** — you own `open` and close it via `onClose`. The panel is
+Fully **controlled**: you own `open` and close it via `onClose`. The panel is
 content-driven in height (max 90 dvh) and capped in width by `width`. The optional
 built-in footer renders OK / Cancel buttons wired to `onOk` / `onCancel`; omit it
 with `hasFooter={false}` to supply your own actions in `children`.
@@ -52,14 +52,14 @@ const [open, setOpen] = useState(false)
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>open</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Controlled open state.</td></tr>
-    <tr><td style={td0}>onClose</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Esc / overlay / close button.</td></tr>
-    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Header content.</td></tr>
+    <tr><td style={td0}>open</td><td style={td(true)}>boolean</td><td style={td(true)}>none</td><td style={td(false)}>Controlled open state.</td></tr>
+    <tr><td style={td0}>onClose</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Esc / overlay / close button.</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Header content.</td></tr>
     <tr><td style={td0}>width</td><td style={td(true)}>number</td><td style={td(true)}>600</td><td style={td(false)}>Max panel width in px.</td></tr>
     <tr><td style={td0}>hasFooter</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Built-in OK/Cancel footer.</td></tr>
-    <tr><td style={td0}>onOk / onCancel</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Footer button handlers.</td></tr>
-    <tr><td style={td0}>okText / cancelText</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Footer button labels.</td></tr>
-    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Classes merged onto the panel.</td></tr>
+    <tr><td style={td0}>onOk / onCancel</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Footer button handlers.</td></tr>
+    <tr><td style={td0}>okText / cancelText</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Footer button labels.</td></tr>
+    <tr><td style={td0}>className</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Classes merged onto the panel.</td></tr>
   </tbody>
 </table>
 

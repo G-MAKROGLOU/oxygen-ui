@@ -1,4 +1,4 @@
-{/* src/docs/VirtualList.mdx */}
+﻿{/* src/docs/VirtualList.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/VirtualList/Guide" />
@@ -12,7 +12,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 A windowed list: only the rows in view (plus a little overscan) are mounted, so
 10,000 rows scroll as cheaply as 20. Zero dependencies. Set `searchable` for a
-built-in filter — the canonical "virtualized search".
+built-in filter: the canonical "virtualized search".
 
 ## Mental model
 
@@ -43,13 +43,13 @@ import { VirtualList } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>items</td><td style={td(true)}>T[]</td><td style={td(true)}>—</td><td style={td(false)}>Full dataset.</td></tr>
-    <tr><td style={td0}>rowHeight</td><td style={td(true)}>number</td><td style={td(true)}>—</td><td style={td(false)}>Fixed row height in px.</td></tr>
-    <tr><td style={td0}>renderItem</td><td style={td(true)}>{'(item, index) => ReactNode'}</td><td style={td(true)}>—</td><td style={td(false)}>Row renderer.</td></tr>
+    <tr><td style={td0}>items</td><td style={td(true)}>T[]</td><td style={td(true)}>none</td><td style={td(false)}>Full dataset.</td></tr>
+    <tr><td style={td0}>rowHeight</td><td style={td(true)}>number</td><td style={td(true)}>none</td><td style={td(false)}>Fixed row height in px.</td></tr>
+    <tr><td style={td0}>renderItem</td><td style={td(true)}>{'(item, index) => ReactNode'}</td><td style={td(true)}>none</td><td style={td(false)}>Row renderer.</td></tr>
     <tr><td style={td0}>height</td><td style={td(true)}>number | string</td><td style={td(true)}>400</td><td style={td(false)}>Viewport height (px or CSS).</td></tr>
     <tr><td style={td0}>getKey / overscan</td><td style={td(true)}>{'(item,i)=>Key'} / number</td><td style={td(true)}>index / 6</td><td style={td(false)}>Stable keys; rows rendered beyond the viewport.</td></tr>
     <tr><td style={td0}>searchable / searchKeys / filter</td><td style={td(true)}>boolean / (keyof T)[] / fn</td><td style={td(true)}>false</td><td style={td(false)}>Built-in search field + matching.</td></tr>
-    <tr><td style={td0}>emptyState / searchPlaceholder</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>—</td><td style={td(false)}>Empty + input copy.</td></tr>
+    <tr><td style={td0}>emptyState / searchPlaceholder</td><td style={td(true)}>ReactNode / string</td><td style={td(true)}>none</td><td style={td(false)}>Empty + input copy.</td></tr>
   </tbody>
 </table>
 

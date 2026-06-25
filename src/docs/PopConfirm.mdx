@@ -1,4 +1,4 @@
-{/* src/docs/PopConfirm.mdx */}
+﻿{/* src/docs/PopConfirm.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Feedback/PopConfirm/Guide" />
@@ -10,7 +10,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 # PopConfirm
 
-A lightweight "are you sure?" prompt anchored to its trigger — for in-place
+A lightweight "are you sure?" prompt anchored to its trigger: for in-place
 confirmation without a full Modal.
 
 ## Mental model
@@ -51,16 +51,16 @@ import { PopConfirm, Button } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>children</td><td style={td(true)}>ReactElement</td><td style={td(true)}>—</td><td style={td(false)}>Trigger element (cloned as anchor).</td></tr>
-    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Confirmation heading.</td></tr>
-    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Secondary line.</td></tr>
-    <tr><td style={td0}>onConfirm</td><td style={td(true)}>{'() => void | Promise<void>'}</td><td style={td(true)}>—</td><td style={td(false)}>Async → confirm button shows loading.</td></tr>
-    <tr><td style={td0}>onCancel</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Cancel / dismiss handler.</td></tr>
+    <tr><td style={td0}>children</td><td style={td(true)}>ReactElement</td><td style={td(true)}>none</td><td style={td(false)}>Trigger element (cloned as anchor).</td></tr>
+    <tr><td style={td0}>title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Confirmation heading.</td></tr>
+    <tr><td style={td0}>description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Secondary line.</td></tr>
+    <tr><td style={td0}>onConfirm</td><td style={td(true)}>{'() => void | Promise<void>'}</td><td style={td(true)}>none</td><td style={td(false)}>Async → confirm button shows loading.</td></tr>
+    <tr><td style={td0}>onCancel</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Cancel / dismiss handler.</td></tr>
     <tr><td style={td0}>confirmText / cancelText</td><td style={td(true)}>ReactNode</td><td style={td(true)}>'Confirm' / 'Cancel'</td><td style={td(false)}>Button labels.</td></tr>
     <tr><td style={td0}>tone</td><td style={td(true)}>'default' | 'danger'</td><td style={td(true)}>'default'</td><td style={td(false)}>Danger reddens the confirm button.</td></tr>
-    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Leading icon beside the title.</td></tr>
+    <tr><td style={td0}>icon</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Leading icon beside the title.</td></tr>
     <tr><td style={td0}>side</td><td style={td(true)}>'top'|'right'|'bottom'|'left'</td><td style={td(true)}>'top'</td><td style={td(false)}>Open side.</td></tr>
-    <tr><td style={td0}>open / onOpenChange</td><td style={td(true)}>boolean / fn</td><td style={td(true)}>—</td><td style={td(false)}>Optional controlled open state.</td></tr>
+    <tr><td style={td0}>open / onOpenChange</td><td style={td(true)}>boolean / fn</td><td style={td(true)}>none</td><td style={td(false)}>Optional controlled open state.</td></tr>
   </tbody>
 </table>
 

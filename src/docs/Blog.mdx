@@ -1,4 +1,4 @@
-{/* src/docs/Blog.mdx */}
+﻿{/* src/docs/Blog.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Marketing/Blog/Guide" />
@@ -10,7 +10,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 # Blog
 
-A responsive grid of article cards — cover image, tag, title, excerpt and a
+A responsive grid of article cards: cover image, tag, title, excerpt and a
 byline of author / date / read-time.
 
 ## Mental model
@@ -36,8 +36,8 @@ import { Blog } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>posts</td><td style={td(true)}>BlogPost[]</td><td style={td(true)}>—</td><td style={td(false)}>The articles.</td></tr>
-    <tr><td style={td0}>eyebrow / title / description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>—</td><td style={td(false)}>Optional section header.</td></tr>
+    <tr><td style={td0}>posts</td><td style={td(true)}>BlogPost[]</td><td style={td(true)}>none</td><td style={td(false)}>The articles.</td></tr>
+    <tr><td style={td0}>eyebrow / title / description</td><td style={td(true)}>ReactNode</td><td style={td(true)}>none</td><td style={td(false)}>Optional section header.</td></tr>
     <tr><td style={td0}>columns</td><td style={td(true)}>2 | 3</td><td style={td(true)}>3</td><td style={td(false)}>Widest-breakpoint column count.</td></tr>
     <tr><td style={td0}>centeredHeader</td><td style={td(true)}>boolean</td><td style={td(true)}>true</td><td style={td(false)}>Centre vs left-align the header.</td></tr>
   </tbody>

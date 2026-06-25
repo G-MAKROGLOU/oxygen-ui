@@ -1,4 +1,4 @@
-{/* src/docs/CookieConsent.mdx */}
+﻿{/* src/docs/CookieConsent.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Marketing/CookieConsent/Guide" />
@@ -46,11 +46,11 @@ Read the stored choice yourself anytime via `localStorage.getItem('oxygen-cookie
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
     <tr><td style={td0}>message / title</td><td style={td(true)}>ReactNode</td><td style={td(true)}>(default copy)</td><td style={td(false)}>Banner body + optional heading.</td></tr>
-    <tr><td style={td0}>acceptLabel / declineLabel</td><td style={td(true)}>string</td><td style={td(true)}>'Accept all' / —</td><td style={td(false)}>Action labels. Omit declineLabel for accept-only.</td></tr>
-    <tr><td style={td0}>onAccept / onDecline</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Choice callbacks.</td></tr>
-    <tr><td style={td0}>learnMoreHref / learnMoreLabel</td><td style={td(true)}>string</td><td style={td(true)}>— / 'Learn more'</td><td style={td(false)}>Policy link.</td></tr>
+    <tr><td style={td0}>acceptLabel / declineLabel</td><td style={td(true)}>string</td><td style={td(true)}>'Accept all' / none</td><td style={td(false)}>Action labels. Omit declineLabel for accept-only.</td></tr>
+    <tr><td style={td0}>onAccept / onDecline</td><td style={td(true)}>{'() => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Choice callbacks.</td></tr>
+    <tr><td style={td0}>learnMoreHref / learnMoreLabel</td><td style={td(true)}>string</td><td style={td(true)}>none / 'Learn more'</td><td style={td(false)}>Policy link.</td></tr>
     <tr><td style={td0}>storageKey</td><td style={td(true)}>string | null</td><td style={td(true)}>'oxygen-cookie-consent'</td><td style={td(false)}>Persistence key; null disables (use open).</td></tr>
-    <tr><td style={td0}>open</td><td style={td(true)}>boolean</td><td style={td(true)}>—</td><td style={td(false)}>Controlled visibility (overrides persistence).</td></tr>
+    <tr><td style={td0}>open</td><td style={td(true)}>boolean</td><td style={td(true)}>none</td><td style={td(false)}>Controlled visibility (overrides persistence).</td></tr>
     <tr><td style={td0}>position</td><td style={td(true)}>'bottom' | 'bottom-left' | 'bottom-right'</td><td style={td(true)}>'bottom'</td><td style={td(false)}>Placement.</td></tr>
   </tbody>
 </table>

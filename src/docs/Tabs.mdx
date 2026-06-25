@@ -1,4 +1,4 @@
-{/* src/docs/Tabs.mdx */}
+﻿{/* src/docs/Tabs.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Tabs/Guide" />
@@ -20,13 +20,13 @@ heavy full-fill pill. Built on Radix Tabs, so roving-tabindex keyboard nav,
 `Tabs` is **compositional**: the root holds the active value + shared options
 (variant, size, orientation), and you assemble the parts yourself:
 
-- `Tabs.List` — the strip. Owns overflow (scroll + fade + chevrons + a "jump to
+- `Tabs.List`: the strip. Owns overflow (scroll + fade + chevrons + a "jump to
   any tab" menu) and the sliding marker context.
-- `Tabs.Trigger value` — one tab button. Self-registers so the overflow menu can
+- `Tabs.Trigger value`: one tab button. Self-registers so the overflow menu can
   list it.
-- `Tabs.Panel value` — the matching content pane. Lazy by default; mounts on
+- `Tabs.Panel value`: the matching content pane. Lazy by default; mounts on
   first activation.
-- `Tabs.Add` — an optional trailing "+" affordance for dynamic tabs.
+- `Tabs.Add`: an optional trailing "+" affordance for dynamic tabs.
 
 A `Trigger` and its `Panel` are paired by `value`. Provide `defaultValue`
 (uncontrolled) or `value` + `onChange` (controlled).
@@ -70,7 +70,7 @@ motion → instant) in `underline` and `segmented`.
 </Tabs>
 
 // Enclosed: folder tabs. The active tab is a raised surface that joins the
-// panel — wrap the panels in a bordered, top-flush container.
+// panel: wrap the panels in a bordered, top-flush container.
 <Tabs defaultValue="editor" variant="enclosed">
   <Tabs.List aria-label="Workspace">
     <Tabs.Trigger value="editor">Editor</Tabs.Trigger>
@@ -191,13 +191,13 @@ names. The marker honours `prefers-reduced-motion`.
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>value</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Controlled active tab.</td></tr>
-    <tr><td style={td0}>defaultValue</td><td style={td(true)}>string</td><td style={td(true)}>—</td><td style={td(false)}>Uncontrolled initial active tab.</td></tr>
-    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(value) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires with the next active value.</td></tr>
+    <tr><td style={td0}>value</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Controlled active tab.</td></tr>
+    <tr><td style={td0}>defaultValue</td><td style={td(true)}>string</td><td style={td(true)}>none</td><td style={td(false)}>Uncontrolled initial active tab.</td></tr>
+    <tr><td style={td0}>onChange</td><td style={td(true)}>{'(value) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Fires with the next active value.</td></tr>
     <tr><td style={td0}>variant</td><td style={td(true)}>'underline' | 'segmented' | 'enclosed'</td><td style={td(true)}>'underline'</td><td style={td(false)}>Visual style.</td></tr>
     <tr><td style={td0}>size</td><td style={td(true)}>'sm' | 'md' | 'lg'</td><td style={td(true)}>'md'</td><td style={td(false)}>Control height + type scale.</td></tr>
     <tr><td style={td0}>orientation</td><td style={td(true)}>'horizontal' | 'vertical'</td><td style={td(true)}>'horizontal'</td><td style={td(false)}>Strip-above vs. rail-beside.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Merged onto the root.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Merged onto the root.</td></tr>
   </tbody>
 </table>
 

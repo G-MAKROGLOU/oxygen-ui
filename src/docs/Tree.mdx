@@ -1,4 +1,4 @@
-{/* src/docs/Tree.mdx */}
+﻿{/* src/docs/Tree.mdx */}
 import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Data Display/Tree/Guide" />
@@ -21,7 +21,7 @@ payload that tells you whether it was a branch (`isParent`), plus its `key`,
 `label`, `parentLabel`, and any attached `data`. Control the initial open state
 with `defaultExpandAll` or `defaultExpandedKeys`.
 
-This is a **display/navigation** tree — for picking a single value inside a form,
+This is a **display/navigation** tree: for picking a single value inside a form,
 use **TreeSelect** instead.
 
 ## Quick start
@@ -49,11 +49,11 @@ import { Tree } from '@geomak/ui'
 <table style={tbl}>
   <thead><tr><th style={th}>Prop</th><th style={th}>Type</th><th style={th}>Default</th><th style={th}>Description</th></tr></thead>
   <tbody>
-    <tr><td style={td0}>nodes</td><td style={td(true)}>TreeNode[]</td><td style={td(true)}>—</td><td style={td(false)}>Nested tree data.</td></tr>
-    <tr><td style={td0}>onNodeClick</td><td style={td(true)}>{'(p: TreeItemClickPayload) => void'}</td><td style={td(true)}>—</td><td style={td(false)}>Fires for any node.</td></tr>
+    <tr><td style={td0}>nodes</td><td style={td(true)}>TreeNode[]</td><td style={td(true)}>none</td><td style={td(false)}>Nested tree data.</td></tr>
+    <tr><td style={td0}>onNodeClick</td><td style={td(true)}>{'(p: TreeItemClickPayload) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Fires for any node.</td></tr>
     <tr><td style={td0}>defaultExpandAll</td><td style={td(true)}>boolean</td><td style={td(true)}>false</td><td style={td(false)}>Open every branch initially.</td></tr>
     <tr><td style={td0}>defaultExpandedKeys</td><td style={td(true)}>string[]</td><td style={td(true)}>[]</td><td style={td(false)}>Branches open on first render.</td></tr>
-    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>—</td><td style={td(false)}>Root overrides.</td></tr>
+    <tr><td style={td0}>className / style</td><td style={td(true)}>string / CSSProperties</td><td style={td(true)}>none</td><td style={td(false)}>Root overrides.</td></tr>
   </tbody>
 </table>
 
