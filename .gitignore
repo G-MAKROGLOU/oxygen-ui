@@ -1,5 +1,8 @@
-# Claude Code local config
-.claude/
+# Claude Code — ignore local-only files; skills/ and commands/ are committed
+.claude/launch.json
+.claude/settings.local.json
+.claude/todos/
+.claude/transcripts/
 
 # Dependencies
 node_modules/

@@ -1,10 +1,13 @@
 [build]
-  command   = "yarn build-storybook"
+  command   = "node scripts/generate-ai-manifest.mjs && yarn build-storybook"
   publish   = "storybook-static"
 
 [build.environment]
   NODE_VERSION = "24"
 
-# Ensure clean installs on Netlify
 [build.processing]
   skip_processing = false
+
+[functions]
+  directory    = "netlify/functions"
+  node_bundler = "esbuild"

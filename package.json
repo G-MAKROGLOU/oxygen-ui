@@ -40,6 +40,8 @@
     "dev": "tsup --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "generate-manifest": "node scripts/generate-ai-manifest.mjs",
+    "mcp:dev": "node scripts/generate-ai-manifest.mjs && netlify dev",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --max-warnings 0",
     "lint:fix": "eslint src --fix",
