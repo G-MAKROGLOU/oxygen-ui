@@ -1,3 +1,10 @@
+# [7.20.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.19.0...v7.20.0) (2026-07-19)
+
+
+### Features
+
+* add setup-claude script for plug-and-play Claude Code integration ([5009bf7](https://github.com/G-MAKROGLOU/oxygen-ui/commit/5009bf7a70c0dac4f35333e05d935ef847ce4fa9))
+
 # [7.19.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.5...v7.19.0) (2026-07-19)
 
 
