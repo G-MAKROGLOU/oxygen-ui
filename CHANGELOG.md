@@ -1,3 +1,10 @@
+## [7.18.4](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.3...v7.18.4) (2026-07-19)
+
+
+### Bug Fixes
+
+* deploy functions via Netlify CLI instead of nwtgck action ([2d5149b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2d5149b8c6155cdafe9715aa9cc44692aa793c8f))
+
 ## [7.18.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.2...v7.18.3) (2026-07-19)
 
 
