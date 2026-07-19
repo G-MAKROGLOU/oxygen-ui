@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { useMediaQuery, useBreakpoint } from './useMediaQuery'
 
-// jsdom has no matchMedia — install a controllable mock.
+// jsdom has no matchMedia, install a controllable mock.
 type Listener = () => void
 let width = 1000
 const lists = new Set<{ q: string; ls: Set<Listener>; mql: { matches: boolean; addEventListener: (t: string, l: Listener) => void; removeEventListener: (t: string, l: Listener) => void } }>()

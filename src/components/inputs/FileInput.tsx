@@ -16,11 +16,11 @@ export interface FileInputProps {
     accept?: string
     /** Primary call-to-action copy. Default `'Click to upload or drag and drop'`. */
     prompt?: React.ReactNode
-    /** Secondary hint under the prompt — typically the accepted types / max size. */
+    /** Secondary hint under the prompt, typically the accepted types / max size. */
     hint?: React.ReactNode
     /** Maximum file size in bytes. Files above this are rejected with an error. */
     maxSize?: number
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
@@ -176,7 +176,7 @@ export default function FileInput({
                     disabled={disabled}
                 />
 
-                {/* Icon badge — a contained surface, not a giant raw glyph. */}
+                {/* Icon badge, a contained surface, not a giant raw glyph. */}
                 <span
                     className={[
                         'flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-150',

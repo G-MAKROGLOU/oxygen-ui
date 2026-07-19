@@ -20,7 +20,7 @@ export interface NumberInputProps {
     layout?: 'horizontal' | 'vertical'
     /** Size preset. Default `'md'`. */
     size?: FieldSize
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
@@ -40,7 +40,7 @@ export interface NumberInputProps {
     min?: number
     /** Maximum allowed value. */
     max?: number
-    /** Render read-only — visible but not editable. */
+    /** Render read-only, visible but not editable. */
     readOnly?: boolean
     /** Optional precision for floating-point steps (number of decimal places to round to). */
     precision?: number
@@ -55,7 +55,7 @@ export interface NumberInputProps {
  *   `<span onClick>` which keyboard-only users could not reach.
  * - Floating-point drift on decimal steps (`0.1 + 0.2 = 0.30000000000000004`)
  *   is rounded out via a `precision` prop or auto-inferred from the step.
- * - Empty input resolves to `undefined` instead of `NaN` — works with form
+ * - Empty input resolves to `undefined` instead of `NaN`, works with form
  *   libraries (RHF, Formik) that treat empty as "no value".
  * - The decrement chevron actually points down (the previous SVG was the up
  *   chevron rotated, with the up chevron itself wrongly using the same path).
@@ -160,7 +160,7 @@ export default function NumberInput({
                 `!pr-0` removes the shell's right padding so the steppers sit flush
                 against the edge. The `!important` is deliberate: fieldShell adds
                 `px-3`, and a consumer's own Tailwind build can re-emit `.px-3`
-                after our stylesheet — without `!important` that would win the
+                after our stylesheet, without `!important` that would win the
                 cascade and reintroduce a ~12px gap before the steppers. */}
             <div
                 style={style}

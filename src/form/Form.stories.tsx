@@ -17,7 +17,7 @@ const meta: Meta = {
         docs: {
             description: {
                 component:
-                    'Zero-dependency Form API. `useForm()` owns state + validation; spread `form.field*(name, rules)` onto any input. Validation is native (required / pattern / min / max / length / async `validate`), runs on change once touched and again on submit, and lives entirely at the form level — inputs only receive their error. `useFieldArray` powers dynamic add/remove rows.',
+                    'Zero-dependency Form API. `useForm()` owns state + validation; spread `form.field*(name, rules)` onto any input. Validation is native (required / pattern / min / max / length / async `validate`), runs on change once touched and again on submit, and lives entirely at the form level, inputs only receive their error. `useFieldArray` powers dynamic add/remove rows.',
             },
         },
     },

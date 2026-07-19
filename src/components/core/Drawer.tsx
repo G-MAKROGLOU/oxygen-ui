@@ -6,7 +6,7 @@ import { DialogContainerContext } from './dialogContainerContext'
 
 export type DrawerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
-/** Named width scale (px) — keeps drawer widths consistent across the app. */
+/** Named width scale (px), keeps drawer widths consistent across the app. */
 const SIZE_MAP: Record<DrawerSize, number | string> = {
     sm:   280,
     md:   320,
@@ -19,7 +19,7 @@ export interface DrawerProps {
     open?: boolean
     onClose?: () => void
     hasFooter?: boolean
-    /** 'left' | 'right' — which edge the panel slides from */
+    /** 'left' | 'right', which edge the panel slides from */
     placement?: 'left' | 'right'
     /**
      * Named width scale (default `'md'`): sm 280 · md 320 · lg 480 · xl 640 ·
@@ -27,7 +27,7 @@ export interface DrawerProps {
      */
     size?: DrawerSize
     /**
-     * Explicit width escape hatch — a number (px) or any CSS length
+     * Explicit width escape hatch, a number (px) or any CSS length
      * (e.g. `'30rem'`). Overrides `size` when set.
      */
     width?: number | string
@@ -143,7 +143,7 @@ export default function Drawer({
                                     </Dialog.Close>
                                 </div>
 
-                                {/* Body — render children unconditionally so they
+                                {/* Body, render children unconditionally so they
                                     stay mounted through Radix's exit animation.
                                     Previously `{open && children}` unmounted
                                     children the moment open flipped to false,

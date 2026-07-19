@@ -8,7 +8,7 @@ export interface TreeSelectNode {
     icon?: React.ReactNode
     /** Nested children. If present, this node is treated as a parent (branch). */
     children?: TreeSelectNode[]
-    /** Render the node disabled — visible but not selectable. */
+    /** Render the node disabled, visible but not selectable. */
     disabled?: boolean
 }
 
@@ -37,7 +37,7 @@ export interface TreeSelectProps {
     required?: boolean
     /** Disable interaction and dim the control. */
     disabled?: boolean
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Inline style applied to the control shell. */
     style?: React.CSSProperties
@@ -93,12 +93,12 @@ function findNodeByKey(items: TreeSelectNode[], key: React.Key): TreeSelectNode 
  * parent.
  *
  * **Keyboard model** (focus is on the trigger or any item):
- * - `Enter` / `Space` / `↓` / `↑` on the trigger — open the popover
- * - `↓` / `↑` — move active item through the visible (un-collapsed) list
- * - `→` — expand a branch (or move into it if already expanded)
- * - `←` — collapse a branch (or move to its parent if already collapsed)
- * - `Enter` / `Space` — select the active item (if selectable)
- * - `Esc` — close the popover, return focus to the trigger
+ * - `Enter` / `Space` / `↓` / `↑` on the trigger, open the popover
+ * - `↓` / `↑`, move active item through the visible (un-collapsed) list
+ * - `→`, expand a branch (or move into it if already expanded)
+ * - `←`, collapse a branch (or move to its parent if already collapsed)
+ * - `Enter` / `Space`, select the active item (if selectable)
+ * - `Esc`, close the popover, return focus to the trigger
  *
  * @example
  * ```tsx
@@ -154,7 +154,7 @@ export default function TreeSelect({
 
     // Sync `activeIndex` only on the open transition (or when `value` changes
     // while open). Previously this ran on every `visible` mutation, so any
-    // expand/collapse yanked focus back to the selected item — wrong if the
+    // expand/collapse yanked focus back to the selected item, wrong if the
     // user was navigating to a different branch. We use a ref to track
     // whether we've already done the open-time sync.
     const didSyncOnOpenRef = useRef(false)
@@ -167,7 +167,7 @@ export default function TreeSelect({
         const selectedIdx = visible.findIndex((v) => v.node.key === value)
         setActiveIndex(selectedIdx >= 0 ? selectedIdx : 0)
         didSyncOnOpenRef.current = true
-        // visible intentionally excluded — we want to sync ONCE on open,
+        // visible intentionally excluded, we want to sync ONCE on open,
         // not on every expand/collapse.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, value])
@@ -363,7 +363,7 @@ function TreeNodeRow({
             }`}
             style={{ paddingLeft: depth * 16 + 4 }}
         >
-            {/* Chevron — only for parents, only toggles expand. Acts as its
+            {/* Chevron, only for parents, only toggles expand. Acts as its
                 own button so users can expand without selecting. */}
             {isParent ? (
                 <button
@@ -388,7 +388,7 @@ function TreeNodeRow({
                 <span className="w-5 h-5 inline-block" aria-hidden="true" />
             )}
 
-            {/* Label — clicking selects (or toggles parents when not selectable) */}
+            {/* Label, clicking selects (or toggles parents when not selectable) */}
             <button
                 type="button"
                 onClick={onActivate}

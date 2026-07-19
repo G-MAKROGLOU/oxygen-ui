@@ -20,7 +20,7 @@ export interface CartLineItem {
 
 export interface CartSummaryRow {
     label: React.ReactNode
-    /** Signed amount — negative for discounts. */
+    /** Signed amount, negative for discounts. */
     value: number
     /** Render in muted/normal style instead of emphasised. */
     muted?: boolean
@@ -77,7 +77,7 @@ const Stepper = ({
  * remove, plus a summary that totals the subtotal with any extra rows
  * (shipping, tax, discount) and an optional checkout button.
  *
- * Stateless and controlled — you own the items array and react to
+ * Stateless and controlled, you own the items array and react to
  * `onQuantityChange` / `onRemove`.
  *
  * @example

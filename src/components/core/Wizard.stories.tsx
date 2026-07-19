@@ -20,7 +20,7 @@ const meta: Meta<typeof Wizard> = {
 export default meta
 type Story = StoryObj<typeof Wizard>
 
-// Each story uses `storageKey: null` so the wizard always starts open —
+// Each story uses `storageKey: null` so the wizard always starts open -
 // in production you'd pass a stable key so users only see the tour once.
 
 export const ThreeSteps: Story = {
@@ -38,7 +38,7 @@ export const ThreeSteps: Story = {
                         key={reset}
                         storageKey={null}
                         steps={[
-                            { stepRef: headerRef,  title: 'Welcome',     description: 'This is the application header — it shows you where you are.', placement: 'bottom' },
+                            { stepRef: headerRef,  title: 'Welcome',     description: 'This is the application header, it shows you where you are.', placement: 'bottom' },
                             { stepRef: sidebarRef, title: 'Navigation',  description: 'Jump between sections from the sidebar.',                       placement: 'right'  },
                             { stepRef: dashRef,    title: 'Workspace',   description: 'Your dashboard lives here. Right-click cards for quick actions.', placement: 'left'  },
                         ]}
@@ -83,7 +83,7 @@ export const NonDismissible: Story = {
         docs: {
             description: {
                 story:
-                    'With `dismissible={false}` the Skip button is hidden and Esc is ignored. The user must walk through every step. Use sparingly — onboarding only.',
+                    'With `dismissible={false}` the Skip button is hidden and Esc is ignored. The user must walk through every step. Use sparingly, onboarding only.',
             },
         },
     },

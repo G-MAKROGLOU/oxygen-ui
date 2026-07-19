@@ -91,7 +91,7 @@ export default function AppShell({
             {/* ── TopBar row ── */}
             {topBar && (
                 <div className="flex-shrink-0 flex items-stretch z-topbar">
-                    {/* Mobile hamburger — injected to the left of the TopBar on small screens */}
+                    {/* Mobile hamburger, injected to the left of the TopBar on small screens */}
                     {hasSidebar && (
                         <button
                             type="button"
@@ -141,7 +141,7 @@ export default function AppShell({
                     />
                 )}
 
-                {/* Mobile sidebar overlay — portaled to <body> so the fixed
+                {/* Mobile sidebar overlay, portaled to <body> so the fixed
                     backdrop and drawer always cover the real viewport, never
                     a transformed/contained ancestor (page-transition libs,
                     CSS `contain`, parent `will-change`, etc.). */}

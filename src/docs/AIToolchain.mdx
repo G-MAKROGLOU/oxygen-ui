@@ -9,7 +9,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 # AI Toolchain
 
-OxygenUI ships a built-in MCP server and Claude Code integration so AI assistants can look up component APIs, search by use-case, and scaffold new work — all grounded in the actual documentation you're reading now.
+OxygenUI ships a built-in MCP server and Claude Code integration so AI assistants can look up component APIs, search by use-case, and scaffold new work, all grounded in the actual documentation you're reading now.
 
 ---
 
@@ -36,22 +36,22 @@ The manifest generator scans all 101 MDX guide files, strips Storybook boilerpla
     <tr>
       <td style={td0}>list_components</td>
       <td style={td(false)}>Browse all 100+ components with slug, category, and description. No arguments.</td>
-      <td style={td(false)}>—</td>
+      <td style={td(false)}>-</td>
     </tr>
     <tr>
       <td style={td0}>get_component</td>
       <td style={td(false)}>Fetch the full props API and usage examples for one component.</td>
-      <td style={td(true)}>slug — e.g. "accordion", "data-grid", "use-excel"</td>
+      <td style={td(true)}>slug: e.g. "accordion", "data-grid", "use-excel"</td>
     </tr>
     <tr>
       <td style={td0}>find_component</td>
       <td style={td(false)}>Keyword search across component names, categories, and descriptions.</td>
-      <td style={td(true)}>query — e.g. "date picker", "virtualized table"</td>
+      <td style={td(true)}>query: e.g. "date picker", "virtualized table"</td>
     </tr>
     <tr>
       <td style={td0}>get_token</td>
       <td style={td(false)}>Look up CSS custom properties by name or category prefix.</td>
-      <td style={td(true)}>token — e.g. "--color-accent", "radius", "motion"</td>
+      <td style={td(true)}>token: e.g. "--color-accent", "radius", "motion"</td>
     </tr>
   </tbody>
 </table>
@@ -88,7 +88,7 @@ Four slash commands are registered in `.claude/commands/`. They are available in
 
 ## Context skill
 
-The `/oxygen-ui` skill (`.claude/skills/oxygen-ui/SKILL.md`) loads the full design system context into any Claude Code session — import patterns, token usage, Tailwind utilities, form API, and repository conventions. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
+The `/oxygen-ui` skill (`.claude/skills/oxygen-ui/SKILL.md`) loads the full design system context into any Claude Code session, import patterns, token usage, Tailwind utilities, form API, and repository conventions. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
 
 ---
 

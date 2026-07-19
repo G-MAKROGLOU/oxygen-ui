@@ -287,7 +287,7 @@ describe('Table', () => {
         render(<Table columns={cols} rows={ROWS} pagination={{ enabled: false }} onCellEdit={vi.fn()} />)
         fireEvent.click(screen.getByRole('button', { name: 'Alice' }))
         expect(screen.getByTestId('custom-editor')).toBeInTheDocument()
-        // Click inside the portaled popup — must NOT cancel the edit.
+        // Click inside the portaled popup, must NOT cancel the edit.
         fireEvent.mouseDown(screen.getByTestId('popup-option'))
         expect(screen.getByTestId('custom-editor')).toBeInTheDocument()
     })

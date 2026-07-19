@@ -55,13 +55,13 @@ const Frame = ({ children }: { children: React.ReactNode }) => (
 )
 
 export const AsyncMonth: Story = {
-    name: 'Month — async via MSW',
+    name: 'Month, async via MSW',
     render: () => <Frame><Scheduler loadEvents={loadEvents} onNewEvent={() => alert('New event')} onSelectEvent={(e) => alert(e.title)} /></Frame>,
     parameters: { docs: { description: { story: 'Events are fetched per visible range with `GET /api/scheduler/events` (350 ms latency, mocked by MSW). Page months and watch it refetch.' } } },
 }
 
 export const AsyncWeek: Story = {
-    name: 'Week — async via MSW',
+    name: 'Week, async via MSW',
     render: () => <Frame><Scheduler loadEvents={loadEvents} defaultView="week" onNewEvent={() => alert('New event')} onSelectEvent={(e) => alert(e.title)} /></Frame>,
 }
 
@@ -71,7 +71,7 @@ export const Controlled: Story = {
 }
 
 export const BusinessHoursWeek: Story = {
-    name: 'Week — business hours (7–20)',
+    name: 'Week, business hours (7–20)',
     render: () => <Frame><Scheduler events={DEMO_EVENTS} defaultView="week" dayHours={[7, 20]} /></Frame>,
 }
 

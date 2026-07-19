@@ -16,7 +16,7 @@ export interface FABAction {
 export interface FABProps {
     /** Main button icon. */
     icon: React.ReactNode
-    /** Accessible label for the main button (required — it's icon-only). */
+    /** Accessible label for the main button (required, it's icon-only). */
     label: string
     /** Click handler. Ignored when `actions` is provided (the button toggles the dial). */
     onClick?: React.MouseEventHandler
@@ -30,7 +30,7 @@ export interface FABProps {
     tone?: FABTone
     /**
      * `position: fixed` to the viewport (default) or `absolute` to the nearest
-     * positioned ancestor — set `false` to anchor inside a `relative` container.
+     * positioned ancestor, set `false` to anchor inside a `relative` container.
      */
     fixed?: boolean
     className?: string

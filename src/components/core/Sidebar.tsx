@@ -25,7 +25,7 @@ export interface SidebarItem {
 
 export interface SidebarSection {
     key: string
-    /** Section title — visible only when expanded */
+    /** Section title, visible only when expanded */
     title?: string
     items: SidebarItem[]
 }
@@ -127,7 +127,7 @@ function CollapsedFlyout({ item, trigger }: { item: SidebarItem; trigger: React.
                 asChild
                 onPointerEnter={openNow}
                 onPointerLeave={closeSoon}
-                // For mouse, hover owns open/close — block Radix's pointerdown
+                // For mouse, hover owns open/close, block Radix's pointerdown
                 // toggle so clicking the icon doesn't close the hover-opened
                 // menu. Touch (no hover) and keyboard still toggle normally.
                 onPointerDown={(e) => {
@@ -200,7 +200,7 @@ function NavItem({
                 )}
             </span>
 
-            {/* Label — only visible when expanded */}
+            {/* Label, only visible when expanded */}
             {isExpanded && (
                 <motion.span initial={false} animate={{ opacity: 1 }} className="flex-1 truncate text-left text-sm font-medium">
                     {item.label}
@@ -337,7 +337,7 @@ export default function Sidebar({
                 <nav className="flex-1 overflow-y-auto overflow-x-hidden py-2 px-1.5 space-y-0.5">
                     {sections.map((section, si) => (
                         <div key={section.key} className={si > 0 ? 'pt-3' : ''}>
-                            {/* Section title — hidden when collapsed */}
+                            {/* Section title, hidden when collapsed */}
                             {section.title && isExpanded && (
                                 <motion.p
                                     initial={{ opacity: 0 }}

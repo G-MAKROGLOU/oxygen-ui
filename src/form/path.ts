@@ -1,5 +1,5 @@
 /**
- * Tiny immutable path helpers for nested form values — supports dotted paths
+ * Tiny immutable path helpers for nested form values, supports dotted paths
  * with numeric segments (e.g. `"users.0.email"`). Zero dependencies; written
  * so field arrays and nested objects "just work" without lodash.
  */

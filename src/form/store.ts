@@ -9,7 +9,7 @@ export interface FormStoreOptions {
     rules?: RulesMap
     /**
      * When a field revalidates. `'onSubmit'` is always implied. Default
-     * `['onChange', 'onBlur', 'onSubmit']` — error appears once a field is
+     * `['onChange', 'onBlur', 'onSubmit']`, error appears once a field is
      * touched and updates live as the user types.
      */
     validateOn?: ValidateTrigger[]
@@ -21,7 +21,7 @@ export type ErrorMap = Record<string, string | undefined>
 export interface FieldSnapshot {
     value: unknown
     error: string | undefined
-    /** touched OR the form was submitted — i.e. "should the error be shown". */
+    /** touched OR the form was submitted, i.e. "should the error be shown". */
     showError: boolean
 }
 
@@ -52,7 +52,7 @@ export class FormStore {
     private keys: Record<string, number[]> = {}
     private keySeq = 1
 
-    // Root snapshot — a new ref on every change, for form-level subscribers.
+    // Root snapshot, a new ref on every change, for form-level subscribers.
     private rootSnap: { v: number } = { v: 0 }
 
     constructor(opts: FormStoreOptions = {}) {
@@ -203,7 +203,7 @@ export class FormStore {
         this.setValue(name, arr, { validate: false })
     }
 
-    /** Drop any errors/touched flags under `name.` — used when an array shifts. */
+    /** Drop any errors/touched flags under `name.`, used when an array shifts. */
     private clearBranch(name: string) {
         const prefix = name + '.'
         const errors: ErrorMap = {}

@@ -98,7 +98,7 @@ function VConnector({ filled, reduced }: { filled: boolean; reduced: boolean | n
 }
 
 /**
- * A configurable steps indicator for multi-step flows — wizards, onboarding,
+ * A configurable steps indicator for multi-step flows, wizards, onboarding,
  * async pipelines. Completed steps show a check, the active step is highlighted
  * (or a spinner via `status="loading"` for async work, or an error mark), and
  * the connectors fill up to the current step. Horizontal or vertical, with an

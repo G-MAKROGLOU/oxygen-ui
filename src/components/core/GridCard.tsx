@@ -8,7 +8,7 @@ export interface GridCardItem {
     /** Image URL or JSX element */
     cover?: string | React.ReactNode
     enabled?: boolean
-    /** Arbitrary route or payload — passed back to onOpen */
+    /** Arbitrary route or payload, passed back to onOpen */
     to?: string
     [key: string]: any
 }
@@ -27,7 +27,7 @@ export interface GridCardProps {
 /**
  * Application card tile (grid layout).
  *
- * Decoupled from React Router — navigation is delegated to the `onOpen` prop.
+ * Decoupled from React Router, navigation is delegated to the `onOpen` prop.
  *
  * @example
  * <GridCard

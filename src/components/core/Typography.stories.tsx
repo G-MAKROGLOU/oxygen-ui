@@ -22,16 +22,16 @@ type Story = StoryObj<typeof Typography>
 export const AllVariants: Story = {
     render: () => (
         <div className="space-y-3">
-            <Typography variant="display">Display — hero headline</Typography>
-            <Typography variant="h1">H1 — page title</Typography>
-            <Typography variant="h2">H2 — section heading</Typography>
-            <Typography variant="h3">H3 — subsection</Typography>
-            <Typography variant="h4">H4 — minor heading</Typography>
-            <Typography variant="subtitle">Subtitle — emphasised lead text</Typography>
-            <Typography variant="body" color="foreground">Body — the default paragraph style. The quick brown fox jumps over the lazy dog.</Typography>
-            <Typography variant="caption" color="foreground-secondary">Caption — small label or hint text</Typography>
-            <Typography variant="overline" color="accent">Overline — eyebrow text</Typography>
-            <Typography variant="code">Inline code — npm install @geomak/ui</Typography>
+            <Typography variant="display">Display, hero headline</Typography>
+            <Typography variant="h1">H1, page title</Typography>
+            <Typography variant="h2">H2, section heading</Typography>
+            <Typography variant="h3">H3, subsection</Typography>
+            <Typography variant="h4">H4, minor heading</Typography>
+            <Typography variant="subtitle">Subtitle, emphasised lead text</Typography>
+            <Typography variant="body" color="foreground">Body, the default paragraph style. The quick brown fox jumps over the lazy dog.</Typography>
+            <Typography variant="caption" color="foreground-secondary">Caption, small label or hint text</Typography>
+            <Typography variant="overline" color="accent">Overline, eyebrow text</Typography>
+            <Typography variant="code">Inline code, npm install @geomak/ui</Typography>
         </div>
     ),
 }
@@ -80,7 +80,7 @@ export const PolymorphicAs: Story = {
     },
     render: () => (
         <Typography variant="h1" as="div">
-            Styled as h1 — but rendered as a div (inspect to verify)
+            Styled as h1, but rendered as a div (inspect to verify)
         </Typography>
     ),
 }

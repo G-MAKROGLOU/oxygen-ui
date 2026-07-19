@@ -14,7 +14,7 @@ export interface ThemeSwitchProps {
  * Theme (dark-mode) toggle switch powered by Radix Switch.
  *
  * The thumb color indicates mode: green = light, slate = dark.
- * Layout (position, margin) is the parent's responsibility — this component
+ * Layout (position, margin) is the parent's responsibility, this component
  * renders inline with no external margins.
  *
  * @example

@@ -54,7 +54,7 @@ const DENSITY_PAD_LEFT: Record<NonNullable<ListProps['density']>, string> = {
 // panel the List sits in, so hover/active were effectively invisible. An
 // accent wash reads clearly over any background, and the three states form a
 // visible progression: hover < selected < pressed.
-// (color-mix, not a `/opacity` modifier — the accent token is var()-valued, so
+// (color-mix, not a `/opacity` modifier, the accent token is var()-valued, so
 // `bg-accent/10` would emit transparent CSS. Arbitrary classes are also unique
 // to the lib, so a consumer's Tailwind can't re-order/override them.)
 const HOVER = 'hover:bg-[color-mix(in_srgb,var(--color-accent)_8%,transparent)] hover:text-foreground'

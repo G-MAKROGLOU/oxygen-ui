@@ -6,7 +6,7 @@ import { cx } from '../../utils/cx'
 
 export interface ChatMessage {
     id: string | number
-    /** Author id — compared to `currentUserId` to decide own vs. incoming. */
+    /** Author id, compared to `currentUserId` to decide own vs. incoming. */
     authorId: string | number
     /** Display name (shown above the first bubble of an incoming group). */
     authorName?: string
@@ -14,7 +14,7 @@ export interface ChatMessage {
     avatar?: string
     /** Message body. */
     text: string
-    /** Timestamp — Date or ISO string. */
+    /** Timestamp, Date or ISO string. */
     timestamp?: Date | string
     /** Delivery status for own messages. */
     status?: 'sent' | 'delivered' | 'read'
@@ -22,11 +22,11 @@ export interface ChatMessage {
 
 export interface ChatProps {
     messages: ChatMessage[]
-    /** The viewer's id — their messages align right with the accent bubble. */
+    /** The viewer's id, their messages align right with the accent bubble. */
     currentUserId: string | number
     /** Fires when the composer sends a non-empty trimmed message. */
     onSend?: (text: string) => void
-    /** Names currently typing — shows an animated indicator at the bottom. */
+    /** Names currently typing, shows an animated indicator at the bottom. */
     typingNames?: string[]
     /** Header: title, subtitle, avatar, trailing actions. Omit for no header. */
     title?: React.ReactNode
@@ -43,7 +43,7 @@ export interface ChatProps {
     loading?: boolean
     /** Shown when there are no messages. */
     emptyState?: React.ReactNode
-    /** Overall height — the message list scrolls within it. Default `480`. */
+    /** Overall height, the message list scrolls within it. Default `480`. */
     height?: number | string
     className?: string
     style?: React.CSSProperties

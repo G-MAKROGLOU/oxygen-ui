@@ -101,7 +101,7 @@ function TypeIcon({ type }: { type: NotificationType }) {
 /** ─────────────────── animated toast item ───────────────────
  *
  * Renders a single notification as a `motion.div` direct child of
- * `AnimatePresence` — no Radix Toast wrapping. The previous Radix-based
+ * `AnimatePresence`, no Radix Toast wrapping. The previous Radix-based
  * implementation entangled `Toast.Root`/`Toast.Viewport` lifecycles with
  * Framer Motion's exit detection in a way that suppressed enter/exit
  * animations in some configurations. A pure Framer + portal pattern is
@@ -127,7 +127,7 @@ function NotificationItem({
     const isAutoDismissing = isFinite(duration) && duration > 0
     const showProgress = !reduced && isAutoDismissing
 
-    // Timer management — careful with refs so React 18 strict-mode double
+    // Timer management, careful with refs so React 18 strict-mode double
     // mount doesn't double-schedule the dismissal.
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
     const startTimeRef = useRef<number>(0)
@@ -182,7 +182,7 @@ function NotificationItem({
                     ? { duration: 0 }
                     : {
                           // Opacity finishes in 0.15 s; y/scale take 0.34 s.
-                          // Card is opaque while still travelling — movement
+                          // Card is opaque while still travelling, movement
                           // is clearly visible to the user.
                           opacity: { duration: 0.15 },
                           y:       { type: 'tween', duration: 0.34, ease: [0.16, 1, 0.3, 1] },
@@ -232,7 +232,7 @@ function NotificationItem({
                     </button>
                 </div>
 
-                {/* Countdown progress bar — `notification-progress` keyframe
+                {/* Countdown progress bar, `notification-progress` keyframe
                     drives a scaleX 1→0. animationPlayState pauses with our
                     hover/focus state so the visual matches the actual timer. */}
                 {showProgress && (
@@ -294,7 +294,7 @@ export function NotificationProvider({
             {children}
 
             {/* Portaled into <body> so `position: fixed` resolves against the
-                real viewport — see Portal.tsx for the why. */}
+                real viewport, see Portal.tsx for the why. */}
             <Portal>
                 <ul
                     role="region"

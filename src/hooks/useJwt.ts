@@ -36,7 +36,7 @@ function decodeSegment(seg?: string): Record<string, unknown> | null {
  * re-renders exactly when the token crosses its `exp`, so `isExpired` / `isValid`
  * flip on their own without polling.
  *
- * Decodes only — it never verifies the signature. Treat the result as a UI hint;
+ * Decodes only, it never verifies the signature. Treat the result as a UI hint;
  * real authorization belongs on the server. Pairs with `SecureLayout`.
  *
  * @example

@@ -25,7 +25,7 @@ export const Hero: Story = {
     args: {
         height: 460,
         slides: [
-            { eyebrow: 'Fleet intelligence', title: 'Command your fleet from one screen', description: 'Live AIS, fuel and emissions — calm, legible, always current.', image: img('ocean1'), actions: <><Button content="Get started" /><Button variant="outline" content="Watch demo" /></> },
+            { eyebrow: 'Fleet intelligence', title: 'Command your fleet from one screen', description: 'Live AIS, fuel and emissions, calm, legible, always current.', image: img('ocean1'), actions: <><Button content="Get started" /><Button variant="outline" content="Watch demo" /></> },
             { eyebrow: 'Compliance', title: 'Stay ahead of CII & EU-ETS', description: 'Automated reporting that turns red days into a plan.', image: img('port2'), actions: <Button content="See compliance" /> },
             { eyebrow: 'Performance', title: 'Cut fuel, not corners', description: 'Voyage optimisation grounded in real vessel data.', image: img('ship3'), actions: <Button content="Explore" /> },
         ],

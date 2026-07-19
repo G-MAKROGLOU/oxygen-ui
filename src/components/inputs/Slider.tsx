@@ -38,11 +38,11 @@ export interface SliderProps {
     marks?: SliderMark[]
     /** Show a value tooltip above the thumb while dragging. */
     tooltip?: boolean
-    /** Size preset — controls height, padding, and font. Default 'md'. */
+    /** Size preset, controls height, padding, and font. Default 'md'. */
     size?: FieldSize
     /** Disable interaction and dim the control. */
     disabled?: boolean
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode

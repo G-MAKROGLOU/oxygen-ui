@@ -6,12 +6,12 @@ Add or improve Storybook stories for the OxygenUI component: **$ARGUMENTS**
 
 ## Steps
 
-1. **Read the component** — Find and read:
+1. **Read the component**: Find and read:
    - The component source file (`src/components/**/$ARGUMENTS.tsx` or similar)
    - The existing story file if one exists
    - The MDX guide if one exists in `src/docs/`
 
-2. **Identify gaps** — Look for:
+2. **Identify gaps**: Look for:
    - Props that have no story coverage
    - State combinations (loading, error, empty, disabled)
    - Controlled vs uncontrolled usage
@@ -19,7 +19,7 @@ Add or improve Storybook stories for the OxygenUI component: **$ARGUMENTS**
    - Responsive or theme-sensitive behaviour
 
 3. **Write stories** following the CSF3 format used throughout the codebase:
-   - `Default` — the simplest working example with sensible args
+   - `Default`: the simplest working example with sensible args
    - One story per major variant or visual state
    - Use `render` functions for complex compositions
    - Use `play` functions only when testing interactions (focus, type, click)

@@ -47,7 +47,7 @@ const NODE: Record<TimelineStatus, string> = {
 }
 
 /**
- * A vertical timeline of ordered events — order tracking (Order placed →
+ * A vertical timeline of ordered events, order tracking (Order placed →
  * Packed → Shipped → Out for delivery → Delivered), audit trails, activity
  * feeds, anything sequential. Completed events show a check on the accent rail;
  * the current event pulses; upcoming events are muted.

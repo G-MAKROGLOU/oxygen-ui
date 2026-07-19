@@ -39,6 +39,6 @@ export const CustomSuccess: Story = {
         title: 'Request early access',
         description: 'Be first to try the new voyage planner.',
         buttonLabel: 'Request access',
-        successMessage: 'You’re on the waitlist — we’ll be in touch.',
+        successMessage: 'You’re on the waitlist, we’ll be in touch.',
     },
 }

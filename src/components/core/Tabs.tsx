@@ -86,8 +86,8 @@ export interface TabsProps {
  *
  * The active tab is marked by a thin cobalt indicator that *slides* between
  * tabs (the design system's "one rare accent" rule, not a full-fill pill).
- * Three variants — `underline` (signature), `segmented` (lifted-pill track),
- * `enclosed` (folder tabs) — plus horizontal/vertical orientation, icons,
+ * Three variants, `underline` (signature), `segmented` (lifted-pill track),
+ * `enclosed` (folder tabs), plus horizontal/vertical orientation, icons,
  * count badges, closeable + add-tab, and overflow scrolling with chevrons that
  * appear only when the strip actually overflows.
  *
@@ -125,7 +125,7 @@ function Tabs({
         onChange?.(next)
     }, [isControlled, onChange])
 
-    // Tab registry — triggers self-register their label/icon so the overflow
+    // Tab registry, triggers self-register their label/icon so the overflow
     // menu can enumerate them. `version` only bumps on membership change (add /
     // remove), so re-registering a label on every render never loops.
     const registry = useRef<Map<string, TabMeta & { order: number }>>(new Map())
@@ -179,7 +179,7 @@ function TabsList({ children, 'aria-label': ariaLabel, className = '' }: TabsLis
     const scrollRef = useRef<HTMLDivElement>(null)
     const [edges, setEdges] = useState({ start: false, end: false })
 
-    // Segmented is a compact track (2-4 options) — never scrolls.
+    // Segmented is a compact track (2-4 options), never scrolls.
     const scrollable = variant !== 'segmented'
 
     useLayoutEffect(() => {
@@ -432,7 +432,7 @@ function TabsTrigger({ value, icon, badge, closeable, onClose, disabled, classNa
             disabled={disabled}
             className={cx(base, sz.trigger, layoutCls, closeable ? '!pr-8' : '', variantCls, className)}
         >
-            {/* Segmented lifted pill — slides between tabs. */}
+            {/* Segmented lifted pill, slides between tabs. */}
             {variant === 'segmented' && isActive && (
                 <motion.span
                     layoutId={`${indicatorId}-seg`}
@@ -456,7 +456,7 @@ function TabsTrigger({ value, icon, badge, closeable, onClose, disabled, classNa
                 )}
             </span>
 
-            {/* Underline marker — slides between tabs (horizontal: bottom edge;
+            {/* Underline marker, slides between tabs (horizontal: bottom edge;
                 vertical: right edge of the rail). */}
             {variant === 'underline' && isActive && (
                 <motion.span
@@ -521,7 +521,7 @@ export interface TabsPanelProps {
     value: string
     /**
      * Keep the panel mounted when inactive (preserves scroll / form state).
-     * Default `false` — panels mount lazily on first activation.
+     * Default `false`, panels mount lazily on first activation.
      */
     keepMounted?: boolean
     /** Extra classes merged onto the panel. */

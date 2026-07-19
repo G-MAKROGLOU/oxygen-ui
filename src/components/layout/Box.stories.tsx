@@ -12,7 +12,7 @@ const meta: Meta<typeof Box> = {
         docs: {
             description: {
                 component:
-                    'Polymorphic `<div>` styled via tokenised props — padding, margin, background, border, radius, shadow. Use Box in place of a className-only `<div>` when you want spacing and surfacing spelled out via design-system tokens.',
+                    'Polymorphic `<div>` styled via tokenised props, padding, margin, background, border, radius, shadow. Use Box in place of a className-only `<div>` when you want spacing and surfacing spelled out via design-system tokens.',
             },
         },
     },
@@ -52,7 +52,7 @@ export const PolymorphicAs: Story = {
         docs: {
             description: {
                 story:
-                    'Use `as` to change the underlying element while keeping the tokenised styling — e.g. render Box as `<section>` for landmark semantics.',
+                    'Use `as` to change the underlying element while keeping the tokenised styling, e.g. render Box as `<section>` for landmark semantics.',
             },
         },
     },
@@ -73,5 +73,5 @@ export const Playground: Story = {
         radius: { control: 'select', options: ['none', 'sm', 'md', 'lg', 'xl', '2xl', 'full'] },
         shadow: { control: 'inline-radio', options: ['none', 'sm', 'md', 'lg', 'xl'] },
     },
-    render: (args) => <Box {...args}><Typography>Box content — tweak padding, background, border, radius and shadow.</Typography></Box>,
+    render: (args) => <Box {...args}><Typography>Box content, tweak padding, background, border, radius and shadow.</Typography></Box>,
 }

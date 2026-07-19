@@ -22,11 +22,11 @@ export interface PasswordProps {
     style?: React.CSSProperties
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
-    /** Size preset — controls height, padding, and font. Default `'md'`. */
+    /** Size preset, controls height, padding, and font. Default `'md'`. */
     size?: FieldSize
-    /** Blur handler — useful for touched/validation timing. */
+    /** Blur handler, useful for touched/validation timing. */
     onBlur?: React.FocusEventHandler<HTMLInputElement>
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode

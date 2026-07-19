@@ -13,7 +13,7 @@ export interface SecureLayoutProps {
      * role / permission / `canAccess` gates apply.
      */
     isAuthenticated?: boolean
-    /** A JWT. Used only to check expiry (`exp`) client-side — never trust this
+    /** A JWT. Used only to check expiry (`exp`) client-side, never trust this
      *  for real authorization; the server must verify the signature. */
     token?: string
 
@@ -50,10 +50,10 @@ export interface SecureLayoutProps {
     /** Shown when access is denied. Defaults to a simple "Access denied" panel;
      *  pass `null` to render nothing (e.g. when `onDeny` redirects away). */
     fallback?: React.ReactNode
-    /** Fired once when access is granted — e.g. to hydrate app state or redirect
+    /** Fired once when access is granted, e.g. to hydrate app state or redirect
      *  to a landing route after a successful token check. */
     onGranted?: () => void
-    /** Fired once when access is denied — e.g. to redirect to login / logout. */
+    /** Fired once when access is denied, e.g. to redirect to login / logout. */
     onDeny?: () => void
 
     className?: string
@@ -95,13 +95,13 @@ const Spinner = () => (
 )
 
 /**
- * A layout wrapper that gates its children behind an access check —
+ * A layout wrapper that gates its children behind an access check -
  * authentication, RBAC (roles), PBAC (permissions), JWT expiry, and/or a
  * custom (optionally async) predicate. While the check runs it shows a
  * loading fallback; on success it fades the content in; on failure it renders
  * a fallback and calls `onDeny`.
  *
- * This is a UI guard, not a security boundary — it controls what renders.
+ * This is a UI guard, not a security boundary, it controls what renders.
  * Real authorization must be enforced by your API/server.
  *
  * @example Full RBAC + PBAC gate
@@ -120,7 +120,7 @@ const Spinner = () => (
  *   }}
  *   onGranted={() => navigate('/dashboard')}
  *   onDeny={() => navigate('/logout')}
- *   fallback={null}                    // redirecting — don't flash a panel
+ *   fallback={null}                    // redirecting, don't flash a panel
  * >
  *   <AppRoutes />
  * </SecureLayout>
@@ -157,7 +157,7 @@ export default function SecureLayout({
     const reduced = useReducedMotion()
 
     // Hold the callbacks in a ref so the check effect does NOT depend on their
-    // identity — otherwise an inline `canAccess` (the common case) would re-run
+    // identity, otherwise an inline `canAccess` (the common case) would re-run
     // the check (and re-fire any request inside it) on every parent render.
     const cbs = useRef({ canAccess, onGranted, onDeny })
     cbs.current = { canAccess, onGranted, onDeny }
@@ -203,7 +203,7 @@ export default function SecureLayout({
             finish(true)
         } else {
             const result = check(route)
-            // Only enter the 'checking' state for a genuine promise — a
+            // Only enter the 'checking' state for a genuine promise, a
             // synchronous canAccess resolves in place, so per-route guarding
             // with an in-memory map never flashes a loading state on navigation.
             if (result && typeof (result as Promise<boolean>).then === 'function') {

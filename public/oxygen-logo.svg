@@ -3,15 +3,15 @@
   <!-- Soft glow halo behind nucleus -->
   <circle cx="18" cy="18" r="9" fill="#2d88ff" fill-opacity="0.1"/>
 
-  <!-- Orbital ring 1 — horizontal, full opacity -->
+  <!-- Orbital ring 1, horizontal, full opacity -->
   <ellipse cx="18" cy="18" rx="15.5" ry="5.5" stroke="#2d88ff" stroke-width="1.5"/>
 
-  <!-- Orbital ring 2 — 60° tilt, mid opacity -->
+  <!-- Orbital ring 2, 60° tilt, mid opacity -->
   <ellipse cx="18" cy="18" rx="15.5" ry="5.5"
     stroke="#4d9aff" stroke-width="1.5" opacity="0.6"
     transform="rotate(60 18 18)"/>
 
-  <!-- Orbital ring 3 — -60° tilt, low opacity (depth) -->
+  <!-- Orbital ring 3, -60° tilt, low opacity (depth) -->
   <ellipse cx="18" cy="18" rx="15.5" ry="5.5"
     stroke="#4d9aff" stroke-width="1.5" opacity="0.28"
     transform="rotate(-60 18 18)"/>

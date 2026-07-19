@@ -1,7 +1,7 @@
 import { createIcon } from './createIcon'
 
 /**
- * oxygen-ui icon pack — a cohesive set of outline (and a few solid) icons that
+ * oxygen-ui icon pack, a cohesive set of outline (and a few solid) icons that
  * colour with `currentColor` and size via the `size` prop. Extend the pack with
  * {@link createIcon} so your own icons match the built-ins.
  *

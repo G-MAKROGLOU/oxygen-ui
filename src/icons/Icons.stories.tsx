@@ -136,7 +136,7 @@ export const Usage: Story = {
     ),
 }
 
-// A custom icon built with createIcon — matches the built-ins exactly.
+// A custom icon built with createIcon, matches the built-ins exactly.
 const Anchor = createIcon('Anchor', <path d="M12 21V8m0 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-7 4a7 7 0 0 0 14 0M3 11h4m10 0h4" />)
 const Rocket = createIcon('Rocket', <path d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.63 8.41m5.96 5.96-5.96-5.96m-2.58 5.84a6 6 0 0 0-7.38 5.84h4.8m2.58-5.84-2.58-2.58m0 0L4.5 12" />)
 
@@ -145,7 +145,7 @@ export const Extending: Story = {
         <div className="mx-auto max-w-2xl space-y-5 p-6">
             <div>
                 <h2 className="text-lg font-bold text-foreground">Extend the pack</h2>
-                <p className="text-sm text-foreground-secondary">Wrap a path in <code className="text-accent">createIcon</code> and it behaves exactly like a built-in — same sizing, colour, and a11y.</p>
+                <p className="text-sm text-foreground-secondary">Wrap a path in <code className="text-accent">createIcon</code> and it behaves exactly like a built-in, same sizing, colour, and a11y.</p>
             </div>
             <pre className="overflow-x-auto rounded-lg border border-border bg-surface p-4 text-xs leading-relaxed text-foreground-secondary"><code>{`import { createIcon } from '@geomak/ui'
 

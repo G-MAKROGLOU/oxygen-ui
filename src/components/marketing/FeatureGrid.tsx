@@ -34,7 +34,7 @@ const COLS: Record<2 | 3 | 4, string> = {
 }
 
 /**
- * A responsive grid of product features — icon, title, blurb — with an optional
+ * A responsive grid of product features, icon, title, blurb, with an optional
  * section header. Collapses to a single column on mobile.
  *
  * @example

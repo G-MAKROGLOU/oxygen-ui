@@ -26,12 +26,12 @@ export interface AutoCompleteProps {
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
     /**
-     * Static list — when provided, the component does its own substring
+     * Static list, when provided, the component does its own substring
      * filtering on `label` and `key`. Mutually exclusive with `onSearch`.
      */
     items?: AutoCompleteItem[]
     /**
-     * Async resolver — when provided, `items` is ignored and `onSearch(term)`
+     * Async resolver, when provided, `items` is ignored and `onSearch(term)`
      * is called (debounced) every time the user pauses typing. Its returned
      * promise drives the option list. The component manages an internal
      * `loading` state and shows an `xs` LoadingSpinner where the search icon
@@ -47,13 +47,13 @@ export interface AutoCompleteProps {
     onItemClick?: (value: string) => void
     /** Custom "empty" message */
     emptyText?: string
-    /** Custom "loading" message — shown in async mode while a query is in flight. */
+    /** Custom "loading" message, shown in async mode while a query is in flight. */
     loadingText?: string
     /** Size preset. Default `'md'`. */
     size?: FieldSize
     /** Override the leading search icon (hidden while loading). */
     icon?: React.ReactNode
-    /** Validation message — turns the field red and links via aria-describedby. */
+    /** Validation message, turns the field red and links via aria-describedby. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
@@ -69,9 +69,9 @@ export interface AutoCompleteProps {
  * Search-as-you-type autocomplete powered by Radix Popover. Supports two
  * modes:
  *
- * - **Static**: pass `items` — the component substring-filters locally.
+ * - **Static**: pass `items`, the component substring-filters locally.
  *   Best for small fixed lists (≤ 200 entries).
- * - **Async**: pass `onSearch(term) => Promise<Item[]>` — the component
+ * - **Async**: pass `onSearch(term) => Promise<Item[]>`, the component
  *   debounces input and drives the option list from the resolver. Shows
  *   an `xs` LoadingSpinner while the query is in flight.
  *
@@ -136,7 +136,7 @@ export default function AutoComplete({
     // don't overwrite fresher results.
     const requestIdRef = useRef(0)
 
-    // Static filtering — only when not async
+    // Static filtering, only when not async
     const staticFiltered = isAsync || !items
         ? []
         : term.trim()

@@ -4,7 +4,7 @@ import { buildBindings, type FieldBindings, type FieldKind } from './bindings'
 import type { FieldRules, FormValues } from './validate'
 
 export interface UseFormReturn {
-    /** The underlying store — pass to `<Form form={...}>` and for imperative use. */
+    /** The underlying store, pass to `<Form form={...}>` and for imperative use. */
     store: FormStore
     values: FormValues
     errors: ErrorMap
@@ -44,7 +44,7 @@ export interface UseFormReturn {
  * `useFormField` / `<FormField>` instead of reading everything here.
  *
  * Validation lives at the form level (rules map or per-field `rules` arg), and
- * the inputs only *receive* their error — they never validate themselves.
+ * the inputs only *receive* their error, they never validate themselves.
  *
  * @example
  * ```tsx

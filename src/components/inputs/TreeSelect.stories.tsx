@@ -72,7 +72,7 @@ export const LeavesOnly: Story = {
         docs: {
             description: {
                 story:
-                    'With `parentsSelectable={false}`, clicking a branch only toggles its expand state — only leaves can be picked. The parent rows show a "parent" hint.',
+                    'With `parentsSelectable={false}`, clicking a branch only toggles its expand state, only leaves can be picked. The parent rows show a "parent" hint.',
             },
         },
     },

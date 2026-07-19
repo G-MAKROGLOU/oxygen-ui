@@ -10,7 +10,7 @@ interface SkeletonBaseProps {
 
 // Shared shimmer classes. The animated sweep lives in `.oxy-skeleton::after`
 // (src/styles/_animations.scss) where the band colour is `color-mix`-ed from
-// `--color-foreground`, so it stays visible in BOTH light and dark themes — a
+// `--color-foreground`, so it stays visible in BOTH light and dark themes, a
 // fixed white sheen vanishes on a light `surface-raised` base. The element
 // keeps `bg-surface-raised` as a Tailwind utility so consumers can override the
 // resting colour via `className` / `style`. Reduced-motion hides the sweep but
@@ -108,7 +108,7 @@ export interface SkeletonCircleProps extends SkeletonBaseProps {
 }
 
 /**
- * Circular loading placeholder — avatars, icons, status indicators.
+ * Circular loading placeholder, avatars, icons, status indicators.
  *
  * @example
  * <SkeletonCircle size={48} />
@@ -139,7 +139,7 @@ export interface SkeletonCardProps extends SkeletonBaseProps {
 }
 
 /**
- * Composite card skeleton — avatar + heading + body text + action strip.
+ * Composite card skeleton, avatar + heading + body text + action strip.
  * Use as a drop-in while real card data loads.
  *
  * @example

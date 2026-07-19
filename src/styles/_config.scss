@@ -1,15 +1,15 @@
 // ╔══════════════════════════════════════════════════════════════════════════╗
-// ║  @geomak/ui — Token Configuration                                        ║
+// ║  @geomak/ui: Token Configuration                                        ║
 // ║                                                                          ║
 // ║  Every variable carries !default so consuming projects can override at   ║
 // ║  SCSS compile-time via:                                                  ║
 // ║    @use '@geomak/ui/src/styles/config' with ($color-accent: #e63946);    ║
 // ║                                                                          ║
-// ║  Runtime override (simpler — no build dependency on SCSS):               ║
+// ║  Runtime override (simpler, no build dependency on SCSS):               ║
 // ║    :root { --color-accent: #e63946; }                                    ║
 // ╚══════════════════════════════════════════════════════════════════════════╝
 
-// ── Colors — Light ────────────────────────────────────────────────────────────
+// ── Colors, Light ────────────────────────────────────────────────────────────
 $color-background:            #eef4fa  !default;
 $color-surface:               #ffffff  !default;
 $color-surface-raised:        #ffffff  !default;
@@ -25,10 +25,10 @@ $color-error:                 #c0392b  !default;
 $color-warning:               #d68910  !default;
 $color-success:               #1e8449  !default;
 $color-info:                  #1565c0  !default;
-// Scrim behind modals / drawers — navy-tinted to match the brand surface stack.
+// Scrim behind modals / drawers, navy-tinted to match the brand surface stack.
 $color-backdrop:              rgba(6, 15, 26, 0.45)  !default;
 
-// ── Colors — Dark ─────────────────────────────────────────────────────────────
+// ── Colors, Dark ─────────────────────────────────────────────────────────────
 $color-dark-background:            #060f1a  !default;
 $color-dark-surface:               #0d1f30  !default;
 $color-dark-surface-raised:        #152638  !default;
@@ -47,7 +47,7 @@ $color-dark-info:                  #5bc0de  !default;
 // Denser scrim on dark backgrounds so the dimmed page reads clearly.
 $color-dark-backdrop:              rgba(0, 0, 0, 0.6)  !default;
 
-// ── Radius — enterprise scale (tighter than consumer-app defaults) ─────────────
+// ── Radius, enterprise scale (tighter than consumer-app defaults) ─────────────
 $radius-sm:    2px     !default;  // tags, badges, tight inputs
 $radius-md:    5px     !default;  // buttons, form fields
 $radius-lg:    7px     !default;  // cards, panels, dropdowns
@@ -55,7 +55,7 @@ $radius-xl:    10px    !default;  // modals, drawers, large panels
 $radius-2xl:   12px    !default;  // hero elements only
 $radius-full:  9999px  !default;  // pills, avatars
 
-// ── Shadows — Light (blue-tinted, layered) ────────────────────────────────────
+// ── Shadows, Light (blue-tinted, layered) ────────────────────────────────────
 // Comma in box-shadow values: SCSS treats these as comma-separated lists.
 // #{$shadow-*} interpolation joins list items with their separator, preserving commas.
 $shadow-sm:  0 1px 2px rgba(4, 31, 66, 0.06)                                          !default;
@@ -63,7 +63,7 @@ $shadow-md:  0 2px 8px rgba(4, 31, 66, 0.08),  0 1px 3px  rgba(4, 31, 66, 0.05) 
 $shadow-lg:  0 8px 24px rgba(4, 31, 66, 0.10), 0 3px 8px  rgba(4, 31, 66, 0.06)       !default;
 $shadow-xl:  0 20px 48px rgba(4, 31, 66, 0.13), 0 6px 16px rgba(4, 31, 66, 0.08)      !default;
 
-// ── Shadows — Dark (pure, crisp) ──────────────────────────────────────────────
+// ── Shadows, Dark (pure, crisp) ──────────────────────────────────────────────
 $shadow-dark-sm:  0 1px 2px rgba(0, 0, 0, 0.30)                                        !default;
 $shadow-dark-md:  0 2px 8px rgba(0, 0, 0, 0.40),  0 1px 3px rgba(0, 0, 0, 0.25)        !default;
 $shadow-dark-lg:  0 8px 24px rgba(0, 0, 0, 0.50), 0 3px 8px rgba(0, 0, 0, 0.30)        !default;
@@ -114,7 +114,7 @@ $duration-normal:   150ms  !default;  // tooltips, dropdowns
 $duration-slow:     220ms  !default;  // modals, drawers, accordions
 $duration-gentle:   350ms  !default;  // page-level transitions
 
-// Easing — cubic-bezier() is parsed as a function call, not a list. Safe to use directly.
+// Easing, cubic-bezier() is parsed as a function call, not a list. Safe to use directly.
 $ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1)   !default;
 $ease-out-quart:  cubic-bezier(0.25, 1, 0.5, 1)   !default;
 $ease-out-cubic:  cubic-bezier(0.33, 1, 0.68, 1)  !default;

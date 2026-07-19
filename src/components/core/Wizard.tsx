@@ -10,10 +10,10 @@ export interface WizardStep {
     description: React.ReactNode
     /**
      * Tooltip placement relative to the highlighted element.
-     * - `'right'`  (default) — to the right of the highlight
-     * - `'left'`             — to the left of the highlight
-     * - `'top'`              — above the highlight
-     * - `'bottom'`           — below the highlight
+     * - `'right'`  (default), to the right of the highlight
+     * - `'left'`            , to the left of the highlight
+     * - `'top'`             , above the highlight
+     * - `'bottom'`          , below the highlight
      */
     placement?: 'right' | 'left' | 'top' | 'bottom'
     /** Optional heading for the step's tooltip. */
@@ -21,7 +21,7 @@ export interface WizardStep {
 }
 
 export interface WizardProps {
-    /** The wrapped subtree — refs in `steps` point into this tree. */
+    /** The wrapped subtree, refs in `steps` point into this tree. */
     children: React.ReactNode
     /** Ordered list of steps to walk the user through. */
     steps: WizardStep[]
@@ -66,11 +66,11 @@ function writeDismissed(key: string | null) {
     try {
         window.localStorage.setItem(key, 'true')
     } catch {
-        // Swallow — Safari private mode, quota exceeded, etc.
+        // Swallow, Safari private mode, quota exceeded, etc.
     }
 }
 
-// ── Bbox tracking — handles scroll + resize ────────────────────────────────
+// ── Bbox tracking, handles scroll + resize ────────────────────────────────
 
 function useTargetBbox(ref: React.RefObject<HTMLElement | null> | undefined) {
     const [bbox, setBbox] = useState<DOMRect | null>(null)
@@ -149,7 +149,7 @@ function tooltipStyleFor(
         transform = 'translate(-50%, -100%)'
     }
 
-    // ── 3. Final clamp — keep tooltip fully within the viewport ─────────────
+    // ── 3. Final clamp, keep tooltip fully within the viewport ─────────────
     // Horizontal: for left/right the rendered x-range is [left, left+W].
     // For top/bottom (centered) the rendered x-range is [left-W/2, left+W/2].
     if (side === 'top' || side === 'bottom') {
@@ -175,7 +175,7 @@ function tooltipStyleFor(
     return { left, top, transform, width: W }
 }
 
-// ── Focus trap — cycles Tab within the tooltip's focusable buttons ─────────
+// ── Focus trap, cycles Tab within the tooltip's focusable buttons ─────────
 
 function useFocusTrap(containerRef: React.RefObject<HTMLDivElement | null>, active: boolean) {
     useEffect(() => {
@@ -230,7 +230,7 @@ function useFocusTrap(containerRef: React.RefObject<HTMLDivElement | null>, acti
  *   portaled outline rectangle that tracks the target's bbox via
  *   `ResizeObserver` + scroll/resize listeners. The consumer's DOM is never
  *   mutated, so unmounting Wizard mid-tour leaves no orphan classes.
- * - Focus trap inside the tooltip — Tab and Shift+Tab cycle through the
+ * - Focus trap inside the tooltip, Tab and Shift+Tab cycle through the
  *   tooltip's buttons. Esc dismisses (when `dismissible`).
  * - Backdrop blocks click-through on the rest of the page so the user can't
  *   stumble into unrelated UI mid-tour. The highlighted target itself stays
@@ -238,7 +238,7 @@ function useFocusTrap(containerRef: React.RefObject<HTMLDivElement | null>, acti
  * - Position recalculates on scroll / resize / target size changes via
  *   `ResizeObserver`.
  * - All `dark-cornflower-blue` / `prussian-blue` / `bg-white` swapped for
- *   semantic tokens — both light and dark modes work out of the box.
+ *   semantic tokens, both light and dark modes work out of the box.
  *
  * @example
  * ```tsx
@@ -275,7 +275,7 @@ export default function Wizard({
     const [activeIndex, setActiveIndex] = useState(0)
 
     // Measured height of the tooltip so the clamp function has an accurate value.
-    // Reruns on step change and open toggle — the only events that alter the
+    // Reruns on step change and open toggle, the only events that alter the
     // tooltip's rendered content and thus its height. The functional updater
     // prevents re-render loops: React bails out when the value is unchanged.
     const [tooltipHeight, setTooltipHeight] = useState(0)
@@ -337,7 +337,7 @@ export default function Wizard({
           }
         : { display: 'none' }
 
-    // Four backdrop rectangles surrounding the target bbox — they share the
+    // Four backdrop rectangles surrounding the target bbox, they share the
     // blur + tint, but leave the target area itself crystal clear. A
     // transparent fifth rect sits ON the target and blocks pointer events so
     // the user can't accidentally interact with the highlighted UI during
@@ -377,7 +377,7 @@ export default function Wizard({
                 {open && step && (
                     <Portal>
                         {/* Backdrop is built from FOUR rectangles surrounding
-                            the target — the area inside the spotlight stays
+                            the target, the area inside the spotlight stays
                             crystal clear (no blur, no tint). All four fade
                             in/out together. */}
                         {(['top', 'bottom', 'left', 'right'] as const).map((side) => (
@@ -398,7 +398,7 @@ export default function Wizard({
                             />
                         ))}
 
-                        {/* Transparent click blocker over the target — keeps
+                        {/* Transparent click blocker over the target, keeps
                             the highlight visually untouched but stops the user
                             from accidentally interacting with the spotlit UI
                             mid-tour. */}
@@ -421,7 +421,7 @@ export default function Wizard({
                             exit={{ opacity: 0, scale: 1.08 }}
                             transition={{
                                 duration: reduced ? 0 : 0.32,
-                                ease: [0.16, 1, 0.3, 1], // ease-out-expo — settles softly
+                                ease: [0.16, 1, 0.3, 1], // ease-out-expo, settles softly
                             }}
                             aria-hidden="true"
                         />

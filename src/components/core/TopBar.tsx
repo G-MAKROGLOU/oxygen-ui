@@ -1,15 +1,15 @@
 import React from 'react'
 
 export interface TopBarProps {
-    /** Brand area — logo, wordmark, or app name. Rendered on the leading edge. */
+    /** Brand area, logo, wordmark, or app name. Rendered on the leading edge. */
     brand?: React.ReactNode
     /**
-     * Centre content — primary navigation links, breadcrumb, or page title.
+     * Centre content, primary navigation links, breadcrumb, or page title.
      * On mobile (< md breakpoint) this moves below the brand row.
      */
     center?: React.ReactNode
     /**
-     * Trailing actions — theme toggle, user avatar, notification bell, etc.
+     * Trailing actions, theme toggle, user avatar, notification bell, etc.
      * Rendered on the trailing edge.
      */
     actions?: React.ReactNode
@@ -26,7 +26,7 @@ export interface TopBarProps {
  * App-shell top navigation bar.
  *
  * Three named slots: brand (leading), center, actions (trailing).
- * All slots are optional — omit what you don't need.
+ * All slots are optional, omit what you don't need.
  *
  * The component is sticky by default (`sticky top-0`) with `z-[100]`.
  * Height is exposed as `--topbar-height` CSS variable on the element so

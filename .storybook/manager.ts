@@ -5,11 +5,11 @@ import { version } from '../package.json'
 const theme = create({
     base: 'dark',
 
-    // Brand — HTML title so the logo and the library version render together
+    // Brand, HTML title so the logo and the library version render together
     // (a plain `brandImage` would suppress the title text entirely). The
     // build-time package.json version is only a fallback: the badge updates
     // itself from the npm registry at runtime (see below), because the
-    // release bot's version-bump commit is tagged [skip ci] — builds always
+    // release bot's version-bump commit is tagged [skip ci], builds always
     // run one commit BEFORE the bump, so a baked-in version lags forever.
     brandTitle: `
         <div style="display:flex;align-items:center;gap:8px">
@@ -72,7 +72,7 @@ const updateVersionBadge = async () => {
             await new Promise((r) => setTimeout(r, 250))
         }
     } catch {
-        /* offline / registry hiccup — the build-time fallback stays */
+        /* offline / registry hiccup, the build-time fallback stays */
     }
 }
 void updateVersionBadge()

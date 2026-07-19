@@ -65,7 +65,7 @@ export const WithDescription: Story = {
     parameters: {
         docs: {
             description: {
-                story: 'A secondary `description` wraps under the label — the same affordance RadioGroup options use. Works with `helperText` and either label side.',
+                story: 'A secondary `description` wraps under the label, the same affordance RadioGroup options use. Works with `helperText` and either label side.',
             },
         },
     },

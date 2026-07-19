@@ -4,7 +4,7 @@ import { Field, fieldShell, type FieldSize } from './_field'
 export interface TextInputProps {
     /** Controlled string value. */
     value?: string
-    /** Native change handler — read `e.target.value`. */
+    /** Native change handler, read `e.target.value`. */
     onChange?: React.ChangeEventHandler<HTMLInputElement>
     /** Disable interaction and dim the field. */
     disabled?: boolean
@@ -24,11 +24,11 @@ export interface TextInputProps {
     style?: React.CSSProperties
     /** Label/input orientation. Defaults to `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
-    /** Size preset — controls height, padding, and font. Default `'md'`. */
+    /** Size preset, controls height, padding, and font. Default `'md'`. */
     size?: FieldSize
     /** Native blur handler. */
     onBlur?: React.FocusEventHandler<HTMLInputElement>
-    /** Validation message — shown under the input; also flags it red + `aria-invalid`. */
+    /** Validation message, shown under the input; also flags it red + `aria-invalid`. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
@@ -45,7 +45,7 @@ export interface TextInputProps {
 }
 
 /**
- * Single-line text input. Full-width by default (responsive) — constrain it
+ * Single-line text input. Full-width by default (responsive), constrain it
  * with the parent layout or `style={{ maxWidth }}`. Supports an optional
  * leading `prefix` and trailing `suffix` adornment (icon, unit, etc.).
  *

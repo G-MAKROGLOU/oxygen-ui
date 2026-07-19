@@ -5,12 +5,12 @@ import { cx } from '../../utils/cx'
 export type CardCarouselVariant = 'flat' | 'rotating'
 
 export interface CardCarouselProps {
-    /** The slides — typically `Card`s. */
+    /** The slides, typically `Card`s. */
     children: React.ReactNode
     /**
      * Layout style. Default `'flat'`.
-     * - `'flat'` — a horizontal scroll-snap row (trackpad / touch / wheel).
-     * - `'rotating'` — a coverflow stack: the active card sits centre-stage,
+     * - `'flat'`, a horizontal scroll-snap row (trackpad / touch / wheel).
+     * - `'rotating'`, a coverflow stack: the active card sits centre-stage,
      *   prominent, with its neighbours scaled back and faded behind it.
      */
     variant?: CardCarouselVariant
@@ -61,9 +61,9 @@ const Dots = ({ count, active, onSelect }: { count: number; active: number; onSe
 /**
  * A carousel for cards, in two flavours via `variant`:
  *
- * - **`flat`** (default) — a native scroll-snap row driven by trackpad / touch /
+ * - **`flat`** (default), a native scroll-snap row driven by trackpad / touch /
  *   wheel, with optional arrows and dots. Arrows disable at the ends.
- * - **`rotating`** — a coverflow stack. The active card is centre-stage and
+ * - **`rotating`**, a coverflow stack. The active card is centre-stage and
  *   prominent; neighbours are scaled back and faded behind it. Stepping animates
  *   the stack with a Framer Motion spring (transform + opacity only, so it stays
  *   smooth). Click a side card, use the arrows/dots, or press ←/→.
@@ -79,7 +79,7 @@ export default function CardCarousel(props: CardCarouselProps) {
     return props.variant === 'rotating' ? <RotatingCarousel {...props} /> : <FlatCarousel {...props} />
 }
 
-// ─── flat — scroll-snap row ───────────────────────────────────────────────────
+// ─── flat, scroll-snap row ───────────────────────────────────────────────────
 
 function FlatCarousel({
     children,
@@ -163,7 +163,7 @@ function FlatCarousel({
     )
 }
 
-// ─── rotating — coverflow stack ───────────────────────────────────────────────
+// ─── rotating, coverflow stack ───────────────────────────────────────────────
 
 function RotatingCarousel({
     children,
@@ -217,7 +217,7 @@ function RotatingCarousel({
                 </button>
             )}
 
-            {/* Stage — overflow-hidden so off-stage cards bleed cleanly off the
+            {/* Stage, overflow-hidden so off-stage cards bleed cleanly off the
                 edges; py gives the active card's shadow room to breathe. */}
             <div className="relative mx-auto overflow-hidden py-6">
                 {/* Invisible spacer sizes the stage to the active card's height. */}

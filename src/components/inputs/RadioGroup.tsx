@@ -37,7 +37,7 @@ export interface RadioGroupProps {
      * `'right'` (default) → dot then label; `'left'` → label then dot.
      */
     labelPosition?: 'left' | 'right'
-    /** Size preset — controls the dot + text size. Default `'md'`. */
+    /** Size preset, controls the dot + text size. Default `'md'`. */
     size?: FieldSize
     /** Disable interaction and dim the control. */
     disabled?: boolean
@@ -47,7 +47,7 @@ export interface RadioGroupProps {
     helperText?: React.ReactNode
     /** Extra classes merged onto the field root element. */
     className?: string
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
 }
 
@@ -172,7 +172,7 @@ export default function RadioGroup({
 
                     // Label-left: dot sits directly beside the label on the
                     // first line, and any description wraps UNDER the label
-                    // (full width) — so the dot never gets pushed away by a long
+                    // (full width), so the dot never gets pushed away by a long
                     // description, and dots line up under each other.
                     if (labelFirst) {
                         return (

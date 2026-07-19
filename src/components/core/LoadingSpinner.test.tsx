@@ -48,7 +48,7 @@ describe('LoadingSpinner', () => {
 
     it('renders the fullscreen overlay via portal when inline is false', () => {
         const { container } = render(<LoadingSpinner prompt="Loading" />)
-        // Portaled content lives outside the container — but the status role
+        // Portaled content lives outside the container, but the status role
         // is still findable via screen queries.
         expect(container.querySelector('.fixed')).toBeNull()
         expect(screen.getByRole('status')).toBeInTheDocument()

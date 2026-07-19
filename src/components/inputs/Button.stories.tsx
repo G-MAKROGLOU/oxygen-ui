@@ -84,7 +84,7 @@ export const Disabled: Story = {
 // ── Interaction tests (visible in the Storybook Interactions panel) ───────────
 
 export const ClickFiresCallback: Story = {
-    name: 'Interaction — click fires callback',
+    name: 'Interaction, click fires callback',
     args: { content: 'Click me', variant: 'primary' },
     play: async ({ canvasElement, args }) => {
         const canvas = within(canvasElement)
@@ -95,7 +95,7 @@ export const ClickFiresCallback: Story = {
 }
 
 export const DisabledDoesNotFire: Story = {
-    name: 'Interaction — disabled blocks click',
+    name: 'Interaction, disabled blocks click',
     args: { content: 'Unavailable', disabled: true },
     play: async ({ canvasElement, args }) => {
         const canvas = within(canvasElement)

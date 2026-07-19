@@ -31,13 +31,13 @@ export type SchedulerView = 'month' | 'week'
 export interface SchedulerEvent {
     id: string | number
     title: string
-    /** Start time — Date or ISO string. */
+    /** Start time, Date or ISO string. */
     start: Date | string
     /** End time. Defaults to start + 1h. */
     end?: Date | string
     /** Any CSS colour for the event chip. Defaults to the accent token. */
     color?: string
-    /** All-day event — pinned to the day header strip rather than a time slot. */
+    /** All-day event, pinned to the day header strip rather than a time slot. */
     allDay?: boolean
 }
 
@@ -65,7 +65,7 @@ export interface SchedulerProps {
     dayHours?: [number, number]
     /** Pixel height of one hour row in the week view. Default `48`. */
     hourHeight?: number
-    /** Click an empty day cell (month) or time slot (week) — for creating events. */
+    /** Click an empty day cell (month) or time slot (week), for creating events. */
     onSelectSlot?: (date: Date) => void
     /** Click an event chip. */
     onSelectEvent?: (event: SchedulerEvent) => void
@@ -108,7 +108,7 @@ const Chevron = ({ dir }: { dir: 'left' | 'right' }) => (
 )
 
 /**
- * An event scheduler with month and week views — the agenda-style calendar for
+ * An event scheduler with month and week views, the agenda-style calendar for
  * dashboards and ops tools (think Google Calendar's month/week). Supply events
  * directly via `events`, or hand it an async `loadEvents(range, view)` and it
  * manages the loading / empty states as the user pages around.
@@ -222,7 +222,7 @@ export default function Scheduler({
             {/* ── Body ── */}
             {/* Keyed remount + enter animation (no AnimatePresence/exit): the
                 previous view unmounts immediately and the new one fades/slides
-                in — robust, with no exit phase that can stall mid-transition. */}
+                in, robust, with no exit phase that can stall mid-transition. */}
             <div className="relative flex-1 overflow-hidden">
                 {error ? (
                     <SchedulerError onRetry={retry} />

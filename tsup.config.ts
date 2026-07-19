@@ -7,7 +7,7 @@ export default defineConfig({
     tsconfig: 'tsconfig.json',
     sourcemap: true,
     clean: true,
-    // CSS is injected via PostCSS — emit a separate styles.css
+    // CSS is injected via PostCSS, emit a separate styles.css
     injectStyle: false,
     external: ['react', 'react-dom'],
     treeshake: true,

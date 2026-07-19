@@ -26,7 +26,7 @@ const AVA = 'https://i.pravatar.cc/64?img=47'
 
 const seed: ChatMessage[] = [
     { id: 1, authorId: 'maria', authorName: 'Maria Ferreira', avatar: AVA, text: 'Hey! Did the vessel report come through?', timestamp: t(9) },
-    { id: 2, authorId: 'me', text: 'Yes, just reviewed it — looks good.', timestamp: t(8), status: 'read' },
+    { id: 2, authorId: 'me', text: 'Yes, just reviewed it, looks good.', timestamp: t(8), status: 'read' },
     { id: 3, authorId: 'me', text: 'One note on the fuel figures though.', timestamp: t(8), status: 'read' },
     { id: 4, authorId: 'maria', authorName: 'Maria Ferreira', avatar: AVA, text: 'Oh? What did you find?', timestamp: t(6) },
     { id: 5, authorId: 'maria', authorName: 'Maria Ferreira', avatar: AVA, text: 'Send it over when you can 🙏', timestamp: t(6) },
@@ -65,7 +65,7 @@ export const Default: Story = {
 }
 
 export const WithHeaderAvatarAndActions: Story = {
-    name: 'Header — avatar + actions',
+    name: 'Header, avatar + actions',
     render: () => (
         <Frame>
             <Conversation
@@ -146,7 +146,7 @@ export const Tall: Story = {
 // ── Async history via MSW (HTTP) ────────────────────────────────────────────────
 
 export const AsyncHistory: Story = {
-    name: 'Async history — MSW (HTTP)',
+    name: 'Async history, MSW (HTTP)',
     parameters: {
         msw: {
             handlers: [
@@ -181,7 +181,7 @@ export const AsyncHistory: Story = {
 const chatSocket = ws.link('wss://chat.oxygen.example/room/*')
 
 export const LiveSocket: Story = {
-    name: 'Real-time — WebSocket (MSW ws)',
+    name: 'Real-time, WebSocket (MSW ws)',
     parameters: {
         msw: {
             handlers: [

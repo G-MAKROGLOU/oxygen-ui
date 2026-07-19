@@ -15,7 +15,7 @@ export interface BlogPost {
     date?: React.ReactNode
     /** Read time, e.g. `'4 min read'`. */
     readTime?: React.ReactNode
-    /** Link target — renders the card as an anchor. */
+    /** Link target, renders the card as an anchor. */
     href?: string
     onClick?: () => void
 }
@@ -38,7 +38,7 @@ const COLS: Record<2 | 3, string> = {
 }
 
 /**
- * A grid of article cards — cover image, tag, title, excerpt, and a byline of
+ * A grid of article cards, cover image, tag, title, excerpt, and a byline of
  * author / date / read-time. Cards link out via `href` or fire `onClick`.
  *
  * @example

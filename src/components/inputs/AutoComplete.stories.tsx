@@ -42,7 +42,7 @@ export default meta
 type Story = StoryObj<typeof AutoComplete>
 
 export const Static: Story = {
-    name: 'Static — local filter',
+    name: 'Static, local filter',
     args: { items: PORTS },
 }
 
@@ -70,7 +70,7 @@ async function fakeServerSearch(term: string): Promise<AutoCompleteItem[]> {
 }
 
 export const Async: Story = {
-    name: 'Async — server-backed',
+    name: 'Async, server-backed',
     parameters: {
         docs: {
             description: {
@@ -83,7 +83,7 @@ export const Async: Story = {
 }
 
 export const AsyncFastDebounce: Story = {
-    name: 'Async — 100 ms debounce',
+    name: 'Async, 100 ms debounce',
     parameters: {
         docs: {
             description: {

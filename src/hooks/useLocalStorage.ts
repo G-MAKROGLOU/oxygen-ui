@@ -10,7 +10,7 @@ const CUSTOM_EVENT = 'oxy-local-storage'
  * (the native `storage` event) and **across hook instances in the same tab**
  * (a custom event), so two components on the same key stay consistent.
  *
- * @returns `[value, setValue, remove]` — `setValue` accepts a value or an
+ * @returns `[value, setValue, remove]`, `setValue` accepts a value or an
  * updater, like `useState`; `remove` deletes the key and resets to initial.
  *
  * @example
@@ -27,7 +27,7 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T
         } catch {
             return initialValue
         }
-        // initialValue is intentionally excluded — it's a seed, read once per key.
+        // initialValue is intentionally excluded, it's a seed, read once per key.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [key])
 

@@ -35,7 +35,7 @@ function DefaultIllustration() {
             {/* Glow halo */}
             <circle cx="56" cy="50" r="48" fill="url(#oui-empty-cart-glow)" />
 
-            {/* Cart body — line art */}
+            {/* Cart body, line art */}
             <g
                 stroke="var(--color-border-strong)"
                 strokeWidth="3"
@@ -59,7 +59,7 @@ function DefaultIllustration() {
 }
 
 /**
- * The empty state for a shopping cart — a configurable illustration with a
+ * The empty state for a shopping cart, a configurable illustration with a
  * title, optional description, and an optional call-to-action.
  *
  * Pass a custom `illustration` to match your brand, or override `title` /

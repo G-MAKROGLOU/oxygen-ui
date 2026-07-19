@@ -6,16 +6,16 @@ export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
     content?: React.ReactNode
     /** Visual style variant */
     variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'warning' | 'success' | 'info'
-    /** Size — controls height, padding, and font size */
+    /** Size, controls height, padding, and font size */
     size?: 'sm' | 'md' | 'lg'
     /** HTML button type */
     buttonType?: 'button' | 'submit' | 'reset'
     /** Show a loading spinner and disable the control. */
     loading?: boolean
-    /** Leading icon — rendered before content */
+    /** Leading icon, rendered before content */
     icon?: React.ReactNode
     /**
-     * @deprecated Pass `variant` instead. Kept for API compat — currently no-op.
+     * @deprecated Pass `variant` instead. Kept for API compat, currently no-op.
      * Will be removed in the next major version.
      */
     type?: string
@@ -38,7 +38,7 @@ const VARIANT_CLASSES: Record<NonNullable<ButtonProps['variant']>, string> = {
         'focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
     ].join(' '),
 
-    // Neutral, flat, hairline-bordered button — the quiet sibling of `secondary`
+    // Neutral, flat, hairline-bordered button, the quiet sibling of `secondary`
     // (which carries the accent border). Mirrors the input border behaviour:
     // hairline at rest, strong-hairline on hover. No shadow (flat at rest).
     outline: [
@@ -100,7 +100,7 @@ const SIZE_CLASSES: Record<NonNullable<ButtonProps['size']>, string> = {
 /**
  * Primary action button with variant + size system.
  *
- * Width is never hardcoded — set `style={{ width }}` or let the parent grid/flex control it.
+ * Width is never hardcoded, set `style={{ width }}` or let the parent grid/flex control it.
  * Uses `React.forwardRef` so it works as a Radix `asChild` trigger (Popover, Tooltip, etc.).
  *
  * @example
@@ -121,7 +121,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
         icon,
         onClick,
         className = '',
-        type: _deprecated, // consume deprecated prop — do not spread to DOM
+        type: _deprecated, // consume deprecated prop, do not spread to DOM
         ...rest
     },
     ref,

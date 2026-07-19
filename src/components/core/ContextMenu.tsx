@@ -18,7 +18,7 @@ export interface ContextMenuActionItem {
     onClick?: () => void
     /** Optional sub-menu items. */
     children?: ContextMenuActionItem[]
-    /** Render as disabled — still visible but not activatable. */
+    /** Render as disabled, still visible but not activatable. */
     disabled?: boolean
 }
 
@@ -28,7 +28,7 @@ export interface ContextMenuProps {
     /**
      * The element that should respond to right-click. The entire React
      * subtree underneath becomes the trigger area. Wrap an existing
-     * component / div / image — anything you can right-click on.
+     * component / div / image, anything you can right-click on.
      */
     children: React.ReactNode
     /** Extra classes merged onto the menu content panel. */
@@ -43,7 +43,7 @@ export interface ContextMenuProps {
  * navigation (↑↓ to move, → to open sub-menu, ← to close, Enter to activate,
  * Esc to dismiss), focus management, and portal-based stacking.
  *
- * @example Basic — flat menu
+ * @example Basic, flat menu
  * ```tsx
  * <ContextMenu
  *   items={[
@@ -91,16 +91,16 @@ export default function ContextMenu({ items, children, className = '' }: Context
     )
 }
 
-// ── Styling constants — keep markup readable ────────────────────────────────
+// ── Styling constants, keep markup readable ────────────────────────────────
 
 const CONTENT_CLASSNAME = [
-    // Surface — semantic tokens, both modes covered
+    // Surface, semantic tokens, both modes covered
     'min-w-[180px] rounded-lg border border-border bg-surface shadow-lg',
     'p-1 z-[500000] text-sm text-foreground',
     // Entry animation matches the Tooltip / Dropdown style
     'animate-in fade-in-0 zoom-in-95',
     'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
-    // Outline reset — Radix handles focus internally
+    // Outline reset, Radix handles focus internally
     'focus:outline-none',
 ].join(' ')
 
@@ -112,7 +112,7 @@ const ITEM_CLASSNAME = [
     'focus:outline-none',
 ].join(' ')
 
-// ── Item renderer — recursive for sub-menus ─────────────────────────────────
+// ── Item renderer, recursive for sub-menus ─────────────────────────────────
 
 function renderItem(item: ContextMenuActionItem) {
     if (item.children && item.children.length > 0) {
@@ -175,7 +175,7 @@ function ChevronRight() {
 // automatic), but is re-exported as a deprecated alias so older imports
 // keep compiling while consumers migrate.
 
-/** @deprecated The Radix rewrite positions the menu automatically — no coordinates needed. */
+/** @deprecated The Radix rewrite positions the menu automatically, no coordinates needed. */
 export interface ContextMenuPosition {
     x: number
     y: number

@@ -12,7 +12,7 @@ const meta: Meta<typeof List> = {
         docs: {
             description: {
                 component:
-                    'Vertical clickable list with optional `avatar` / `description` / `trailing` slots per item. Renders as `role="listbox"` with `role="option"` items — Enter/Space activate. Use it for "browse + pick one" surfaces (sidebar nav, contact list, vessel chooser).',
+                    'Vertical clickable list with optional `avatar` / `description` / `trailing` slots per item. Renders as `role="listbox"` with `role="option"` items, Enter/Space activate. Use it for "browse + pick one" surfaces (sidebar nav, contact list, vessel chooser).',
             },
         },
     },
@@ -50,7 +50,7 @@ function Rich() {
 }
 
 export const WithAvatarsAndDescriptions: Story = {
-    name: 'Rich — avatar + description + trailing',
+    name: 'Rich, avatar + description + trailing',
     parameters: {
         docs: {
             description: {
@@ -67,7 +67,7 @@ export const Density: Story = {
         docs: {
             description: {
                 story:
-                    '`density` picks the row vertical padding — `compact` for dense reference lists, `comfortable` (default) for typical UI, `spacious` for hero rows.',
+                    '`density` picks the row vertical padding, `compact` for dense reference lists, `comfortable` (default) for typical UI, `spacious` for hero rows.',
             },
         },
     },

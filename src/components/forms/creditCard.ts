@@ -1,6 +1,6 @@
 /**
  * Zero-dependency credit-card helpers: brand detection, Luhn checksum, and
- * display formatting. Pure functions — no React, no deps — so they're unit
+ * display formatting. Pure functions, no React, no deps, so they're unit
  * testable and reusable.
  */
 
@@ -49,7 +49,7 @@ export function maxCardLength(value: string): number {
     return b ? Math.max(...b.lengths) : 19
 }
 
-/** Luhn (mod-10) checksum — the standard card-number integrity check. */
+/** Luhn (mod-10) checksum, the standard card-number integrity check. */
 export function luhnValid(value: string): boolean {
     const s = onlyDigits(value)
     if (s.length < 12) return false

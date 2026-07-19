@@ -102,7 +102,7 @@ export const PerRouteSingleWrapper: Story = {
                     canAccess={(path) => (allowed[path ?? ''] ?? []).length === 0 || (allowed[path ?? ''] ?? []).some((r) => userRoles.includes(r))}
                     fallback={
                         <div className="rounded-xl border border-border bg-surface p-8 text-center">
-                            <div className="text-sm font-semibold text-foreground">403 — no access to {route}</div>
+                            <div className="text-sm font-semibold text-foreground">403, no access to {route}</div>
                             <div className="mt-1 text-xs text-foreground-muted">Your roles: {userRoles.join(', ')}</div>
                         </div>
                     }

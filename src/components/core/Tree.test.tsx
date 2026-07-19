@@ -96,7 +96,7 @@ describe('Tree', () => {
 
         expect(handler).toHaveBeenCalledTimes(1)
         expect(handler).toHaveBeenCalledWith(expect.objectContaining({ key: 'parent', isParent: true }))
-        expect(screen.getByText('Child one')).toBeInTheDocument() // still expanded — label didn't collapse
+        expect(screen.getByText('Child one')).toBeInTheDocument() // still expanded, label didn't collapse
     })
 
     // ── Leaf icons ──────────────────────────────────────────────────────────

@@ -123,7 +123,7 @@ export const ServerSide: Story = {
 // The component manages its own loading state and re-fetches on page/perPage change.
 //
 // If toasts appear saying "Failed to fetch" the MSW service worker may not
-// have registered yet — reload the Storybook page once and try again.
+// have registered yet, reload the Storybook page once and try again.
 
 const PER_PAGE_DEFAULT = 10
 
@@ -170,11 +170,11 @@ function AsyncServerSideTable() {
         <div className="relative">
             {error && (
                 <div className="mb-2 rounded-md bg-status-error/10 border border-status-error/20 px-3 py-2 text-sm text-status-error">
-                    {error} — MSW service worker may not be active yet. Reload once.
+                    {error}, MSW service worker may not be active yet. Reload once.
                 </div>
             )}
             {/* Table.loading swaps the body for skeleton rows during the
-                fetch — far less disruptive than a backdrop spinner. */}
+                fetch, far less disruptive than a backdrop spinner. */}
             <Table
                 columns={COLUMNS}
                 rows={rows}
@@ -191,7 +191,7 @@ export const AsyncServerSide: Story = {
     parameters: {
         docs: {
             description: {
-                story: 'Server-side pagination with `GET /api/vessels` mocked by MSW (400 ms latency). If you see a fetch error, reload — the service worker registers asynchronously on first load.',
+                story: 'Server-side pagination with `GET /api/vessels` mocked by MSW (400 ms latency). If you see a fetch error, reload, the service worker registers asynchronously on first load.',
             },
         },
         msw: {

@@ -26,7 +26,7 @@ export interface DateRangePickerProps {
     placeholder?: string
     /** Label/control orientation: 'horizontal' or 'vertical'. */
     layout?: 'horizontal' | 'vertical'
-    /** Size preset — controls height, padding, and font. Default 'md'. */
+    /** Size preset, controls height, padding, and font. Default 'md'. */
     size?: FieldSize
     /** Earliest selectable date. */
     min?: Date
@@ -40,7 +40,7 @@ export interface DateRangePickerProps {
     format?: (d: Date) => string
     /** Disable interaction and dim the control. */
     disabled?: boolean
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode

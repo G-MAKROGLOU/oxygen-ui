@@ -1,9 +1,9 @@
 /**
- * oxygen-ui Form API — a zero-dependency, native form layer.
+ * oxygen-ui Form API, a zero-dependency, native form layer.
  *
  * - `useForm()` creates a store; `<Form form={...}>` owns submission.
  * - Bind any input by spreading `form.field(name)` (or the kind-specific
- *   variants) — the input only receives its value + error, never validates
+ *   variants), the input only receives its value + error, never validates
  *   itself.
  * - Validation is native (required / pattern / min / max / length + custom
  *   sync/async `validate`), runs onChange + onSubmit, and lives at form level.

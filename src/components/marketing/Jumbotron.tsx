@@ -11,7 +11,7 @@ export interface JumbotronProps {
     title: React.ReactNode
     /** Supporting paragraph under the title. */
     description?: React.ReactNode
-    /** Call-to-action row — typically one or two `Button`s. */
+    /** Call-to-action row, typically one or two `Button`s. */
     actions?: React.ReactNode
     /** Media (image / screenshot / illustration). Shown beside the copy in
      *  `split`, below it in `centered`. */
@@ -28,7 +28,7 @@ const GRADIENT = 'radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in oklab,
 
 /**
  * A landing-page hero ("jumbotron"): an eyebrow, a large headline, a supporting
- * line, and call-to-action buttons — optionally paired with media. `centered`
+ * line, and call-to-action buttons, optionally paired with media. `centered`
  * stacks everything centred; `split` puts the copy next to the media and stacks
  * on small screens. Pair with FeatureGrid / PricingPlans / Testimonials to
  * compose a full page.

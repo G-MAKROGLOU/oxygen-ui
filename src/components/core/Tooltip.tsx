@@ -61,14 +61,14 @@ export default function Tooltip({
                         className={cx(
                             // Layout + typography
                             'pointer-events-none z-[500000] max-w-[220px] px-2.5 py-1.5',
-                            // Inverted surface: dark on light, light on dark — both readable
+                            // Inverted surface: dark on light, light on dark, both readable
                             'bg-foreground text-background',
                             'text-xs font-medium leading-snug',
                             // Shape + shadow
                             'rounded-md shadow-md',
-                            // Out animation (always the same — just fade)
+                            // Out animation (always the same, just fade)
                             'data-[state=closed]:animate-tooltip-out',
-                            // In animation — direction-aware
+                            // In animation, direction-aware
                             ANIMATION[placement],
                             className,
                         )}

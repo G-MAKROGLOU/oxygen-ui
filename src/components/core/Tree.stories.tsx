@@ -97,7 +97,7 @@ export const PartiallyExpanded: Story = {
 }
 
 // Mirrors the deepest real-world structure (7 levels:
-// Vessels → group → fleet → class → vessel → mode → report-type) —
+// Vessels → group → fleet → class → vessel → mode → report-type) -
 // regression story for the additive-indentation clipping bug.
 const DEEP_NODES: TreeNode[] = [
     {

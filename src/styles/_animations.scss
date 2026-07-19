@@ -17,7 +17,7 @@
     to   { height: 0; opacity: 0; }
 }
 
-// ── Tooltip — direction-aware (nudge toward the trigger) ─────────────────────
+// ── Tooltip, direction-aware (nudge toward the trigger) ─────────────────────
 @keyframes tooltip-in-bottom {
     from { opacity: 0; transform: translateY(-4px) scale(0.97); }
     to   { opacity: 1; transform: translateY(0)    scale(1);    }
@@ -51,7 +51,7 @@
 }
 
 // ── Skeleton shimmer ──────────────────────────────────────────────────────────
-// Transform-based — translates a semi-transparent "sheen" overlay across the
+// Transform-based, translates a semi-transparent "sheen" overlay across the
 // placeholder. Transform is composited (no repaint) so this is GPU-friendly,
 // scales to long lists of skeletons without jank.
 @keyframes shimmer {
@@ -71,7 +71,7 @@
 
 // Skeleton placeholder sweep. The moving band is mixed from `--color-foreground`
 // so it stays visible in BOTH themes (a translucent dark band on light
-// surfaces, a translucent light band on dark surfaces) — unlike a fixed white
+// surfaces, a translucent light band on dark surfaces), unlike a fixed white
 // sheen, which vanishes on a light base. The element supplies its own
 // background utility (e.g. `bg-surface-raised`) so consumers can override it.
 .oxy-skeleton {
@@ -142,7 +142,7 @@
     to   { transform: scaleX(0); }
 }
 
-// ── LoadingSpinner — breathing centre dot ────────────────────────────────────
+// ── LoadingSpinner, breathing centre dot ────────────────────────────────────
 // Scales and pulses opacity simultaneously so the dot reads as "alive"
 // without rotating. Pairs with two concentric rings rotating in opposite
 // directions to give the loader its enterprise-poised character.

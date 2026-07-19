@@ -39,7 +39,7 @@ export interface SegmentedControlProps {
     name?: string
     /** Show a required asterisk after the label. */
     required?: boolean
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Accessible label for the control. */
     'aria-label'?: string

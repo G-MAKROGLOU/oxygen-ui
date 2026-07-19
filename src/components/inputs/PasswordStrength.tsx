@@ -15,7 +15,7 @@ export interface PasswordStrengthResult {
     label: string
 }
 
-/** The default requirement set — also drives the optional checklist. */
+/** The default requirement set, also drives the optional checklist. */
 export const defaultPasswordRules: PasswordRule[] = [
     { label: 'At least 8 characters', test: (p) => p.length >= 8 },
     { label: 'A lowercase letter', test: (p) => /[a-z]/.test(p) },
@@ -96,7 +96,7 @@ const Tick = ({ ok }: { ok: boolean }) => (
 
 /**
  * Password strength meter + (optional) requirement checklist + (optional)
- * confirm-password matcher. Controlled — feed it the current password `value`
+ * confirm-password matcher. Controlled, feed it the current password `value`
  * (and `confirmValue` for the matcher). Scoring is a dependency-free heuristic;
  * override with `scorer`.
  *

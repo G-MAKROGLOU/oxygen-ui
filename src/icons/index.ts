@@ -1,5 +1,5 @@
 /**
- * `@geomak/ui/icons` — tree-shakeable named icon exports.
+ * `@geomak/ui/icons`, tree-shakeable named icon exports.
  *
  * Deep-import individual icons so your bundler only ships what you use:
  *

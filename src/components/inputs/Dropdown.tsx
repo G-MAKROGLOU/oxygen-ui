@@ -12,7 +12,7 @@ export interface DropdownItem {
 }
 
 /**
- * Item key type — DOM-friendly subset of `React.Key` (no bigint, since UI
+ * Item key type, DOM-friendly subset of `React.Key` (no bigint, since UI
  * keys are always strings or numbers in practice).
  */
 export type DropdownKey = string | number
@@ -36,7 +36,7 @@ export interface DropdownProps {
     value?: DropdownValue
     /** Fires when the value changes. */
     onChange?: (e: { target: { value: DropdownValue; id?: string; name?: string } }) => void
-    /** Blur handler — useful for touched/validation timing. */
+    /** Blur handler, useful for touched/validation timing. */
     onBlur?: React.FocusEventHandler
     /** Disable interaction and dim the control. */
     disabled?: boolean
@@ -46,7 +46,7 @@ export interface DropdownProps {
     helperText?: React.ReactNode
     /** Show a required asterisk after the label. */
     required?: boolean
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Inline style applied to the control shell. */
     style?: React.CSSProperties
@@ -73,7 +73,7 @@ export interface DropdownProps {
 /**
  * Single-line tag row for multi-select values. Shows as many removable tag
  * chips as fit on one line, then collapses the remainder into a "+N more"
- * chip — so the trigger never grows in width OR height as the selection
+ * chip, so the trigger never grows in width OR height as the selection
  * changes.
  *
  * Sizing is measured off a hidden, off-layout copy of the full tag set (so the
@@ -149,7 +149,7 @@ function MultiTagRow({
 
     return (
         <div ref={wrapRef} className="relative flex-1 min-w-0 flex flex-nowrap items-center gap-1.5 overflow-hidden">
-            {/* Hidden measuring copy — full set + a sample more chip. Off-layout
+            {/* Hidden measuring copy, full set + a sample more chip. Off-layout
                 so it never affects the trigger size, but measurable. */}
             <div
                 ref={measureRef}
@@ -308,7 +308,7 @@ export default function Dropdown({
                             aria-invalid={hasError || undefined}
                             aria-describedby={hasError ? errorId : undefined}
                             // A definite width keeps the trigger from shrink-
-                            // wrapping to its tags — the selection count changes
+                            // wrapping to its tags, the selection count changes
                             // what's shown, never the box size. Override via
                             // `style={{ width: '100%' }}` to fill a container.
                             style={{ width: 240, ...style }}
@@ -316,7 +316,7 @@ export default function Dropdown({
                             tabIndex={disabled ? -1 : 0}
                             onKeyDown={(e) => {
                                 if (disabled) return
-                                // Open on Enter, Space, ArrowDown, ArrowUp — the
+                                // Open on Enter, Space, ArrowDown, ArrowUp, the
                                 // canonical combobox activation keys per WAI-ARIA.
                                 if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                                     e.preventDefault()
@@ -324,7 +324,7 @@ export default function Dropdown({
                                 }
                             }}
                         >
-                            {/* Selected value(s) — rendered as removable tags.
+                            {/* Selected value(s), rendered as removable tags.
                                 Clicking a tag's × deselects (multi) or clears
                                 (single). The × calls stopPropagation so it
                                 doesn't toggle the popover. Multi-select collapses
@@ -350,7 +350,7 @@ export default function Dropdown({
                                 </div>
                             )}
 
-                            {/* Chevron — currentColor follows trigger text */}
+                            {/* Chevron, currentColor follows trigger text */}
                             <div className={`flex-shrink-0 text-foreground-muted transition-transform duration-200 ${open ? 'rotate-180' : 'rotate-0'}`} aria-hidden="true">
                                 <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -411,7 +411,7 @@ export default function Dropdown({
                                             {item.label}
                                         </div>
                                         {isSelected(item.key) && (
-                                            // currentColor — checkmark follows
+                                            // currentColor, checkmark follows
                                             // the item's text colour, which
                                             // flips automatically on hover.
                                             <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">

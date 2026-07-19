@@ -1,11 +1,11 @@
 /**
- * @geomak/ui — Design Tokens
+ * @geomak/ui, Design Tokens
  *
  * Three layers, each useful in a different context:
  *
- *  1. `palette`        — raw brand hex values from palette.json
- *  2. `semanticTokens` — resolved hex / px values keyed by light / dark / shared
- *  3. `vars`           — CSS custom-property reference strings for inline styles / CSS-in-JS
+ *  1. `palette`       , raw brand hex values from palette.json
+ *  2. `semanticTokens`, resolved hex / px values keyed by light / dark / shared
+ *  3. `vars`          , CSS custom-property reference strings for inline styles / CSS-in-JS
  *
  * CSS custom properties are injected by: import '@geomak/ui/styles'
  * Tailwind utilities map to these vars via the bundled tailwind preset.
@@ -72,7 +72,7 @@ export const semanticTokens = {
 
     // Mode-independent tokens
     shared: {
-        // Radius — enterprise scale
+        // Radius, enterprise scale
         'radius-sm':    '2px',
         'radius-md':    '5px',
         'radius-lg':    '7px',
@@ -141,7 +141,7 @@ export type SemanticSharedKey      = keyof typeof semanticTokens.shared
 
 /**
  * CSS custom-property reference strings.
- * Use in inline styles or CSS-in-JS — values respond to light/dark automatically.
+ * Use in inline styles or CSS-in-JS, values respond to light/dark automatically.
  *
  * @example
  * // Inline style

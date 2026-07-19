@@ -29,7 +29,7 @@ export function useMediaQuery(query: string): boolean {
     return matches
 }
 
-// Min-width breakpoints — kept in sync with tailwind.config.cjs `screens`.
+// Min-width breakpoints, kept in sync with tailwind.config.cjs `screens`.
 const BREAKPOINTS = { sm: 480, md: 768, lg: 976, xl: 1440 } as const
 export type Breakpoint = keyof typeof BREAKPOINTS
 

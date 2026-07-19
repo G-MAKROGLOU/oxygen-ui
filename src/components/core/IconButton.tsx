@@ -23,7 +23,7 @@ export interface IconButtonProps {
  * Square icon-only button.
  *
  * Uses `React.forwardRef` so it works as a Radix `asChild` trigger (Popover,
- * PopConfirm, Tooltip, etc.) — those need a DOM ref to anchor floating content.
+ * PopConfirm, Tooltip, etc.), those need a DOM ref to anchor floating content.
  *
  * @example
  * <IconButton icon={<Icon.Search />} onClick={doSearch} />
@@ -48,7 +48,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(function
     const colorScheme = useMemo(() => {
         if (type === 'primary') {
             // Single semantic palette handles both light and dark modes via
-            // CSS vars on the consumer's ThemeProvider — no `dark:` variants
+            // CSS vars on the consumer's ThemeProvider, no `dark:` variants
             // needed.
             return 'bg-accent text-accent-fg hover:bg-accent-hover'
         }

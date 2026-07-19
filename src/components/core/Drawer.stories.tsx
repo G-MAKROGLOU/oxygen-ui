@@ -59,7 +59,7 @@ export const WithoutFooter: Story = {
     args: {
         title: 'Filters',
         hasFooter: false,
-        children: <p className="text-sm text-foreground-secondary">No footer — dismiss with the close button or Escape.</p>,
+        children: <p className="text-sm text-foreground-secondary">No footer, dismiss with the close button or Escape.</p>,
     },
 }
 

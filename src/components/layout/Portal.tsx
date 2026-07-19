@@ -15,8 +15,8 @@ export interface PortalProps {
 }
 
 /**
- * SSR-safe DOM relocator. Renders `children` at a detached DOM node — by
- * default `document.body` — so that any `position: fixed` descendant resolves
+ * SSR-safe DOM relocator. Renders `children` at a detached DOM node, by
+ * default `document.body`, so that any `position: fixed` descendant resolves
  * against the real viewport, never against a transformed, filtered, or
  * contained ancestor.
  *
@@ -25,7 +25,7 @@ export interface PortalProps {
  * Per the CSS spec, **any ancestor with `transform`, `filter`, `perspective`,
  * `will-change`, or `contain: layout|paint|strict` creates a new containing
  * block for `position: fixed` descendants**. The fixed element then resolves
- * its coordinates against that ancestor, not the viewport — silently breaking
+ * its coordinates against that ancestor, not the viewport, silently breaking
  * full-screen overlays, toast viewports, mobile drawers, and loading screens
  * whenever a consumer wraps the component in:
  *
@@ -42,7 +42,7 @@ export interface PortalProps {
  * ## When to use it
  *
  * Wrap any element that uses `position: fixed` to anchor itself to the
- * viewport — full-screen overlays, toast viewports, drawers, loading screens,
+ * viewport, full-screen overlays, toast viewports, drawers, loading screens,
  * command palettes, lightboxes.
  *
  * If you're already using a Radix primitive, prefer its built-in `*.Portal`
@@ -50,12 +50,12 @@ export interface PortalProps {
  *
  * ## When NOT to use it
  *
- * - For inline elements that already flow naturally with the document — Portal
+ * - For inline elements that already flow naturally with the document, Portal
  *   is for **fixed/absolute escape**, not general layout.
- * - For SSR-critical content that must appear before hydration — Portal renders
+ * - For SSR-critical content that must appear before hydration, Portal renders
  *   `null` on the server and the first client render.
  * - For accessibility-critical content that depends on DOM proximity (form
- *   labels, ARIA `aria-controls` targets) — escaping the tree can break focus
+ *   labels, ARIA `aria-controls` targets), escaping the tree can break focus
  *   order and assistive-tech navigation.
  *
  * ## SSR / hydration
@@ -63,7 +63,7 @@ export interface PortalProps {
  * `document.body` isn't available during SSR or the first client render.
  * `Portal` renders `null` until `useEffect` resolves the target post-mount,
  * then re-renders with the portal in place. Content that needs to appear
- * immediately on mount paints one frame later — acceptable for overlays
+ * immediately on mount paints one frame later, acceptable for overlays
  * (the trigger interaction is what kicks them off anyway).
  *
  * @example Full-screen loading overlay

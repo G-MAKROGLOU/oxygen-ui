@@ -73,7 +73,7 @@ describe('DatePicker', () => {
         const onSelect = vi.fn()
         render(<Harness onSelect={onSelect} initial={new Date(2026, 4, 15)} />)
         fireEvent.click(screen.getByText('2026-05-15')) // open via existing value (formatted)
-        // Find a specific day cell — use aria-label which is the ISO date
+        // Find a specific day cell, use aria-label which is the ISO date
         const cell = screen.getByLabelText('2026-05-20')
         fireEvent.click(cell)
         expect(onSelect).toHaveBeenCalledOnce()

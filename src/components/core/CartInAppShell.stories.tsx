@@ -24,13 +24,13 @@ const PRODUCTS: CartItemInput[] = [
 
 const fmt = (v: number) => `$${v.toFixed(2)}`
 
-/** Product catalogue — every "Add" button drives the shared cart store. */
+/** Product catalogue, every "Add" button drives the shared cart store. */
 function Catalogue() {
     const { addToCart, isInCart } = useCart()
     return (
         <div>
             <h1 className="mb-1 text-xl font-semibold tracking-tight text-foreground">Marine equipment</h1>
-            <p className="mb-6 text-sm text-foreground-muted">Add items — the TopBar badge and cart drawer stay in sync.</p>
+            <p className="mb-6 text-sm text-foreground-muted">Add items, the TopBar badge and cart drawer stay in sync.</p>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {PRODUCTS.map((p) => (
                     <div key={p.id} className="flex flex-col rounded-xl border border-border bg-surface p-4">

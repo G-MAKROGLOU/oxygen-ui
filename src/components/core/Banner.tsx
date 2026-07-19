@@ -5,7 +5,7 @@ import { cx } from '../../utils/cx'
 export type BannerTone = 'info' | 'success' | 'warning' | 'danger'
 
 export interface BannerProps {
-    /** Semantic tone — drives the tint, icon colour, and default icon. */
+    /** Semantic tone, drives the tint, icon colour, and default icon. */
     tone: BannerTone
     /** Banner body. */
     children: React.ReactNode
@@ -19,7 +19,7 @@ export interface BannerProps {
 
 // Low-opacity tint per tone, with the solid tone colour reserved for the icon.
 // `color-mix` is used rather than a `/opacity` modifier because the status
-// tokens are `var()`-valued — Tailwind's slash-opacity emits transparent CSS
+// tokens are `var()`-valued, Tailwind's slash-opacity emits transparent CSS
 // for those, whereas color-mix tints correctly in both light and dark.
 const TONE_BG: Record<BannerTone, string> = {
     info:    'bg-[color-mix(in_srgb,var(--color-info)_20%,transparent)] border border-[color-mix(in_srgb,var(--color-info)_30%,transparent)]',
@@ -55,7 +55,7 @@ const DEFAULT_ICON: Record<BannerTone, React.ReactNode> = {
  * </Banner>
  *
  * <Banner tone="danger" onDismiss={() => setShown(false)}>
- *   Sync failed — changes were not saved.
+ *   Sync failed, changes were not saved.
  * </Banner>
  * ```
  */

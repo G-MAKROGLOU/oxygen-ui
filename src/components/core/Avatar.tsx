@@ -8,13 +8,13 @@ export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy'
 export interface AvatarProps {
     /** Image URL. If missing or fails to load, `fallback` renders instead. */
     src?: string
-    /** Alt text — required when `src` is provided for screen readers. */
+    /** Alt text, required when `src` is provided for screen readers. */
     alt?: string
     /**
      * Fallback rendered when the image is unavailable. Pass either:
-     * - a string (e.g. user initials like "JD") — rendered with semi-bold weight
+     * - a string (e.g. user initials like "JD"), rendered with semi-bold weight
      * - any ReactNode (icon, emoji)
-     * - omit entirely — a generic "person" silhouette is used
+     * - omit entirely, a generic "person" silhouette is used
      */
     fallback?: React.ReactNode
     /** Size preset. Default `'md'`. */
@@ -63,7 +63,7 @@ const STATUS_CLASS: Record<AvatarStatus, string> = {
  * 2. Two-character initials extracted from `alt` if `alt` is provided
  * 3. A generic "person" silhouette SVG
  *
- * **Status dot** is an optional presence indicator in the bottom-right —
+ * **Status dot** is an optional presence indicator in the bottom-right -
  * online (green), away (amber), busy (red), offline (grey).
  *
  * @example Basic with image

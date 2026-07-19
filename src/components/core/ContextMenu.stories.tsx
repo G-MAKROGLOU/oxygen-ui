@@ -95,7 +95,7 @@ export const InsideACard: Story = {
         docs: {
             description: {
                 story:
-                    'The entire React subtree under `<ContextMenu>` becomes the right-click target — wrap a card, a row, an image, anything.',
+                    'The entire React subtree under `<ContextMenu>` becomes the right-click target, wrap a card, a row, an image, anything.',
             },
         },
     },

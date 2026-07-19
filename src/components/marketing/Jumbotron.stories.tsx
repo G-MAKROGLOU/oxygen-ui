@@ -30,7 +30,7 @@ export const Centered: Story = {
         background: 'gradient',
         eyebrow: <Badge tone="accent" variant="soft">New · v6</Badge>,
         title: 'Ship maritime operations faster',
-        description: 'One portal for compliance, performance and voyage data — built for the teams that keep fleets moving.',
+        description: 'One portal for compliance, performance and voyage data, built for the teams that keep fleets moving.',
         actions: CTAs,
     },
 }

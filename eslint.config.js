@@ -40,7 +40,7 @@ export default [
             'react-hooks/exhaustive-deps': 'warn',
 
             // ── General ───────────────────────────────────────────────────
-            // Disable no-undef — TypeScript catches undefined references;
+            // Disable no-undef, TypeScript catches undefined references;
             // DOM types (HTMLDivElement, MouseEvent, …) are in lib: ["DOM"]
             // but not in ESLint's scope analysis.
             'no-undef': 'off',
@@ -49,7 +49,7 @@ export default [
 
             // ── Design-system conventions ─────────────────────────────────
             // Prefer the `cx()` helper over the [a, b].filter(Boolean).join(' ')
-            // idiom for joining class names — clearer and allocation-light.
+            // idiom for joining class names, clearer and allocation-light.
             'no-restricted-syntax': [
                 'error',
                 {

@@ -42,7 +42,7 @@ export const SelfManaging: Story = {
         return (
             <div className="p-10">
                 <p className="mb-4 max-w-md text-sm text-foreground-secondary">
-                    This instance persists the choice under <code>{KEY}</code>. Accept/reject, then refresh — it stays dismissed. Use the button to clear and show it again.
+                    This instance persists the choice under <code>{KEY}</code>. Accept/reject, then refresh, it stays dismissed. Use the button to clear and show it again.
                 </p>
                 <Button variant="outline" content="Reset consent" onClick={() => { window.localStorage.removeItem(KEY); force((n) => n + 1) }} />
                 <CookieConsent storageKey={KEY} declineLabel="Reject" learnMoreHref="#" />

@@ -6,7 +6,7 @@ import { DialogContainerContext } from './dialogContainerContext'
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
-/** Named max-width scale (px) — keeps modal widths consistent across the app. */
+/** Named max-width scale (px), keeps modal widths consistent across the app. */
 const SIZE_MAP: Record<ModalSize, number | string> = {
     sm:   400,
     md:   600,
@@ -22,7 +22,7 @@ export interface ModalProps {
      */
     size?: ModalSize
     /**
-     * Explicit max-width escape hatch — a number (px) or any CSS length
+     * Explicit max-width escape hatch, a number (px) or any CSS length
      * (e.g. `'48rem'`). Overrides `size` when set.
      *
      * Height is always content-driven (max 90 dvh): modals grow with their
@@ -142,7 +142,7 @@ export default function Modal({
                                     </Dialog.Close>
                                 </div>
 
-                                {/* Body — render children unconditionally so they
+                                {/* Body, render children unconditionally so they
                                     stay mounted through Radix's exit animation.
                                     Previously `{open && children}` unmounted
                                     children the moment open flipped to false,

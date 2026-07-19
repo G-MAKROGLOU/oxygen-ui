@@ -13,7 +13,7 @@ const makeRows = (n: number): Array<Record<string, CellValue>> =>
     Array.from({ length: n }, (_, i) => ({ id: i, name: `Row ${i}`, score: i * 2 }))
 
 describe('DataGrid', () => {
-    it('windows rows — does not mount the whole dataset', () => {
+    it('windows rows, does not mount the whole dataset', () => {
         render(<DataGrid columns={columns} rows={makeRows(5000)} height={400} />)
         const cells = screen.getAllByRole('gridcell')
         // Far fewer than 5000 × 3 cells are in the DOM.

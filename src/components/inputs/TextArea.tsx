@@ -6,7 +6,7 @@ export interface TextAreaProps {
     value?: string
     /** Fires when the value changes. */
     onChange?: React.ChangeEventHandler<HTMLTextAreaElement>
-    /** Blur handler — useful for touched/validation timing. */
+    /** Blur handler, useful for touched/validation timing. */
     onBlur?: React.FocusEventHandler<HTMLTextAreaElement>
     /** Disable interaction and dim the control. */
     disabled?: boolean
@@ -20,7 +20,7 @@ export interface TextAreaProps {
     name?: string
     /** Label/control orientation. Default `'vertical'`. */
     layout?: 'horizontal' | 'vertical'
-    /** Size preset — controls text size + padding. Default `'md'`. */
+    /** Size preset, controls text size + padding. Default `'md'`. */
     size?: FieldSize
     /** Visible rows when not auto-growing. Default `4`. */
     rows?: number
@@ -37,7 +37,7 @@ export interface TextAreaProps {
     showCount?: boolean
     /** CSS `resize` behaviour. Default `'vertical'` (or `'none'` when autoGrow). */
     resize?: 'none' | 'vertical' | 'horizontal' | 'both'
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode

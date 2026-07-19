@@ -10,11 +10,11 @@ import { SkeletonBox } from './Skeleton'
 /**
  * Column descriptor for the Table.
  *
- * The generic `T` is the shape of a row — `keyBind` must be one of T's
+ * The generic `T` is the shape of a row, `keyBind` must be one of T's
  * string-keyed properties, and `component(cellValue, row)` receives the
  * matching value with full type inference. When used without a generic
  * (`TableColumn[]`), `T` falls back to `Record<string, any>` for backwards
- * compatibility — narrower typing is preferred whenever possible:
+ * compatibility, narrower typing is preferred whenever possible:
  *
  * ```ts
  * type Vessel = { id: number; name: string; status: 'At Sea' | 'In Port' }
@@ -31,7 +31,7 @@ export interface TableColumn<T extends Record<string, any> = Record<string, any>
     keyBind: keyof T & string
     /** Custom cell renderer. Receives the cell value and the full row. */
     component?: (cellValue: T[keyof T], row: T) => React.ReactNode
-    /** Explicit column width (CSS length or px number). Optional — defaults to auto. */
+    /** Explicit column width (CSS length or px number). Optional, defaults to auto. */
     width?: string | number
     /** Text alignment for both header and cells. Defaults to `'center'`. */
     align?: 'left' | 'center' | 'right'
@@ -75,11 +75,11 @@ export interface SearchOptions<T extends Record<string, any> = Record<string, an
     matchMode?: 'contains' | 'startsWith' | 'equals'
     /** Case-sensitive matching. Default `false`. */
     caseSensitive?: boolean
-    /** Debounce the filter (ms) — useful for large lists. Default `0`. */
+    /** Debounce the filter (ms), useful for large lists. Default `0`. */
     debounceMs?: number
     /** Input placeholder. */
     placeholder?: string
-    /** Full custom matcher — overrides keys / matchMode / caseSensitive. */
+    /** Full custom matcher, overrides keys / matchMode / caseSensitive. */
     predicate?: (row: T, term: string) => boolean
 }
 
@@ -116,7 +116,7 @@ export interface TableProps<T extends Record<string, any> = Record<string, any>>
     /**
      * Returns a stable key for each row, used for React reconciliation AND
      * for tracking expanded state when `expandRow.enabled` is true.
-     * Defaults to the row index — fine for static lists, but pass an
+     * Defaults to the row index, fine for static lists, but pass an
      * explicit getter (e.g. `(row) => row.id`) if rows can be reordered or
      * filtered while expand state should persist.
      */
@@ -181,7 +181,7 @@ function createDatasets<T>(rows: T[], perPage: number | null): T[][] {
 }
 
 /**
- * Default row-key strategy — index-based. Stable across renders for static
+ * Default row-key strategy, index-based. Stable across renders for static
  * lists; pass an explicit `getRowKey` for any list that mutates.
  */
 const defaultGetRowKey = (_row: unknown, index: number): React.Key => index
@@ -191,7 +191,7 @@ const cellAlign = (align: TableColumn['align']) =>
 
 /** ─────────────────── sub-components ─────────────────── */
 
-/** Comparator for client-side sorting — numeric-aware, null-safe. */
+/** Comparator for client-side sorting, numeric-aware, null-safe. */
 function compareValues(a: unknown, b: unknown): number {
     if (a == null && b == null) return 0
     if (a == null) return -1
@@ -261,7 +261,7 @@ function TableHeader<T extends Record<string, any>>({
     )
 }
 
-// Chevron (down when collapsed) — rotates to point up when the row expands, so
+// Chevron (down when collapsed), rotates to point up when the row expands, so
 // the open/closed state is actually visible (the old plus-in-circle looked
 // identical rotated). Override per-row via expandRow.expandIcon / collapseIcon.
 const DefaultExpandIcon = (
@@ -282,7 +282,7 @@ const DefaultExpandIcon = (
  * An inline-editable cell: shows the value (or `column.component`) until
  * clicked, then a text input (or a custom `column.editor`). Enter / blur
  * commits via `onCellEdit`; Escape cancels. The data stays controlled by the
- * consumer — update your rows in the `onCellEdit` handler.
+ * consumer, update your rows in the `onCellEdit` handler.
  */
 function EditableCell<T extends Record<string, any>>({
     col,
@@ -304,7 +304,7 @@ function EditableCell<T extends Record<string, any>>({
     }
     const cancel = () => setEditing(false)
 
-    // Custom editors (col.editor) get no native blur/Escape — and components
+    // Custom editors (col.editor) get no native blur/Escape, and components
     // like Temporal/Dropdown open portaled popups so blur never bubbles up.
     // Dismiss the editor on outside click or Escape while editing.
     useEffect(() => {
@@ -313,7 +313,7 @@ function EditableCell<T extends Record<string, any>>({
             const target = e.target as Node
             if (editRef.current && editRef.current.contains(target)) return
             // Editors like Temporal/Dropdown open Radix popups portaled to
-            // <body> — clicks there are outside editRef but still part of the
+            // <body>, clicks there are outside editRef but still part of the
             // edit. Treat them as inside, or selecting a value would unmount the
             // editor before it commits.
             if (target instanceof Element && target.closest('[data-radix-popper-content-wrapper],[data-radix-portal]')) return
@@ -372,7 +372,7 @@ function TableBody<T extends Record<string, any>>({
     getRowKey: (row: T, index: number) => React.Key
     onCellEdit?: (info: CellEditInfo<T>) => void
 }) {
-    // Expand state is keyed by the row's stable key — survives reorder/filter
+    // Expand state is keyed by the row's stable key, survives reorder/filter
     // as long as `getRowKey` returns the same value for the same row.
     const [expanded, setExpanded] = useState<Set<React.Key>>(() => new Set())
     const reduced = useReducedMotion()
@@ -483,7 +483,7 @@ function Pagination({
     onPageChange: (page: number) => void
     maxPage: number
     options: PaginationOptions
-    /** The table's authoritative rows-per-page — shared by all pagers. */
+    /** The table's authoritative rows-per-page, shared by all pagers. */
     perPage: number
     onPerPageChange: (perPage: number) => void
 }) {
@@ -493,13 +493,13 @@ function Pagination({
     const currentOpt = picker.find((o) => o.value === perPage || o.label === perPage)
     const currentPerPageLabel = currentOpt?.label ?? currentOpt?.value ?? perPage ?? ''
 
-    // Square, flat, neutral icon buttons — same primitive/height/border as the
+    // Square, flat, neutral icon buttons, same primitive/height/border as the
     // per-page MenuButton so the whole strip reads as one cohesive group.
     // Match the input focus style (border turns accent, no ring band) so the
     // controls don't flash a heavy halo.
     const FOCUS = 'focus-visible:!ring-0 focus-visible:!border-accent'
 
-    // Square, flat, neutral icon buttons — same primitive/height/border as the
+    // Square, flat, neutral icon buttons, same primitive/height/border as the
     // per-page MenuButton so the whole strip reads as one cohesive group.
     const navBtn = (icon: React.ReactNode, disabled: boolean, onClick: () => void, title: string) => (
         <Button variant="outline" size="sm" disabled={disabled} onClick={onClick} icon={icon} className={`w-7 !px-0 ${FOCUS}`} aria-label={title} title={title} />
@@ -643,7 +643,7 @@ export default function Table<T extends Record<string, any> = Record<string, any
     }, [searchTerm, debounceMs])
     const term = debounceMs > 0 ? debouncedTerm : searchTerm
 
-    // Client-side filter — memoised so the scan runs once per term change, not
+    // Client-side filter, memoised so the scan runs once per term change, not
     // per render. Server-side short-circuits (the consumer's API is the filter).
     const filteredRows = useMemo(() => {
         if (isServerSide || !term) return rows
@@ -661,7 +661,7 @@ export default function Table<T extends Record<string, any> = Record<string, any
     }, [rows, term, isServerSide, search?.predicate, search?.caseSensitive, search?.matchMode, search?.keys])
 
     // Sorted view of the filtered rows (client-side). Server-side sorting is
-    // delegated to the consumer via onSortChange — the page data is untouched.
+    // delegated to the consumer via onSortChange, the page data is untouched.
     const sortedRows = useMemo(() => {
         if (isServerSide || !sortState) return filteredRows
         const col = columns.find((c) => c.keyBind === sortState.key)
@@ -671,7 +671,7 @@ export default function Table<T extends Record<string, any> = Record<string, any
         return out
     }, [filteredRows, sortState, isServerSide, columns])
 
-    // Pagination buckets — derived. Re-bucketed when the sorted set or page size changes.
+    // Pagination buckets, derived. Re-bucketed when the sorted set or page size changes.
     const datasets = useMemo(() => {
         if (isServerSide) return [rows]
         return createDatasets(sortedRows, pagination.enabled ? perPage : null)
@@ -759,7 +759,7 @@ export default function Table<T extends Record<string, any> = Record<string, any
                 </div>
             )}
             <div>{header}</div>
-            {/* Horizontal scroll wrapper — enables swipe-scroll on narrow viewports
+            {/* Horizontal scroll wrapper, enables swipe-scroll on narrow viewports
                 without forcing the table itself to layout horizontally. */}
             <div className="overflow-x-auto rounded-lg">
                 <table className="w-full border-collapse" aria-busy={loading || undefined}>

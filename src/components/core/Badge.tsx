@@ -17,7 +17,7 @@ export interface BadgeProps {
     /** Optional leading icon (label mode). */
     icon?: React.ReactNode
     /**
-     * Indicator mode — a numeric counter. With `children` it overlays the
+     * Indicator mode, a numeric counter. With `children` it overlays the
      * top-right corner of the wrapped element; without, it renders inline.
      */
     count?: number
@@ -79,9 +79,9 @@ const SIZE: Record<BadgeSize, string> = {
 /**
  * A small status / count indicator. Three uses:
  *
- * 1. **Label pill** — `<Badge tone="success">Active</Badge>`.
- * 2. **Inline count** — `<Badge count={5} tone="error" />`.
- * 3. **Overlay** — wrap an element to anchor a count/dot to its top-right:
+ * 1. **Label pill**, `<Badge tone="success">Active</Badge>`.
+ * 2. **Inline count**, `<Badge count={5} tone="error" />`.
+ * 3. **Overlay**, wrap an element to anchor a count/dot to its top-right:
  *    `<Badge count={3} tone="error"><IconButton … /></Badge>`.
  *
  * @example

@@ -100,9 +100,9 @@ function CardMedia({ children, className = '' }: CardMediaProps) {
 export interface CardHeaderProps {
     title?: React.ReactNode
     subtitle?: React.ReactNode
-    /** Trailing slot — actions, menu, badge. */
+    /** Trailing slot, actions, menu, badge. */
     action?: React.ReactNode
-    /** Leading slot — avatar / icon. */
+    /** Leading slot, avatar / icon. */
     avatar?: React.ReactNode
     children?: React.ReactNode
     className?: string

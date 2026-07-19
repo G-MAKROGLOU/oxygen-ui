@@ -57,7 +57,7 @@ const SEARCH_DEBOUNCE = 220
 
 // pdf.js positions text-layer spans with inline left/top/transform but relies on
 // the viewer stylesheet for `position:absolute` (and transparency). The library
-// doesn't ship that CSS, so inject the minimal rules once — without them the
+// doesn't ship that CSS, so inject the minimal rules once, without them the
 // spans stack at the top-left and show through. Scoped to our own class.
 const TEXT_LAYER_STYLE_ID = 'oxygen-pdf-textlayer'
 const TEXT_LAYER_CSS = `

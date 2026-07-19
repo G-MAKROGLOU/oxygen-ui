@@ -38,7 +38,7 @@
 
 ### Features
 
-* add GenAI toolchain — MCP server, skills, and commands ([2b9a0a7](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2b9a0a7d2c4592de14962a03baf5c12d27a0aebf))
+* add GenAI toolchain, MCP server, skills, and commands ([2b9a0a7](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2b9a0a7d2c4592de14962a03baf5c12d27a0aebf))
 
 ## [7.17.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.17.0...v7.17.1) (2026-06-25)
 
@@ -46,7 +46,7 @@
 ### Bug Fixes
 
 * **Wizard:** add deps array to useLayoutEffect to satisfy react-hooks/exhaustive-deps ([f2d1874](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f2d1874f2d93d5217c0d599db9ec29b539e5ce24))
-* **Wizard:** clamp tooltip to viewport — auto-flip + final edge clamp ([e000f13](https://github.com/G-MAKROGLOU/oxygen-ui/commit/e000f130dcd333de7a13193c756c3b7019b582e5))
+* **Wizard:** clamp tooltip to viewport, auto-flip + final edge clamp ([e000f13](https://github.com/G-MAKROGLOU/oxygen-ui/commit/e000f130dcd333de7a13193c756c3b7019b582e5))
 * **Wizard:** move tooltipHeight state below open/activeIndex declarations ([20b36e1](https://github.com/G-MAKROGLOU/oxygen-ui/commit/20b36e1c8d518e9fd57e6a5470a4cfef548a3514))
 
 # [7.17.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.16.0...v7.17.0) (2026-06-24)
@@ -659,7 +659,7 @@ Drawer `isOpen` is now `open`; Accordion and Tabs `onValueChange` is now
 
 ### Bug Fixes
 
-* **megamenu:** panel no longer shrinks — drop shared viewport, self-size panels ([2871974](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2871974a20826a17a4e3a11746cd0f37b968bce0))
+* **megamenu:** panel no longer shrinks, drop shared viewport, self-size panels ([2871974](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2871974a20826a17a4e3a11746cd0f37b968bce0))
 
 # [6.2.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v6.1.0...v6.2.0) (2026-06-01)
 
@@ -680,12 +680,12 @@ Drawer `isOpen` is now `open`; Accordion and Tabs `onValueChange` is now
 
 ### Bug Fixes
 
-* **tabs:** unopinionated count badge — slate pill, near-white text ([9455d54](https://github.com/G-MAKROGLOU/oxygen-ui/commit/9455d54658075c9494a6de2c3eff149aa73ec27f)), closes [#2e4057](https://github.com/G-MAKROGLOU/oxygen-ui/issues/2e4057)
+* **tabs:** unopinionated count badge, slate pill, near-white text ([9455d54](https://github.com/G-MAKROGLOU/oxygen-ui/commit/9455d54658075c9494a6de2c3eff149aa73ec27f)), closes [#2e4057](https://github.com/G-MAKROGLOU/oxygen-ui/issues/2e4057)
 
 # [6.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.10.0...v6.0.0) (2026-05-30)
 
 
-* feat(tabs)!: redesign — compositional API, sliding cobalt marker, 3 variants ([7d0bf17](https://github.com/G-MAKROGLOU/oxygen-ui/commit/7d0bf17f1059e8df3ab03b5c1ee2868cc6d3f293)), closes [#0466c8](https://github.com/G-MAKROGLOU/oxygen-ui/issues/0466c8) [#d3dde8](https://github.com/G-MAKROGLOU/oxygen-ui/issues/d3dde8)
+* feat(tabs)!: redesign, compositional API, sliding cobalt marker, 3 variants ([7d0bf17](https://github.com/G-MAKROGLOU/oxygen-ui/commit/7d0bf17f1059e8df3ab03b5c1ee2868cc6d3f293)), closes [#0466c8](https://github.com/G-MAKROGLOU/oxygen-ui/issues/0466c8) [#d3dde8](https://github.com/G-MAKROGLOU/oxygen-ui/issues/d3dde8)
 
 
 ### BREAKING CHANGES
@@ -707,7 +707,7 @@ tabs (Framer layoutId, exponential ease-out, reduced-motion → instant).
   button) + trailing `Tabs.Add`.
 - Overflow: horizontal scroll with edge fade mask + prev/next chevrons that
   appear ONLY on the overflowing side. Adds the real `.hidden-scrollbar`
-  utility (was referenced but never defined — also fixes TimePicker columns).
+  utility (was referenced but never defined, also fixes TimePicker columns).
 - className/style passthrough; controlled/uncontrolled; lazy panels by default
   with `keepMounted` to preserve state.
 
@@ -716,7 +716,7 @@ tabs (Framer layoutId, exponential ease-out, reduced-motion → instant).
 
 ### Features
 
-* **config:** finish className passthrough — remaining components ([c8244c6](https://github.com/G-MAKROGLOU/oxygen-ui/commit/c8244c6c8743a89352cfd364951075d12416322a))
+* **config:** finish className passthrough, remaining components ([c8244c6](https://github.com/G-MAKROGLOU/oxygen-ui/commit/c8244c6c8743a89352cfd364951075d12416322a))
 
 # [5.9.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.8.0...v5.9.0) (2026-05-30)
 
@@ -730,7 +730,7 @@ tabs (Framer layoutId, exponential ease-out, reduced-motion → instant).
 
 ### Features
 
-* **forms:** CreditCardForm — unified card form on the Form API ([76e267b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/76e267b91da822a9e41cb91b4c652ee05bb9cd92))
+* **forms:** CreditCardForm, unified card form on the Form API ([76e267b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/76e267b91da822a9e41cb91b4c652ee05bb9cd92))
 
 ## [5.7.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.7.1...v5.7.2) (2026-05-30)
 
@@ -744,28 +744,28 @@ tabs (Framer layoutId, exponential ease-out, reduced-motion → instant).
 
 ### Bug Fixes
 
-* **radio:** clean label-left layout — dot beside label, description wraps under ([65dd906](https://github.com/G-MAKROGLOU/oxygen-ui/commit/65dd90636dfb6da0548c9266e8aac0ee580dcb22))
+* **radio:** clean label-left layout, dot beside label, description wraps under ([65dd906](https://github.com/G-MAKROGLOU/oxygen-ui/commit/65dd90636dfb6da0548c9266e8aac0ee580dcb22))
 
 # [5.7.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.6.0...v5.7.0) (2026-05-30)
 
 
 ### Features
 
-* **form:** zero-dependency Form API — useForm, <Form>, native validation, field arrays ([c42a8ad](https://github.com/G-MAKROGLOU/oxygen-ui/commit/c42a8ad0bdb197030677074532bd07e24ef096ae))
+* **form:** zero-dependency Form API, useForm, <Form>, native validation, field arrays ([c42a8ad](https://github.com/G-MAKROGLOU/oxygen-ui/commit/c42a8ad0bdb197030677074532bd07e24ef096ae))
 
 # [5.6.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.5.3...v5.6.0) (2026-05-30)
 
 
 ### Features
 
-* **inputs:** unified form-prop surface — helperText, Switch/Segmented labels, Dropdown overflow ([ab94019](https://github.com/G-MAKROGLOU/oxygen-ui/commit/ab940199b7eeafa1fc4ed9c3db28a3191a742a85))
+* **inputs:** unified form-prop surface, helperText, Switch/Segmented labels, Dropdown overflow ([ab94019](https://github.com/G-MAKROGLOU/oxygen-ui/commit/ab940199b7eeafa1fc4ed9c3db28a3191a742a85))
 
 ## [5.5.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.5.2...v5.5.3) (2026-05-29)
 
 
 ### Bug Fixes
 
-* **inputs:** final detail pass — OTP halo, Radio props, Dropdown chevron, SB controls ([de0297b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/de0297b9ad142e2a735b6839722063bf9b127da2))
+* **inputs:** final detail pass, OTP halo, Radio props, Dropdown chevron, SB controls ([de0297b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/de0297b9ad142e2a735b6839722063bf9b127da2))
 
 ## [5.5.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.5.1...v5.5.2) (2026-05-29)
 
@@ -779,21 +779,21 @@ tabs (Framer layoutId, exponential ease-out, reduced-motion → instant).
 
 ### Bug Fixes
 
-* **inputs:** review pass — unified focus, nowrap labels, removable tags, layout + geometry fixes ([3d51c33](https://github.com/G-MAKROGLOU/oxygen-ui/commit/3d51c3392866fffa055ea824488ccf323617522f))
+* **inputs:** review pass, unified focus, nowrap labels, removable tags, layout + geometry fixes ([3d51c33](https://github.com/G-MAKROGLOU/oxygen-ui/commit/3d51c3392866fffa055ea824488ccf323617522f))
 
 # [5.5.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.4.0...v5.5.0) (2026-05-29)
 
 
 ### Features
 
-* **inputs:** P1 batch — OTP, Rating, TimePicker, DateRangePicker, ColorPicker ([f1cfac2](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f1cfac2b8d0d210625de5203ef963a396fcd623b))
+* **inputs:** P1 batch, OTP, Rating, TimePicker, DateRangePicker, ColorPicker ([f1cfac2](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f1cfac2b8d0d210625de5203ef963a396fcd623b))
 
 # [5.4.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.3.0...v5.4.0) (2026-05-29)
 
 
 ### Features
 
-* **inputs:** P0 batch — TextArea, SegmentedControl, Slider, TagsInput ([3ca4e0f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/3ca4e0ff5e14c1199d0d0a5580a823e3cd98a233))
+* **inputs:** P0 batch, TextArea, SegmentedControl, Slider, TagsInput ([3ca4e0f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/3ca4e0ff5e14c1199d0d0a5580a823e3cd98a233))
 
 # [5.3.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.2.0...v5.3.0) (2026-05-29)
 
@@ -821,33 +821,33 @@ tabs (Framer layoutId, exponential ease-out, reduced-motion → instant).
 
 ### Bug Fixes
 
-* round 3 polish batch — focus styling, canvas overflow, shimmer, xs spinner, etc. ([d210411](https://github.com/G-MAKROGLOU/oxygen-ui/commit/d21041112939b972ec8cdf377de849704332633f))
+* round 3 polish batch, focus styling, canvas overflow, shimmer, xs spinner, etc. ([d210411](https://github.com/G-MAKROGLOU/oxygen-ui/commit/d21041112939b972ec8cdf377de849704332633f))
 
 ## [5.0.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.0.1...v5.0.2) (2026-05-28)
 
 
 ### Bug Fixes
 
-* **animations:** Notification + Wizard — visible enter/exit motion ([2abab65](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2abab655076eb42d88ad01ecd2ce40ca01a08217))
+* **animations:** Notification + Wizard, visible enter/exit motion ([2abab65](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2abab655076eb42d88ad01ecd2ce40ca01a08217))
 
 ## [5.0.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v5.0.0...v5.0.1) (2026-05-28)
 
 
 ### Bug Fixes
 
-* critical bug batch — LoadingSpinner colour, Switch text leak, NumberInput corners, TreeSelect focus ([0355df1](https://github.com/G-MAKROGLOU/oxygen-ui/commit/0355df181571b1d318d0866dfc867b04903570ca))
+* critical bug batch, LoadingSpinner colour, Switch text leak, NumberInput corners, TreeSelect focus ([0355df1](https://github.com/G-MAKROGLOU/oxygen-ui/commit/0355df181571b1d318d0866dfc867b04903570ca))
 
 # [5.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v4.0.0...v5.0.0) (2026-05-28)
 
 
-* feat(DatePicker)!: Phase 5e — keyboard-navigable grid calendar rewrite ([6653e2b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/6653e2be94ba9f02399ba9ebfc30105c692e8ab7))
+* feat(DatePicker)!: Phase 5e, keyboard-navigable grid calendar rewrite ([6653e2b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/6653e2be94ba9f02399ba9ebfc30105c692e8ab7))
 
 
 ### BREAKING CHANGES
 
 * `DatePicker.value` is no longer required (`Date` →
 `Date | null | undefined`). `disableBefore`/`disableAfter` are replaced
-by `min`/`max` (Date only — string accepted previously is gone).
+by `min`/`max` (Date only, string accepted previously is gone).
 `onChange` signature changed: the previous synthetic event shape
 `(e: { target: { value: Date, ... } }) => void` is replaced with
 `(date: Date | null) => void`. Inline migration:
@@ -865,7 +865,7 @@ Verified: typecheck, lint, 123/123 tests, library build, Storybook build.
 # [4.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v3.0.0...v4.0.0) (2026-05-28)
 
 
-* feat(TreeSelect)!: Phase 5d — actual hierarchical tree-select with keyboard nav ([e057618](https://github.com/G-MAKROGLOU/oxygen-ui/commit/e05761881d6e910a28ca2dccc8f2aa98d1b63833))
+* feat(TreeSelect)!: Phase 5d, actual hierarchical tree-select with keyboard nav ([e057618](https://github.com/G-MAKROGLOU/oxygen-ui/commit/e05761881d6e910a28ca2dccc8f2aa98d1b63833))
 
 
 ### BREAKING CHANGES
@@ -875,7 +875,7 @@ with optional `children`, not flat `TreeSelectItem[]`. The old
 type-alias `TreeSelectItem` was removed; rename it to `TreeSelectNode`
 in your imports. Flat consumers can pass an array with no `children`
 on any node and the component behaves like the previous single-select.
-The trigger is now a `<button>` not a `<div>` — any styles targeting
+The trigger is now a `<button>` not a `<div>`, any styles targeting
 the previous `div[role="combobox"]` will need to update the selector.
 
 Test count: 99 → 109 (+10).
@@ -886,7 +886,7 @@ Verified: typecheck, lint, 109/109 tests, library build.
 # [3.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v2.0.0...v3.0.0) (2026-05-28)
 
 
-* feat(Wizard)!: Phase 5a — SSR-safe portaled rewrite with focus trap ([130ea54](https://github.com/G-MAKROGLOU/oxygen-ui/commit/130ea54f2306425195480ce76b8f9472a6769694))
+* feat(Wizard)!: Phase 5a, SSR-safe portaled rewrite with focus trap ([130ea54](https://github.com/G-MAKROGLOU/oxygen-ui/commit/130ea54f2306425195480ce76b8f9472a6769694))
 
 
 ### BREAKING CHANGES
@@ -895,7 +895,7 @@ Verified: typecheck, lint, 109/109 tests, library build.
 replaced by `WizardStep.placement?: 'right' | 'left' | 'top' | 'bottom'`.
 The old values silently mapped to "right" and "centred over target"
 respectively; the new model is explicit and supports four sides.
-Consumers using `positioning` need to switch to `placement` — the
+Consumers using `positioning` need to switch to `placement`, the
 mapping is `'natural'` → `'right'` and `'center'` → `'bottom'` (closest
 visual equivalent). Also: the default `storageKey` changed from
 `'po_wizard'` to `'oxygen.wizard.completed'` so existing users get the
@@ -909,7 +909,7 @@ Verified: typecheck, lint, 99/99 tests, library build.
 # [2.0.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.9.0...v2.0.0) (2026-05-28)
 
 
-* feat(ContextMenu)!: Phase 5b — rebuild on @radix-ui/react-context-menu ([308c4d0](https://github.com/G-MAKROGLOU/oxygen-ui/commit/308c4d06dd492ec6171125dc00124b9c5931b171))
+* feat(ContextMenu)!: Phase 5b, rebuild on @radix-ui/react-context-menu ([308c4d0](https://github.com/G-MAKROGLOU/oxygen-ui/commit/308c4d06dd492ec6171125dc00124b9c5931b171))
 
 
 ### BREAKING CHANGES
@@ -949,7 +949,7 @@ Verified: typecheck, lint, 86/86 tests, library build.
 
 ### Features
 
-* **NumberInput:** Phase 5c — full rewrite with keyboard a11y + FP precision ([395742f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/395742fc17468d15c8ec3d961db443b499ebfe5b))
+* **NumberInput:** Phase 5c, full rewrite with keyboard a11y + FP precision ([395742f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/395742fc17468d15c8ec3d961db443b499ebfe5b))
 
 # [1.8.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.5...v1.8.0) (2026-05-28)
 
@@ -963,7 +963,7 @@ Verified: typecheck, lint, 86/86 tests, library build.
 
 ### Bug Fixes
 
-* **a11y:** Phase 3 — form-error linkage + keyboard handlers on option items ([48ef9f5](https://github.com/G-MAKROGLOU/oxygen-ui/commit/48ef9f5455ee9f2d1223c67c69ddb143008c36c4))
+* **a11y:** Phase 3, form-error linkage + keyboard handlers on option items ([48ef9f5](https://github.com/G-MAKROGLOU/oxygen-ui/commit/48ef9f5455ee9f2d1223c67c69ddb143008c36c4))
 
 ## [1.7.4](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.7.3...v1.7.4) (2026-05-28)
 
@@ -991,7 +991,7 @@ Verified: typecheck, lint, 86/86 tests, library build.
 
 ### Bug Fixes
 
-* **components:** Phase 1a — bug-fix sweep across healthy components ([34d4513](https://github.com/G-MAKROGLOU/oxygen-ui/commit/34d45130587e8d2a93aebe08e86d7b0046a213f0))
+* **components:** Phase 1a, bug-fix sweep across healthy components ([34d4513](https://github.com/G-MAKROGLOU/oxygen-ui/commit/34d45130587e8d2a93aebe08e86d7b0046a213f0))
 
 # [1.7.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.6.2...v1.7.0) (2026-05-28)
 
@@ -1033,7 +1033,7 @@ Verified: typecheck, lint, 86/86 tests, library build.
 
 ### Bug Fixes
 
-* resolve CI failures — lint unused imports + MDX emphasis parser crash ([f75bbd9](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f75bbd941689aa8116d28fc2a7cb57d41e72f2b3))
+* resolve CI failures, lint unused imports + MDX emphasis parser crash ([f75bbd9](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f75bbd941689aa8116d28fc2a7cb57d41e72f2b3))
 
 ## [1.5.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.5.0...v1.5.1) (2026-05-28)
 
@@ -1054,29 +1054,29 @@ Verified: typecheck, lint, 86/86 tests, library build.
 
 ### Features
 
-* Phase E — fixes, new components, enterprise polish, dark mode stories ([6db1905](https://github.com/G-MAKROGLOU/oxygen-ui/commit/6db1905626e990a787102cd8794f2a255d6b6d50)), closes [#eef4fa](https://github.com/G-MAKROGLOU/oxygen-ui/issues/eef4fa)
+* Phase E, fixes, new components, enterprise polish, dark mode stories ([6db1905](https://github.com/G-MAKROGLOU/oxygen-ui/commit/6db1905626e990a787102cd8794f2a255d6b6d50)), closes [#eef4fa](https://github.com/G-MAKROGLOU/oxygen-ui/issues/eef4fa)
 
 # [1.3.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.2.0...v1.3.0) (2026-05-27)
 
 
 ### Features
 
-* Phase C — Button variants, TopBar, ThemeSwitch cleanup, Notification animation ([64b2279](https://github.com/G-MAKROGLOU/oxygen-ui/commit/64b22792b7fe241cef5aabaad92405c99e41b776)), closes [#fff](https://github.com/G-MAKROGLOU/oxygen-ui/issues/fff)
-* Phase D — MSW + Storybook integration for async story patterns ([2f143b8](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2f143b894aece4e31b02448f596883956350602e))
+* Phase C, Button variants, TopBar, ThemeSwitch cleanup, Notification animation ([64b2279](https://github.com/G-MAKROGLOU/oxygen-ui/commit/64b22792b7fe241cef5aabaad92405c99e41b776)), closes [#fff](https://github.com/G-MAKROGLOU/oxygen-ui/issues/fff)
+* Phase D, MSW + Storybook integration for async story patterns ([2f143b8](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2f143b894aece4e31b02448f596883956350602e))
 
 # [1.2.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.1.0...v1.2.0) (2026-05-27)
 
 
 ### Features
 
-* Phase B — design token layer (CSS vars, semantic tokens, Tailwind extension) ([f4d7b46](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f4d7b468565dc8c0afbb826f23864561432dc08e))
+* Phase B, design token layer (CSS vars, semantic tokens, Tailwind extension) ([f4d7b46](https://github.com/G-MAKROGLOU/oxygen-ui/commit/f4d7b468565dc8c0afbb826f23864561432dc08e))
 
 # [1.1.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v1.0.0...v1.1.0) (2026-05-27)
 
 
 ### Features
 
-* Phase A — Tree fix, Framer Motion animations, PRODUCT.md ([910e21f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/910e21f464733f27fe9890520f43d38eff7a8a08))
+* Phase A, Tree fix, Framer Motion animations, PRODUCT.md ([910e21f](https://github.com/G-MAKROGLOU/oxygen-ui/commit/910e21f464733f27fe9890520f43d38eff7a8a08))
 
 # 1.0.0 (2026-05-27)
 

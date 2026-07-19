@@ -1,9 +1,9 @@
-// ── Autofill — token-aware browser autofill styling ──────────────────────────
+// ── Autofill, token-aware browser autofill styling ──────────────────────────
 //
 // Browsers force their own background (white / pale blue in Chrome) and black
 // text onto autofilled fields, ignoring the input's CSS background. Inside the
 // design system's `bg-surface` inputs that renders as a jarring light rectangle
-// — especially broken in dark mode. The background can't be overridden
+//, especially broken in dark mode. The background can't be overridden
 // directly, but an opaque inset box-shadow paints over it, and
 // `-webkit-text-fill-color` restores the foreground. The absurdly long
 // background-color transition defeats the UA's late repaint of the autofill

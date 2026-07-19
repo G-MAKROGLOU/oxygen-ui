@@ -78,7 +78,7 @@ export const CustomFormat: Story = {
         docs: {
             description: {
                 story:
-                    'Override the trigger display with any function — typically `Intl.DateTimeFormat` for locale-aware output.',
+                    'Override the trigger display with any function, typically `Intl.DateTimeFormat` for locale-aware output.',
             },
         },
     },

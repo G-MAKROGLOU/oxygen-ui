@@ -32,7 +32,7 @@ export interface RadioTileProps {
     label?: React.ReactNode
     /** Widest-breakpoint column count. Default `2`. */
     columns?: 1 | 2 | 3
-    /** Size preset — controls padding + text. Default `'md'`. */
+    /** Size preset, controls padding + text. Default `'md'`. */
     size?: FieldSize
     /** Disable the whole group. */
     disabled?: boolean
@@ -40,7 +40,7 @@ export interface RadioTileProps {
     required?: boolean
     /** Contextual help revealed via an info icon beside the label. */
     helperText?: React.ReactNode
-    /** Validation message — shown under the group; flags it red + `aria-invalid`. */
+    /** Validation message, shown under the group; flags it red + `aria-invalid`. */
     errorMessage?: React.ReactNode
     className?: string
 }
@@ -61,7 +61,7 @@ const CheckMark = (
 )
 
 /**
- * A single-select group of rich, card-style options — icon, title, description,
+ * A single-select group of rich, card-style options, icon, title, description,
  * and an optional corner badge. Built on `@radix-ui/react-radio-group`, so it
  * keeps real radio semantics (roving arrow-key focus, `role="radiogroup"`,
  * native form serialisation via `name`). The selected tile gets an accent

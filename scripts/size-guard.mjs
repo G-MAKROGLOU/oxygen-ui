@@ -1,4 +1,4 @@
-// Bundle-size guard — measures the consumer-facing, minified + gzipped cost of
+// Bundle-size guard, measures the consumer-facing, minified + gzipped cost of
 // key entry points (with peer/runtime deps treated as external, since the
 // consumer already ships those) and fails if any exceeds its budget.
 //
@@ -14,7 +14,7 @@ import * as esbuild from 'esbuild'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const reportOnly = process.argv.includes('--report')
 
-// Deps the consumer already has — exclude from the measurement.
+// Deps the consumer already has, exclude from the measurement.
 const external = ['react', 'react-dom', 'react/jsx-runtime', 'framer-motion', '@radix-ui/*']
 
 // name → { entry, imports (ESM names or '*'), limit in KB (gzipped) }
@@ -48,7 +48,7 @@ for (const t of TARGETS) {
 }
 console.table(rows)
 if (failed) {
-    console.error('\nBundle-size guard failed — a target exceeded its budget. Investigate the import graph or raise the budget deliberately.')
+    console.error('\nBundle-size guard failed, a target exceeded its budget. Investigate the import graph or raise the budget deliberately.')
     process.exit(1)
 }
-console.log(reportOnly ? '\n(report mode — budgets not enforced)' : '\nAll targets within budget.')
+console.log(reportOnly ? '\n(report mode, budgets not enforced)' : '\nAll targets within budget.')

@@ -4,7 +4,7 @@ import IconButton from './IconButton'
 import { useCart } from './CartProvider'
 
 export interface CartButtonProps {
-    /** Click handler — typically opens the cart drawer / navigates to checkout. */
+    /** Click handler, typically opens the cart drawer / navigates to checkout. */
     onClick?: React.MouseEventHandler<HTMLButtonElement>
     /** Icon-button style. Default `'bordered'`. */
     variant?: 'primary' | 'bordered'

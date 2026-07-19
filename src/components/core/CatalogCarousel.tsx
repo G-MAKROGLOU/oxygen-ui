@@ -14,7 +14,7 @@ export interface CatalogCarouselProps {
 /**
  * Three-card carousel (previous → active (scaled) → next).
  *
- * Decoupled from ThemeContext — uses CSS `dark:` classes.
+ * Decoupled from ThemeContext, uses CSS `dark:` classes.
  */
 export default function CatalogCarousel({ items, buttonText, onOpen, className = '' }: CatalogCarouselProps) {
     const [activeIndex, setActiveIndex] = useState(0)

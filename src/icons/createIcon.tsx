@@ -5,7 +5,7 @@ export interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, 'ref'> {
     size?: number | string
     /**
      * Accessible label. When set, the icon is exposed as `role="img"` with this
-     * name; when omitted, it's `aria-hidden` (decorative) — the default, since
+     * name; when omitted, it's `aria-hidden` (decorative), the default, since
      * most icons sit beside a text label.
      */
     title?: string

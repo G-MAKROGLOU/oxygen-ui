@@ -5,7 +5,7 @@ import { useForm, Form, useFieldArray, useFormField, patterns } from './index'
 import { FormStore } from './store'
 import TextInput from '../components/inputs/TextInput'
 
-describe('Form API — validation + submit', () => {
+describe('Form API, validation + submit', () => {
     function LoginForm({ onFinish }: { onFinish: (v: unknown) => void }) {
         const form = useForm({ initialValues: { email: '', password: '' } })
         return (
@@ -48,7 +48,7 @@ describe('Form API — validation + submit', () => {
     })
 })
 
-describe('Form API — async validation', () => {
+describe('Form API, async validation', () => {
     it('awaits a custom async validator before submitting', async () => {
         const onFinish = vi.fn()
         function AsyncForm() {
@@ -73,7 +73,7 @@ describe('Form API — async validation', () => {
     })
 })
 
-describe('Form API — dynamic field arrays', () => {
+describe('Form API, dynamic field arrays', () => {
     function ContactsForm({ onFinish }: { onFinish: (v: unknown) => void }) {
         const form = useForm({ initialValues: { contacts: [{ email: '' }] } })
         return (
@@ -122,7 +122,7 @@ describe('Form API — dynamic field arrays', () => {
     })
 })
 
-describe('Form API — isSubmitting', () => {
+describe('Form API, isSubmitting', () => {
     function SubmitForm({ onFinish }: { onFinish: (v: unknown) => Promise<void> }) {
         const form = useForm({ initialValues: { name: 'ok' } })
         return (
@@ -167,7 +167,7 @@ describe('Form API — isSubmitting', () => {
     })
 })
 
-describe('Form API — reset', () => {
+describe('Form API, reset', () => {
     it('restores initial values and clears errors', async () => {
         function ResetForm() {
             const form = useForm({ initialValues: { name: 'init' } })

@@ -38,7 +38,7 @@ export const Empty: Story = {
 }
 
 export const Massive: Story = {
-    name: 'Virtualized — 100,000 rows × 40 cols',
+    name: 'Virtualized, 100,000 rows × 40 cols',
     render: () => {
         const { cols, data } = useMemo(() => {
             const cols: GridColumn[] = Array.from({ length: 40 }, (_, i) => ({ key: `c${i}`, label: `Column ${i + 1}`, width: 130 }))

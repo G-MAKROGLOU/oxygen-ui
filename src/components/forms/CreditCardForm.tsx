@@ -91,7 +91,7 @@ function BrandMark({ brand }: { brand: CardBrand | null }) {
 /**
  * Unified credit-card form built on the oxygen-ui {@link useForm} Form API.
  *
- * One component owns all four fields and their cross-field rules — card number
+ * One component owns all four fields and their cross-field rules, card number
  * (brand detection + grouping + Luhn), expiry (`MM/YY`, real month, not past),
  * CVV (brand-aware length), and cardholder name. It is deliberately NOT shipped
  * as separate inputs: a CVV or expiry field has no meaning outside a card form.
@@ -135,7 +135,7 @@ export default function CreditCardForm({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [form.values.number, form.values.name, form.values.expiry, form.values.cvv])
 
-    // Base bindings (errorMessage + name + id) — value/onChange are overridden
+    // Base bindings (errorMessage + name + id), value/onChange are overridden
     // below so we can format keystrokes brand-by-brand.
     const numberBind = form.fieldNative('number', {
         required: 'Card number is required',

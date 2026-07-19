@@ -6,14 +6,14 @@ import type { FieldRules } from './validate'
 export interface UseFormFieldOptions {
     /** How the control reports changes. Default `'value'`. */
     kind?: FieldKind
-    /** Rules for this field — registered on the form (and cleaned up on unmount). */
+    /** Rules for this field, registered on the form (and cleaned up on unmount). */
     rules?: FieldRules
 }
 
 /**
  * Subscribe a single field to the enclosing `<Form>`. Unlike reading bindings
  * off `useForm()`, this isolates re-renders to just this field via a memoized
- * per-field snapshot — the right choice for large or dynamic forms. Registering
+ * per-field snapshot, the right choice for large or dynamic forms. Registering
  * `rules` here also unregisters them on unmount, which is what makes field
  * arrays validate correctly as rows come and go.
  *

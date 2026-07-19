@@ -12,7 +12,7 @@ const meta: Meta<typeof ThemeProvider> = {
         docs: {
             description: {
                 component:
-                    'Scoped theme overrides. The CSS vars set in `theme` (and `darkTheme`) apply only to descendants of this provider — multiple ThemeProviders can coexist on the same page, each with its own palette / radii / motion / typography.',
+                    'Scoped theme overrides. The CSS vars set in `theme` (and `darkTheme`) apply only to descendants of this provider, multiple ThemeProviders can coexist on the same page, each with its own palette / radii / motion / typography.',
             },
         },
     },

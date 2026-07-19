@@ -107,7 +107,7 @@ export const Responsive: Story = {
         docs: {
             description: {
                 story:
-                    'Below the `md` breakpoint the hover bar collapses into a tap-friendly hamburger disclosure — a vertical accordion built from the same items. Use the Storybook viewport toolbar (or narrow the window) to see it. Set `responsive={false}` to keep the desktop bar at every width.',
+                    'Below the `md` breakpoint the hover bar collapses into a tap-friendly hamburger disclosure, a vertical accordion built from the same items. Use the Storybook viewport toolbar (or narrow the window) to see it. Set `responsive={false}` to keep the desktop bar at every width.',
             },
         },
     },

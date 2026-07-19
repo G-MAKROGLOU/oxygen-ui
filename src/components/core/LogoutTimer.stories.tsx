@@ -22,7 +22,7 @@ type Story = StoryObj<typeof LogoutTimer>
 export const Default: Story = {
     args: { timeout: 3000, countdown: 10000, enabled: true },
     render: (args) => {
-        const [event, setEvent] = useState('Idle — stop interacting and wait 3s for the warning…')
+        const [event, setEvent] = useState('Idle, stop interacting and wait 3s for the warning…')
         return (
             <div className="flex flex-col items-center gap-3" style={{ width: 360 }}>
                 <div className="rounded-lg border border-border bg-surface px-4 py-3 text-center text-sm text-foreground-secondary">
@@ -30,8 +30,8 @@ export const Default: Story = {
                 </div>
                 <LogoutTimer
                     {...args}
-                    onWarning={() => setEvent('⚠️ Warning shown — choose an option.')}
-                    onContinue={() => setEvent('✅ Stayed signed in — idle timer reset.')}
+                    onWarning={() => setEvent('⚠️ Warning shown, choose an option.')}
+                    onContinue={() => setEvent('✅ Stayed signed in, idle timer reset.')}
                     onLogout={() => setEvent('🔒 Logged out (onLogout fired).')}
                 />
             </div>
@@ -43,7 +43,7 @@ export const Disabled: Story = {
     args: { timeout: 3000, countdown: 10000, enabled: false },
     render: (args) => (
         <div style={{ width: 360 }} className="rounded-lg border border-border bg-surface px-4 py-3 text-center text-sm text-foreground-muted">
-            Timer disabled — no warning will appear.
+            Timer disabled, no warning will appear.
             <LogoutTimer {...args} onLogout={() => {}} />
         </div>
     ),

@@ -29,7 +29,7 @@ export const Tones: Story = {
             <Banner tone="info">A new compliance report is available for download.</Banner>
             <Banner tone="success">Voyage data synced successfully.</Banner>
             <Banner tone="warning">Two vessels are missing noon reports for today.</Banner>
-            <Banner tone="danger">Sync failed — your latest changes were not saved.</Banner>
+            <Banner tone="danger">Sync failed, your latest changes were not saved.</Banner>
         </div>
     ),
 }

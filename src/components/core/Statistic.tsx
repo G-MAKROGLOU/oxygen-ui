@@ -67,7 +67,7 @@ const ArrowDown = (
 
 /**
  * A single metric: caption, value (with optional prefix/suffix and icon), and an
- * optional trend delta whose colour follows direction — flipped for metrics
+ * optional trend delta whose colour follows direction, flipped for metrics
  * where a rise is bad via `positiveIsGood: false`.
  *
  * @example

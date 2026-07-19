@@ -11,7 +11,7 @@ const meta: Meta<typeof Avatar> = {
         docs: {
             description: {
                 component:
-                    'Circular or rounded-square user avatar built on `@radix-ui/react-avatar`. Tries to load the supplied `src`; falls back to either explicit `fallback` content, two-letter initials extracted from `alt`, or a generic silhouette — in that order. Optional `status` adds a presence dot.',
+                    'Circular or rounded-square user avatar built on `@radix-ui/react-avatar`. Tries to load the supplied `src`; falls back to either explicit `fallback` content, two-letter initials extracted from `alt`, or a generic silhouette, in that order. Optional `status` adds a presence dot.',
             },
         },
     },
@@ -87,7 +87,7 @@ export const BrokenImage: Story = {
         docs: {
             description: {
                 story:
-                    'A 404 image URL — after Radix\'s short load delay, the fallback (initials) renders. Useful for guarding against stale CDN URLs.',
+                    'A 404 image URL, after Radix\'s short load delay, the fallback (initials) renders. Useful for guarding against stale CDN URLs.',
             },
         },
     },

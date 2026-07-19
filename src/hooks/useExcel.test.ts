@@ -98,7 +98,7 @@ describe('useExcel', () => {
     it('readWorkbook handles an empty worksheet gracefully', async () => {
         const { result } = renderHook(() => useExcel())
 
-        // Export a sheet with no rows — just headers
+        // Export a sheet with no rows, just headers
         let capturedBlob: Blob | null = null
         await act(async () => {
             await result.current.exportSheets(

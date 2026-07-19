@@ -2,7 +2,7 @@
  * Native, dependency-free validation. A field carries one rule or an array of
  * rules; rules run in order and the first failure wins. Rules are plain data
  * (required / pattern / min / max / length) plus an escape hatch `validate`
- * for anything custom — including async checks (uniqueness, server lookups) and
+ * for anything custom, including async checks (uniqueness, server lookups) and
  * third-party schemas: `validate: (v) => zodSchema.safeParse(v).success ? undefined : 'msg'`.
  */
 

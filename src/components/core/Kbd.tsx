@@ -7,7 +7,7 @@ export interface KbdProps {
     /** A single key's label when `keys` is not used. */
     children?: React.ReactNode
     /**
-     * A key combination — each entry renders as its own key cap, joined by
+     * A key combination, each entry renders as its own key cap, joined by
      * `separator`. e.g. `['Ctrl', 'K']` → `Ctrl + K`.
      */
     keys?: string[]
@@ -30,7 +30,7 @@ const cap =
     'font-sans shadow-sm'
 
 /**
- * Renders keyboard keys as styled caps — a single key via `children`, or a
+ * Renders keyboard keys as styled caps, a single key via `children`, or a
  * combination via `keys` (each rendered as its own cap, joined by `separator`).
  *
  * @example

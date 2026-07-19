@@ -164,7 +164,7 @@ export interface MegaMenuPanelProps {
 }
 
 function MegaMenuPanel({ children, columns, className = '', style }: MegaMenuPanelProps) {
-    // Grid with a *definite* panel width — this is the key to both a stable
+    // Grid with a *definite* panel width, this is the key to both a stable
     // width (no Radix-viewport feedback loop, since the panel is a
     // self-positioning absolute element) AND sections that spread to fill,
     // rather than shrink-wrapping to min-content the way the old flex layout
@@ -270,7 +270,7 @@ function MegaMenuFeatured({ children, className = '' }: MegaMenuFeaturedProps) {
 // Hover mega-panels are unusable on touch, so below `md` we render a self-
 // contained accordion built from the SAME compound children. We introspect the
 // element tree (Item → Panel → Section/Featured → Link) by component identity
-// and re-render it with plain anchors — no Radix NavigationMenu context needed,
+// and re-render it with plain anchors, no Radix NavigationMenu context needed,
 // so nothing depends on the desktop bar being mounted.
 
 type AnyEl = React.ReactElement<Record<string, unknown>>

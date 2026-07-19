@@ -20,11 +20,11 @@ export interface OtpInputProps {
     mode?: 'numeric' | 'alphanumeric'
     /** Render boxes as masked dots (for PIN entry). */
     masked?: boolean
-    /** Size preset — controls height, padding, and font. Default 'md'. */
+    /** Size preset, controls height, padding, and font. Default 'md'. */
     size?: FieldSize
     /** Disable interaction and dim the control. */
     disabled?: boolean
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Show a required asterisk after the label. */
     required?: boolean

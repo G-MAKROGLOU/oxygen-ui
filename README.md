@@ -4,7 +4,7 @@
 
 # @geomak/ui · Oxygen Design System
 
-**100+ production-grade React components for enterprise apps** — dashboards, CRMs, internal tools, and landing pages. Token-driven, accessible, light/dark first-class, and properly tree-shakeable.
+**100+ production-grade React components for enterprise apps**, dashboards, CRMs, internal tools, and landing pages. Token-driven, accessible, light/dark first-class, and properly tree-shakeable.
 
 [![npm version](https://img.shields.io/npm/v/@geomak/ui?color=0466c8&label=npm)](https://www.npmjs.com/package/@geomak/ui)
 [![types](https://img.shields.io/npm/types/@geomak/ui?color=0466c8)](https://www.npmjs.com/package/@geomak/ui)
@@ -14,7 +14,7 @@
 
 ### ▶ [Browse the live, interactive demo →](https://oxygenui.com)
 
-<!-- Tip: drop a Storybook screen-recording here for the launch — docs/assets/preview.gif -->
+<!-- Tip: drop a Storybook screen-recording here for the launch, docs/assets/preview.gif -->
 
 </div>
 
@@ -24,11 +24,11 @@ Built on **React 19**, **Radix UI** (accessibility + behaviour), **Tailwind CSS*
 
 ## Why oxygen-ui
 
-- **Token-driven, dark mode first-class.** Every colour, radius, shadow, and motion value is a CSS variable. Light and dark aren't an afterthought — both are designed. Re-theme the whole system with one override.
+- **Token-driven, dark mode first-class.** Every colour, radius, shadow, and motion value is a CSS variable. Light and dark aren't an afterthought, both are designed. Re-theme the whole system with one override.
 - **Accessible by default.** Behaviour comes from Radix (focus traps, keyboard nav, ARIA); icons are `aria-hidden`, controls are labelled.
-- **Genuinely tree-shakeable.** Import one icon and ship **0.45 KB** (not the whole set). The entire library is **~76 KB gzipped** with deps external — and a CI guard keeps it from regressing.
+- **Genuinely tree-shakeable.** Import one icon and ship **0.45 KB** (not the whole set). The entire library is **~76 KB gzipped** with deps external, and a CI guard keeps it from regressing.
 - **Strict and tested.** `strict` TypeScript, ESLint at zero warnings, 360+ unit tests, per-export bundle budgets in CI.
-- **Batteries included.** Not just buttons — a `Scheduler`, a real-time `Chat` (WebSocket-ready), `Table` with pagination, a `Form` engine, an e-commerce `Cart`, and a full **Marketing** kit (hero, pricing, testimonials, lead capture) to build the landing page too.
+- **Batteries included.** Not just buttons, a `Scheduler`, a real-time `Chat` (WebSocket-ready), `Table` with pagination, a `Form` engine, an e-commerce `Cart`, and a full **Marketing** kit (hero, pricing, testimonials, lead capture) to build the landing page too.
 
 ---
 
@@ -64,7 +64,7 @@ import { ChevronDown, Search, createIcon } from '@geomak/ui/icons'
 
 ## Components
 
-100+ components across these groups — all with **live controls and a written guide** in [Storybook](https://oxygenui.com).
+100+ components across these groups, all with **live controls and a written guide** in [Storybook](https://oxygenui.com).
 
 | Group | Components |
 |---|---|
@@ -137,7 +137,7 @@ The standard **gray / slate / zinc** ramps and **black** stay available alongsid
 
 ## AI toolchain (Claude Code)
 
-OxygenUI ships a built-in MCP server and a set of Claude Code skills and commands that let AI assistants look up component APIs, search by use-case, and scaffold new components — all grounded in the real MDX documentation.
+OxygenUI ships a built-in MCP server and a set of Claude Code skills and commands that let AI assistants look up component APIs, search by use-case, and scaffold new components, all grounded in the real MDX documentation.
 
 ### MCP server
 
@@ -153,7 +153,7 @@ The server is deployed alongside Storybook on Netlify as a Netlify Function at `
 **Connect it:**
 
 ```jsonc
-// .mcp.json (already in the repo — update the URL after first deploy)
+// .mcp.json (already in the repo, update the URL after first deploy)
 {
   "mcpServers": {
     "oxygen-ui": {
@@ -176,14 +176,14 @@ Four slash commands are registered in `.claude/commands/`:
 
 | Command | Usage |
 |---|---|
-| `/ui-lookup <name>` | Fetch the full docs for a component — e.g. `/ui-lookup wizard` |
-| `/ui-find <query>` | Search by use-case — e.g. `/ui-find virtualized table` |
+| `/ui-lookup <name>` | Fetch the full docs for a component, e.g. `/ui-lookup wizard` |
+| `/ui-find <query>` | Search by use-case, e.g. `/ui-find virtualized table` |
 | `/ui-scaffold <name>` | Scaffold a new component with source + story + MDX guide |
 | `/ui-story <name>` | Add story coverage for an existing component |
 
 ### Context skill
 
-The `/oxygen-ui` skill loads the full design system context into any Claude Code session — import patterns, token usage, Tailwind utilities, form API, and repository conventions. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
+The `/oxygen-ui` skill loads the full design system context into any Claude Code session, import patterns, token usage, Tailwind utilities, form API, and repository conventions. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
 
 ### Local development with the MCP server
 
@@ -196,7 +196,7 @@ The function is then available at `http://localhost:8888/mcp`. Claude Code picks
 
 ### How the manifest is built
 
-At build time, `scripts/generate-ai-manifest.mjs` scans all 101 MDX guide files in `src/docs/` and the co-located MDX files in `src/components/`, strips Storybook boilerplate, and emits `netlify/functions/ai-manifest.json`. The Netlify Function bundles this JSON via esbuild — no database, no runtime file I/O, no cold-start penalty.
+At build time, `scripts/generate-ai-manifest.mjs` scans all 101 MDX guide files in `src/docs/` and the co-located MDX files in `src/components/`, strips Storybook boilerplate, and emits `netlify/functions/ai-manifest.json`. The Netlify Function bundles this JSON via esbuild, no database, no runtime file I/O, no cold-start penalty.
 
 ---
 

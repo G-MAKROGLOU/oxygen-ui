@@ -18,13 +18,13 @@ export interface RatingProps {
     clearable?: boolean
     /** Field label, placed above (vertical) or beside (horizontal) the control. */
     label?: React.ReactNode
-    /** Size preset — controls height, padding, and font. Default 'md'. */
+    /** Size preset, controls height, padding, and font. Default 'md'. */
     size?: FieldSize
     /** Disable interaction and dim the control. */
     disabled?: boolean
     /** Override the icon. Receives a `filled` flag. Default is a star. */
     icon?: (filled: boolean) => React.ReactNode
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Native form field name (used for FormData serialisation). */
     name?: string
@@ -146,11 +146,11 @@ export default function Rating({
                                 }
                             }}
                         >
-                            {/* Empty layer — full star outline */}
+                            {/* Empty layer, full star outline */}
                             <span className="absolute inset-0 text-foreground-muted">{icon(false)}</span>
                             {/* Filled layer: a clip box (width = fill fraction)
                                 containing a FULL-SIZE star pinned left, so a
-                                50% clip reveals the exact left half — not a
+                                50% clip reveals the exact left half, not a
                                 squished half-width star. */}
                             <span
                                 className="absolute inset-y-0 left-0 overflow-hidden"

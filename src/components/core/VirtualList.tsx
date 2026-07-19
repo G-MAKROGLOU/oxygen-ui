@@ -3,13 +3,13 @@ import SearchInput from '../inputs/SearchInput'
 import { cx } from '../../utils/cx'
 
 export interface VirtualListProps<T> {
-    /** The full dataset — only the visible window is mounted. */
+    /** The full dataset, only the visible window is mounted. */
     items: T[]
     /** Fixed row height in px. (Variable heights aren't supported in this lean build.) */
     rowHeight: number
     /** Render one item. Wrapped in a row of exactly `rowHeight`. */
     renderItem: (item: T, index: number) => React.ReactNode
-    /** Viewport height — number (px) or any CSS length. Default `400`. */
+    /** Viewport height, number (px) or any CSS length. Default `400`. */
     height?: number | string
     /** Stable key per item. Defaults to the index. */
     getKey?: (item: T, index: number) => React.Key
@@ -19,7 +19,7 @@ export interface VirtualListProps<T> {
     searchable?: boolean
     /** Object keys to search (default: searches `String(item)`). */
     searchKeys?: (keyof T)[]
-    /** Custom matcher — overrides `searchKeys`. */
+    /** Custom matcher, overrides `searchKeys`. */
     filter?: (item: T, term: string) => boolean
     searchPlaceholder?: string
     /** Shown when there are no items (or none match the search). */
@@ -35,7 +35,7 @@ const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : use
 /**
  * A windowed (virtualized) list: renders only the rows in view (plus overscan),
  * so 100k items scroll as cheaply as 20. Fixed `rowHeight`, no dependencies.
- * Set `searchable` for a built-in filter — the canonical "virtualized search".
+ * Set `searchable` for a built-in filter, the canonical "virtualized search".
  *
  * @example
  * <VirtualList

@@ -55,7 +55,7 @@ export const DecimalStep: Story = {
         docs: {
             description: {
                 story:
-                    'Step of `0.1` rounds to the inferred precision (1 decimal). Click increment ten times — the value is exactly `2.5`, not `2.4999999…` as the previous component produced.',
+                    'Step of `0.1` rounds to the inferred precision (1 decimal). Click increment ten times, the value is exactly `2.5`, not `2.4999999…` as the previous component produced.',
             },
         },
     },
@@ -83,7 +83,7 @@ export const WithError: Story = {
         docs: {
             description: {
                 story:
-                    'Error state. The input gains `aria-invalid` and `aria-describedby` pointing at the error region, plus a red border. The error message is only rendered when present — no empty announcement.',
+                    'Error state. The input gains `aria-invalid` and `aria-describedby` pointing at the error region, plus a red border. The error message is only rendered when present, no empty announcement.',
             },
         },
     },

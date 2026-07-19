@@ -14,7 +14,7 @@ export interface FadingBaseProps {
  * The component mounts on `isMounted=true` and unmounts after the 300ms
  * fade-out completes on `isMounted=false`.
  *
- * Uses CSS `dark:` class for the glass effect — no ThemeContext dependency.
+ * Uses CSS `dark:` class for the glass effect, no ThemeContext dependency.
  *
  * @example
  * <FadingBase isMounted={isPageVisible}>

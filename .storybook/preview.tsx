@@ -3,7 +3,7 @@ import type { Preview, Decorator } from '@storybook/react-vite'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 import '../src/styles/index.scss'
 
-// Start MSW — explicit worker URL avoids path-resolution issues in Vite dev server
+// Start MSW, explicit worker URL avoids path-resolution issues in Vite dev server
 initialize({
     onUnhandledRequest: 'bypass',
     serviceWorker: { url: '/mockServiceWorker.js' },
@@ -60,7 +60,7 @@ const preview: Preview = {
             // Hide props that can't be meaningfully driven from a control panel
             // (callbacks, render-node slots, controlled value/collection props,
             // refs, custom formatters). This keeps every story's Controls panel
-            // focused on the real knobs — size, layout, disabled, error, etc.
+            // focused on the real knobs, size, layout, disabled, error, etc.
             // String-literal unions (size/layout/labelPosition) and booleans are
             // auto-inferred from the TS types as select / toggle controls.
             exclude: [
@@ -90,7 +90,7 @@ const preview: Preview = {
         },
 
         // ── Viewport presets ──────────────────────────────────────────────────
-        // WIDTH matches the Tailwind breakpoints — that's what stories should
+        // WIDTH matches the Tailwind breakpoints, that's what stories should
         // simulate. HEIGHT is intentionally lower than each device's native
         // resolution: Storybook 10 only honours fixed pixel heights for the
         // iframe (no `100%` / auto-fit), and a 900+px tall iframe overflows
@@ -126,7 +126,7 @@ const preview: Preview = {
                     'Layout',
                     'Buttons',
                     'Inputs',
-                    'Forms',          // empty placeholder — slot for FormProvider work
+                    'Forms',          // empty placeholder, slot for FormProvider work
                     'Data Display',
                     'Feedback',
                     'Progress',
@@ -140,13 +140,13 @@ const preview: Preview = {
     },
 
     initialGlobals: {
-        // No initial viewport — the iframe auto-fits the available canvas
+        // No initial viewport, the iframe auto-fits the available canvas
         // pane width. Users can still pick a specific preset (Mobile / Tablet
         // / Desktop / Wide) from the toolbar to test responsive behaviour.
         //
         // Previously this was hardcoded to `'desktop'` (1280×700), which
         // forced every story to render in a 1280-wide iframe regardless of
-        // the user's monitor / sidebar / addons-panel state — producing
+        // the user's monitor / sidebar / addons-panel state, producing
         // horizontal scroll on smaller canvas areas.
         viewport: {
             value: undefined,

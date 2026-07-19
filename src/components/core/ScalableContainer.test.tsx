@@ -48,7 +48,7 @@ describe('ScalableContainer', () => {
         // pushes neighbours instead of being squeezed. Siblings are untouched.
         expect(box.style.width).toBe('900px')
         expect(box.style.height).toBe('520px')
-        // `flex: none` serialises to its longhand — i.e. no grow, no shrink.
+        // `flex: none` serialises to its longhand, i.e. no grow, no shrink.
         expect(box.style.flexGrow).toBe('0')
         expect(box.style.flexShrink).toBe('0')
     })
@@ -67,7 +67,7 @@ describe('ScalableContainer', () => {
         const neighbour = screen.getByTestId('neighbour')
         const before = neighbour.getAttribute('style')
         fireEvent.click(screen.getByRole('button', { name: 'Expand container' }))
-        // The component never writes to siblings — its inline style is unchanged.
+        // The component never writes to siblings, its inline style is unchanged.
         expect(neighbour.getAttribute('style')).toBe(before)
     })
 

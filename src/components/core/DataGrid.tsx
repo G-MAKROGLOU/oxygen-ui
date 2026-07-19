@@ -118,7 +118,7 @@ function colLetter(i: number): string {
  * Virtualized (both axes) data grid primitive. Renders only the cells inside
  * the viewport plus an overscan margin, so it stays smooth at tens of thousands
  * of rows. The header and the row-number gutter are pinned by positioning them
- * at the live scroll offset (`top: scrollTop` / `left: scrollLeft`) — the same
+ * at the live scroll offset (`top: scrollTop` / `left: scrollLeft`), the same
  * translate-window technique as {@link VirtualList}, extended to two axes.
  *
  * Stateless w.r.t. data: it renders the `rows` it's given and emits
@@ -157,7 +157,7 @@ export default function DataGrid({
     // Cell selection (for highlight + clipboard) and hovered row (for highlight).
     const [selected, setSelected] = useState<{ disp: number; col: number } | null>(null)
     const [hoveredRow, setHoveredRow] = useState<number | null>(null)
-    // What the open context menu targets — a cell, a row, or a column header.
+    // What the open context menu targets, a cell, a row, or a column header.
     const [ctxTarget, setCtxTarget] = useState<{ kind: 'cell' | 'row'; disp: number } | { kind: 'header'; col: number } | null>(null)
     // `editing.disp` is the on-screen position; the emitted/sourced row is the
     // original index (`order[disp]`), stable across sorting.
@@ -172,7 +172,7 @@ export default function DataGrid({
     const colSortable = (c: GridColumn) => c.sortable ?? sortable
 
     // Data columns + blank letter-labelled trailing columns (the spreadsheet
-    // "slack"). Slack columns are display-only — add real ones via onInsertColumn.
+    // "slack"). Slack columns are display-only, add real ones via onInsertColumn.
     const cols = useMemo<GridColumn[]>(() => {
         if (trailingCols <= 0) return columns
         const extra = Array.from({ length: trailingCols }, (_, k) => {
@@ -182,7 +182,7 @@ export default function DataGrid({
         return [...columns, ...extra]
     }, [columns, trailingCols])
 
-    // Column geometry — resolved widths + prefix offsets.
+    // Column geometry: resolved widths + prefix offsets.
     const { widths, offsets, totalWidth } = useMemo(() => {
         const widths = cols.map((c) => resolveWidth(c.width))
         const offsets: number[] = []
@@ -499,7 +499,7 @@ const HILITE = 'color-mix(in srgb, var(--color-accent) 9%, transparent)'
 const SELECT_BG = 'color-mix(in srgb, var(--color-accent) 16%, transparent)'
 const SELECT_RING = 'inset 0 0 0 2px var(--color-accent)'
 
-/** Sort direction indicator — both carets dimmed when unsorted, active one lit. */
+/** Sort direction indicator, both carets dimmed when unsorted, active one lit. */
 function SortCaret({ dir }: { dir: GridSortDirection | null }) {
     return (
         <svg viewBox="0 0 16 16" className="h-3 w-3 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">

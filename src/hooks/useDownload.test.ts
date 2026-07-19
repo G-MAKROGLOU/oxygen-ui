@@ -40,7 +40,7 @@ describe('useDownload', () => {
 
         expect(URL.createObjectURL).toHaveBeenCalledWith(blob)
         expect(clickSpy).toHaveBeenCalledOnce()
-        // Revoke is deferred — not yet called.
+        // Revoke is deferred, not yet called.
         expect(URL.revokeObjectURL).not.toHaveBeenCalled()
 
         vi.runAllTimers()

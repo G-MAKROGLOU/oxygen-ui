@@ -6,7 +6,7 @@ export type SocialPlatform =
     | 'instagram' | 'facebook' | 'mastodon' | 'email' | 'website'
 
 export interface SocialLink {
-    /** Known platform — supplies the icon + default label. */
+    /** Known platform, supplies the icon + default label. */
     platform?: SocialPlatform
     href: string
     /** Accessible label / tooltip. Falls back to the platform name. */

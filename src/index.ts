@@ -26,7 +26,7 @@ export type { ClassValue } from './utils/cx'
 // ─── Layout components ───────────────────────────────────────────────────────
 // Structural primitives that re-anchor or compose rendering.
 //
-// Portal — SSR-safe DOM relocator. Wrap any `position: fixed` element in
+// Portal, SSR-safe DOM relocator. Wrap any `position: fixed` element in
 // `<Portal>` to escape ancestor `transform` / `filter` / `contain` containing
 // blocks. Use whenever a component anchors itself to the viewport (overlays,
 // drawers, full-screen loaders). See `src/components/layout/Portal.tsx` for
@@ -34,7 +34,7 @@ export type { ClassValue } from './utils/cx'
 export { default as Portal } from './components/layout/Portal'
 export type { PortalProps } from './components/layout/Portal'
 
-// Box / Flex / Grid — tokenised layout primitives. Use them in place of
+// Box / Flex / Grid, tokenised layout primitives. Use them in place of
 // className-only `<div>`s when you want padding, surface, border, radius,
 // shadow, or flex/grid behaviour spelled out via design-system tokens.
 export { default as Box } from './components/layout/Box'
@@ -60,7 +60,7 @@ export { default as Grid } from './components/layout/Grid'
 export type { GridProps } from './components/layout/Grid'
 
 // ─── Core components ─────────────────────────────────────────────────────────
-// Avatar — circular / rounded-square user avatar with image-fallback +
+// Avatar, circular / rounded-square user avatar with image-fallback +
 // optional presence dot. Built on `@radix-ui/react-avatar`.
 export { default as Avatar } from './components/core/Avatar'
 export type {
@@ -70,7 +70,7 @@ export type {
     AvatarStatus,
 } from './components/core/Avatar'
 
-// Typography — polymorphic text primitive with semantic variants
+// Typography, polymorphic text primitive with semantic variants
 // (display / h1-h4 / subtitle / body / caption / overline / code).
 export { default as Typography } from './components/core/Typography'
 export type {
@@ -311,7 +311,7 @@ export type { CheckboxProps } from './components/inputs/Checkbox'
 export { default as RadioGroup } from './components/inputs/RadioGroup'
 export type { RadioGroupProps, RadioOption } from './components/inputs/RadioGroup'
 
-/** Shared input field foundation — exported for consumers building custom inputs. */
+/** Shared input field foundation, exported for consumers building custom inputs. */
 export { Field, fieldShell, FieldLabel, FieldHelpIcon } from './components/inputs/_field'
 export type { FieldProps, FieldShellOptions, FieldSize, FieldLabelProps } from './components/inputs/_field'
 

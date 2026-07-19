@@ -28,7 +28,7 @@ export const Overlay: Story = {
         docs: {
             description: {
                 story:
-                    'Default mode — covers the viewport with a blurred backdrop and the spinner + caption centred. Use during page loads, route transitions, or critical async work.',
+                    'Default mode, covers the viewport with a blurred backdrop and the spinner + caption centred. Use during page loads, route transitions, or critical async work.',
             },
         },
     },
@@ -63,7 +63,7 @@ export const Sizes: Story = {
         docs: {
             description: {
                 story:
-                    'Four size presets — `xs` for use inside button text or async input affordances, `sm` for compact surfaces, `md` for the default fullscreen overlay, `lg` for marquee loaders. All four rotate at the same speed so the visual rhythm is consistent across the system.',
+                    'Four size presets, `xs` for use inside button text or async input affordances, `sm` for compact surfaces, `md` for the default fullscreen overlay, `lg` for marquee loaders. All four rotate at the same speed so the visual rhythm is consistent across the system.',
             },
         },
     },
@@ -92,12 +92,12 @@ export const Sizes: Story = {
 // ─── 3. Inline mode with caption ────────────────────────────────────────────
 
 export const InlineWithCaption: Story = {
-    name: '3. Inline — with caption',
+    name: '3. Inline, with caption',
     parameters: {
         docs: {
             description: {
                 story:
-                    'Inline mode with a short caption. Use inside cards, drawers, and empty-state slots. No portal, no backdrop — renders at the call site.',
+                    'Inline mode with a short caption. Use inside cards, drawers, and empty-state slots. No portal, no backdrop, renders at the call site.',
             },
         },
     },
@@ -134,12 +134,12 @@ export const CustomColour: Story = {
 // ─── 5. Inside a button ─────────────────────────────────────────────────────
 
 export const InsideButton: Story = {
-    name: '5. Tiny inline — inside a button',
+    name: '5. Tiny inline, inside a button',
     parameters: {
         docs: {
             description: {
                 story:
-                    "The `Button` component has its own `loading` prop; this story shows the spinner inline next to text when you need a custom loading affordance outside of `Button` — e.g. inside a chip or a row action.",
+                    "The `Button` component has its own `loading` prop; this story shows the spinner inline next to text when you need a custom loading affordance outside of `Button`, e.g. inside a chip or a row action.",
             },
         },
     },

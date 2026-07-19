@@ -61,7 +61,7 @@ export const TwoColumnLayout: Story = {
         docs: {
             description: {
                 story:
-                    'Fixed-width first track + flexible second track — `cols="240px 1fr"` produces a classic sidebar + content layout.',
+                    'Fixed-width first track + flexible second track, `cols="240px 1fr"` produces a classic sidebar + content layout.',
             },
         },
     },

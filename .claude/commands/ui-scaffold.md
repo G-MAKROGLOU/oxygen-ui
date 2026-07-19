@@ -1,5 +1,5 @@
 ---
-description: Scaffold a new OxygenUI component — implementation + story + MDX guide
+description: Scaffold a new OxygenUI component, implementation + story + MDX guide
 ---
 
 Scaffold a new OxygenUI component named: **$ARGUMENTS**
@@ -9,15 +9,15 @@ Parse the argument as `ComponentName [category]` where category is optional
 
 ## Steps
 
-1. **Plan** — Determine:
+1. **Plan**: Determine:
    - Target directory: `src/components/{core|inputs|forms|layout|marketing}/`
    - Story title: `"Category/ComponentName"`
    - Whether the component wraps a Radix primitive or is fully custom
 
-2. **Check for overlap** — Call `find_component` to confirm no existing component
+2. **Check for overlap**, Call `find_component` to confirm no existing component
    already covers this use case before creating anything.
 
-3. **Scaffold files** — Create the following three files:
+3. **Scaffold files**: Create the following three files:
 
 ### `ComponentName.tsx`
 
@@ -66,7 +66,7 @@ export const Default: Story = {
 Use the MDX guide structure with HTML tables (not GFM markdown tables).
 Use the exported `th / td / td0 / tbl` style constants from Accordion.mdx as a template.
 
-4. **Export** — Add the new component to `src/index.ts` in the correct section
+4. **Export**, Add the new component to `src/index.ts` in the correct section
    (Core components, Input components, etc.).
 
 5. **Report** what was created and what the developer should fill in next

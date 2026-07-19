@@ -2,7 +2,7 @@ import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeAll } from 'vitest'
 
-// Mock the heavy pdfjs-dist engine — the component only relies on this surface.
+// Mock the heavy pdfjs-dist engine, the component only relies on this surface.
 vi.mock('pdfjs-dist', () => {
     const page = {
         getViewport: ({ scale }: { scale: number }) => ({ width: 600 * scale, height: 800 * scale, scale }),

@@ -61,7 +61,7 @@ const SHADOW_MAP: Record<BoxShadow, string> = {
 
 export interface BoxProps {
     as?: keyof React.JSX.IntrinsicElements
-    /** Padding shorthand — applies to all sides. */
+    /** Padding shorthand, applies to all sides. */
     p?: Spacing
     /** Horizontal padding (left + right). */
     px?: Spacing
@@ -87,7 +87,7 @@ export interface BoxProps {
     width?: string | number
     /** Height via Tailwind class or CSS value. */
     height?: string | number
-    /** Click handler — accepts any element-typed handler. */
+    /** Click handler, accepts any element-typed handler. */
     onClick?: React.MouseEventHandler<HTMLElement>
     className?: string
     style?: React.CSSProperties
@@ -95,7 +95,7 @@ export interface BoxProps {
 }
 
 /**
- * A polymorphic layout primitive — a `<div>` (by default) styled via prop
+ * A polymorphic layout primitive, a `<div>` (by default) styled via prop
  * shortcuts to the design system's tokenised spacing, surface, border,
  * radius, and shadow scales. Use it when you'd otherwise reach for a
  * className-only `<div>` with `p-4 bg-surface border border-border rounded-lg`.

@@ -39,7 +39,7 @@ export const PerStateLabels: Story = {
     render: (a) => <Controlled {...a} />,
     args: { offLabel: 'Monthly', onLabel: 'Yearly' },
     parameters: {
-        docs: { description: { story: '`offLabel` / `onLabel` flank the track and emphasise the active state — the "Monthly ▮ Yearly" pattern.' } },
+        docs: { description: { story: '`offLabel` / `onLabel` flank the track and emphasise the active state, the "Monthly ▮ Yearly" pattern.' } },
     },
 }
 

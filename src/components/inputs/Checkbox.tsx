@@ -15,7 +15,7 @@ export interface CheckboxProps {
     name?: string
     /** `id` for the control and the `<label htmlFor>` link. */
     htmlFor?: string
-    /** Validation message — shown under the control; also flags the box red + `aria-invalid`. */
+    /** Validation message, shown under the control; also flags the box red + `aria-invalid`. */
     errorMessage?: React.ReactNode
     /** Contextual help revealed via an info icon + tooltip beside the label. */
     helperText?: React.ReactNode
@@ -47,7 +47,7 @@ export interface CheckboxProps {
  * Radix handles keyboard activation, focus ring, and `role="checkbox"` ARIA;
  * the check mark pops in with a spring on first check. Supports a secondary
  * `description`, `helperText` tooltip, left/right label placement, and the
- * shared error treatment — so it lines up with every other input in a form.
+ * shared error treatment, so it lines up with every other input in a form.
  *
  * Emits `{ target: { checked, id, name } }` for drop-in use with existing
  * change handlers.

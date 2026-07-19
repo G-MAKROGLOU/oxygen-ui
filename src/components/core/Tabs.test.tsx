@@ -27,7 +27,7 @@ describe('Tabs', () => {
 
     it('switches panels when a tab is activated', () => {
         render(<Basic />)
-        // Radix Tabs use automatic activation — focusing the tab selects it.
+        // Radix Tabs use automatic activation, focusing the tab selects it.
         const beta = screen.getByRole('tab', { name: 'Beta' })
         beta.focus()
         fireEvent.focus(beta)

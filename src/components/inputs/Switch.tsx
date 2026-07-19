@@ -18,7 +18,7 @@ export interface SwitchInputProps {
     // ── Field-level labelling (mode 1) ──────────────────────────────────────
     /**
      * Central field label, positioned per `layout` (above in vertical, beside
-     * in horizontal) — the same affordance every other input uses.
+     * in horizontal), the same affordance every other input uses.
      */
     label?: React.ReactNode
     /** Label/control orientation. Default `'horizontal'`. */
@@ -41,7 +41,7 @@ export interface SwitchInputProps {
     required?: boolean
     /** Disable interaction and dim the control. */
     disabled?: boolean
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
 }
 

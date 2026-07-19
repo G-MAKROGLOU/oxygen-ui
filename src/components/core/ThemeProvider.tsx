@@ -78,7 +78,7 @@ export interface ThemeMotion {
 
 /**
  * Partial theme override configuration.
- * Every field is optional — only the keys you provide are overridden.
+ * Every field is optional, only the keys you provide are overridden.
  */
 export interface ThemeConfig {
     colors?:     ThemeColors
@@ -99,16 +99,16 @@ export interface ThemeProviderProps {
     /**
      * Additional token overrides applied only when the wrapper element carries
      * the `.dark` class (i.e. when `colorScheme="dark"` or when a parent sets `.dark`).
-     * Injected via a scoped `<style>` tag — no inline-style limitations.
+     * Injected via a scoped `<style>` tag, no inline-style limitations.
      */
     darkTheme?: ThemeConfig
 
     /**
      * Managed color scheme.
-     * - `'light'`  — removes `.dark` class from the wrapper
-     * - `'dark'`   — adds `.dark` class to the wrapper
-     * - `'system'` — follows `prefers-color-scheme` media query
-     * - `'auto'`   — do nothing; inherit from an ancestor (default)
+     * - `'light'` , removes `.dark` class from the wrapper
+     * - `'dark'`  , adds `.dark` class to the wrapper
+     * - `'system'`, follows `prefers-color-scheme` media query
+     * - `'auto'`  , do nothing; inherit from an ancestor (default)
      */
     colorScheme?: 'light' | 'dark' | 'system' | 'auto'
 
@@ -207,7 +207,7 @@ function toCssVars(theme?: ThemeConfig): Record<string, string> {
 // (including `<script>`) execute. We allow normal CSS value characters
 // (letters, digits, punctuation needed for `rgb()`, `oklch()`, multi-word
 // font-family lists, etc.) but reject the characters that can break CSS
-// escaping — including comment delimiters and the backslash hex-escape.
+// escaping, including comment delimiters and the backslash hex-escape.
 //
 // React inline `style={…}` values do NOT need this check: React applies them
 // as DOM `.style.<prop> = value`, where a malicious value can only affect
@@ -224,7 +224,7 @@ function varsToStyleString(vars: Record<string, string>): string {
     const out: string[] = []
     for (const [k, v] of Object.entries(vars)) {
         if (!isSafeCssValue(v)) {
-            // Warn unconditionally — these values are a security risk; the
+            // Warn unconditionally, these values are a security risk; the
             // consumer needs to fix them in both dev and prod. (We don't
             // gate on `process.env.NODE_ENV` because that's not always
             // defined in browser bundles.)

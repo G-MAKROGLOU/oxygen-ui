@@ -36,7 +36,7 @@ export const WithError: Story = {
             events={[
                 { key: 1, title: 'Payment authorized', status: 'complete', timestamp: '09:24' },
                 { key: 2, title: 'Processing', status: 'complete', timestamp: '09:25' },
-                { key: 3, title: 'Payment captured', status: 'error', description: 'Card declined — please retry.', timestamp: '09:26' },
+                { key: 3, title: 'Payment captured', status: 'error', description: 'Card declined, please retry.', timestamp: '09:26' },
                 { key: 4, title: 'Fulfilment', status: 'upcoming' },
             ]}
         />

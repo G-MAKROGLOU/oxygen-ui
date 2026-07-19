@@ -31,7 +31,7 @@ const defaultFormat = (v: number) => `${v < 0 ? '-' : ''}$${Math.abs(v).toFixed(
  * {@link useCart} store, so it must be rendered inside a `<CartProvider>`.
  *
  * The pay button is disabled whenever the cart is empty (via the form's
- * `submitDisabled`) — the card fields stay editable, but payment can't be
+ * `submitDisabled`), the card fields stay editable, but payment can't be
  * submitted with nothing to buy. Stacks to a single column below `lg`.
  *
  * @example

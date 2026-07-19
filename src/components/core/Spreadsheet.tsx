@@ -8,7 +8,7 @@ import { type RemoteSourceOptions, sourceToBytes, sourceName, downloadBlob } fro
 
 export interface Cell {
     value: CellValue
-    /** Reserved for a future formula engine — parsed/stored but not evaluated. */
+    /** Reserved for a future formula engine, parsed/stored but not evaluated. */
     formula?: string
 }
 
@@ -23,7 +23,7 @@ export type GridSource = SheetData[] | File | Blob | string | URL
 export interface SpreadsheetProps {
     source: GridSource
     remote?: RemoteSourceOptions
-    /** Value editing only — no formulas. Default false. */
+    /** Value editing only, no formulas. Default false. */
     editable?: boolean
     onCellEdit?: (e: { sheet: string; row: number; column: string; value: unknown }) => void
     onChange?: (sheets: SheetData[]) => void
@@ -44,7 +44,7 @@ export interface SpreadsheetProps {
     height?: number | string
     /** Overall width. Defaults to filling the container. */
     width?: number | string
-    // formulaEngine?: FormulaEngineAdapter // RESERVED FOR FUTURE — design seam only.
+    // formulaEngine?: FormulaEngineAdapter // RESERVED FOR FUTURE, design seam only.
     className?: string
     style?: React.CSSProperties
 }
@@ -135,7 +135,7 @@ function coerceToCellType(prev: CellValue, next: string): CellValue {
 
 /**
  * Multi-sheet spreadsheet built on {@link DataGrid}. Accepts data three ways
- * — in-memory `SheetData[]` (no network), a `File`/`Blob` (no network), or a
+ *, in-memory `SheetData[]` (no network), a `File`/`Blob` (no network), or a
  * URL (the only mode that fetches). `.xlsx` is parsed with SheetJS, loaded
  * lazily on first use. Value editing emits `onCellEdit` + `onChange`; there is
  * no formula engine (the `Cell.formula` slot is reserved, not evaluated).
@@ -464,7 +464,7 @@ export default function Spreadsheet({
 
     return (
         <div className={cx('flex flex-col overflow-hidden rounded-lg border border-border bg-surface-raised', className)} style={{ height, width, ...style }}>
-            {/* Menu bar — File / Sheet menus, like a spreadsheet app. */}
+            {/* Menu bar, File / Sheet menus, like a spreadsheet app. */}
             <div className="flex flex-shrink-0 items-center gap-0.5 border-b border-border bg-surface px-1.5 py-1">
                 <MenuButton label="File" variant="ghost" size="sm" hideChevron items={fileItems} />
                 {editable && <MenuButton label="Sheet" variant="ghost" size="sm" hideChevron items={sheetItems} />}

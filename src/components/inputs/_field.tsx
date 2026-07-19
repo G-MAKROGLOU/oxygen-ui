@@ -7,7 +7,7 @@ import { cx } from '../../utils/cx'
  *
  * Centralises the things every input must agree on:
  * - the **size scale** (sm / md / lg) → control height + text size + padding
- * - the **refined focus treatment** — a crisp 1px accent border plus a soft
+ * - the **refined focus treatment**, a crisp 1px accent border plus a soft
  *   3px low-opacity halo (NOT a heavy solid ring band)
  * - the **resting / hover / error / disabled** border + background states
  * - a **`<Field>` wrapper** handling label, error region, layout
@@ -41,7 +41,7 @@ export const FIELD_SIZE: Record<FieldSize, SizeSpec> = {
 // emits the CSS. Do not template the variant prefix.
 
 // CONSISTENCY: every input shows the IDENTICAL focus treatment under the same
-// conditions — the border turns accent. We deliberately use NO ring/box-shadow
+// conditions, the border turns accent. We deliberately use NO ring/box-shadow
 // halo: a ring is a box-shadow that any ancestor with `overflow` (incl. the
 // Storybook canvas) clips, producing the choppy "rounded-top, square-bottom"
 // artifact. A border-colour change can never be clipped and reads cleanly.
@@ -72,7 +72,7 @@ export interface FieldShellOptions {
 }
 
 /**
- * Compose the className for an input's outer "shell" — the bordered, rounded
+ * Compose the className for an input's outer "shell", the bordered, rounded
  * box that carries the focus ring. Apply to the `<input>` directly, or to a
  * wrapper `<div>` that contains an input plus adornments (pass
  * `focusWithin: true` in that case).
@@ -152,7 +152,7 @@ export interface FieldLabelProps {
 }
 
 /**
- * The label row shared by every input — label text + required asterisk +
+ * The label row shared by every input, label text + required asterisk +
  * optional `helperText` info icon. Components that render their own label
  * outside `<Field>` (Dropdown, DatePicker, Switch, SegmentedControl) use this
  * so the affordance is pixel-identical everywhere.
@@ -198,9 +198,9 @@ export function FieldLabel({
 
 export interface FieldProps {
     label?: React.ReactNode
-    /** `id` of the control — links the `<label htmlFor>`. */
+    /** `id` of the control, links the `<label htmlFor>`. */
     htmlFor?: string
-    /** `id` for the error region — pair with `aria-describedby` on the control. */
+    /** `id` for the error region, pair with `aria-describedby` on the control. */
     errorId?: string
     errorMessage?: React.ReactNode
     /** Orientation of label vs control. Default `'vertical'`. */
@@ -236,7 +236,7 @@ export interface FieldProps {
  * The error message always sits under the **control only** (never spanning
  * the label in horizontal layout). Label uses full-contrast foreground +
  * medium weight so it reads as the anchor, while the input's placeholder is
- * muted — establishing hierarchy without making the label tiny.
+ * muted, establishing hierarchy without making the label tiny.
  */
 export function Field({
     label,

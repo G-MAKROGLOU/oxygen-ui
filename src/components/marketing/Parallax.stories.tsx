@@ -14,7 +14,7 @@ const meta: Meta<typeof Parallax> = {
     },
     decorators: [(Story) => (
         <div className="p-6">
-            <div className="mb-6 rounded-xl border border-border bg-surface p-6 text-sm text-foreground-secondary">Scroll down — the band’s background drifts as it passes through the viewport.</div>
+            <div className="mb-6 rounded-xl border border-border bg-surface p-6 text-sm text-foreground-secondary">Scroll down, the band’s background drifts as it passes through the viewport.</div>
             <Story />
             <div className="mt-6 rounded-xl border border-border bg-surface p-6 text-sm text-foreground-secondary">Content after the band.</div>
         </div>

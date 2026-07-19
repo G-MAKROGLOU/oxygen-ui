@@ -10,7 +10,7 @@ const meta: Meta<typeof CreditCardForm> = {
         docs: {
             description: {
                 component:
-                    'A single, unified credit-card form built on the oxygen-ui Form API. Owns all four fields and their cross-field rules — card number (brand detection + grouping + Luhn), expiry (MM/YY, real month, not past), CVV (brand-aware length), and cardholder name. `onSubmit(card)` fires only once everything validates; `onChange(card)` streams live updates. Shipped as one component on purpose: a CVV or expiry field is meaningless on its own.',
+                    'A single, unified credit-card form built on the oxygen-ui Form API. Owns all four fields and their cross-field rules, card number (brand detection + grouping + Luhn), expiry (MM/YY, real month, not past), CVV (brand-aware length), and cardholder name. `onSubmit(card)` fires only once everything validates; `onChange(card)` streams live updates. Shipped as one component on purpose: a CVV or expiry field is meaningless on its own.',
             },
         },
     },
@@ -53,7 +53,7 @@ export const LiveBrandPreview: Story = {
                 <div className="w-96">
                     <CreditCardForm onChange={setLive} onSubmit={() => undefined} />
                     <p className="mt-3 text-sm text-foreground-secondary">
-                        Brand: <strong className="text-foreground">{live?.brand ?? '—'}</strong>
+                        Brand: <strong className="text-foreground">{live?.brand ?? '-'}</strong>
                         {'  ·  '}
                         Digits: <strong className="text-foreground">{live?.number.length ?? 0}</strong>
                     </p>

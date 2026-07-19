@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
 
-// Ordered scan — src/docs takes precedence; co-located MDX files fill gaps
+// Ordered scan, src/docs takes precedence; co-located MDX files fill gaps
 const MDX_DIRS = [
   join(ROOT, 'src', 'docs'),
   join(ROOT, 'src', 'hooks'),
@@ -197,7 +197,7 @@ function main() {
   mkdirSync(outDir, { recursive: true })
   // Outside netlify/functions so Netlify doesn't try to deploy it as a serverless function
   const outPath = join(outDir, 'ai-manifest.js')
-  writeFileSync(outPath, `// AUTO-GENERATED — run: yarn generate-manifest\nexport default ${JSON.stringify(manifest, null, 2)}\n`)
+  writeFileSync(outPath, `// AUTO-GENERATED, run: yarn generate-manifest\nexport default ${JSON.stringify(manifest, null, 2)}\n`)
 
   const size = (JSON.stringify(manifest).length / 1024).toFixed(1)
   console.log(`  ✓ ${components.length} components · ${tokens.all.length} tokens · ${size} KB → ${outPath}`)

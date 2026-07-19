@@ -12,7 +12,7 @@ const meta: Meta<typeof Portal> = {
         docs: {
             description: {
                 component:
-                    'SSR-safe DOM relocator. Renders children at a detached node (defaults to `document.body`) so `position: fixed` descendants resolve against the real viewport, never a transformed/filtered/contained ancestor. Use it for any viewport-anchored UI — toasts, drawers, full-screen overlays, lightboxes. Components built on Radix primitives (Modal, Drawer, Tooltip, Dropdown) already do this via their own `*.Portal` and do not need to be wrapped.',
+                    'SSR-safe DOM relocator. Renders children at a detached node (defaults to `document.body`) so `position: fixed` descendants resolve against the real viewport, never a transformed/filtered/contained ancestor. Use it for any viewport-anchored UI, toasts, drawers, full-screen overlays, lightboxes. Components built on Radix primitives (Modal, Drawer, Tooltip, Dropdown) already do this via their own `*.Portal` and do not need to be wrapped.',
             },
         },
     },
@@ -23,7 +23,7 @@ type Story = StoryObj<typeof Portal>
 // ─── 1. Basic ────────────────────────────────────────────────────────────────
 
 export const Basic: Story = {
-    name: '1. Basic — toggle a fixed overlay',
+    name: '1. Basic, toggle a fixed overlay',
     parameters: {
         docs: {
             description: {
@@ -67,12 +67,12 @@ export const Basic: Story = {
 // ─── 2. Failure mode side-by-side ────────────────────────────────────────────
 
 export const BrokenWithoutPortal: Story = {
-    name: '2. Without Portal — broken by transformed ancestor',
+    name: '2. Without Portal, broken by transformed ancestor',
     parameters: {
         docs: {
             description: {
                 story:
-                    "A `position: fixed` element inside a wrapper with `transform` no longer covers the viewport — it covers only the wrapper's box. Open both this story and the next one to compare; this one's overlay only fills the bordered container.",
+                    "A `position: fixed` element inside a wrapper with `transform` no longer covers the viewport, it covers only the wrapper's box. Open both this story and the next one to compare; this one's overlay only fills the bordered container.",
             },
         },
     },
@@ -83,7 +83,7 @@ export const BrokenWithoutPortal: Story = {
                 <div className="p-10">
                     <div className="rounded-lg border border-border p-6" style={{ transform: 'translateZ(0)' }}>
                         <p className="text-sm text-foreground-secondary mb-3">
-                            This card has <code className="font-mono text-xs">transform: translateZ(0)</code> — a common
+                            This card has <code className="font-mono text-xs">transform: translateZ(0)</code>, a common
                             performance hint. It creates a new containing block for fixed descendants.
                         </p>
                         <Button content="Open overlay (no Portal)" onClick={() => setOpen(true)} />
@@ -95,7 +95,7 @@ export const BrokenWithoutPortal: Story = {
                                 <div className="rounded-lg bg-surface p-6 shadow-xl max-w-sm">
                                     <h3 className="text-base font-semibold text-foreground">Broken overlay</h3>
                                     <p className="mt-1 text-sm text-foreground-secondary">
-                                        Only covers the card, not the viewport — the parent <code>transform</code> hijacked the containing block.
+                                        Only covers the card, not the viewport, the parent <code>transform</code> hijacked the containing block.
                                     </p>
                                     <Button content="Close" variant="secondary" onClick={() => setOpen(false)} className="mt-4" />
                                 </div>
@@ -110,7 +110,7 @@ export const BrokenWithoutPortal: Story = {
 }
 
 export const FixedWithPortal: Story = {
-    name: '3. With Portal — same wrapper, correct behaviour',
+    name: '3. With Portal, same wrapper, correct behaviour',
     parameters: {
         docs: {
             description: {
@@ -158,7 +158,7 @@ export const FixedWithPortal: Story = {
 // ─── 4. Custom target ────────────────────────────────────────────────────────
 
 export const CustomTarget: Story = {
-    name: '4. Custom target — mount into a specific node',
+    name: '4. Custom target, mount into a specific node',
     parameters: {
         docs: {
             description: {
@@ -200,7 +200,7 @@ export const CustomTarget: Story = {
 // ─── 5. Disabled / inline render ─────────────────────────────────────────────
 
 export const Disabled: Story = {
-    name: '5. Disabled — pass null to render nothing',
+    name: '5. Disabled, pass null to render nothing',
     parameters: {
         docs: {
             description: {

@@ -51,7 +51,7 @@ function Stars({ value }: { value: number }) {
 }
 
 /**
- * A wall of customer testimonials — quote, star rating, and author with avatar.
+ * A wall of customer testimonials, quote, star rating, and author with avatar.
  * Responsive grid (single column on mobile); use `columns={1}` for one centred
  * featured quote.
  *

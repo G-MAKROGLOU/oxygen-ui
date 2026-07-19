@@ -14,7 +14,7 @@ export default meta
 type Story = StoryObj<typeof ScalableContainer>
 
 export const Default: Story = {
-    name: 'Subtle expand — both axes',
+    name: 'Subtle expand, both axes',
     render: () => (
         <div className="h-[400px] w-full bg-surface-raised rounded-lg p-4">
             <ScalableContainer width="50%" height={200}>
@@ -45,7 +45,7 @@ export const TogglePositions: Story = {
 }
 
 export const StackPushBehaviour: Story = {
-    name: 'Stack — expand pushes siblings',
+    name: 'Stack, expand pushes siblings',
     parameters: {
         layout: 'fullscreen',
         docs: {
@@ -81,7 +81,7 @@ export const StackPushBehaviour: Story = {
                 </ScalableContainer>
             ))}
             <div className="h-px bg-border my-2" />
-            <p className="text-xs text-foreground-muted">End of stack — expanding panels above pushes this marker down.</p>
+            <p className="text-xs text-foreground-muted">End of stack, expanding panels above pushes this marker down.</p>
         </div>
     ),
 }
@@ -123,7 +123,7 @@ export const Playground: Story = {
 }
 
 // Mimics a real chart: re-measures on window resize (like ECharts / Chart.js)
-// and reports its current size, so you can see content adapting — not breaking —
+// and reports its current size, so you can see content adapting, not breaking -
 // as the container resizes it.
 const FakeChart = ({ label }: { label: string }) => {
     const ref = React.useRef<HTMLDivElement>(null)
@@ -151,7 +151,7 @@ const FakeChart = ({ label }: { label: string }) => {
 // A flex-wrap chart grid, sized by className (the real consumer pattern): each
 // chart rests at ~half width via `w-[calc(50%-6px)]`, height set by the `height`
 // prop. Expanding one grows it to targetWidth/targetHeight and the others reflow
-// below at their own dimensions — pushed down, never squeezed. No `width` prop,
+// below at their own dimensions, pushed down, never squeezed. No `width` prop,
 // so the className controls resting size (inline width is only written when
 // expanded).
 export const GridExpand: Story = {

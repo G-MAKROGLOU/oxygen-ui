@@ -6,7 +6,7 @@ export type LoadingSpinnerSize = 'xs' | 'sm' | 'md' | 'lg'
 
 export interface LoadingSpinnerProps {
     /**
-     * Text revealed letter-by-letter beneath the spinner. Optional — pass
+     * Text revealed letter-by-letter beneath the spinner. Optional, pass
      * `undefined` for a pure spinner with no caption (e.g. inline mode).
      */
     prompt?: string
@@ -29,7 +29,7 @@ export interface LoadingSpinnerProps {
      */
     textColor?: string
     /**
-     * Backdrop opacity (0 – 1) for the fullscreen overlay. Defaults to 0.8 —
+     * Backdrop opacity (0 – 1) for the fullscreen overlay. Defaults to 0.8 -
      * close enough to opaque to block UI underneath while still hinting at the
      * previous state. Ignored when `inline` is true.
      */
@@ -41,7 +41,7 @@ export interface LoadingSpinnerProps {
 // ── Size → dimensions table ─────────────────────────────────────────────────
 // Outer ring, inner ring, centre dot, ring stroke width, text size.
 const SIZE_MAP = {
-    // xs is sized to fit beside button text (~14px) — async AutoComplete,
+    // xs is sized to fit beside button text (~14px), async AutoComplete,
     // Button loading prop, inline status badges, etc.
     xs: { outer: 'w-3.5 h-3.5', inner: 'w-1.5 h-1.5', dot: 'w-0.5 h-0.5', stroke: 'border-[1.5px]', text: 'text-[10px]' },
     sm: { outer: 'w-8 h-8',     inner: 'w-4 h-4',    dot: 'w-1 h-1',     stroke: 'border-2',        text: 'text-xs'    },
@@ -53,7 +53,7 @@ const SIZE_MAP = {
 
 // ── Letter-stagger variants ─────────────────────────────────────────────────
 // 60 ms stagger, 250 ms fade + lift per glyph. With `useReducedMotion` the
-// container falls back to instant reveal — the prompt stays visible.
+// container falls back to instant reveal, the prompt stays visible.
 const containerVariants: Variants = {
     hidden:  {},
     visible: { transition: { staggerChildren: 0.05 } },
@@ -67,26 +67,26 @@ const letterVariants: Variants = {
 // ── Spinner core (rings + dot) ──────────────────────────────────────────────
 // Two concentric arcs rotating at different speeds in opposite directions,
 // with a centred breathing dot. Each ring uses two opposing border edges so
-// the rotation reads as a 180° arc traversal — sharper than a full ring.
+// the rotation reads as a 180° arc traversal, sharper than a full ring.
 // All three elements rotate around the same centre via `relative + absolute`.
 function SpinnerCore({ size, color }: { size: LoadingSpinnerSize; color?: string }) {
     const dims = SIZE_MAP[size]
     const ringColor = color ?? 'var(--color-accent)'
     return (
         <div className="relative flex items-center justify-center" style={{ color: ringColor }}>
-            {/* Outer arc — slower clockwise */}
+            {/* Outer arc, slower clockwise */}
             <div
                 className={`${dims.outer} ${dims.stroke} rounded-full border-transparent border-t-current border-r-current animate-spin`}
                 style={{ animationDuration: '1.4s' }}
                 aria-hidden="true"
             />
-            {/* Inner arc — faster counter-clockwise, lower opacity for layering */}
+            {/* Inner arc, faster counter-clockwise, lower opacity for layering */}
             <div
                 className={`absolute ${dims.inner} ${dims.stroke} rounded-full border-transparent border-b-current border-l-current animate-spin opacity-60`}
                 style={{ animationDuration: '0.9s', animationDirection: 'reverse' }}
                 aria-hidden="true"
             />
-            {/* Centre dot — breathing pulse */}
+            {/* Centre dot, breathing pulse */}
             <div
                 className={`absolute ${dims.dot} rounded-full bg-current animate-breathe`}
                 aria-hidden="true"
@@ -113,7 +113,7 @@ function SpinnerCore({ size, color }: { size: LoadingSpinnerSize; color?: string
  *
  * **Accessibility**: `role="status"` + `aria-label`/`aria-live` make the
  * indicator announce-able to screen readers. `prefers-reduced-motion`
- * collapses the letter stagger to instant reveal — the spinner rings keep
+ * collapses the letter stagger to instant reveal, the spinner rings keep
  * rotating since a continuous spinner is informative, not decorative.
  *
  * @example Fullscreen overlay (page load)

@@ -1,10 +1,10 @@
 /**
  * Shared file-source contract for content components (PdfViewer, Spreadsheet).
  *
- * Three independent, equal ways to supply content — no preference baked in:
- *  1. PROGRAMMATIC  — `ArrayBuffer | Uint8Array` built in-browser (no network)
- *  2. BACKEND       — `string | URL` fetched/streamed from a server
- *  3. LOCAL         — `File | Blob` from a file input / drag-drop (no network)
+ * Three independent, equal ways to supply content, no preference baked in:
+ *  1. PROGRAMMATIC , `ArrayBuffer | Uint8Array` built in-browser (no network)
+ *  2. BACKEND      , `string | URL` fetched/streamed from a server
+ *  3. LOCAL        , `File | Blob` from a file input / drag-drop (no network)
  */
 export type FileSource = string | URL | File | Blob | ArrayBuffer | Uint8Array
 
@@ -29,7 +29,7 @@ export function urlHref(source: string | URL): string {
  * Resolve any {@link FileSource} to raw bytes.
  *
  * Modes 1 (ArrayBuffer/Uint8Array) and 3 (File/Blob) resolve **fully
- * client-side — no network**. Mode 2 (URL) is the only one that fetches; the
+ * client-side, no network**. Mode 2 (URL) is the only one that fetches; the
  * server contract is a plain HTTP GET returning the file bytes, with optional
  * `httpHeaders`/`withCredentials` forwarded.
  */
@@ -37,7 +37,7 @@ export async function sourceToBytes(source: FileSource, remote?: RemoteSourceOpt
     if (source instanceof Uint8Array) return source
     if (source instanceof ArrayBuffer) return new Uint8Array(source)
     if (typeof Blob !== 'undefined' && source instanceof Blob) {
-        // Covers both File and Blob — no network.
+        // Covers both File and Blob, no network.
         return new Uint8Array(await source.arrayBuffer())
     }
     if (isUrlSource(source)) {

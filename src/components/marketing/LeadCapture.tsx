@@ -27,7 +27,7 @@ export interface LeadCaptureProps {
 const GRADIENT = 'radial-gradient(120% 140% at 50% 0%, color-mix(in oklab, var(--color-accent) 14%, transparent), transparent 70%)'
 
 /**
- * A footer call-to-action band with an inline email-capture form — title,
+ * A footer call-to-action band with an inline email-capture form, title,
  * supporting copy, an email field, and a submit button. Shows a confirmation in
  * place of the form once submitted.
  *
@@ -47,7 +47,7 @@ export default function LeadCapture({
     buttonLabel = 'Subscribe',
     onSubmit,
     note,
-    successMessage = 'Thanks — you’re on the list.',
+    successMessage = 'Thanks, you’re on the list.',
     background = 'gradient',
     centered = true,
     className = '',

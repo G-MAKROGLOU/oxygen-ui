@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { CartLineItem } from './Cart'
 
-/** Shape accepted by `addToCart` — quantity is optional (defaults to 1). */
+/** Shape accepted by `addToCart`, quantity is optional (defaults to 1). */
 export type CartItemInput = Omit<CartLineItem, 'quantity'> & { quantity?: number }
 
 export interface CartContextValue {
@@ -22,7 +22,7 @@ export interface CartContextValue {
     isInCart: (id: CartLineItem['id']) => boolean
     /** Total number of units across all lines (sum of quantities). */
     getItemCount: () => number
-    /** Subtotal — sum of `price × quantity` across all lines. */
+    /** Subtotal, sum of `price × quantity` across all lines. */
     getCartTotal: () => number
 }
 
@@ -43,7 +43,7 @@ export interface CartProviderProps {
 
 /**
  * Provides a robust, app-wide cart API. Wrap any subtree and call
- * {@link useCart} from anywhere inside to add, remove, and total items —
+ * {@link useCart} from anywhere inside to add, remove, and total items -
  * the cart panel, a product grid, and a topbar badge all stay in sync off the
  * same store.
  *

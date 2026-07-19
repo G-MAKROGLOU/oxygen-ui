@@ -4,12 +4,12 @@ import { isRequired } from './validate'
 
 /**
  * How a control reports changes, so one binder can drive any of our inputs:
- * - `value`   — `onChange(value)` directly (RadioGroup, Slider, Rating,
+ * - `value`  , `onChange(value)` directly (RadioGroup, Slider, Rating,
  *               SegmentedControl, TagsInput, OtpInput, DatePicker, ColorPicker…)
- * - `native`  — `onChange(e)` reading `e.target.value` (TextInput, Password,
+ * - `native` , `onChange(e)` reading `e.target.value` (TextInput, Password,
  *               TextArea, NumberInput, SearchInput)
- * - `checked` — `onChange({target:{checked}})` (Switch, Checkbox)
- * - `target`  — `onChange({target:{value}})` (Dropdown, TreeSelect)
+ * - `checked`, `onChange({target:{checked}})` (Switch, Checkbox)
+ * - `target` , `onChange({target:{value}})` (Dropdown, TreeSelect)
  */
 export type FieldKind = 'value' | 'native' | 'checked' | 'target'
 

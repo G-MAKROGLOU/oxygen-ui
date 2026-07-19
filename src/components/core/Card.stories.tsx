@@ -55,7 +55,7 @@ export const Interactive: Story = {
     render: () => (
         <Card interactive onClick={() => alert('opened')} padding="md">
             <div className="text-sm font-semibold text-foreground">Clickable card</div>
-            <p className="mt-1 text-sm text-foreground-secondary">The whole surface is a button — hover to see the lift.</p>
+            <p className="mt-1 text-sm text-foreground-secondary">The whole surface is a button, hover to see the lift.</p>
         </Card>
     ),
 }
@@ -64,7 +64,7 @@ export const Flat: Story = {
     render: () => (
         <Card flush padding="md">
             <div className="text-sm font-semibold text-foreground">Borderless</div>
-            <p className="mt-1 text-sm text-foreground-secondary">No border or shadow — sits flush on its background.</p>
+            <p className="mt-1 text-sm text-foreground-secondary">No border or shadow, sits flush on its background.</p>
         </Card>
     ),
 }

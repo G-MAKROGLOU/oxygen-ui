@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react'
 import { useFormStore } from './context'
 
 export interface FieldArrayItem {
-    /** Stable React key — survives reorders and removals. */
+    /** Stable React key, survives reorders and removals. */
     key: number
     /** Dotted base path for this row, e.g. `"contacts.2"`. */
     name: string

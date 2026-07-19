@@ -63,7 +63,7 @@ describe('ContextMenu', () => {
         fireEvent.contextMenu(screen.getByText('trigger'))
         const share = screen.getByText('Share')
         expect(share.closest('[data-disabled]')).not.toBeNull()
-        // Clicking does nothing — Radix swallows the activation
+        // Clicking does nothing, Radix swallows the activation
         fireEvent.click(share)
         expect(onShare).not.toHaveBeenCalled()
     })
@@ -89,7 +89,7 @@ describe('ContextMenu', () => {
         // Parent renders its label
         expect(screen.getByText('Export')).toBeInTheDocument()
         // Sub-menu doesn't open until hover / arrow; we don't simulate that
-        // here — Radix handles it. The test guards that the parent renders
+        // here, Radix handles it. The test guards that the parent renders
         // with the chevron affordance.
         expect(screen.getByText('Export').closest('[role="menuitem"]')).not.toBeNull()
     })

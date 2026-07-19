@@ -54,7 +54,7 @@ function Controlled(args: React.ComponentProps<typeof Dropdown>) {
         <div style={{ minWidth: 240 }}>
             <Dropdown {...args} value={val} onChange={(e) => setVal(e.target.value)} />
             <p className="mt-2 text-sm text-foreground-secondary">
-                Selected: {Array.isArray(val) ? val.join(', ') || '—' : String(val) || '—'}
+                Selected: {Array.isArray(val) ? val.join(', ') || '-' : String(val) || '-'}
             </p>
         </div>
     )
@@ -73,7 +73,7 @@ export const MultiselectPrefilled: Story = {
         docs: {
             description: {
                 story:
-                    'Selected values render as removable tag chips (the same chip TagsInput uses). The trigger keeps a fixed size: it shows as many tags as fit on one line, then collapses the rest into a "+N more" chip — never changing width or height as the selection grows. Clicking a tag\'s × deselects it.',
+                    'Selected values render as removable tag chips (the same chip TagsInput uses). The trigger keeps a fixed size: it shows as many tags as fit on one line, then collapses the rest into a "+N more" chip, never changing width or height as the selection grows. Clicking a tag\'s × deselects it.',
             },
         },
     },

@@ -16,7 +16,7 @@ export interface LogoutTimerProps {
     onWarning?: () => void
     /** Activity events that reset the idle timer. */
     events?: string[]
-    /** Master switch — when false the timer is fully disabled. Default `true`. */
+    /** Master switch, when false the timer is fully disabled. Default `true`. */
     enabled?: boolean
     /** Warning dialog heading. Default `'Still there?'`. */
     title?: React.ReactNode
@@ -41,7 +41,7 @@ const formatTime = (ms: number) => {
  * Inactivity / session-timeout guard. After `timeout` ms with no user activity
  * it raises a warning dialog that counts down for `countdown` ms; if the user
  * doesn't respond, `onLogout` fires. "Stay signed in" extends the session;
- * "Sign out now" logs out immediately. Activity resets the idle timer — but not
+ * "Sign out now" logs out immediately. Activity resets the idle timer, but not
  * while the warning is up, so the user must make a choice.
  *
  * Mount it once near the app root, alongside (or just inside) your
@@ -126,7 +126,7 @@ export default function LogoutTimer({
             return
         }
         const onActivity = () => {
-            // Don't let background activity dismiss an active warning — the user
+            // Don't let background activity dismiss an active warning, the user
             // must choose. Throttle resets to avoid thrashing the timer.
             if (warningRef.current) return
             const now = Date.now()

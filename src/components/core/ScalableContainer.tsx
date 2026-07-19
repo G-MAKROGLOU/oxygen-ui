@@ -5,12 +5,12 @@ import { cx } from '../../utils/cx'
 
 export interface ScalableContainerProps {
     /**
-     * Resting width. Optional — when omitted, the resting size is left to your
+     * Resting width. Optional, when omitted, the resting size is left to your
      * own `className` / parent layout (so the container can sit in a fluid grid
      * sized by `w-[…]` classes). Only set this if you want an inline width.
      */
     width?: React.CSSProperties['width']
-    /** Resting height. Optional — see {@link ScalableContainerProps.width}. */
+    /** Resting height. Optional, see {@link ScalableContainerProps.width}. */
     height?: React.CSSProperties['height']
     /**
      * Width when expanded. Default `'100%'`. Use `'100%'` to span the full row
@@ -39,12 +39,12 @@ export interface ScalableContainerProps {
     collapseIcon?: React.ReactNode
     /**
      * Position of the toggle button inside the container.
-     * Default `'top-right'` — matches the OS-window convention.
+     * Default `'top-right'`, matches the OS-window convention.
      */
     togglePosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
-    /** @deprecated No longer used — set `targetWidth`/`targetHeight` instead. */
+    /** @deprecated No longer used, set `targetWidth`/`targetHeight` instead. */
     expandContainerRef?: React.RefObject<HTMLElement | null>
-    /** @deprecated No longer used — set `targetWidth`/`targetHeight` instead. */
+    /** @deprecated No longer used, set `targetWidth`/`targetHeight` instead. */
     expandRatio?: number
     /** Extra classes merged onto the container root. */
     className?: string
@@ -59,26 +59,26 @@ const TOGGLE_POSITION_CLASS: Record<NonNullable<ScalableContainerProps['togglePo
 
 /**
  * Container that grows to a target size on click and collapses back. Reads like
- * an OS window resize — subtle elevation lift, smooth size transition.
+ * an OS window resize, subtle elevation lift, smooth size transition.
  *
  * **Resting size comes from your layout, not from props.** Leave `width`/`height`
  * unset and size the container with your own `className` (e.g. a fluid grid:
  * `w-full lg:w-[calc(50%-6px)]`). Only when expanded does the container write an
  * inline `width`/`height` (= `targetWidth`/`targetHeight`) and go `flex: none`,
- * so it grows to that size and simply **pushes its neighbours along the flow** —
+ * so it grows to that size and simply **pushes its neighbours along the flow** -
  * they keep their own dimensions and reflow (wrap / move down). On collapse the
  * inline sizing is removed and your className layout takes back over. No sibling
  * styles are ever touched.
  *
  * For neighbours to reflow *below* the expanded one, the parent must be able to
- * wrap — a `flex flex-wrap` row is the simplest; with `targetWidth="100%"` the
+ * wrap, a `flex flex-wrap` row is the simplest; with `targetWidth="100%"` the
  * expanded item takes a full row and everything after it moves down.
  *
  * @example
  * ```tsx
  * <div className="flex flex-wrap gap-3">
  *   <ScalableContainer
- *     className="w-full lg:w-[calc(50%-6px)]"   // resting size — your grid
+ *     className="w-full lg:w-[calc(50%-6px)]"   // resting size, your grid
  *     height={300}                              // resting height
  *     targetWidth="100%" targetHeight={580}     // expanded size
  *   >
@@ -115,7 +115,7 @@ export default function ScalableContainer({
 
     // Chart libraries (Chart.js, ECharts, …) measure once and don't notice a CSS
     // size change. Most listen to window resize, so emit resize kicks across the
-    // transition and once it settles — both the grown chart and any reflowed
+    // transition and once it settles, both the grown chart and any reflowed
     // neighbours re-render at their new sizes. Also scroll the grown box into view.
     useEffect(() => {
         if (isScaled === prevScaled.current) return
@@ -145,7 +145,7 @@ export default function ScalableContainer({
         <div
             ref={containerRef}
             // Resting (collapsed): only emit inline width/height if the consumer
-            // explicitly passed them — otherwise leave sizing to className/parent
+            // explicitly passed them, otherwise leave sizing to className/parent
             // so the container fits its fluid grid. Expanded: write the target
             // size + `flex:none` so it holds that size and pushes neighbours
             // (which keep their own dimensions and reflow) instead of shrinking
@@ -164,7 +164,7 @@ export default function ScalableContainer({
                 className,
             )}
         >
-            {/* Toggle button — floats over content, no background flash. */}
+            {/* Toggle button, floats over content, no background flash. */}
             <Tooltip placement="bottom" title={isScaled ? 'Collapse' : 'Expand'}>
                 <button
                     type="button"

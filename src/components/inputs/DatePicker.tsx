@@ -25,7 +25,7 @@ export interface DatePickerProps {
     required?: boolean
     /** Disable interaction and dim the control. */
     disabled?: boolean
-    /** Validation message — shown under the control; also flags it red and sets aria-invalid. */
+    /** Validation message, shown under the control; also flags it red and sets aria-invalid. */
     errorMessage?: React.ReactNode
     /** Earliest selectable date. Dates before this render disabled. */
     min?: Date
@@ -48,7 +48,7 @@ export interface DatePickerProps {
     className?: string
 }
 
-// Legacy alias — the previous component exported `TemporalPickerProps`. Keep
+// Legacy alias, the previous component exported `TemporalPickerProps`. Keep
 // it for backwards-compat imports; same shape as DatePickerProps now.
 export type TemporalPickerProps = DatePickerProps
 
@@ -74,7 +74,7 @@ function defaultFormat(d: Date) {
 /**
  * Build the 6×7 calendar grid for `viewMonth`. Days from the previous and
  * next month are included as "outside" cells so the grid always has 42 cells
- * (six rows of seven days) — keeps the layout stable across months.
+ * (six rows of seven days), keeps the layout stable across months.
  */
 function buildGrid(viewMonth: Date, weekStartsOn: 0 | 1): { date: Date; outside: boolean }[][] {
     const first = startOfMonth(viewMonth)
@@ -100,12 +100,12 @@ function buildGrid(viewMonth: Date, weekStartsOn: 0 | 1): { date: Date; outside:
  * proper row/column context.
  *
  * **Keyboard model** (focus is anywhere inside the grid):
- * - `←` `→` — previous / next day
- * - `↑` `↓` — previous / next week
- * - `PageUp` / `PageDown` — previous / next month
- * - `Home` / `End` — first / last day of the current week
- * - `Enter` / `Space` — select the focused day
- * - `Esc` — close the popover
+ * - `←` `→`, previous / next day
+ * - `↑` `↓`, previous / next week
+ * - `PageUp` / `PageDown`, previous / next month
+ * - `Home` / `End`, first / last day of the current week
+ * - `Enter` / `Space`, select the focused day
+ * - `Esc`, close the popover
  *
  * @example Required date
  * ```tsx
@@ -285,7 +285,7 @@ export default function DatePicker({
                                     <ChevronLeft />
                                 </button>
 
-                                {/* Header label — clicking promotes to the next-broader view.
+                                {/* Header label, clicking promotes to the next-broader view.
                                     In `years` view it's not clickable (we're already at the top). */}
                                 <button
                                     type="button"
@@ -319,7 +319,7 @@ export default function DatePicker({
                                 </button>
                             </div>
 
-                            {/* MONTHS view — 4×3 grid of month buttons */}
+                            {/* MONTHS view, 4×3 grid of month buttons */}
                             {view === 'months' && (
                                 <div className="grid grid-cols-3 gap-1 min-w-[224px]">
                                     {MONTH_NAMES.map((name, idx) => {
@@ -343,7 +343,7 @@ export default function DatePicker({
                                 </div>
                             )}
 
-                            {/* YEARS view — 4×3 grid of years for the current decade
+                            {/* YEARS view, 4×3 grid of years for the current decade
                                 (plus 1 spillover slot for the year after) */}
                             {view === 'years' && (() => {
                                 const decadeStart = Math.floor(viewMonth.getFullYear() / 10) * 10
@@ -372,7 +372,7 @@ export default function DatePicker({
                                 )
                             })()}
 
-                            {/* DAYS view — the calendar grid */}
+                            {/* DAYS view, the calendar grid */}
                             {view === 'days' && (
                             <table
                                 ref={gridRef}
@@ -432,7 +432,7 @@ export default function DatePicker({
                             </table>
                             )}
 
-                            {/* Footer — Today + Clear */}
+                            {/* Footer, Today + Clear */}
                             <div className="mt-2 flex items-center justify-between gap-2 border-t border-border pt-2">
                                 <button
                                     type="button"

@@ -8,7 +8,7 @@ export interface FormProps extends Omit<React.FormHTMLAttributes<HTMLFormElement
     /** The instance from `useForm()`. */
     form: UseFormReturn
     /**
-     * SPA submit handler — called with the validated values once all rules
+     * SPA submit handler, called with the validated values once all rules
      * pass. Receiving this puts the form in client mode (`preventDefault`).
      */
     onFinish?: (values: FormValues) => void | Promise<void>
@@ -26,7 +26,7 @@ export interface FormProps extends Omit<React.FormHTMLAttributes<HTMLFormElement
 
 /**
  * Form wrapper. Owns submission: on submit it marks the form submitted, runs
- * every field's rules, and only then dispatches — to `onFinish(values)` in SPA
+ * every field's rules, and only then dispatches, to `onFinish(values)` in SPA
  * mode or to `action` (function or native URL) for SSR. Renders a real
  * `<form noValidate>` so our inputs' `name`s serialise into `FormData` while we
  * still show our own validation messages.

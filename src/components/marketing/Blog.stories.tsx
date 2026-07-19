@@ -17,7 +17,7 @@ type Story = StoryObj<typeof Blog>
 
 const posts = [
     { title: 'Cutting CII red days before they happen', excerpt: 'A practical playbook for keeping vessels in band without sacrificing schedule.', image: 'https://picsum.photos/seed/blog1/800/450', tag: 'Compliance', author: 'A. Costa', date: 'May 12, 2026', readTime: '6 min read', href: '#' },
-    { title: 'The hidden cost of spreadsheet reporting', excerpt: 'Why scattered noon reports quietly erode your fuel budget — and what to do instead.', image: 'https://picsum.photos/seed/blog2/800/450', tag: 'Operations', author: 'M. Ferreira', date: 'Apr 28, 2026', readTime: '4 min read', href: '#' },
+    { title: 'The hidden cost of spreadsheet reporting', excerpt: 'Why scattered noon reports quietly erode your fuel budget, and what to do instead.', image: 'https://picsum.photos/seed/blog2/800/450', tag: 'Operations', author: 'M. Ferreira', date: 'Apr 28, 2026', readTime: '4 min read', href: '#' },
     { title: 'Designing for the bridge at 2am', excerpt: 'Legibility, contrast and calm: the interface principles behind oxygen-ui.', image: 'https://picsum.photos/seed/blog3/800/450', tag: 'Design', author: 'G. Makroglou', date: 'Apr 10, 2026', readTime: '8 min read', href: '#' },
 ]
 

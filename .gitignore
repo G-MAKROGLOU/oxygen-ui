@@ -1,4 +1,4 @@
-# Claude Code — ignore local-only files; skills/ and commands/ are committed
+# Claude Code, ignore local-only files; skills/ and commands/ are committed
 .claude/launch.json
 .claude/settings.local.json
 .claude/todos/

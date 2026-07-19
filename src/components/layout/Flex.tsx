@@ -49,7 +49,7 @@ export interface FlexProps extends BoxProps {
     align?: FlexAlign
     justify?: FlexJustify
     wrap?: FlexWrap
-    /** Gap between children — uses the same spacing token scale as Box. */
+    /** Gap between children, uses the same spacing token scale as Box. */
     gap?: Spacing
     inline?: boolean
 }

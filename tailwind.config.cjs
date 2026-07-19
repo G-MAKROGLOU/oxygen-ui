@@ -18,7 +18,7 @@ module.exports = {
         // Brand palette + standard neutral scales. PALETTE holds the brand
         // tokens; the gray/slate/zinc ramps and black are merged back in as
         // sane defaults (Tailwind's `theme.colors` replaces the built-ins, so
-        // without this they'd be unavailable — see the earlier off-palette bugs).
+        // without this they'd be unavailable, see the earlier off-palette bugs).
         colors: {
             ...PALETTE,
             black: colors.black,
@@ -55,9 +55,9 @@ module.exports = {
                 'status-info':          'var(--color-info)',
                 // Scrim behind modals / drawers. Alpha is baked into the token
                 // value, so use the bare `bg-backdrop` utility (no `/opacity`
-                // modifier — that produces invalid CSS on a var-valued token).
+                // modifier, that produces invalid CSS on a var-valued token).
                 'backdrop':             'var(--color-backdrop)',
-                // Soft focus-halo colours — `color-mix` reads the accent / error
+                // Soft focus-halo colours, `color-mix` reads the accent / error
                 // var live, so theme overrides flow through. Used as the ring
                 // colour for the refined input focus state (crisp 1px border +
                 // low-opacity 3px halo). Avoids the `/opacity` modifier, which
@@ -66,7 +66,7 @@ module.exports = {
                 'focus-ring-error':     'color-mix(in oklab, var(--color-error) 22%, transparent)',
             },
 
-            // ── Radius utilities — rounded-sm, rounded-md, etc. ──────────────
+            // ── Radius utilities, rounded-sm, rounded-md, etc. ──────────────
             borderRadius: {
                 sm:    'var(--radius-sm)',
                 md:    'var(--radius-md)',
@@ -76,7 +76,7 @@ module.exports = {
                 full:  'var(--radius-full)',
             },
 
-            // ── Shadow utilities — shadow-sm, shadow-md, etc. ────────────────
+            // ── Shadow utilities, shadow-sm, shadow-md, etc. ────────────────
             boxShadow: {
                 sm: 'var(--shadow-sm)',
                 md: 'var(--shadow-md)',
@@ -84,7 +84,7 @@ module.exports = {
                 xl: 'var(--shadow-xl)',
             },
 
-            // ── Typography — font-size-*, font-weight-* etc. ─────────────────
+            // ── Typography, font-size-*, font-weight-* etc. ─────────────────
             fontSize: {
                 xs:    ['var(--font-size-xs)',   { lineHeight: 'var(--line-height-normal)' }],
                 sm:    ['var(--font-size-sm)',   { lineHeight: 'var(--line-height-normal)' }],
@@ -113,7 +113,7 @@ module.exports = {
                 wider:  'var(--letter-spacing-wider)',
             },
 
-            // ── Component heights — h-control-md, h-topbar, etc. ────────────
+            // ── Component heights, h-control-md, h-topbar, etc. ────────────
             height: {
                 'control-xs': 'var(--height-control-xs)',
                 'control-sm': 'var(--height-control-sm)',
@@ -122,7 +122,7 @@ module.exports = {
                 'topbar':     'var(--height-topbar)',
             },
 
-            // ── Motion — duration-fast, ease-out-expo, etc. ──────────────────
+            // ── Motion, duration-fast, ease-out-expo, etc. ──────────────────
             transitionDuration: {
                 instant: 'var(--duration-instant)',
                 fast:    'var(--duration-fast)',
@@ -138,7 +138,7 @@ module.exports = {
                 'in':        'var(--ease-in)',
             },
 
-            // ── Z-index — z-dropdown, z-modal, etc. ──────────────────────────
+            // ── Z-index, z-dropdown, z-modal, etc. ──────────────────────────
             zIndex: {
                 base:     'var(--z-base)',
                 raised:   'var(--z-raised)',
@@ -152,7 +152,7 @@ module.exports = {
                 tooltip:  'var(--z-tooltip)',
             },
 
-            // ── Animation utilities — animate-accordion-down, etc. ───────────
+            // ── Animation utilities, animate-accordion-down, etc. ───────────
             // Keyframes are defined in src/styles/_animations.scss.
             // Only animation shorthand utilities are configured here.
             animation: {

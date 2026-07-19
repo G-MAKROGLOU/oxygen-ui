@@ -27,8 +27,8 @@ export interface AccordionProps {
     collapsible?: boolean
     /**
      * Visual style:
-     * - `'separated'` (default) — each item is its own bordered card with gaps.
-     * - `'contained'` — one bordered surface with divider lines between items.
+     * - `'separated'` (default), each item is its own bordered card with gaps.
+     * - `'contained'`, one bordered surface with divider lines between items.
      */
     variant?: AccordionVariant
     /** Extra classes merged onto the root. */
@@ -40,7 +40,7 @@ export interface AccordionProps {
  * Vertically stacked, collapsible panels built on `@radix-ui/react-accordion`.
  * Radix handles open/close state, keyboard navigation (↑/↓/Home/End), and ARIA;
  * the content height animates via the shared `accordion-down` / `accordion-up`
- * keyframes (reduced-motion safe — the height var simply snaps).
+ * keyframes (reduced-motion safe, the height var simply snaps).
  *
  * @example
  * ```tsx
@@ -49,7 +49,7 @@ export interface AccordionProps {
  *     Everything in the Pro plan, plus priority support.
  *   </Accordion.Item>
  *   <Accordion.Item value="b" title="Can I cancel anytime?">
- *     Yes — cancel from billing settings, no questions asked.
+ *     Yes, cancel from billing settings, no questions asked.
  *   </Accordion.Item>
  * </Accordion>
  * ```
@@ -112,7 +112,7 @@ function Accordion({
 export interface AccordionItemProps {
     /** Unique value identifying this panel (used for open state). */
     value: string
-    /** Header content — the always-visible trigger label. */
+    /** Header content, the always-visible trigger label. */
     title: React.ReactNode
     /** Optional leading icon shown before the title. */
     icon?: React.ReactNode

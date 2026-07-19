@@ -12,7 +12,7 @@ export interface TagProps {
 /**
  * Internal chip used by TagsInput and Dropdown for selected values. Subtle
  * bordered surface (not a heavy accent fill) with an optional × remove
- * button. Kept internal — consumers compose tags through the inputs, not
+ * button. Kept internal, consumers compose tags through the inputs, not
  * directly.
  */
 export default function Tag({ children, onRemove, removeLabel, disabled }: TagProps) {

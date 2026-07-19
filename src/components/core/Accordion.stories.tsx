@@ -26,7 +26,7 @@ export const Default: Story = {
                 Everything in Starter, plus unlimited projects, priority support, and SSO.
             </Accordion.Item>
             <Accordion.Item value="b" title="Can I cancel anytime?">
-                Yes. Cancel from billing settings — your plan stays active until the end of the period.
+                Yes. Cancel from billing settings, your plan stays active until the end of the period.
             </Accordion.Item>
             <Accordion.Item value="c" title="Do you offer discounts?">
                 Annual billing saves 20%, and we have dedicated nonprofit and education pricing.

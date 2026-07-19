@@ -1,7 +1,7 @@
 export type ClassValue = string | number | false | null | undefined
 
 /**
- * Join class names, dropping falsy values — a tiny `clsx` for the design system.
+ * Join class names, dropping falsy values, a tiny `clsx` for the design system.
  * Replaces the repeated `[a, b].filter(Boolean).join(' ')` idiom with a clearer,
  * allocation-light call.
  *
