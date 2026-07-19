@@ -193,10 +193,10 @@ function main() {
     tokens,
   }
 
-  const outDir = join(ROOT, 'netlify', 'functions')
+  const outDir = join(ROOT, 'netlify', '_data')
   mkdirSync(outDir, { recursive: true })
-  // Emit as a JS module so esbuild can import it without JSON-loader config
-  const outPath = join(outDir, 'ai-manifest.generated.js')
+  // Outside netlify/functions so Netlify doesn't try to deploy it as a serverless function
+  const outPath = join(outDir, 'ai-manifest.js')
   writeFileSync(outPath, `// AUTO-GENERATED — run: yarn generate-manifest\nexport default ${JSON.stringify(manifest, null, 2)}\n`)
 
   const size = (JSON.stringify(manifest).length / 1024).toFixed(1)

@@ -10,7 +10,7 @@
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore — generated JS module, no type declarations
-import MANIFEST from './ai-manifest.generated.js'
+import MANIFEST from '../_data/ai-manifest.js'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
