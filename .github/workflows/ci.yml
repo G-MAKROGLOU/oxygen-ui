@@ -119,19 +119,14 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Generate AI manifest
+        run: yarn generate-manifest
+
       - name: Build Storybook
         run: yarn build-storybook
 
       - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v3
-        with:
-          publish-dir: storybook-static
-          production-branch: main
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy Storybook from ${{ github.sha }}"
-          enable-pull-request-comment: false
-          enable-commit-comment: true
+        run: npx netlify-cli deploy --prod --dir storybook-static --functions netlify/functions --message "Deploy Storybook from ${{ github.sha }}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 5
