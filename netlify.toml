@@ -11,3 +11,9 @@
 [functions]
   directory    = "netlify/functions"
   node_bundler = "esbuild"
+
+# Route /mcp to the MCP function (belt-and-suspenders alongside config.path in the function)
+[[redirects]]
+  from   = "/mcp"
+  to     = "/.netlify/functions/mcp"
+  status = 200
