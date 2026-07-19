@@ -1,3 +1,10 @@
+## [7.18.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.0...v7.18.1) (2026-07-19)
+
+
+### Bug Fixes
+
+* rename function to .ts and add /mcp redirect for Netlify deploy ([da1d6a1](https://github.com/G-MAKROGLOU/oxygen-ui/commit/da1d6a126f8dbce707d366d10b1140ab3edbc377))
+
 # [7.18.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.17.1...v7.18.0) (2026-07-19)
 
 
