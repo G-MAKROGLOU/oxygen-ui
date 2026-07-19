@@ -1,0 +1,131 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Docs/AI Toolchain" />
+
+export const th  = { padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--color-foreground-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '2px solid var(--color-border)' }
+export const td  = (mono) => ({ padding: '9px 16px', fontSize: 13, fontFamily: mono ? 'monospace' : undefined, borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground-secondary)', verticalAlign: 'top' })
+export const td0 = { padding: '9px 16px', fontSize: 13, fontFamily: 'monospace', borderBottom: '1px solid var(--color-border)', color: 'var(--color-foreground)', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }
+export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32, background: 'var(--color-surface)', borderRadius: 7, overflow: 'hidden', border: '1px solid var(--color-border)' }
+
+# AI Toolchain
+
+OxygenUI ships a built-in MCP server and Claude Code integration so AI assistants can look up component APIs, search by use-case, and scaffold new work — all grounded in the actual documentation you're reading now.
+
+---
+
+## Architecture
+
+```
+Netlify deploy
+├── /                     → Storybook static build (this site)
+└── /mcp                  → netlify/functions/mcp.mts
+                             Stateless HTTP, no session state
+                             Data: netlify/functions/ai-manifest.json
+                             Built by: node scripts/generate-ai-manifest.mjs
+```
+
+The manifest generator scans all 101 MDX guide files, strips Storybook boilerplate, and emits a single JSON file bundled into the function via esbuild. No database, no cold-start penalty.
+
+---
+
+## MCP tools
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Tool</th><th style={th}>Description</th><th style={th}>Key argument</th></tr></thead>
+  <tbody>
+    <tr>
+      <td style={td0}>list_components</td>
+      <td style={td(false)}>Browse all 100+ components with slug, category, and description. No arguments.</td>
+      <td style={td(false)}>—</td>
+    </tr>
+    <tr>
+      <td style={td0}>get_component</td>
+      <td style={td(false)}>Fetch the full props API and usage examples for one component.</td>
+      <td style={td(true)}>slug — e.g. "accordion", "data-grid", "use-excel"</td>
+    </tr>
+    <tr>
+      <td style={td0}>find_component</td>
+      <td style={td(false)}>Keyword search across component names, categories, and descriptions.</td>
+      <td style={td(true)}>query — e.g. "date picker", "virtualized table"</td>
+    </tr>
+    <tr>
+      <td style={td0}>get_token</td>
+      <td style={td(false)}>Look up CSS custom properties by name or category prefix.</td>
+      <td style={td(true)}>token — e.g. "--color-accent", "radius", "motion"</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## Claude Code commands
+
+Four slash commands are registered in `.claude/commands/`. They are available in any Claude Code session opened from the `oxygen-ui` directory.
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Command</th><th style={th}>What it does</th></tr></thead>
+  <tbody>
+    <tr>
+      <td style={td0}>/ui-lookup &lt;name&gt;</td>
+      <td style={td(false)}>Fetch the full documentation for a component. Example: <code>/ui-lookup wizard</code></td>
+    </tr>
+    <tr>
+      <td style={td0}>/ui-find &lt;query&gt;</td>
+      <td style={td(false)}>Search by use-case or keyword. Example: <code>/ui-find virtualized table with sorting</code></td>
+    </tr>
+    <tr>
+      <td style={td0}>/ui-scaffold &lt;name&gt;</td>
+      <td style={td(false)}>Scaffold a new component with source file, story, and MDX guide.</td>
+    </tr>
+    <tr>
+      <td style={td0}>/ui-story &lt;name&gt;</td>
+      <td style={td(false)}>Add or improve Storybook story coverage for an existing component.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## Context skill
+
+The `/oxygen-ui` skill (`.claude/skills/oxygen-ui/SKILL.md`) loads the full design system context into any Claude Code session — import patterns, token usage, Tailwind utilities, form API, and repository conventions. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
+
+---
+
+## Setup
+
+### Remote server (after deploy)
+
+Update `.mcp.json` with your Netlify site URL:
+
+```json
+{
+  "mcpServers": {
+    "oxygen-ui": {
+      "type": "http",
+      "url": "https://your-site.netlify.app/mcp"
+    }
+  }
+}
+```
+
+Or via the CLI: `claude mcp add oxygen-ui --transport http https://your-site.netlify.app/mcp`
+
+### Local server
+
+```bash
+npm install -g netlify-cli
+yarn mcp:dev              # generates manifest + starts netlify dev on port 8888
+```
+
+The `oxygen-ui-local` entry in `.mcp.json` points to `http://localhost:8888/mcp` and is picked up automatically.
+
+### Regenerating the manifest
+
+When component docs change (new MDX files, updated props tables):
+
+```bash
+yarn generate-manifest
+```
+
+The Netlify build command runs this automatically before `storybook build`, so the deployed server is always in sync.

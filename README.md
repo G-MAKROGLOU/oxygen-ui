@@ -4,7 +4,7 @@
 
 # @geomak/ui · Oxygen Design System
 
-**60+ production-grade React components for enterprise apps** — dashboards, CRMs, internal tools, and landing pages. Token-driven, accessible, light/dark first-class, and properly tree-shakeable.
+**100+ production-grade React components for enterprise apps** — dashboards, CRMs, internal tools, and landing pages. Token-driven, accessible, light/dark first-class, and properly tree-shakeable.
 
 [![npm version](https://img.shields.io/npm/v/@geomak/ui?color=0466c8&label=npm)](https://www.npmjs.com/package/@geomak/ui)
 [![types](https://img.shields.io/npm/types/@geomak/ui?color=0466c8)](https://www.npmjs.com/package/@geomak/ui)
@@ -64,7 +64,7 @@ import { ChevronDown, Search, createIcon } from '@geomak/ui/icons'
 
 ## Components
 
-60+ components across these groups — all with **live controls and a written guide** in [Storybook](https://oxygenui.com).
+100+ components across these groups — all with **live controls and a written guide** in [Storybook](https://oxygenui.com).
 
 | Group | Components |
 |---|---|
@@ -132,6 +132,71 @@ The standard **gray / slate / zinc** ramps and **black** stay available alongsid
 | `@geomak/ui/icons` | Tree-shakeable named icons + `createIcon` |
 | `@geomak/ui/styles` | Compiled CSS (tokens + components) |
 | `@geomak/ui/tokens` | `palette`, `semanticTokens`, `vars` as JS |
+
+---
+
+## AI toolchain (Claude Code)
+
+OxygenUI ships a built-in MCP server and a set of Claude Code skills and commands that let AI assistants look up component APIs, search by use-case, and scaffold new components — all grounded in the real MDX documentation.
+
+### MCP server
+
+The server is deployed alongside Storybook on Netlify as a Netlify Function at `/mcp`. It exposes four tools:
+
+| Tool | What it does |
+|---|---|
+| `list_components` | Browse all 100+ components with slug, category, and description |
+| `get_component` | Fetch the full props API and usage examples for one component by slug |
+| `find_component` | Keyword search across names, categories, and descriptions |
+| `get_token` | Look up CSS custom properties by name or category prefix |
+
+**Connect it:**
+
+```jsonc
+// .mcp.json (already in the repo — update the URL after first deploy)
+{
+  "mcpServers": {
+    "oxygen-ui": {
+      "type": "http",
+      "url": "https://your-site.netlify.app/mcp"
+    },
+    "oxygen-ui-local": {
+      "type": "http",
+      "url": "http://localhost:8888/mcp"
+    }
+  }
+}
+```
+
+Or add it from the CLI: `claude mcp add oxygen-ui --transport http https://your-site.netlify.app/mcp`
+
+### Claude Code commands
+
+Four slash commands are registered in `.claude/commands/`:
+
+| Command | Usage |
+|---|---|
+| `/ui-lookup <name>` | Fetch the full docs for a component — e.g. `/ui-lookup wizard` |
+| `/ui-find <query>` | Search by use-case — e.g. `/ui-find virtualized table` |
+| `/ui-scaffold <name>` | Scaffold a new component with source + story + MDX guide |
+| `/ui-story <name>` | Add story coverage for an existing component |
+
+### Context skill
+
+The `/oxygen-ui` skill loads the full design system context into any Claude Code session — import patterns, token usage, Tailwind utilities, form API, and repository conventions. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
+
+### Local development with the MCP server
+
+```bash
+npm install -g netlify-cli          # one-time global install
+yarn mcp:dev                        # generates manifest + starts netlify dev on port 8888
+```
+
+The function is then available at `http://localhost:8888/mcp`. Claude Code picks up the `oxygen-ui-local` entry from `.mcp.json` automatically when you open the project.
+
+### How the manifest is built
+
+At build time, `scripts/generate-ai-manifest.mjs` scans all 101 MDX guide files in `src/docs/` and the co-located MDX files in `src/components/`, strips Storybook boilerplate, and emits `netlify/functions/ai-manifest.json`. The Netlify Function bundles this JSON via esbuild — no database, no runtime file I/O, no cold-start penalty.
 
 ---
 
