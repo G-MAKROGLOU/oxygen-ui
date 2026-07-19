@@ -1,3 +1,10 @@
+## [7.18.3](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.2...v7.18.3) (2026-07-19)
+
+
+### Bug Fixes
+
+* switch manifest to JS module to fix Netlify esbuild bundling ([8a792cd](https://github.com/G-MAKROGLOU/oxygen-ui/commit/8a792cd04b763646c30c186159a7a316118c35f6))
+
 ## [7.18.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.1...v7.18.2) (2026-07-19)
 
 
