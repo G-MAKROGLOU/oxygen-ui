@@ -137,28 +137,39 @@ The standard **gray / slate / zinc** ramps and **black** stay available alongsid
 
 ## AI toolchain (Claude Code)
 
-OxygenUI ships a built-in MCP server and a set of Claude Code skills and commands that let AI assistants look up component APIs, search by use-case, and scaffold new components, all grounded in the real MDX documentation.
+OxygenUI ships a built-in MCP server and a set of Claude Code skills and commands that let AI assistants look up component APIs, search by use-case, generate complete page components, and bootstrap entire apps, all grounded in the real MDX documentation.
 
 ### MCP server
 
-The server is deployed alongside Storybook on Netlify as a Netlify Function at `/mcp`. It exposes four tools:
+The server is deployed alongside Storybook at `https://oxygenui.com/mcp` (Netlify Function). It exposes eight tools in two tiers.
+
+**Lookup tier** (docs + tokens):
 
 | Tool | What it does |
 |---|---|
 | `list_components` | Browse all 100+ components with slug, category, and description |
-| `get_component` | Fetch the full props API and usage examples for one component by slug |
+| `get_component` | Full props API and usage examples for one component by slug |
 | `find_component` | Keyword search across names, categories, and descriptions |
 | `get_token` | Look up CSS custom properties by name or category prefix |
+
+**Generation tier** (patterns + code):
+
+| Tool | What it does |
+|---|---|
+| `get_pattern` | Full wired recipe for a page type: components, state, wiring steps, and a complete code example. Patterns: `crud-list`, `dashboard`, `settings-tabs`, `multi-step-form`, `detail-page`, `app-bootstrap` |
+| `get_form_binding` | Correct `useForm` binder for any input (`fieldNative` / `fieldChecked` / `fieldTarget` / `field`), with paste-ready snippet |
+| `compare_components` | Decision guide for similar components: Modal vs Drawer, Table vs DataGrid, Tabs vs SegmentedControl |
+| `get_app_bootstrap` | Full Bootstrap.tsx + AppRoutes.tsx + brandTokens.ts template for a new project |
 
 **Connect it:**
 
 ```jsonc
-// .mcp.json (already in the repo, update the URL after first deploy)
+// .mcp.json (already in the repo)
 {
   "mcpServers": {
     "oxygen-ui": {
       "type": "http",
-      "url": "https://your-site.netlify.app/mcp"
+      "url": "https://oxygenui.com/mcp"
     },
     "oxygen-ui-local": {
       "type": "http",
@@ -168,22 +179,40 @@ The server is deployed alongside Storybook on Netlify as a Netlify Function at `
 }
 ```
 
-Or add it from the CLI: `claude mcp add oxygen-ui --transport http https://your-site.netlify.app/mcp`
+Or add it from the CLI: `claude mcp add oxygen-ui --transport http https://oxygenui.com/mcp`
 
 ### Claude Code commands
 
-Four slash commands are registered in `.claude/commands/`:
+Ten slash commands are registered in `.claude/commands/`:
+
+**Lookup commands:**
 
 | Command | Usage |
 |---|---|
-| `/ui-lookup <name>` | Fetch the full docs for a component, e.g. `/ui-lookup wizard` |
 | `/ui-find <query>` | Search by use-case, e.g. `/ui-find virtualized table` |
-| `/ui-scaffold <name>` | Scaffold a new component with source + story + MDX guide |
-| `/ui-story <name>` | Add story coverage for an existing component |
+| `/ui-lookup <name>` | Full docs for a component, e.g. `/ui-lookup wizard` |
+
+**Generation commands** (write real files):
+
+| Command | Usage |
+|---|---|
+| `/ui-page <type> [entity]` | Scaffold a complete page file. Types: `crud`, `dashboard`, `settings`, `detail`, `multi-step-form`. Example: `/ui-page crud Vessel` |
+| `/ui-bootstrap [name]` | Generate the four-file app bootstrap (Bootstrap.tsx, AppRoutes.tsx, brandTokens.ts, main.tsx) |
+| `/ui-form <field:type ...>` | Generate a fully-wired Form from a field spec, e.g. `/ui-form name:text role:dropdown active:switch` |
+| `/ui-table <entity> [col:type]` | Typed Table with column renderers + actions, e.g. `/ui-table Vessel name:string flag:string status:badge actions:menu` |
+| `/ui-modal <type>` | Complete state + Modal JSX. Types: `confirm-delete`, `form-in-modal`, `detail-view`, `alert` |
+| `/ui-auth-shell [name] [routes]` | Full SecureLayout + AppShell + Wizard tour shell, e.g. `/ui-auth-shell VesOPS dashboard,vessels,settings` |
+
+**Library commands** (for contributing to this repo):
+
+| Command | Usage |
+|---|---|
+| `/ui-scaffold <name>` | Scaffold a new component with source file, story, and MDX guide |
+| `/ui-story <name>` | Add or improve Storybook story coverage for an existing component |
 
 ### Context skill
 
-The `/oxygen-ui` skill loads the full design system context into any Claude Code session, import patterns, token usage, Tailwind utilities, form API, and repository conventions. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
+The `/oxygen-ui` skill (`.claude/skills/oxygen-ui/SKILL.md`) loads the full design system context into any Claude Code session: import patterns, form binder cheat sheet, component decision guide, provider nesting order, React Query integration, and page pattern reference. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
 
 ### Local development with the MCP server
 
@@ -196,7 +225,7 @@ The function is then available at `http://localhost:8888/mcp`. Claude Code picks
 
 ### How the manifest is built
 
-At build time, `scripts/generate-ai-manifest.mjs` scans all 101 MDX guide files in `src/docs/` and the co-located MDX files in `src/components/`, strips Storybook boilerplate, and emits `netlify/functions/ai-manifest.json`. The Netlify Function bundles this JSON via esbuild, no database, no runtime file I/O, no cold-start penalty.
+At build time, `scripts/generate-ai-manifest.mjs` scans all MDX guide files in `src/docs/` and co-located MDX files in `src/components/`, strips Storybook boilerplate, and emits `netlify/_data/ai-manifest.js`. The Netlify Function bundles this via esbuild at deploy time. No database, no runtime file I/O, no cold-start penalty.
 
 ---
 

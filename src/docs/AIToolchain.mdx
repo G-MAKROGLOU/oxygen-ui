@@ -9,7 +9,7 @@ export const tbl = { width: '100%', borderCollapse: 'collapse', marginBottom: 32
 
 # AI Toolchain
 
-OxygenUI ships a built-in MCP server and Claude Code integration so AI assistants can look up component APIs, search by use-case, and scaffold new work, all grounded in the actual documentation you're reading now.
+OxygenUI ships a built-in MCP server and Claude Code integration so AI assistants can look up component APIs, search by use-case, generate complete page components, and bootstrap entire apps, all grounded in the actual documentation you are reading now.
 
 ---
 
@@ -17,18 +17,22 @@ OxygenUI ships a built-in MCP server and Claude Code integration so AI assistant
 
 ```
 Netlify deploy
-├── /                     → Storybook static build (this site)
-└── /mcp                  → netlify/functions/mcp.mts
-                             Stateless HTTP, no session state
-                             Data: netlify/functions/ai-manifest.json
-                             Built by: node scripts/generate-ai-manifest.mjs
+├── /                     Storybook static build (this site)
+└── /mcp                  netlify/functions/mcp.ts
+                           Stateless HTTP, JSON-RPC 2.0
+                           Data: netlify/_data/ai-manifest.js
+                           Built by: node scripts/generate-ai-manifest.mjs
 ```
 
-The manifest generator scans all 101 MDX guide files, strips Storybook boilerplate, and emits a single JSON file bundled into the function via esbuild. No database, no cold-start penalty.
+The manifest generator scans all MDX guide files, strips Storybook boilerplate, and emits a JS module bundled into the function via esbuild. No database, no cold-start penalty.
 
 ---
 
 ## MCP tools
+
+Eight tools in two tiers.
+
+### Lookup tier
 
 <table style={tbl}>
   <thead><tr><th style={th}>Tool</th><th style={th}>Description</th><th style={th}>Key argument</th></tr></thead>
@@ -40,7 +44,7 @@ The manifest generator scans all 101 MDX guide files, strips Storybook boilerpla
     </tr>
     <tr>
       <td style={td0}>get_component</td>
-      <td style={td(false)}>Fetch the full props API and usage examples for one component.</td>
+      <td style={td(false)}>Full props API and usage examples for one component.</td>
       <td style={td(true)}>slug: e.g. "accordion", "data-grid", "use-excel"</td>
     </tr>
     <tr>
@@ -56,26 +60,100 @@ The manifest generator scans all 101 MDX guide files, strips Storybook boilerpla
   </tbody>
 </table>
 
+### Generation tier
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Tool</th><th style={th}>Description</th><th style={th}>Key argument</th></tr></thead>
+  <tbody>
+    <tr>
+      <td style={td0}>get_pattern</td>
+      <td style={td(false)}>Full wired recipe for a page type: components needed, state to declare, wiring steps, and a complete runnable code example.</td>
+      <td style={td(true)}>pattern: "crud-list" | "dashboard" | "settings-tabs" | "multi-step-form" | "detail-page" | "app-bootstrap". Optional: entity name.</td>
+    </tr>
+    <tr>
+      <td style={td0}>get_form_binding</td>
+      <td style={td(false)}>Correct useForm binder for any input (fieldNative / fieldChecked / fieldTarget / field), with the value type and a paste-ready snippet. Eliminates the most common form wiring mistake.</td>
+      <td style={td(true)}>input: e.g. "Dropdown", "Switch", "DatePicker", "TagsInput"</td>
+    </tr>
+    <tr>
+      <td style={td0}>compare_components</td>
+      <td style={td(false)}>Decision guide for similar components: when to use Modal vs Drawer vs PopConfirm, Table vs DataGrid vs VirtualList, or Tabs vs SegmentedControl.</td>
+      <td style={td(true)}>components: array of slugs, e.g. ["modal", "drawer"]</td>
+    </tr>
+    <tr>
+      <td style={td0}>get_app_bootstrap</td>
+      <td style={td(false)}>Full Bootstrap.tsx + AppRoutes.tsx + brandTokens.ts template for a new project, with correct provider nesting order and dark-mode wiring.</td>
+      <td style={td(true)}>router, reactQuery, customTheme (booleans), appName (string)</td>
+    </tr>
+  </tbody>
+</table>
+
 ---
 
 ## Claude Code commands
 
-Four slash commands are registered in `.claude/commands/`. They are available in any Claude Code session opened from the `oxygen-ui` directory.
+Ten slash commands are registered in `.claude/commands/`. Available in any Claude Code session opened from the `oxygen-ui` directory.
+
+### Lookup commands
 
 <table style={tbl}>
   <thead><tr><th style={th}>Command</th><th style={th}>What it does</th></tr></thead>
   <tbody>
     <tr>
-      <td style={td0}>/ui-lookup &lt;name&gt;</td>
-      <td style={td(false)}>Fetch the full documentation for a component. Example: <code>/ui-lookup wizard</code></td>
-    </tr>
-    <tr>
       <td style={td0}>/ui-find &lt;query&gt;</td>
       <td style={td(false)}>Search by use-case or keyword. Example: <code>/ui-find virtualized table with sorting</code></td>
     </tr>
     <tr>
+      <td style={td0}>/ui-lookup &lt;name&gt;</td>
+      <td style={td(false)}>Full documentation for a component. Example: <code>/ui-lookup wizard</code></td>
+    </tr>
+  </tbody>
+</table>
+
+### Generation commands
+
+These write real files into the consumer project.
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Command</th><th style={th}>What it does</th></tr></thead>
+  <tbody>
+    <tr>
+      <td style={td0}>/ui-page &lt;type&gt; [entity]</td>
+      <td style={td(false)}>Scaffold a complete, self-contained page component. Types: crud, dashboard, settings, detail, multi-step-form. Example: <code>/ui-page crud Vessel</code> writes <code>src/pages/VesselsPage.tsx</code> (~120 lines, all wired).</td>
+    </tr>
+    <tr>
+      <td style={td0}>/ui-bootstrap [name]</td>
+      <td style={td(false)}>Generate the four-file app bootstrap: Bootstrap.tsx (provider stack), AppRoutes.tsx (SecureLayout + AppShell), brandTokens.ts, main.tsx. Example: <code>/ui-bootstrap VesOPS</code></td>
+    </tr>
+    <tr>
+      <td style={td0}>/ui-form &lt;field:type ...&gt;</td>
+      <td style={td(false)}>Generate a fully-wired Form from a field specification. Calls get_form_binding per field to use the correct binder. Example: <code>/ui-form name:text role:dropdown active:switch joined:date</code></td>
+    </tr>
+    <tr>
+      <td style={td0}>/ui-table &lt;entity&gt; [col:type]</td>
+      <td style={td(false)}>Typed Table with column renderers and an actions column. Column types: string, number, badge, date, link, menu. Example: <code>/ui-table Vessel name:string flag:string status:badge actions:menu</code></td>
+    </tr>
+    <tr>
+      <td style={td0}>/ui-modal &lt;type&gt;</td>
+      <td style={td(false)}>Complete state + Modal JSX for a named pattern. Types: confirm-delete, form-in-modal, detail-view, alert. Example: <code>/ui-modal confirm-delete</code></td>
+    </tr>
+    <tr>
+      <td style={td0}>/ui-auth-shell [name] [routes]</td>
+      <td style={td(false)}>Full authenticated app shell: SecureLayout + AppShell + sidebar + Wizard onboarding tour + lazy routes. Example: <code>/ui-auth-shell VesOPS dashboard,vessels,settings</code></td>
+    </tr>
+  </tbody>
+</table>
+
+### Library commands
+
+For contributors adding or improving components in this repository.
+
+<table style={tbl}>
+  <thead><tr><th style={th}>Command</th><th style={th}>What it does</th></tr></thead>
+  <tbody>
+    <tr>
       <td style={td0}>/ui-scaffold &lt;name&gt;</td>
-      <td style={td(false)}>Scaffold a new component with source file, story, and MDX guide.</td>
+      <td style={td(false)}>Scaffold a new component with source file, Storybook story, and MDX guide.</td>
     </tr>
     <tr>
       <td style={td0}>/ui-story &lt;name&gt;</td>
@@ -88,28 +166,26 @@ Four slash commands are registered in `.claude/commands/`. They are available in
 
 ## Context skill
 
-The `/oxygen-ui` skill (`.claude/skills/oxygen-ui/SKILL.md`) loads the full design system context into any Claude Code session, import patterns, token usage, Tailwind utilities, form API, and repository conventions. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
+The `/oxygen-ui` skill (`.claude/skills/oxygen-ui/SKILL.md`) loads the full design system context into any Claude Code session: import patterns, form binder cheat sheet, component decision matrix, provider nesting order, React Query integration patterns, useNotification usage, and a page pattern reference table. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
 
 ---
 
 ## Setup
 
-### Remote server (after deploy)
-
-Update `.mcp.json` with your Netlify site URL:
+### Remote server
 
 ```json
 {
   "mcpServers": {
     "oxygen-ui": {
       "type": "http",
-      "url": "https://your-site.netlify.app/mcp"
+      "url": "https://oxygenui.com/mcp"
     }
   }
 }
 ```
 
-Or via the CLI: `claude mcp add oxygen-ui --transport http https://your-site.netlify.app/mcp`
+Or via the CLI: `claude mcp add oxygen-ui --transport http https://oxygenui.com/mcp`
 
 ### Local server
 
