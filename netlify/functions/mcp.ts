@@ -8,7 +8,9 @@
 //   find_component    — keyword search across names, categories, descriptions
 //   get_token         — lookup CSS custom properties by name or prefix
 
-import MANIFEST from './ai-manifest.json'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore — generated JS module, no type declarations
+import MANIFEST from './ai-manifest.generated.js'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
