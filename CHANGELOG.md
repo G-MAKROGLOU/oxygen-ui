@@ -1,3 +1,10 @@
+## [7.18.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.1...v7.18.2) (2026-07-19)
+
+
+### Bug Fixes
+
+* install @netlify/functions and restore v2 handler format ([e684a74](https://github.com/G-MAKROGLOU/oxygen-ui/commit/e684a743734b417148d3fa433ed83c55beaba1f4))
+
 ## [7.18.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.0...v7.18.1) (2026-07-19)
 
 
