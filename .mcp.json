@@ -1,12 +1,12 @@
 {
-  "mcpServers": {
-    "oxygen-ui": {
-      "type": "http",
-      "url": "https://REPLACE_WITH_YOUR_NETLIFY_SITE.netlify.app/mcp"
-    },
-    "oxygen-ui-local": {
-      "type": "http",
-      "url": "http://localhost:8888/mcp"
+    "mcpServers": {
+        "oxygen-ui": {
+            "type": "http",
+            "url": "https://oxygenui.com/mcp"
+        },
+        "oxygen-ui-local": {
+            "type": "http",
+            "url": "http://localhost:8888/mcp"
+        }
     }
-  }
 }
