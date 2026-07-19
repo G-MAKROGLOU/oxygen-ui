@@ -1,3 +1,10 @@
+## [7.18.5](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.4...v7.18.5) (2026-07-19)
+
+
+### Bug Fixes
+
+* move AI manifest out of functions dir to avoid Netlify name validation error ([99ca038](https://github.com/G-MAKROGLOU/oxygen-ui/commit/99ca038f4c6c37440f9539524c8aa0fe2562f40d))
+
 ## [7.18.4](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.3...v7.18.4) (2026-07-19)
 
 
