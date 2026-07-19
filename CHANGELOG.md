@@ -1,3 +1,10 @@
+# [7.19.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.5...v7.19.0) (2026-07-19)
+
+
+### Features
+
+* expand AI toolchain with 4 new MCP tools and 6 new slash commands ([0befb65](https://github.com/G-MAKROGLOU/oxygen-ui/commit/0befb653f4390a71478fff9cc554987bf42744d9))
+
 ## [7.18.5](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.18.4...v7.18.5) (2026-07-19)
 
 
