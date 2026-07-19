@@ -1,3 +1,10 @@
+# [7.18.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.17.1...v7.18.0) (2026-07-19)
+
+
+### Features
+
+* add GenAI toolchain — MCP server, skills, and commands ([2b9a0a7](https://github.com/G-MAKROGLOU/oxygen-ui/commit/2b9a0a7d2c4592de14962a03baf5c12d27a0aebf))
+
 ## [7.17.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.17.0...v7.17.1) (2026-06-25)
 
 
