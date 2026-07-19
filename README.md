@@ -139,6 +139,42 @@ The standard **gray / slate / zinc** ramps and **black** stay available alongsid
 
 OxygenUI ships a built-in MCP server and a set of Claude Code skills and commands that let AI assistants look up component APIs, search by use-case, generate complete page components, and bootstrap entire apps, all grounded in the real MDX documentation.
 
+### Setup
+
+The toolchain has two parts: the **MCP server** (does the work) and the **commands + skill** (how you call it from Claude Code). Both can be installed at user scope (available in every project on your machine) or project scope (committed to the repo, shared with the whole team).
+
+#### Option A — User scope (recommended for individuals)
+
+Installs everything into `~/.claude/`. Available in every Claude Code session from that point on.
+
+```bash
+# 1. Install commands + skill + MCP server config in one shot
+npx --package=@geomak/ui@latest setup-claude
+
+# If you already have @geomak/ui installed locally:
+node node_modules/@geomak/ui/scripts/setup-claude.mjs
+```
+
+#### Option B — Project scope (recommended for teams)
+
+Commits the toolchain into the repo so every developer who clones it gets it automatically.
+
+```bash
+# 1. Install commands + skill + .mcp.json into the project directory
+npx --package=@geomak/ui@latest setup-claude --scope project
+
+# If you already have @geomak/ui installed locally:
+node node_modules/@geomak/ui/scripts/setup-claude.mjs --scope project
+
+# 2. Commit the generated files so your team gets them on clone
+git add .claude/ .mcp.json
+git commit -m "chore: add OxygenUI Claude Code toolchain"
+```
+
+Both options write a `.mcp.json` / `~/.claude/mcp.json` entry pointing to `https://oxygenui.com/mcp` alongside the commands and skill, so no manual config is needed. Restart Claude Code (or reload the MCP server list) after running.
+
+---
+
 ### MCP server
 
 The server is deployed alongside Storybook at `https://oxygenui.com/mcp` (Netlify Function). It exposes eight tools in two tiers.
@@ -161,29 +197,9 @@ The server is deployed alongside Storybook at `https://oxygenui.com/mcp` (Netlif
 | `compare_components` | Decision guide for similar components: Modal vs Drawer, Table vs DataGrid, Tabs vs SegmentedControl |
 | `get_app_bootstrap` | Full Bootstrap.tsx + AppRoutes.tsx + brandTokens.ts template for a new project |
 
-**Connect it:**
-
-```jsonc
-// .mcp.json (already in the repo)
-{
-  "mcpServers": {
-    "oxygen-ui": {
-      "type": "http",
-      "url": "https://oxygenui.com/mcp"
-    },
-    "oxygen-ui-local": {
-      "type": "http",
-      "url": "http://localhost:8888/mcp"
-    }
-  }
-}
-```
-
-Or add it from the CLI: `claude mcp add oxygen-ui --transport http https://oxygenui.com/mcp`
-
 ### Claude Code commands
 
-Ten slash commands are registered in `.claude/commands/`:
+Eight slash commands are available after setup:
 
 **Lookup commands:**
 
@@ -192,7 +208,7 @@ Ten slash commands are registered in `.claude/commands/`:
 | `/ui-find <query>` | Search by use-case, e.g. `/ui-find virtualized table` |
 | `/ui-lookup <name>` | Full docs for a component, e.g. `/ui-lookup wizard` |
 
-**Generation commands** (write real files):
+**Generation commands** (write real files into your project):
 
 | Command | Usage |
 |---|---|
@@ -203,16 +219,11 @@ Ten slash commands are registered in `.claude/commands/`:
 | `/ui-modal <type>` | Complete state + Modal JSX. Types: `confirm-delete`, `form-in-modal`, `detail-view`, `alert` |
 | `/ui-auth-shell [name] [routes]` | Full SecureLayout + AppShell + Wizard tour shell, e.g. `/ui-auth-shell VesOPS dashboard,vessels,settings` |
 
-**Library commands** (for contributing to this repo):
-
-| Command | Usage |
-|---|---|
-| `/ui-scaffold <name>` | Scaffold a new component with source file, story, and MDX guide |
-| `/ui-story <name>` | Add or improve Storybook story coverage for an existing component |
+Two additional library commands (`/ui-scaffold`, `/ui-story`) are available inside the `oxygen-ui` repository itself for contributors.
 
 ### Context skill
 
-The `/oxygen-ui` skill (`.claude/skills/oxygen-ui/SKILL.md`) loads the full design system context into any Claude Code session: import patterns, form binder cheat sheet, component decision guide, provider nesting order, React Query integration, and page pattern reference. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
+The `/oxygen-ui` skill (installed by the setup script) loads the full design system context into any Claude Code session: import patterns, form binder cheat sheet, component decision guide, provider nesting order, React Query integration, and page pattern reference. Invoke it at the start of any session where you plan to build against `@geomak/ui`.
 
 ### Local development with the MCP server
 

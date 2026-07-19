@@ -172,29 +172,81 @@ The `/oxygen-ui` skill (`.claude/skills/oxygen-ui/SKILL.md`) loads the full desi
 
 ## Setup
 
-### Remote server
+The toolchain has two parts: the **MCP server** (does the work) and the **commands + skill** (how you call it from Claude Code). A single script installs both. Choose user scope or project scope depending on your situation.
 
-```json
-{
-  "mcpServers": {
-    "oxygen-ui": {
-      "type": "http",
-      "url": "https://oxygenui.com/mcp"
-    }
-  }
-}
+### Option A — User scope
+
+Installs everything into `~/.claude/`. Available in every Claude Code session on your machine from that point on. Right for individuals who use `@geomak/ui` across multiple projects.
+
+```bash
+npx --package=@geomak/ui@latest setup-claude
 ```
 
-Or via the CLI: `claude mcp add oxygen-ui --transport http https://oxygenui.com/mcp`
+Or if you already have the package installed locally:
 
-### Local server
+```bash
+node node_modules/@geomak/ui/scripts/setup-claude.mjs
+```
+
+This writes:
+
+<table style={tbl}>
+  <thead><tr><th style={th}>File</th><th style={th}>What it does</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>~/.claude/mcp.json</td><td style={td(false)}>Registers the MCP server globally. All Claude Code sessions will find it.</td></tr>
+    <tr><td style={td0}>~/.claude/commands/ui-*.md</td><td style={td(false)}>Eight slash commands available in every project.</td></tr>
+    <tr><td style={td0}>~/.claude/skills/oxygen-ui/SKILL.md</td><td style={td(false)}>Context skill with form binder cheat sheet, decision guide, and patterns reference.</td></tr>
+  </tbody>
+</table>
+
+Restart Claude Code (or reload the MCP server list) after running.
+
+---
+
+### Option B — Project scope
+
+Commits the toolchain into the repo so every developer gets it automatically when they clone. Right for teams.
+
+```bash
+npx --package=@geomak/ui@latest setup-claude --scope project
+```
+
+Or if you already have the package installed locally:
+
+```bash
+node node_modules/@geomak/ui/scripts/setup-claude.mjs --scope project
+```
+
+Then commit the generated files:
+
+```bash
+git add .claude/ .mcp.json
+git commit -m "chore: add OxygenUI Claude Code toolchain"
+```
+
+This writes:
+
+<table style={tbl}>
+  <thead><tr><th style={th}>File</th><th style={th}>What it does</th></tr></thead>
+  <tbody>
+    <tr><td style={td0}>.mcp.json</td><td style={td(false)}>Project-scoped MCP server config. Claude Code picks this up automatically for anyone who opens the project.</td></tr>
+    <tr><td style={td0}>.claude/commands/ui-*.md</td><td style={td(false)}>Eight slash commands scoped to this project.</td></tr>
+    <tr><td style={td0}>.claude/skills/oxygen-ui/SKILL.md</td><td style={td(false)}>Context skill scoped to this project.</td></tr>
+  </tbody>
+</table>
+
+Each developer still needs [Claude Code](https://claude.ai/code) installed — the committed files configure it but do not install the CLI itself.
+
+---
+
+### Local MCP server (contributors only)
 
 ```bash
 npm install -g netlify-cli
 yarn mcp:dev              # generates manifest + starts netlify dev on port 8888
 ```
 
-The `oxygen-ui-local` entry in `.mcp.json` points to `http://localhost:8888/mcp` and is picked up automatically.
+The `oxygen-ui-local` entry in `.mcp.json` points to `http://localhost:8888/mcp` and is picked up automatically when you open this repository.
 
 ### Regenerating the manifest
 

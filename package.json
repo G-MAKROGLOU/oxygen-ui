@@ -27,8 +27,14 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "setup-claude": "scripts/setup-claude.mjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    ".claude/commands",
+    ".claude/skills",
+    "scripts/setup-claude.mjs"
   ],
   "sideEffects": [
     "**/*.css"
@@ -40,6 +46,7 @@
     "dev": "tsup --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "setup-claude": "node scripts/setup-claude.mjs",
     "generate-manifest": "node scripts/generate-ai-manifest.mjs",
     "mcp:dev": "node scripts/generate-ai-manifest.mjs && netlify dev",
     "typecheck": "tsc --noEmit",
