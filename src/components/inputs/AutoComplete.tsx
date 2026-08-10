@@ -2,6 +2,7 @@ import React, { useEffect, useId, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import LoadingSpinner from '../core/LoadingSpinner'
 import { Field, fieldShell, type FieldSize } from './_field'
+import { useDialogContainer } from '../core/dialogContainerContext'
 
 export interface AutoCompleteItem {
     key: string
@@ -125,6 +126,7 @@ export default function AutoComplete({
 }: AutoCompleteProps) {
     const errorId = useId()
     const hasError = errorMessage != null
+    const dialogContainer = useDialogContainer()
     const [term, setTerm] = useState('')
     const [open, setOpen] = useState(false)
     const [asyncItems, setAsyncItems] = useState<AutoCompleteItem[]>([])
@@ -237,7 +239,7 @@ export default function AutoComplete({
                         </div>
                     </Popover.Anchor>
 
-                    <Popover.Portal>
+                    <Popover.Portal container={dialogContainer ?? undefined}>
                         <Popover.Content
                             align="start"
                             sideOffset={4}

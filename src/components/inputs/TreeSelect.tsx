@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import { fieldShell, Field, type FieldSize } from './_field'
+import { useDialogContainer } from '../core/dialogContainerContext'
 
 export interface TreeSelectNode {
     key: string | number
@@ -143,6 +144,7 @@ export default function TreeSelect({
 }: TreeSelectProps) {
     const errorId = useId()
     const hasError = errorMessage != null
+    const dialogContainer = useDialogContainer()
 
     const [open, setOpen] = useState(false)
     const [expanded, setExpanded] = useState<Set<React.Key>>(() => new Set(defaultExpandedKeys))
@@ -271,7 +273,7 @@ export default function TreeSelect({
                         </button>
                     </Popover.Trigger>
 
-                    <Popover.Portal>
+                    <Popover.Portal container={dialogContainer ?? undefined}>
                         <Popover.Content
                             align="start"
                             sideOffset={4}

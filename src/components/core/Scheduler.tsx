@@ -5,6 +5,7 @@ import IconButton from './IconButton'
 import Button from '../inputs/Button'
 import SegmentedControl from '../inputs/SegmentedControl'
 import { cx } from '../../utils/cx'
+import { useDialogContainer } from './dialogContainerContext'
 import {
     type WeekStart,
     toDate,
@@ -320,6 +321,7 @@ function SchedulerError({ onRetry }: { onRetry: () => void }) {
 function MonthYearPicker({ label, cursor, onPick }: { label: string; cursor: Date; onPick: (d: Date) => void }) {
     const [open, setOpen] = useState(false)
     const [viewYear, setViewYear] = useState(cursor.getFullYear())
+    const dialogContainer = useDialogContainer()
     // Re-sync the browsing year to the cursor each time the popover opens.
     useEffect(() => { if (open) setViewYear(cursor.getFullYear()) }, [open, cursor])
 
@@ -336,7 +338,7 @@ function MonthYearPicker({ label, cursor, onPick }: { label: string; cursor: Dat
                     </svg>
                 </button>
             </Popover.Trigger>
-            <Popover.Portal>
+            <Popover.Portal container={dialogContainer ?? undefined}>
                 <Popover.Content
                     align="start"
                     sideOffset={8}

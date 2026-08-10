@@ -1,6 +1,7 @@
 import React, { useId, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import { Field, fieldShell, type FieldSize } from './_field'
+import { useDialogContainer } from '../core/dialogContainerContext'
 
 export interface ColorPickerProps {
     /** Hex string, e.g. `"#0466c8"`. */
@@ -71,6 +72,7 @@ export default function ColorPicker({
 }: ColorPickerProps) {
     const errorId = useId()
     const hasError = errorMessage != null
+    const dialogContainer = useDialogContainer()
     const [open, setOpen] = useState(false)
     const [draft, setDraft] = useState(value)
 
@@ -109,7 +111,7 @@ export default function ColorPicker({
                         </span>
                     </button>
                 </Popover.Trigger>
-                <Popover.Portal>
+                <Popover.Portal container={dialogContainer ?? undefined}>
                     <Popover.Content
                         align="start"
                         sideOffset={4}

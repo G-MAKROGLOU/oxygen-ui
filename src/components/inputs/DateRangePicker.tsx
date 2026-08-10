@@ -1,6 +1,7 @@
 import React, { useId, useMemo, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import { Field, fieldShell, type FieldSize } from './_field'
+import { useDialogContainer } from '../core/dialogContainerContext'
 
 export interface DateRange {
     start: Date | null
@@ -111,6 +112,7 @@ export default function DateRangePicker({
 }: DateRangePickerProps) {
     const errorId = useId()
     const hasError = errorMessage != null
+    const dialogContainer = useDialogContainer()
     const [open, setOpen] = useState(false)
     const [leftMonth, setLeftMonth] = useState(() => startOfMonth(value.start ?? new Date()))
     // While selecting, we hold the in-progress start and hover end.
@@ -223,7 +225,7 @@ export default function DateRangePicker({
                         </svg>
                     </button>
                 </Popover.Trigger>
-                <Popover.Portal>
+                <Popover.Portal container={dialogContainer ?? undefined}>
                     <Popover.Content
                         align="start"
                         sideOffset={4}

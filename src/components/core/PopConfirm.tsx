@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import * as Popover from '@radix-ui/react-popover'
 import Button, { ButtonProps } from '../inputs/Button'
 import { cx } from '../../utils/cx'
+import { useDialogContainer } from './dialogContainerContext'
 
 export type PopConfirmTone = 'default' | 'info' | 'warning' | 'error' | 'danger' | 'success'
 
@@ -81,6 +82,7 @@ export default function PopConfirm({
 }: PopConfirmProps) {
     const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const dialogContainer = useDialogContainer()
     const isOpen = open ?? uncontrolledOpen
 
     const setOpen = (next: boolean) => {
@@ -114,7 +116,7 @@ export default function PopConfirm({
             }}
         >
             <Popover.Trigger asChild>{children}</Popover.Trigger>
-            <Popover.Portal>
+            <Popover.Portal container={dialogContainer ?? undefined}>
                 <Popover.Content
                     side={side}
                     sideOffset={8}

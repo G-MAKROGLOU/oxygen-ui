@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import { fieldShell, FieldLabel, type FieldSize } from './_field'
+import { useDialogContainer } from '../core/dialogContainerContext'
 
 // ── Public API ──────────────────────────────────────────────────────────────
 
@@ -150,6 +151,7 @@ export default function DatePicker({
 }: DatePickerProps) {
     const errorId = useId()
     const hasError = errorMessage != null
+    const dialogContainer = useDialogContainer()
 
     const [open, setOpen] = useState(false)
     // The month currently shown in the calendar. Drives navigation independently
@@ -259,7 +261,7 @@ export default function DatePicker({
                         </button>
                     </Popover.Trigger>
 
-                    <Popover.Portal>
+                    <Popover.Portal container={dialogContainer ?? undefined}>
                         <Popover.Content
                             align="start"
                             sideOffset={4}

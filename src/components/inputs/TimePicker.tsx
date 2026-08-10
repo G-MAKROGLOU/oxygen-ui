@@ -1,6 +1,7 @@
 import React, { useId, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import { Field, fieldShell, type FieldSize } from './_field'
+import { useDialogContainer } from '../core/dialogContainerContext'
 
 export interface TimePickerProps {
     /** Value as `"HH:mm"` (24h) or `"HH:mm:ss"`. `null`/`undefined` = unset. */
@@ -90,6 +91,7 @@ export default function TimePicker({
 }: TimePickerProps) {
     const errorId = useId()
     const hasError = errorMessage != null
+    const dialogContainer = useDialogContainer()
     const [open, setOpen] = useState(false)
 
     const parsed = parse(value) ?? { h: 0, m: 0, s: 0 }
@@ -156,7 +158,7 @@ export default function TimePicker({
                         </svg>
                     </button>
                 </Popover.Trigger>
-                <Popover.Portal>
+                <Popover.Portal container={dialogContainer ?? undefined}>
                     <Popover.Content
                         align="start"
                         sideOffset={4}
