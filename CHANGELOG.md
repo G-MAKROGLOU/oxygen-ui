@@ -1,3 +1,10 @@
+## [7.20.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.20.0...v7.20.1) (2026-08-10)
+
+
+### Bug Fixes
+
+* apply dialog container portal fix to all popup components ([fc2256b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/fc2256ba152223f01fed9264b9721c741b67a0da))
+
 # [7.20.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.19.0...v7.20.0) (2026-07-19)
 
 
