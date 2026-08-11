@@ -2,6 +2,33 @@
   "name": "@geomak/ui",
   "version": "7.20.1",
   "description": "Oxygen Design System, reusable UI primitives built with Radix UI behaviours and Tailwind CSS styling",
+  "keywords": [
+    "design-system",
+    "ui",
+    "react",
+    "components",
+    "radix-ui",
+    "tailwindcss",
+    "accessible",
+    "a11y",
+    "headless-ui",
+    "component-library",
+    "typescript",
+    "dark-mode",
+    "design-tokens",
+    "oxygen-ui",
+    "forms",
+    "data-grid",
+    "mcp"
+  ],
+  "homepage": "https://oxygenui.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/G-MAKROGLOU/oxygen-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/G-MAKROGLOU/oxygen-ui/issues"
+  },
   "author": "G-MAKROGLOU",
   "license": "MIT",
   "private": false,
@@ -39,6 +66,13 @@
   "sideEffects": [
     "**/*.css"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build:js": "tsup",
     "build:styles": "sass src/styles/index.scss dist/styles.css --no-source-map && postcss dist/styles.css --replace",
