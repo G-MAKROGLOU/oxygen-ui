@@ -1,3 +1,10 @@
+## [7.20.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.20.1...v7.20.2) (2026-08-11)
+
+
+### Bug Fixes
+
+* publish repository, homepage and discovery metadata ([5fd9bd4](https://github.com/G-MAKROGLOU/oxygen-ui/commit/5fd9bd482f82a776593c7b2c8ef47b2f8435a8d8))
+
 ## [7.20.1](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.20.0...v7.20.1) (2026-08-10)
 
 
