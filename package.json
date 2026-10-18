@@ -116,7 +116,7 @@
     "framer-motion": "^12.40.0",
     "jspdf": "^4.2.1",
     "pdfjs-dist": "^6.0.227",
-    "xlsx": "^0.18.5"
+    "xlsx": "npm:@stackline/xlsx@^1.0.6"
   },
   "peerDependencies": {
     "react": "^19.0.0",
