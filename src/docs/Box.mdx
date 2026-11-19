@@ -16,9 +16,12 @@ The polymorphic layout primitive. A token-styled `<div>` (or any element via
 ## Mental model
 
 Box maps prop shortcuts to the design system's token scales: spacing (padding /
-margin), background, border, radius, shadow: emitting Tailwind classes so there's
-no runtime style cost. Spacing props take the shared scale (`none`→`2xl`). Use
-`as` when the semantic element should differ from a `div`.
+margin), background, border, radius, shadow. Spacing props set one static class
+plus a CSS custom property per side (`class="oxy-p" style="--oxy-p: 1rem"`), so
+the CSS ships in the stylesheet without Tailwind scanning; surface, border,
+radius, and shadow use static Tailwind classes. Spacing props take the shared
+scale (`none`→`2xl`). Use `as` when the semantic element should differ from a
+`div`.
 
 ## Quick start
 

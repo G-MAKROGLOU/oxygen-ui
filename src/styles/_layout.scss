@@ -1,0 +1,27 @@
+// ── Layout spacing utilities (Box / Grid) ───────────────────────────────────
+//
+// Each class reads one CSS custom property that the component sets inline
+// (e.g. `class="oxy-p" style="--oxy-p: 1rem"`). The class names are static,
+// so no runtime-built Tailwind class exists and the Tailwind scanner is not
+// involved. Tailwind utilities are emitted later in this bundle, so a
+// consumer's `p-8`-style class still overrides these at equal specificity.
+
+.oxy-p  { padding: var(--oxy-p); }
+.oxy-px { padding-left: var(--oxy-px); padding-right: var(--oxy-px); }
+.oxy-py { padding-top: var(--oxy-py); padding-bottom: var(--oxy-py); }
+.oxy-pt { padding-top: var(--oxy-pt); }
+.oxy-pr { padding-right: var(--oxy-pr); }
+.oxy-pb { padding-bottom: var(--oxy-pb); }
+.oxy-pl { padding-left: var(--oxy-pl); }
+
+.oxy-m  { margin: var(--oxy-m); }
+.oxy-mx { margin-left: var(--oxy-mx); margin-right: var(--oxy-mx); }
+.oxy-my { margin-top: var(--oxy-my); margin-bottom: var(--oxy-my); }
+.oxy-mt { margin-top: var(--oxy-mt); }
+.oxy-mr { margin-right: var(--oxy-mr); }
+.oxy-mb { margin-bottom: var(--oxy-mb); }
+.oxy-ml { margin-left: var(--oxy-ml); }
+
+.oxy-gap   { gap: var(--oxy-gap); }
+.oxy-gap-x { column-gap: var(--oxy-gap-x); }
+.oxy-gap-y { row-gap: var(--oxy-gap-y); }

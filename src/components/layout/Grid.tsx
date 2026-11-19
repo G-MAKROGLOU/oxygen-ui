@@ -1,16 +1,6 @@
 import React from 'react'
-import Box, { type BoxProps, type Spacing } from './Box'
+import Box, { SPACING_REM, type BoxProps, type Spacing } from './Box'
 import { cx } from '../../utils/cx'
-
-const GAP_MAP: Record<Spacing, string> = {
-    'none': 'gap-0',
-    'xs':   'gap-1',
-    'sm':   'gap-2',
-    'md':   'gap-4',
-    'lg':   'gap-6',
-    'xl':   'gap-8',
-    '2xl':  'gap-12',
-}
 
 const COL_MAP: Record<number, string> = {
     1: 'grid-cols-1',  2: 'grid-cols-2',  3: 'grid-cols-3',  4: 'grid-cols-4',
@@ -91,6 +81,13 @@ export default function Grid({
     const inlineCols = typeof cols === 'string' ? cols : undefined
     const inlineRows = typeof rows === 'string' ? rows : undefined
 
+    // Gap props set a static class plus a CSS custom property, like Box's
+    // spacing props, so no runtime-built Tailwind class name exists.
+    const gapVars: Record<string, string> = {}
+    if (gap != null) gapVars['--oxy-gap'] = SPACING_REM[gap]
+    if (gapX != null) gapVars['--oxy-gap-x'] = SPACING_REM[gapX]
+    if (gapY != null) gapVars['--oxy-gap-y'] = SPACING_REM[gapY]
+
     return (
         <Box
             {...boxProps}
@@ -98,14 +95,15 @@ export default function Grid({
                 'grid',
                 colClass,
                 rowClass,
-                gap     ? GAP_MAP[gap]     : '',
-                gapX    ? GAP_MAP[gapX].replace('gap-', 'gap-x-') : '',
-                gapY    ? GAP_MAP[gapY].replace('gap-', 'gap-y-') : '',
+                gap  != null ? 'oxy-gap'   : '',
+                gapX != null ? 'oxy-gap-x' : '',
+                gapY != null ? 'oxy-gap-y' : '',
                 align   ? ALIGN_CLASS[align]     : '',
                 justify ? JUSTIFY_CLASS[justify] : '',
                 className,
             )}
             style={{
+                ...(gapVars as React.CSSProperties),
                 gridTemplateColumns: inlineCols,
                 gridTemplateRows:    inlineRows,
                 ...style,

@@ -18,6 +18,7 @@
 @use 'animations';
 @use 'scrollbar';
 @use 'autofill';
+@use 'layout';
 
 // Tailwind: processed by PostCSS after Sass compilation
 @tailwind base;

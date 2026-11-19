@@ -37,6 +37,7 @@ export function useFormField(name: string, options: UseFormFieldOptions = {}): F
     const snap = useSyncExternalStore(
         store.subscribe,
         () => store.getFieldSnapshot(name),
+        () => store.getFieldSnapshot(name),
     )
     return buildBindings(store, name, kind, snap)
 }

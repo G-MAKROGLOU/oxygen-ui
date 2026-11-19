@@ -70,8 +70,14 @@ For remote sources, pass HTTP headers or credentials via the `remote` prop:
     <tr><td style={td0}>workerSrc</td><td style={td(true)}>string</td><td style={td(true)}>CDN URL</td><td style={td(false)}>Custom pdfjs worker URL (see Worker configuration).</td></tr>
     <tr><td style={td0}>remote</td><td style={td(true)}>object</td><td style={td(true)}>none</td><td style={td(false)}>Options passed to pdfjs for remote sources (headers, credentials, range requests).</td></tr>
     <tr><td style={td0}>overscan</td><td style={td(true)}>number</td><td style={td(true)}>2</td><td style={td(false)}>Pages to render above and below the viewport.</td></tr>
+    <tr><td style={td0}>page</td><td style={td(true)}>number</td><td style={td(true)}>none</td><td style={td(false)}>Controlled current page (1-based). A prop change scrolls to that page. Out-of-range values clamp to 1..numPages. Omit for uncontrolled mode.</td></tr>
+    <tr><td style={td0}>highlight</td><td style={td(true)}>{'{ page, phrase, occurrence? } | null'}</td><td style={td(true)}>none</td><td style={td(false)}>Programmatic highlight: go to the page, highlight the first anchor match of the phrase, scroll it into view. null removes the paint without scrolling.</td></tr>
     <tr><td style={td0}>onLoad</td><td style={td(true)}>{'(pageCount: number) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Called after the document loads.</td></tr>
     <tr><td style={td0}>onError</td><td style={td(true)}>{'(error: Error) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Called when loading fails.</td></tr>
+    <tr><td style={td0}>onPageChange</td><td style={td(true)}>{'(page: number) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Fired when the current page changes, in both controlled and uncontrolled mode.</td></tr>
+    <tr><td style={td0}>onSearchResults</td><td style={td(true)}>{'(r: { query: string; total: number }) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Fired when a search finishes, with the occurrence total.</td></tr>
+    <tr><td style={td0}>onActiveMatchChange</td><td style={td(true)}>{'(m: { page: number; index: number } | null) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Fired when the active search match changes; null when none.</td></tr>
+    <tr><td style={td0}>onHighlightResolved</td><td style={td(true)}>{'(r: { found: boolean }) => void'}</td><td style={td(true)}>none</td><td style={td(false)}>Fired when the highlight prop resolves against the page text.</td></tr>
   </tbody>
 </table>
 
@@ -106,7 +112,33 @@ The `toolbar` prop is either `false` (hide entirely) or an object where each key
 
 When `textLayer` is `true`, invisible `<span>` elements are overlaid on each page, aligned to PDF glyphs via transform matrices from pdfjs-dist. Text is selectable and copy-pasteable.
 
-The search bar requires `textLayer`. Search is debounced (220 ms) and highlights all matches on every rendered page simultaneously.
+The search bar requires `textLayer`. Search is debounced (220 ms). Every occurrence of the term is highlighted in the text layer of the rendered pages; the active occurrence has a stronger accent style. Enter steps to the next occurrence, Shift+Enter to the previous one, with wrap-around and across page boundaries. Escape closes the search bar and clears the highlights. The counter shows `n of total` occurrences and announces through a polite live region.
+
+Matching is normalized on both sides: NFKC (ligatures such as `ﬁ` match `fi`), soft hyphens are ignored, a word hyphenated at a line end matches its unhyphenated form, curly quotes fold to ASCII, whitespace runs collapse, and case is ignored.
+
+Two behavior corrections against earlier versions: the counter counts occurrences, not pages, and matching no longer sees a fabricated space between text items that pdf.js split mid-word.
+
+---
+
+## Controlled page and programmatic highlight
+
+`page` makes the current page controlled: a prop change scrolls to that page, and user scrolling or pager input reports back through `onPageChange` without fighting the prop. `initialPage` keeps its uncontrolled behavior.
+
+`highlight` highlights a phrase that came from a different extractor (for example a server-side PDF pipeline):
+
+```tsx
+<PdfViewer
+  source={bytes}
+  highlight={{ page: 12, phrase: 'the proposed system meets the stated criteria' }}
+  onHighlightResolved={({ found }) => setMissing(!found)}
+/>
+```
+
+The viewer normalizes the phrase and the page text, anchors on the first 8 words, and paints from the anchor for the phrase's normalized length, clamped to the page end. On a miss it goes to the page, paints nothing, and reports `found: false`; it never guesses. The prop highlight has its own style, can be active next to a search, and is not counted in the search counter. Setting `highlight` to `null` removes the paint without scrolling.
+
+When `page` and `highlight` are both used, the later input wins: a highlight change performs one scroll and calls `onPageChange`, so a controlled parent stays in sync.
+
+**Limits of phrase matching.** Reading order in tables and multi-column layouts follows the PDF content stream, not the visual layout, so a phrase that crosses columns can miss. Text that is part of an image, or drawn as vector outlines, has no text layer at all. Headers and footers can interrupt a phrase that visually continues across pages; `highlight` searches one page only.
 
 ---
 

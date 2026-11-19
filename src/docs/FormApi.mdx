@@ -66,7 +66,9 @@ types.
 
 `useForm` creates a **store** (held in a ref, stable for the component's life).
 The store holds `values`, `errors`, `touched`, and the `submitted` flag, and
-notifies React through `useSyncExternalStore`.
+notifies React through `useSyncExternalStore`. Every subscription passes a
+server snapshot, so `useForm`, `useFormField` / `<FormField>`, and
+`useFieldArray` render under `renderToString` and hydrate without a mismatch.
 
 - Reading bindings off `useForm()` re-renders the component on every change none
   perfect for small/medium forms.

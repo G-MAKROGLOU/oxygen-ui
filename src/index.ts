@@ -234,7 +234,7 @@ export type { FileSource, RemoteSourceOptions } from './utils/fileSource'
 
 /** Virtualized PDF viewer (lazy pdfjs-dist; URL / File / bytes sources) */
 export { default as PdfViewer } from './components/core/PdfViewer'
-export type { PdfViewerProps } from './components/core/PdfViewer'
+export type { PdfViewerProps, PdfHighlightTarget, PdfMatchRef } from './components/core/PdfViewer'
 
 /** Both-axes virtualized editable data grid primitive */
 export { default as DataGrid } from './components/core/DataGrid'

@@ -4,11 +4,39 @@ import IconButton from './IconButton'
 import { SkeletonBox } from './Skeleton'
 import { cx } from '../../utils/cx'
 import { type FileSource, type RemoteSourceOptions, isUrlSource, urlHref, sourceName, downloadBlob } from '../../utils/fileSource'
+import {
+    buildPageIndex, findOccurrences, findPhrase, normalizeForSearch,
+    type ItemPos, type NormalizedText, type Occurrence, type PageIndex,
+} from '../../utils/pdfSearch'
+
+/** Target of the programmatic `highlight` prop. */
+export interface PdfHighlightTarget {
+    /** 1-based page number. */
+    page: number
+    /** Phrase to highlight; whitespace, hyphenation and ligatures may differ. */
+    phrase: string
+    /** Which anchor occurrence on the page. Default 0 (the first). */
+    occurrence?: number
+}
+
+/** Reference to one search match, as reported by `onActiveMatchChange`. */
+export interface PdfMatchRef {
+    /** 1-based page number. */
+    page: number
+    /** 0-based index across the whole document. */
+    index: number
+}
 
 export interface PdfViewerProps {
     source: FileSource
     remote?: RemoteSourceOptions
     initialPage?: number
+    /**
+     * Controlled current page (1-based). A prop change scrolls to that page;
+     * user scrolling reports back through `onPageChange` and is not fought.
+     * Out-of-range values clamp to 1..numPages. Omit for uncontrolled mode.
+     */
+    page?: number
     /** Default `'page-width'`. */
     zoom?: number | 'auto' | 'page-fit' | 'page-width'
     /** Default `true`. */
@@ -18,6 +46,12 @@ export interface PdfViewerProps {
     /** Selectable text layer. Default `true`. */
     textLayer?: boolean
     /**
+     * Programmatic highlight: go to `page`, highlight the first anchor match
+     * of `phrase`, and scroll it into view. `null` removes the highlight
+     * without scrolling. Resolution is reported via `onHighlightResolved`.
+     */
+    highlight?: PdfHighlightTarget | null
+    /**
      * Override the pdf.js worker URL (e.g. self-hosted for air-gapped / strict-CSP
      * deploys). Defaults to a version-pinned CDN build. Only the first mounted
      * viewer's value takes effect, since the worker is configured process-wide.
@@ -26,6 +60,12 @@ export interface PdfViewerProps {
     onLoad?: (info: { numPages: number }) => void
     onError?: (err: Error) => void
     onPageChange?: (page: number) => void
+    /** Fired when a search finishes with its occurrence total. */
+    onSearchResults?: (r: { query: string; total: number }) => void
+    /** Fired when the active search match changes; `null` when none. */
+    onActiveMatchChange?: (m: PdfMatchRef | null) => void
+    /** Fired when the `highlight` prop resolves against the page text. */
+    onHighlightResolved?: (r: { found: boolean }) => void
     /** Overall height. Default 600. */
     height?: number | string
     /** Overall width. Defaults to filling the container. */
@@ -61,10 +101,18 @@ const SEARCH_DEBOUNCE = 220
 // spans stack at the top-left and show through. Scoped to our own class.
 const TEXT_LAYER_STYLE_ID = 'oxygen-pdf-textlayer'
 const TEXT_LAYER_CSS = `
-.oxy-textLayer{position:absolute;inset:0;overflow:clip;line-height:1;text-size-adjust:none;forced-color-adjust:none;transform-origin:0 0}
+.oxy-textLayer{position:absolute;inset:0;overflow:clip;line-height:1;text-size-adjust:none;forced-color-adjust:none;transform-origin:0 0;--min-font-size:1;--user-unit:1;--total-scale-factor:calc(var(--scale-factor) * var(--user-unit));--text-scale-factor:calc(var(--total-scale-factor) * var(--min-font-size));--min-font-size-inv:calc(1 / var(--min-font-size))}
 .oxy-textLayer span,.oxy-textLayer br{color:transparent;position:absolute;white-space:pre;cursor:text;transform-origin:0 0}
+.oxy-textLayer > :not(.markedContent),.oxy-textLayer span.markedContent span:not(.markedContent):not(.oxy-hl):not(.oxy-hl-anchor){--font-height:0;--scale-x:1;--rotate:0deg;font-size:calc(var(--text-scale-factor) * var(--font-height));transform:rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv))}
 .oxy-textLayer span.markedContent{top:0;height:0}
 .oxy-textLayer ::selection{background:color-mix(in srgb, var(--color-accent) 35%, transparent)}
+.oxy-textLayer span.oxy-hl,.oxy-textLayer span.oxy-hl-anchor{position:static;color:transparent;transform:none;font-size:inherit}
+.oxy-textLayer .oxy-hl{background:color-mix(in srgb, var(--color-warning) 40%, transparent);mix-blend-mode:multiply;border-radius:2px}
+.oxy-textLayer .oxy-hl-active{background:color-mix(in srgb, var(--color-accent) 45%, transparent)}
+.oxy-textLayer .oxy-hl-anchor{background:color-mix(in srgb, var(--color-accent) 30%, transparent);mix-blend-mode:multiply;border-radius:2px}
+.oxy-textLayer .oxy-hl-begin{border-radius:2px 0 0 2px}
+.oxy-textLayer .oxy-hl-end{border-radius:0 2px 2px 0}
+.oxy-textLayer .oxy-hl-middle{border-radius:0}
 `
 function ensureTextLayerStyles() {
     if (typeof document === 'undefined' || document.getElementById(TEXT_LAYER_STYLE_ID)) return
@@ -75,6 +123,96 @@ function ensureTextLayerStyles() {
 }
 
 type Size = { width: number; height: number }
+
+// ── Highlight painting ───────────────────────────────────────────────────────
+/** One range to paint on a page, in text-item coordinates. */
+interface HighlightRange {
+    beginItem: ItemPos
+    endItem: ItemPos
+    /** Base class: 'oxy-hl', 'oxy-hl oxy-hl-active', or 'oxy-hl-anchor'. */
+    className: string
+}
+
+const EMPTY_HL: HighlightRange[] = []
+
+interface PaintResult {
+    /** offsetTop (px, page space) of the active match, if painted. */
+    activeTop: number | null
+    /** offsetTop of the programmatic (anchor) highlight, if painted. */
+    anchorTop: number | null
+}
+
+/**
+ * Wrap the given ranges of a rendered text layer in highlight spans, after
+ * restoring every previously touched item to its exact original text node.
+ * Modeled on pdf.js's TextHighlighter._renderMatches: a cross-item match gets
+ * begin / middle / end parts. Mutates only the text-item contents.
+ */
+function paintHighlights(
+    divs: HTMLElement[],
+    strs: string[],
+    ranges: HighlightRange[],
+    touched: Set<number>,
+): PaintResult {
+    for (const i of touched) {
+        const d = divs[i]
+        if (d) d.textContent = strs[i] ?? ''
+    }
+    touched.clear()
+    const result: PaintResult = { activeTop: null, anchorTop: null }
+    if (ranges.length === 0) return result
+
+    type Seg = { from: number; to: number; cls: string }
+    const perItem = new Map<number, Seg[]>()
+    for (const r of ranges) {
+        const b = r.beginItem
+        const e = r.endItem
+        if (b.itemIndex > e.itemIndex) continue
+        const last = Math.min(e.itemIndex, strs.length - 1)
+        for (let i = Math.max(0, b.itemIndex); i <= last; i++) {
+            const len = strs[i]?.length ?? 0
+            const from = i === b.itemIndex ? Math.min(b.charOffset, len) : 0
+            const to = i === e.itemIndex ? Math.min(e.charOffset, len) : len
+            if (to <= from) continue
+            const multi = b.itemIndex !== e.itemIndex
+            const part = multi ? (i === b.itemIndex ? ' oxy-hl-begin' : i === e.itemIndex ? ' oxy-hl-end' : ' oxy-hl-middle') : ''
+            const list = perItem.get(i) ?? []
+            list.push({ from, to, cls: r.className + part })
+            perItem.set(i, list)
+        }
+    }
+
+    for (const [i, segs] of perItem) {
+        const div = divs[i]
+        if (!div) continue
+        const str = strs[i] ?? ''
+        const points = new Set<number>([0, str.length])
+        for (const s of segs) { points.add(s.from); points.add(s.to) }
+        const sorted = Array.from(points).sort((a, b) => a - b)
+        div.textContent = ''
+        for (let k = 0; k < sorted.length - 1; k++) {
+            const from = sorted[k]
+            const to = sorted[k + 1]
+            if (to <= from) continue
+            const piece = str.slice(from, to)
+            const covering = segs.filter((s) => s.from <= from && s.to >= to)
+            if (covering.length === 0) {
+                div.appendChild(document.createTextNode(piece))
+                continue
+            }
+            const classes = new Set<string>()
+            for (const s of covering) for (const c of s.cls.split(' ')) if (c) classes.add(c)
+            const span = document.createElement('span')
+            span.className = Array.from(classes).join(' ')
+            span.textContent = piece
+            div.appendChild(span)
+            if (result.activeTop == null && classes.has('oxy-hl-active')) result.activeTop = div.offsetTop
+            if (result.anchorTop == null && classes.has('oxy-hl-anchor')) result.anchorTop = div.offsetTop
+        }
+        touched.add(i)
+    }
+    return result
+}
 
 /** Largest index whose cumulative offset is <= y (binary search over offsets). */
 function pageIndexAt(offsets: number[], y: number): number {
@@ -92,14 +230,19 @@ export default function PdfViewer({
     source,
     remote,
     initialPage = 1,
+    page: pageProp,
     zoom = 'page-width',
     toolbar = true,
     thumbnails = false,
     textLayer = true,
+    highlight,
     workerSrc,
     onLoad,
     onError,
     onPageChange,
+    onSearchResults,
+    onActiveMatchChange,
+    onHighlightResolved,
     height = 600,
     width,
     className = '',
@@ -122,18 +265,21 @@ export default function PdfViewer({
     const [page, setPage] = useState(initialPage)
     const [showSearch, setShowSearch] = useState(false)
     const [query, setQuery] = useState('')
-    const [matchPages, setMatchPages] = useState<number[] | null>(null)
+    const [matches, setMatches] = useState<Array<{ page: number } & Occurrence> | null>(null)
     const [matchIdx, setMatchIdx] = useState(0)
     const [searching, setSearching] = useState(false)
+    const [propHl, setPropHl] = useState<({ page: number } & Occurrence) | null>(null)
     const [pageDraft, setPageDraft] = useState('')
     const pageEditing = useRef(false)
 
     // Search internals: a per-document text cache + a sequence guard so a slow
     // earlier query can never overwrite a newer one's results.
-    const pageText = useRef<Map<number, string>>(new Map())
+    const pageData = useRef<Map<number, { index: PageIndex; norm: NormalizedText }>>(new Map())
     const searchSeq = useRef(0)
     const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
     const measured = useRef<Set<number>>(new Set())
+    // Scroll refinement: after a page paints its highlight, scroll to the span.
+    const pendingScroll = useRef<{ kind: 'search' | 'anchor'; page: number } | null>(null)
 
     const tb = toolbar === true ? { zoom: true, pager: true, download: true, print: true, search: true } : toolbar || {}
 
@@ -142,8 +288,9 @@ export default function PdfViewer({
         let cancelled = false
         let task: any
         setStatus('loading'); setError(null); setDoc(null); setBaseSize(null); setSizes([])
-        pageText.current.clear(); measured.current = new Set()
-        setMatchPages(null); setMatchIdx(0)
+        pageData.current.clear(); measured.current = new Set()
+        searchSeq.current++ // retire any in-flight search against the old document
+        setMatches(null); setMatchIdx(0); setPropHl(null); setSearching(false)
         loadPdfjs(workerSrc)
             .then(async (pdfjs) => {
                 if (cancelled) return
@@ -246,53 +393,181 @@ export default function PdfViewer({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scrollTop, offsets, viewport.h, numPages])
 
-    // Jump to initialPage when ready or when the prop changes.
+    // Mirrors for callbacks that must read fresh layout without re-binding.
+    const pageRef = useRef(page); pageRef.current = page
+    const offsetsRef = useRef(offsets); offsetsRef.current = offsets
+    const visibleRef = useRef<[number, number]>([startIdx, endIdx]); visibleRef.current = [startIdx, endIdx]
+
+    // Jump to initialPage when ready or when the prop changes (uncontrolled only).
     useEffect(() => {
-        if (status === 'ready' && initialPage > 1) scrollToPage(initialPage)
+        if (status === 'ready' && initialPage > 1 && pageProp == null) scrollToPage(initialPage)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status, initialPage])
 
-    // ── Search (debounced, cached, race-guarded) ──────────────────────────────
+    // ── Controlled page: a prop change scrolls; user scroll is not fought ─────
+    const prevPageProp = useRef<number | null>(null)
+    useEffect(() => {
+        if (pageProp == null || status !== 'ready' || numPages === 0) {
+            prevPageProp.current = pageProp ?? null
+            return
+        }
+        const target = Math.min(numPages, Math.max(1, Math.round(pageProp)))
+        if (prevPageProp.current !== pageProp && target !== pageRef.current) scrollToPage(target)
+        prevPageProp.current = pageProp
+    }, [pageProp, status, numPages, scrollToPage])
+
+    // ── Search (debounced, cached, race-guarded, per occurrence) ──────────────
+    const getPageData = useCallback(async (p: number) => {
+        let d = pageData.current.get(p)
+        if (!d) {
+            const pg = await doc.getPage(p)
+            const tc = await pg.getTextContent()
+            const index = buildPageIndex(
+                (tc.items as Array<{ str?: string; hasEOL?: boolean }>).map((it) => ({ str: it.str ?? '', hasEOL: it.hasEOL === true })),
+            )
+            d = { index, norm: normalizeForSearch(index.text) }
+            pageData.current.set(p, d)
+        }
+        return d
+    }, [doc])
+
+    /** Scroll toward an occurrence; the painted page refines to the exact span. */
+    const goToOccurrence = useCallback((occ: { page: number }, kind: 'search' | 'anchor') => {
+        pendingScroll.current = { kind, page: occ.page }
+        const [s, e] = visibleRef.current
+        const mounted = occ.page >= s + 1 && occ.page <= e
+        // An unmounted page must scroll into the window first; a mounted page
+        // repaints on state change and refines from its paint callback.
+        if (!mounted) scrollToPage(occ.page)
+    }, [scrollToPage])
+
     const runSearch = useCallback(async (q: string) => {
-        const needle = q.trim().toLowerCase()
-        if (!doc || !needle) { setMatchPages(null); setMatchIdx(0); setSearching(false); return }
+        const trimmed = q.trim()
+        if (!doc || !trimmed) { setMatches(null); setMatchIdx(0); setSearching(false); return }
         const seq = ++searchSeq.current
         setSearching(true)
-        const hits: number[] = []
-        for (let p = 1; p <= numPages; p++) {
-            let text = pageText.current.get(p)
-            if (text === undefined) {
-                const pg = await doc.getPage(p)
-                const tc = await pg.getTextContent()
-                const built: string = tc.items.map((it: any) => ('str' in it ? it.str : '')).join(' ').toLowerCase()
-                pageText.current.set(p, built)
-                text = built
+        const all: Array<{ page: number } & Occurrence> = []
+        try {
+            for (let p = 1; p <= numPages; p++) {
+                const d = await getPageData(p)
+                if (seq !== searchSeq.current) return // a newer query superseded us
+                for (const occ of findOccurrences(d.index, trimmed, d.norm)) all.push({ page: p, ...occ })
             }
-            if (seq !== searchSeq.current) return // a newer query superseded us
-            if (text.includes(needle)) hits.push(p)
+        } catch {
+            // The document was swapped or a page failed mid-search; keep what
+            // was collected for the surviving sequence, report nothing stale.
+            if (seq !== searchSeq.current) return
+        } finally {
+            if (seq === searchSeq.current) setSearching(false)
         }
         if (seq !== searchSeq.current) return
-        setMatchPages(hits)
+        setMatches(all)
         setMatchIdx(0)
-        setSearching(false)
-        if (hits.length) scrollToPage(hits[0])
-    }, [doc, numPages, scrollToPage])
+        onSearchResults?.({ query: trimmed, total: all.length })
+        if (all.length > 0) {
+            onActiveMatchChange?.({ page: all[0].page, index: 0 })
+            goToOccurrence(all[0], 'search')
+        } else {
+            onActiveMatchChange?.(null)
+        }
+    }, [doc, numPages, getPageData, goToOccurrence, onSearchResults, onActiveMatchChange])
 
     const onQueryChange = useCallback((v: string) => {
         setQuery(v)
         if (searchTimer.current) clearTimeout(searchTimer.current)
-        if (!v.trim()) { searchSeq.current++; setMatchPages(null); setMatchIdx(0); setSearching(false); return }
-        searchTimer.current = setTimeout(() => runSearch(v), SEARCH_DEBOUNCE)
-    }, [runSearch])
+        if (!v.trim()) {
+            searchSeq.current++
+            setMatches(null); setMatchIdx(0); setSearching(false)
+            if (pendingScroll.current?.kind === 'search') pendingScroll.current = null
+            onActiveMatchChange?.(null)
+            return
+        }
+        searchTimer.current = setTimeout(() => { void runSearch(v) }, SEARCH_DEBOUNCE)
+    }, [runSearch, onActiveMatchChange])
 
     useEffect(() => () => { if (searchTimer.current) clearTimeout(searchTimer.current) }, [])
 
     const gotoMatch = (dir: 1 | -1) => {
-        if (!matchPages?.length) return
-        const next = (matchIdx + dir + matchPages.length) % matchPages.length
+        if (!matches || matches.length === 0) return
+        const next = (matchIdx + dir + matches.length) % matches.length
         setMatchIdx(next)
-        scrollToPage(matchPages[next])
+        onActiveMatchChange?.({ page: matches[next].page, index: next })
+        goToOccurrence(matches[next], 'search')
     }
+
+    const closeSearch = () => { setShowSearch(false); onQueryChange('') }
+
+    // ── Programmatic highlight (the `highlight` prop) ─────────────────────────
+    // Keyed by value, so an inline object literal does not loop the effect.
+    const highlightKey = highlight ? `${highlight.page}\u0000${highlight.phrase}\u0000${highlight.occurrence ?? 0}` : null
+    useEffect(() => {
+        if (status !== 'ready' || !doc) return
+        if (!highlight) {
+            setPropHl(null) // removes the paint, no scroll
+            if (pendingScroll.current?.kind === 'anchor') pendingScroll.current = null
+            return
+        }
+        let cancelled = false
+        void (async () => {
+            const target = Math.round(highlight.page)
+            if (target < 1 || target > numPages) {
+                if (!cancelled) { setPropHl(null); onHighlightResolved?.({ found: false }) }
+                return
+            }
+            try {
+                const d = await getPageData(target)
+                if (cancelled) return
+                const occ = findPhrase(d.index, highlight.phrase, { occurrence: highlight.occurrence ?? 0, norm: d.norm })
+                if (occ) {
+                    setPropHl({ page: target, ...occ })
+                    goToOccurrence({ page: target }, 'anchor')
+                } else {
+                    setPropHl(null)
+                    scrollToPage(target)
+                }
+                onPageChange?.(target) // keeps a controlled parent's `page` in sync
+                onHighlightResolved?.({ found: occ != null })
+            } catch {
+                if (!cancelled) { setPropHl(null); onHighlightResolved?.({ found: false }) }
+            }
+        })()
+        return () => { cancelled = true }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [highlightKey, status, doc, numPages])
+
+    // ── Highlight ranges per page (stable identity across scroll renders) ─────
+    const hlByPage = useMemo(() => {
+        const map = new Map<number, HighlightRange[]>()
+        if (matches) {
+            matches.forEach((m, i) => {
+                const list = map.get(m.page) ?? []
+                list.push({
+                    beginItem: m.beginItem,
+                    endItem: m.endItem,
+                    className: i === matchIdx ? 'oxy-hl oxy-hl-active' : 'oxy-hl',
+                })
+                map.set(m.page, list)
+            })
+        }
+        if (propHl) {
+            const list = map.get(propHl.page) ?? []
+            list.push({ beginItem: propHl.beginItem, endItem: propHl.endItem, className: 'oxy-hl-anchor' })
+            map.set(propHl.page, list)
+        }
+        return map
+    }, [matches, matchIdx, propHl])
+
+    // After a page paints, refine the pending scroll to the exact span position.
+    const handlePainted = useCallback((p: number, tops: PaintResult) => {
+        const pending = pendingScroll.current
+        const el = scrollRef.current
+        if (!pending || pending.page !== p || !el) return
+        const top = pending.kind === 'search' ? tops.activeTop : tops.anchorTop
+        if (top == null) return
+        pendingScroll.current = null
+        const target = Math.max(0, (offsetsRef.current[p - 1] ?? 0) + GAP / 2 + top - el.clientHeight / 3)
+        el.scrollTo({ top: target, behavior: 'smooth' })
+    }, [])
 
     // ── Download / print (uses the full bytes pdf.js already holds) ───────────
     const getBytes = useCallback(async (): Promise<Uint8Array> => {
@@ -344,6 +619,10 @@ export default function PdfViewer({
     }
 
     const ready = status === 'ready'
+    // Controlled mode shows the clamped prop; uncontrolled shows live scroll state.
+    const displayPage = pageProp != null && ready && numPages > 0
+        ? Math.min(numPages, Math.max(1, Math.round(pageProp)))
+        : page
 
     return (
         <div className={cx('flex flex-col overflow-hidden rounded-lg border border-border bg-surface-raised', className)} style={{ height, width, ...style }}>
@@ -352,11 +631,11 @@ export default function PdfViewer({
                     <div className="flex items-center gap-1 px-2 py-1.5">
                         {tb.pager && (
                             <div className="flex items-center gap-1">
-                                <IconButton type="ghost" size="sm" title="Previous page" onClick={() => scrollToPage(page - 1)} icon={<Chevron dir="up" />} disabled={!ready || page <= 1} />
+                                <IconButton type="ghost" size="sm" title="Previous page" onClick={() => scrollToPage(displayPage - 1)} icon={<Chevron dir="up" />} disabled={!ready || displayPage <= 1} />
                                 <div className="flex items-center gap-1 text-xs text-foreground-secondary select-none">
                                     <input
-                                        value={pageEditing.current ? pageDraft : ready ? String(page) : '–'}
-                                        onFocus={() => { pageEditing.current = true; setPageDraft(String(page)) }}
+                                        value={pageEditing.current ? pageDraft : ready ? String(displayPage) : '–'}
+                                        onFocus={() => { pageEditing.current = true; setPageDraft(String(displayPage)) }}
                                         onChange={(e) => setPageDraft(e.target.value.replace(/[^\d]/g, ''))}
                                         onBlur={commitPageDraft}
                                         onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
@@ -366,7 +645,7 @@ export default function PdfViewer({
                                     />
                                     <span className="tabular-nums">/ {numPages || '–'}</span>
                                 </div>
-                                <IconButton type="ghost" size="sm" title="Next page" onClick={() => scrollToPage(page + 1)} icon={<Chevron dir="down" />} disabled={!ready || page >= numPages} />
+                                <IconButton type="ghost" size="sm" title="Next page" onClick={() => scrollToPage(displayPage + 1)} icon={<Chevron dir="down" />} disabled={!ready || displayPage >= numPages} />
                             </div>
                         )}
 
@@ -399,16 +678,19 @@ export default function PdfViewer({
                                 autoFocus
                                 value={query}
                                 onChange={(e) => onQueryChange(e.target.value)}
-                                onKeyDown={(e) => { if (e.key === 'Enter') gotoMatch(e.shiftKey ? -1 : 1) }}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') gotoMatch(e.shiftKey ? -1 : 1)
+                                    else if (e.key === 'Escape') { e.preventDefault(); closeSearch() }
+                                }}
                                 placeholder="Find in document…"
                                 className="h-7 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-foreground-muted"
                             />
-                            <span className="text-xs tabular-nums text-foreground-muted">
-                                {searching ? 'Searching…' : matchPages == null ? '' : matchPages.length ? `${matchIdx + 1} of ${matchPages.length}` : 'No matches'}
+                            <span role="status" aria-live="polite" className="text-xs tabular-nums text-foreground-muted">
+                                {searching ? 'Searching…' : matches == null ? '' : matches.length ? `${matchIdx + 1} of ${matches.length}` : 'No matches'}
                             </span>
-                            <IconButton type="ghost" size="sm" title="Previous match" onClick={() => gotoMatch(-1)} icon={<Chevron dir="up" />} disabled={!matchPages?.length} />
-                            <IconButton type="ghost" size="sm" title="Next match" onClick={() => gotoMatch(1)} icon={<Chevron dir="down" />} disabled={!matchPages?.length} />
-                            <IconButton type="ghost" size="sm" title="Close search" onClick={() => { setShowSearch(false); onQueryChange('') }} icon={<CloseIcon />} />
+                            <IconButton type="ghost" size="sm" title="Previous match" onClick={() => gotoMatch(-1)} icon={<Chevron dir="up" />} disabled={!matches?.length} />
+                            <IconButton type="ghost" size="sm" title="Next match" onClick={() => gotoMatch(1)} icon={<Chevron dir="down" />} disabled={!matches?.length} />
+                            <IconButton type="ghost" size="sm" title="Close search" onClick={closeSearch} icon={<CloseIcon />} />
                         </div>
                     )}
                 </div>
@@ -460,7 +742,16 @@ export default function PdfViewer({
                                         style={{ position: 'absolute', top: offsets[p - 1], left: 0, right: 0, display: 'flex', justifyContent: 'center', paddingTop: GAP / 2 }}
                                     >
                                         <div className="relative shadow-md" style={{ width: s.width * scale, height: s.height * scale }}>
-                                            <PdfPage pdfjs={pdfjs} doc={doc} page={p} scale={scale} textLayer={textLayer} onMeasure={handleMeasure} />
+                                            <PdfPage
+                                                pdfjs={pdfjs}
+                                                doc={doc}
+                                                page={p}
+                                                scale={scale}
+                                                textLayer={textLayer}
+                                                onMeasure={handleMeasure}
+                                                highlights={hlByPage.get(p) ?? EMPTY_HL}
+                                                onPainted={handlePainted}
+                                            />
                                         </div>
                                     </div>
                                 )
@@ -473,16 +764,39 @@ export default function PdfViewer({
     )
 }
 
-// ── A single rendered page (canvas + optional text layer) ─────────────────────
+// ── A single rendered page (canvas + optional text layer + highlights) ────────
 function PdfPage({
-    pdfjs, doc, page, scale, textLayer, onMeasure,
-}: { pdfjs: any; doc: any; page: number; scale: number; textLayer: boolean; onMeasure?: (page: number, size: Size) => void }) {
+    pdfjs, doc, page, scale, textLayer, onMeasure, highlights = EMPTY_HL, onPainted,
+}: {
+    pdfjs: any
+    doc: any
+    page: number
+    scale: number
+    textLayer: boolean
+    onMeasure?: (page: number, size: Size) => void
+    highlights?: HighlightRange[]
+    onPainted?: (page: number, tops: PaintResult) => void
+}) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const textRef = useRef<HTMLDivElement>(null)
+    // The rendered text layer's item elements and their original strings.
+    const tlRef = useRef<{ divs: HTMLElement[]; strs: string[] } | null>(null)
+    const touched = useRef<Set<number>>(new Set())
+
+    // Repaint closure, refreshed every render so it sees the latest props.
+    const paintRef = useRef<() => void>(() => {})
+    paintRef.current = () => {
+        const tl = tlRef.current
+        if (!tl) return
+        const tops = paintHighlights(tl.divs, tl.strs, highlights, touched.current)
+        onPainted?.(page, tops)
+    }
 
     useEffect(() => {
         let cancelled = false
         let renderTask: any
+        tlRef.current = null
+        touched.current = new Set()
         ;(async () => {
             const pg = await doc.getPage(page)
             if (cancelled) return
@@ -505,10 +819,21 @@ function PdfPage({
                 textRef.current.style.setProperty('--scale-factor', String(scale))
                 const tl = new pdfjs.TextLayer({ textContentSource: pg.streamTextContent(), container: textRef.current, viewport })
                 await tl.render()
+                if (cancelled) return
+                tlRef.current = {
+                    divs: Array.from(tl.textDivs as HTMLElement[]),
+                    strs: Array.from(tl.textContentItemsStr as string[]),
+                }
+                paintRef.current()
             } catch { /* text layer optional */ }
         })()
         return () => { cancelled = true; renderTask?.cancel?.() }
     }, [pdfjs, doc, page, scale, textLayer, onMeasure])
+
+    // Repaint when the highlight set changes on an already-rendered layer.
+    useEffect(() => {
+        if (tlRef.current) paintRef.current()
+    }, [highlights])
 
     return (
         <>

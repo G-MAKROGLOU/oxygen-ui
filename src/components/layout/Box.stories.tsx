@@ -20,6 +20,31 @@ const meta: Meta<typeof Box> = {
 export default meta
 type Story = StoryObj<typeof Box>
 
+export const SpacingScale: Story = {
+    name: 'Spacing scale',
+    parameters: {
+        docs: {
+            description: {
+                story:
+                    'The shared spacing scale behind every padding and margin prop. ' +
+                    'Each prop sets a static class plus a CSS custom property (`oxy-p` + `--oxy-p`), so the CSS exists without Tailwind scanning.',
+            },
+        },
+    },
+    render: () => (
+        <div className="flex flex-col gap-2">
+            {(['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const).map((s) => (
+                <div key={s} className="flex items-center gap-3">
+                    <code className="w-10 text-xs text-foreground-muted">{s}</code>
+                    <Box p={s} background="surface" border="border" radius="md" className="inline-block">
+                        <div className="h-4 w-24 rounded bg-accent/30" />
+                    </Box>
+                </div>
+            ))}
+        </div>
+    ),
+}
+
 export const Surface: Story = {
     render: () => (
         <Box p="lg" background="surface" border="border" radius="lg" shadow="sm">
@@ -29,21 +54,6 @@ export const Surface: Story = {
                 No className authoring required at the call site.
             </Typography>
         </Box>
-    ),
-}
-
-export const SpacingScale: Story = {
-    render: () => (
-        <div className="flex flex-col gap-2">
-            {(['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const).map((s) => (
-                <div key={s} className="flex items-center gap-3">
-                    <code className="text-xs text-foreground-muted w-12">p="{s}"</code>
-                    <Box p={s} background="surface-raised" radius="md">
-                        <Typography variant="caption">Padding {s}</Typography>
-                    </Box>
-                </div>
-            ))}
-        </div>
     ),
 }
 

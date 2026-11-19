@@ -1,6 +1,10 @@
 ﻿import React, { useEffect, useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import PdfViewer from './PdfViewer'
+import PdfViewer, { type PdfHighlightTarget } from './PdfViewer'
+// Committed fixture: 3 pages with a hyphenated line end (p1), an fi ligature
+// and a two-column section (p2), repeated words (p3). Regenerate with
+// `node scripts/generate-pdf-fixture.mjs`.
+import highlightFixtureUrl from './__fixtures__/pdf-highlight-sample.pdf?url'
 
 const meta: Meta<typeof PdfViewer> = {
     title: 'Data Display/PdfViewer',
@@ -253,6 +257,117 @@ export const ManyPages: Story = {
         },
     },
     render: () => <PdfLoader pages={250} withText={false} style={{ height: 700 }} />,
+}
+
+export const SearchHighlight: Story = {
+    name: 'Search: occurrence highlight',
+    parameters: {
+        docs: {
+            description: {
+                story:
+                    'Search highlights every occurrence in the text layer; the active one is stronger. ' +
+                    'Enter / Shift+Enter step with wrap-around, Escape closes and clears. ' +
+                    'Try "transformation" (hyphenated across a line end on page 1), "specific" (an fi ligature on page 2), or "vessel" (three occurrences on page 3).',
+            },
+        },
+    },
+    render: () => <PdfViewer source={highlightFixtureUrl} style={{ height: 700 }} />,
+}
+
+const PHRASES: Array<{ label: string; target: PdfHighlightTarget }> = [
+    { label: 'Hyphenated (p1)', target: { page: 1, phrase: 'the PdfViewer search transformation cases' } },
+    { label: 'Ligature (p2)', target: { page: 2, phrase: 'the specific configuration uses a real fi ligature glyph' } },
+    { label: 'Repeated (p3)', target: { page: 3, phrase: 'vessel appears here twice' } },
+    { label: 'Not found (p3)', target: { page: 3, phrase: 'this phrase does not exist in the document' } },
+]
+
+const ProgrammaticHighlightDemo = () => {
+    const [target, setTarget] = useState<PdfHighlightTarget | null>(null)
+    const [resolved, setResolved] = useState<string>('–')
+    return (
+        <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+                {PHRASES.map((p) => (
+                    <button
+                        key={p.label}
+                        type="button"
+                        className="rounded border border-border bg-surface px-2 py-1 text-xs hover:bg-surface-raised"
+                        onClick={() => setTarget(p.target)}
+                    >
+                        {p.label}
+                    </button>
+                ))}
+                <button
+                    type="button"
+                    className="rounded border border-border bg-surface px-2 py-1 text-xs hover:bg-surface-raised"
+                    onClick={() => setTarget(null)}
+                >
+                    Clear
+                </button>
+                <span className="text-xs text-foreground-muted">resolved: {resolved}</span>
+            </div>
+            <PdfViewer
+                source={highlightFixtureUrl}
+                highlight={target}
+                onHighlightResolved={({ found }) => setResolved(found ? 'found' : 'not found')}
+                style={{ height: 640 }}
+            />
+        </div>
+    )
+}
+
+export const ProgrammaticHighlight: Story = {
+    name: 'Programmatic highlight (highlight prop)',
+    parameters: {
+        docs: {
+            description: {
+                story:
+                    'The `highlight` prop goes to a page, highlights the first anchor match of a phrase, and scrolls it into view. ' +
+                    'The phrase may come from a different extractor: whitespace, hyphenation, and ligatures are normalized. ' +
+                    'A miss goes to the page, paints nothing, and reports `found: false`.',
+            },
+        },
+    },
+    render: () => <ProgrammaticHighlightDemo />,
+}
+
+const ControlledPageDemo = () => {
+    const [page, setPage] = useState(1)
+    return (
+        <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+                <button
+                    type="button"
+                    className="rounded border border-border bg-surface px-2 py-1 text-xs hover:bg-surface-raised"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
+                    Previous
+                </button>
+                <span className="text-xs tabular-nums text-foreground-secondary">page {page}</span>
+                <button
+                    type="button"
+                    className="rounded border border-border bg-surface px-2 py-1 text-xs hover:bg-surface-raised"
+                    onClick={() => setPage((p) => Math.min(3, p + 1))}
+                >
+                    Next
+                </button>
+            </div>
+            <PdfViewer source={highlightFixtureUrl} page={page} onPageChange={setPage} style={{ height: 640 }} />
+        </div>
+    )
+}
+
+export const ControlledPage: Story = {
+    name: 'Controlled page prop',
+    parameters: {
+        docs: {
+            description: {
+                story:
+                    'The `page` prop controls the current page: external buttons drive the viewer, and user scrolling reports back through `onPageChange` without fighting the prop.',
+            },
+        },
+    },
+    render: () => <ControlledPageDemo />,
 }
 
 export const ErrorState: Story = {

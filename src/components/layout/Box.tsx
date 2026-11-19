@@ -5,20 +5,16 @@ import { cx } from '../../utils/cx'
 
 export type Spacing = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 
-const SPACING_MAP: Record<Spacing, string> = {
-    'none': '0',
-    'xs':   '1',
-    'sm':   '2',
-    'md':   '4',
-    'lg':   '6',
-    'xl':   '8',
-    '2xl':  '12',
+/** Token → CSS length. The scale mirrors Tailwind's spacing steps. */
+export const SPACING_REM: Record<Spacing, string> = {
+    'none': '0px',
+    'xs':   '0.25rem',
+    'sm':   '0.5rem',
+    'md':   '1rem',
+    'lg':   '1.5rem',
+    'xl':   '2rem',
+    '2xl':  '3rem',
 }
-
-const padding = (s?: Spacing, axis: 'p' | 'px' | 'py' | 'pt' | 'pr' | 'pb' | 'pl' = 'p') =>
-    s == null ? '' : `${axis}-${SPACING_MAP[s]}`
-const margin = (s?: Spacing, axis: 'm' | 'mx' | 'my' | 'mt' | 'mr' | 'mb' | 'ml' = 'm') =>
-    s == null ? '' : `${axis}-${SPACING_MAP[s]}`
 
 export type BoxBackground =
     | 'none' | 'background' | 'surface' | 'surface-raised' | 'accent'
@@ -100,9 +96,10 @@ export interface BoxProps {
  * radius, and shadow scales. Use it when you'd otherwise reach for a
  * className-only `<div>` with `p-4 bg-surface border border-border rounded-lg`.
  *
- * The token shortcuts map straight to Tailwind classes under the hood, so
- * Tailwind's content scanner sees the classes and JIT-emits the CSS. There
- * is no runtime style cost beyond the className concatenation.
+ * Spacing props set one static class plus a CSS custom property per side
+ * (`class="oxy-p" style="--oxy-p: 1rem"`), so the CSS exists without any
+ * runtime-built class name. Surface, border, radius, and shadow use static
+ * Tailwind classes.
  *
  * Use `as` when the semantic element should differ (`<section>`, `<article>`).
  *
@@ -136,14 +133,22 @@ export default function Box({
     children,
 }: BoxProps) {
     const Element = (as ?? 'div') as React.ElementType
+    const spacingClasses: string[] = []
+    const spacingVars: Record<string, string> = {}
+    const spacing = (name: string, s?: Spacing) => {
+        if (s == null) return
+        spacingClasses.push(`oxy-${name}`)
+        spacingVars[`--oxy-${name}`] = SPACING_REM[s]
+    }
+    spacing('p', p); spacing('px', px); spacing('py', py)
+    spacing('pt', pt); spacing('pr', pr); spacing('pb', pb); spacing('pl', pl)
+    spacing('m', m); spacing('mx', mx); spacing('my', my)
+    spacing('mt', mt); spacing('mr', mr); spacing('mb', mb); spacing('ml', ml)
     return (
         <Element
             onClick={onClick}
             className={cx(
-                padding(p, 'p'), padding(px, 'px'), padding(py, 'py'),
-                padding(pt, 'pt'), padding(pr, 'pr'), padding(pb, 'pb'), padding(pl, 'pl'),
-                margin(m, 'm'), margin(mx, 'mx'), margin(my, 'my'),
-                margin(mt, 'mt'), margin(mr, 'mr'), margin(mb, 'mb'), margin(ml, 'ml'),
+                ...spacingClasses,
                 BG_MAP[background],
                 BORDER_MAP[border],
                 radius ? RADIUS_MAP[radius] : '',
@@ -151,6 +156,7 @@ export default function Box({
                 className,
             )}
             style={{
+                ...(spacingVars as React.CSSProperties),
                 width: typeof width === 'number' ? `${width}px` : width,
                 height: typeof height === 'number' ? `${height}px` : height,
                 ...style,

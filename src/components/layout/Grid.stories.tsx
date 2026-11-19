@@ -38,6 +38,33 @@ export const ThreeColumns: Story = {
     ),
 }
 
+export const GapScale: Story = {
+    name: 'Gap scale',
+    parameters: {
+        docs: {
+            description: {
+                story:
+                    'The shared spacing scale behind `gap`, `gapX`, and `gapY`. ' +
+                    'Each prop sets a static class plus a CSS custom property (`oxy-gap` + `--oxy-gap`), so the CSS exists without Tailwind scanning.',
+            },
+        },
+    },
+    render: () => (
+        <div className="flex flex-col gap-4">
+            {(['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const).map((s) => (
+                <div key={s}>
+                    <code className="text-xs text-foreground-muted">gap="{s}"</code>
+                    <Grid cols={4} gap={s} className="mt-1">
+                        {Array.from({ length: 4 }, (_, i) => (
+                            <div key={i} className="h-8 rounded bg-accent/30" />
+                        ))}
+                    </Grid>
+                </div>
+            ))}
+        </div>
+    ),
+}
+
 export const AutoFit: Story = {
     name: 'Auto-fit (responsive)',
     parameters: {

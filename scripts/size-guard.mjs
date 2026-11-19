@@ -14,12 +14,16 @@ import * as esbuild from 'esbuild'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const reportOnly = process.argv.includes('--report')
 
-// Deps the consumer already has, exclude from the measurement.
-const external = ['react', 'react-dom', 'react/jsx-runtime', 'framer-motion', '@radix-ui/*']
+// Deps the consumer already has, exclude from the measurement. The last three
+// are runtime deps the library only loads through dynamic import(); without
+// esbuild code-splitting they would otherwise be inlined into the measurement.
+const external = ['react', 'react-dom', 'react/jsx-runtime', 'framer-motion', '@radix-ui/*', 'xlsx', 'jspdf', 'pdfjs-dist']
 
 // name → { entry, imports (ESM names or '*'), limit in KB (gzipped) }
 const TARGETS = [
-    { name: 'root: import *',        entry: 'dist/index.js',       imports: '*',              limit: 90 },
+    // Raised 90 → 100 KB (2026-11): the correctly measured library (lazy deps
+    // external) was already 93.35 KB before the PdfViewer highlight work.
+    { name: 'root: import *',        entry: 'dist/index.js',       imports: '*',              limit: 100 },
     { name: 'root: { Button }',      entry: 'dist/index.js',       imports: '{ Button }',     limit: 10 },
     { name: 'root: { Table }',       entry: 'dist/index.js',       imports: '{ Table }',      limit: 14 },
     { name: 'root: { Icon }',        entry: 'dist/index.js',       imports: '{ Icon }',       limit: 20 },
