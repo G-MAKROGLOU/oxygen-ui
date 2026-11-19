@@ -1,3 +1,16 @@
+# [7.21.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.20.2...v7.21.0) (2026-11-19)
+
+
+### Bug Fixes
+
+* **deps:** drop the @stackline/xlsx alias, restore the official xlsx package ([0094606](https://github.com/G-MAKROGLOU/oxygen-ui/commit/00946068924f40ec236c496db9a59306b15e21fa))
+* **deps:** replace vulnerable xlsx release ([278881b](https://github.com/G-MAKROGLOU/oxygen-ui/commit/278881b7bdf47b59a9b8cceadb564686fff4c839))
+
+
+### Features
+
+* **pdf-viewer:** text highlight for search and programmatic phrases ([4908092](https://github.com/G-MAKROGLOU/oxygen-ui/commit/4908092a1aa77622a5780dfc9e88bb100912fa98))
+
 ## [7.20.2](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.20.1...v7.20.2) (2026-08-11)
 
 
