@@ -347,7 +347,7 @@ const ControlledPageDemo = () => {
                 <button
                     type="button"
                     className="rounded border border-border bg-surface px-2 py-1 text-xs hover:bg-surface-raised"
-                    onClick={() => setPage((p) => Math.min(3, p + 1))}
+                    onClick={() => setPage((p) => Math.min(4, p + 1))}
                 >
                     Next
                 </button>

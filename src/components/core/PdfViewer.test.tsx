@@ -58,6 +58,10 @@ vi.mock('pdfjs-dist', () => {
 })
 
 import PdfViewer from './PdfViewer'
+import { findPhrase, indexFromTextContent } from '../../utils/pdfSearch'
+// Real pdf.js text items of the committed fixture PDF, regenerated together
+// with it by `node scripts/generate-pdf-fixture.mjs`.
+import fixtureItems from './__fixtures__/pdf-highlight-sample.items.json'
 
 const scrollToSpy = vi.fn()
 
@@ -343,6 +347,24 @@ describe('highlight prop', () => {
         await waitFor(() => expect(counter()).toHaveTextContent('1 of 1')) // anchor not counted
         expect(highlightSpans(container).length).toBe(1)
         expect(anchorSpans(container).length).toBeGreaterThan(0)
+    })
+
+    it.each([
+        { page: 1, phrase: 'the PdfViewer search transformation cases' },
+        { page: 2, phrase: 'the specific configuration uses a real fi ligature glyph' },
+        { page: 2, phrase: 'left column line two' },
+        { page: 3, phrase: 'MV Aurora' },
+        { page: 3, phrase: 'the final clause of this agreement continues on the following page' },
+        { page: 4, phrase: 'page four ends the fixture' },
+        { page: 2, phrase: 'this phrase does not exist anywhere' },
+    ])('resolves like the headless matcher on real fixture items: p$page "$phrase"', async ({ page, phrase }) => {
+        // Same items the real PDF produces, so onHighlightResolved must equal
+        // what searchPdfPhrase computes through the shared matcher.
+        mock.pages = fixtureItems as Array<Array<{ str: string; hasEOL?: boolean }>>
+        const expected = findPhrase(indexFromTextContent({ items: fixtureItems[page - 1] }), phrase) != null
+        const onResolved = vi.fn()
+        render(<PdfViewer source={src()} highlight={{ page, phrase }} onHighlightResolved={onResolved} />)
+        await waitFor(() => expect(onResolved).toHaveBeenCalledWith({ found: expected }))
     })
 
     it('works together with a controlled page', async () => {

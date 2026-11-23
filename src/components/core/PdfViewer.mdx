@@ -142,6 +142,27 @@ When `page` and `highlight` are both used, the later input wins: a highlight cha
 
 ---
 
+## Headless phrase search (`@geomak/ui/pdf`)
+
+`searchPdfPhrase` runs the exact matcher behind the `highlight` prop without React, CSS, or a DOM, for example in a Node script that measures how often a server-extracted phrase resolves. It ships from its own entry point, so importing it loads no component code.
+
+```ts
+import { searchPdfPhrase } from '@geomak/ui/pdf'
+import { readFileSync } from 'node:fs'
+
+const bytes = new Uint8Array(readFileSync('report.pdf'))
+const r = await searchPdfPhrase(bytes, 12, 'the proposed system meets the criteria')
+// { found: true, page: 12, matchedText: '…', start: 184, end: 223 }
+```
+
+- `source` is a pdf.js `PDFDocumentProxy` (any build) or the PDF bytes. Bytes are parsed with the installed `pdfjs-dist` legacy build, which runs in Node 20+ without a DOM; a document created from bytes is destroyed before returning, a passed-in document is left alone.
+- `page` is 1-based. On a miss the result is `{ found: false, page }` with no offsets.
+- Options: `occurrence` picks the n-th anchor match on the page (default 0). `pageTolerance` (default 0) also searches that many pages before and after, nearest first, and reports the page where the phrase was found.
+- The extraction and normalization are the same functions PdfViewer uses (`indexFromTextContent`, `findPhrase`), so for the same page and phrase `found` equals what `onHighlightResolved` reports. The lower-level matcher (`buildPageIndex`, `normalizeForSearch`, `findOccurrences`, `findPhrase`) is re-exported from the same entry.
+- The page-break limit applies here too: a phrase split across two pages is found on neither, with or without `pageTolerance`.
+
+---
+
 ## Virtualization
 
 Only pages whose bounding box overlaps the visible viewport are rendered to canvas. Off-screen pages are represented by empty placeholder `<div>` elements that match the page's pixel height, keeping the scrollbar accurate.

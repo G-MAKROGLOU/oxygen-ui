@@ -44,6 +44,11 @@
       "import": "./dist/icons/index.js",
       "require": "./dist/icons/index.cjs"
     },
+    "./pdf": {
+      "types": "./dist/pdf/index.d.ts",
+      "import": "./dist/pdf/index.js",
+      "require": "./dist/pdf/index.cjs"
+    },
     "./styles": "./dist/styles.css",
     "./tokens": {
       "types": "./dist/tokens/index.d.ts",
@@ -115,7 +120,7 @@
     "@radix-ui/react-tooltip": "^1.2.7",
     "framer-motion": "^12.40.0",
     "jspdf": "^4.2.1",
-    "pdfjs-dist": "^6.0.227",
+    "pdfjs-dist": "^6.5.438",
     "xlsx": "^0.18.5"
   },
   "peerDependencies": {

@@ -30,6 +30,7 @@ const TARGETS = [
     { name: 'icons: import *',       entry: 'dist/icons/index.js', imports: '*',              limit: 11 },
     { name: 'icons: { ChevronDown }',entry: 'dist/icons/index.js', imports: '{ ChevronDown }',limit: 1 },
     { name: 'tokens: import *',      entry: 'dist/tokens/index.js',imports: '*',              limit: 2.5 },
+    { name: 'pdf: import *',         entry: 'dist/pdf/index.js',   imports: '*',              limit: 4 },
 ]
 
 async function measure({ entry, imports }) {

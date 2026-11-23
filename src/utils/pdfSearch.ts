@@ -47,6 +47,20 @@ export interface Occurrence {
     endItem: ItemPos
 }
 
+/** The slice of pdf.js's `getTextContent()` result that the index needs. */
+export interface TextContentLike {
+    items: ReadonlyArray<{ str?: string; hasEOL?: boolean }>
+}
+
+/**
+ * Build a page index straight from pdf.js's `getTextContent()` result. Both
+ * PdfViewer's `highlight` prop and the headless `searchPdfPhrase` use this
+ * one function, so their extraction cannot drift.
+ */
+export function indexFromTextContent(tc: TextContentLike): PageIndex {
+    return buildPageIndex(tc.items.map((it) => ({ str: it.str ?? '', hasEOL: it.hasEOL === true })))
+}
+
 /** Build the searchable index of one page from its pdf.js text items. */
 export function buildPageIndex(items: ReadonlyArray<string | PageIndexItem>): PageIndex {
     const strs: string[] = []

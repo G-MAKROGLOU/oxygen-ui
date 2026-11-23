@@ -1,0 +1,121 @@
+[
+ [
+  {
+   "str": "OxygenUI Highlight Fixture"
+  },
+  {
+   "str": "",
+   "hasEOL": true
+  },
+  {
+   "str": "This document exercises the PdfViewer search transfor-",
+   "hasEOL": true
+  },
+  {
+   "str": "mation cases: a word is hyphenated across a line end.",
+   "hasEOL": true
+  },
+  {
+   "str": "The quick brown fox jumps over the lazy dog on page one."
+  }
+ ],
+ [
+  {
+   "str": "Ligatures and columns"
+  },
+  {
+   "str": "",
+   "hasEOL": true
+  },
+  {
+   "str": "The specific configuration uses a real fi ligature glyph."
+  },
+  {
+   "str": "",
+   "hasEOL": true
+  },
+  {
+   "str": "Left column line one",
+   "hasEOL": true
+  },
+  {
+   "str": "Left column line two",
+   "hasEOL": true
+  },
+  {
+   "str": "Left column line three",
+   "hasEOL": true
+  },
+  {
+   "str": "Right column line one",
+   "hasEOL": true
+  },
+  {
+   "str": "Right column line two",
+   "hasEOL": true
+  },
+  {
+   "str": "Right column line three"
+  }
+ ],
+ [
+  {
+   "str": "Page three closes the running text of the fixture document.",
+   "hasEOL": true
+  },
+  {
+   "str": "Search for the word vessel: vessel appears here twice, vessel."
+  },
+  {
+   "str": "",
+   "hasEOL": true
+  },
+  {
+   "str": "Vessel"
+  },
+  {
+   "str": " "
+  },
+  {
+   "str": "IMO number"
+  },
+  {
+   "str": " "
+  },
+  {
+   "str": "Status",
+   "hasEOL": true
+  },
+  {
+   "str": "MV Aurora"
+  },
+  {
+   "str": " "
+  },
+  {
+   "str": "9876543"
+  },
+  {
+   "str": " "
+  },
+  {
+   "str": "In service"
+  },
+  {
+   "str": "",
+   "hasEOL": true
+  },
+  {
+   "str": "The final clause of this agreement continues"
+  }
+ ],
+ [
+  {
+   "str": "on the following page of the document.",
+   "hasEOL": true
+  },
+  {
+   "str": "Page four ends the fixture."
+  }
+ ]
+]

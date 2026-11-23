@@ -5,7 +5,7 @@ import { SkeletonBox } from './Skeleton'
 import { cx } from '../../utils/cx'
 import { type FileSource, type RemoteSourceOptions, isUrlSource, urlHref, sourceName, downloadBlob } from '../../utils/fileSource'
 import {
-    buildPageIndex, findOccurrences, findPhrase, normalizeForSearch,
+    findOccurrences, findPhrase, indexFromTextContent, normalizeForSearch,
     type ItemPos, type NormalizedText, type Occurrence, type PageIndex,
 } from '../../utils/pdfSearch'
 
@@ -422,9 +422,7 @@ export default function PdfViewer({
         if (!d) {
             const pg = await doc.getPage(p)
             const tc = await pg.getTextContent()
-            const index = buildPageIndex(
-                (tc.items as Array<{ str?: string; hasEOL?: boolean }>).map((it) => ({ str: it.str ?? '', hasEOL: it.hasEOL === true })),
-            )
+            const index = indexFromTextContent(tc as { items: Array<{ str?: string; hasEOL?: boolean }> })
             d = { index, norm: normalizeForSearch(index.text) }
             pageData.current.set(p, d)
         }
