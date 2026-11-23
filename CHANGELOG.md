@@ -1,3 +1,10 @@
+# [7.22.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.21.0...v7.22.0) (2026-11-23)
+
+
+### Features
+
+* **pdf:** headless phrase search from the @geomak/ui/pdf entry point ([8b308e1](https://github.com/G-MAKROGLOU/oxygen-ui/commit/8b308e1142844de05b89ab93935b7ed14f8e0775))
+
 # [7.21.0](https://github.com/G-MAKROGLOU/oxygen-ui/compare/v7.20.2...v7.21.0) (2026-11-19)
 
 
