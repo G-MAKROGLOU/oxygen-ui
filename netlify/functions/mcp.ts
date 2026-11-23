@@ -10,16 +10,12 @@
 //   get_token        , lookup CSS custom properties by name or prefix
 //   get_pattern, get_form_binding, compare_components, get_app_bootstrap
 
-import { McpServer, WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/server'
+import { McpServer, WebStandardStreamableHTTPServerTransport, type TextContent } from '@modelcontextprotocol/server'
 import { z } from 'zod'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore, generated JS module, no type declarations
 import MANIFEST from '../_data/ai-manifest.js'
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type TextContent = { type: 'text'; text: string }
 
 // ─── Tool handlers ────────────────────────────────────────────────────────────
 
@@ -897,44 +893,39 @@ function getAppBootstrap(opts: {
 
 const toolResult = (content: TextContent[]) => ({ content })
 
-function buildServer(): McpServer {
-  const server = new McpServer({ name: 'oxygen-ui', version: '1.0.0' })
-
-  server.registerTool('list_components', {
+// Tool metadata and zod schemas are immutable; built once at module load.
+const TOOL_CONFIGS = {
+  list_components: {
     description:
       'List every component, hook, and utility in the OxygenUI (@geomak/ui) design system. ' +
       'Returns each entry\'s slug (for use with get_component), display name, category, and description.',
     inputSchema: z.object({}),
-  }, async () => toolResult(listComponents()))
-
-  server.registerTool('get_component', {
+  },
+  get_component: {
     description:
       'Fetch the full documentation for a specific OxygenUI component, hook, or utility, ' +
       'including its props API, usage examples, and recipes. Pass the slug from list_components or find_component.',
     inputSchema: z.object({
       slug: z.string().describe('Component slug, e.g. "accordion", "data-grid", "use-excel", "table", "wizard".'),
     }),
-  }, async ({ slug }) => toolResult(getComponent(slug)))
-
-  server.registerTool('find_component', {
+  },
+  find_component: {
     description:
       'Search OxygenUI for a component by name, functionality, or keyword. ' +
       'Use this before writing any UI code to discover what the design system already provides.',
     inputSchema: z.object({
       query: z.string().describe('Free-text query, e.g. "date picker", "virtualized table", "pdf viewer", "form validation".'),
     }),
-  }, async ({ query }) => toolResult(findComponent(query)))
-
-  server.registerTool('get_token', {
+  },
+  get_token: {
     description:
       'Look up OxygenUI design tokens, CSS custom properties for color, radius, shadow, motion, ' +
       'typography, z-index, and density. Returns matching variable names grouped by category.',
     inputSchema: z.object({
       token: z.string().describe('Token name or category prefix to search, e.g. "--color-accent", "radius", "motion", "shadow", "color".'),
     }),
-  }, async ({ token }) => toolResult(getToken(token)))
-
-  server.registerTool('get_pattern', {
+  },
+  get_pattern: {
     description:
       'Get a full wired recipe for a common page-level UI pattern, which components to use, ' +
       'what state to declare, how they wire together, and a complete runnable code example. ' +
@@ -943,9 +934,8 @@ function buildServer(): McpServer {
       pattern: z.string().describe('Pattern name: "crud-list", "dashboard", "settings-tabs", "multi-step-form", "detail-page", "app-bootstrap".'),
       entity: z.string().optional().describe('Optional entity/domain name (e.g. "Vessel", "Order", "User") to personalise variable names in the example.'),
     }),
-  }, async ({ pattern, entity }) => toolResult(getPattern(pattern, entity ?? '')))
-
-  server.registerTool('get_form_binding', {
+  },
+  get_form_binding: {
     description:
       'Given an OxygenUI input component name, returns the correct useForm binder method, ' +
       'the value type stored, and a paste-ready code snippet. ' +
@@ -953,18 +943,16 @@ function buildServer(): McpServer {
     inputSchema: z.object({
       input: z.string().describe('Input component name, e.g. "Dropdown", "Switch", "DatePicker", "TagsInput", "Slider".'),
     }),
-  }, async ({ input }) => toolResult(getFormBinding(input)))
-
-  server.registerTool('compare_components', {
+  },
+  compare_components: {
     description:
       'Returns a structured "when to use which" decision guide for two or more similar OxygenUI components. ' +
       'Useful for choosing between Modal/Drawer/PopConfirm, Table/DataGrid/VirtualList, Tabs/SegmentedControl, etc.',
     inputSchema: z.object({
       components: z.array(z.string()).describe('Two or more component slugs to compare, e.g. ["modal", "drawer"], ["table", "data-grid", "virtual-list"].'),
     }),
-  }, async ({ components }) => toolResult(compareComponents(components)))
-
-  server.registerTool('get_app_bootstrap', {
+  },
+  get_app_bootstrap: {
     description:
       'Returns the recommended full app bootstrap code for a new project using @geomak/ui: ' +
       'provider nesting order, ThemeProvider with dark-mode toggle, NotificationProvider, ' +
@@ -975,8 +963,19 @@ function buildServer(): McpServer {
       customTheme: z.boolean().optional().describe('Include brand token override pattern.'),
       appName: z.string().optional().describe('App name used for variable naming in output.'),
     }),
-  }, async (opts) => toolResult(getAppBootstrap(opts)))
+  },
+}
 
+function buildServer(): McpServer {
+  const server = new McpServer({ name: 'oxygen-ui', version: '1.0.0' })
+  server.registerTool('list_components', TOOL_CONFIGS.list_components, async () => toolResult(listComponents()))
+  server.registerTool('get_component', TOOL_CONFIGS.get_component, async ({ slug }) => toolResult(getComponent(slug)))
+  server.registerTool('find_component', TOOL_CONFIGS.find_component, async ({ query }) => toolResult(findComponent(query)))
+  server.registerTool('get_token', TOOL_CONFIGS.get_token, async ({ token }) => toolResult(getToken(token)))
+  server.registerTool('get_pattern', TOOL_CONFIGS.get_pattern, async ({ pattern, entity }) => toolResult(getPattern(pattern, entity ?? '')))
+  server.registerTool('get_form_binding', TOOL_CONFIGS.get_form_binding, async ({ input }) => toolResult(getFormBinding(input)))
+  server.registerTool('compare_components', TOOL_CONFIGS.compare_components, async ({ components }) => toolResult(compareComponents(components)))
+  server.registerTool('get_app_bootstrap', TOOL_CONFIGS.get_app_bootstrap, async (opts) => toolResult(getAppBootstrap(opts)))
   return server
 }
 
@@ -994,13 +993,22 @@ export default async function handler(req: Request): Promise<Response> {
   }
 
   // Stateless mode: one single-use server + transport pair per request.
-  const server = buildServer()
-  const transport = new WebStandardStreamableHTTPServerTransport({
-    sessionIdGenerator: undefined,
-    enableJsonResponse: true,
-  })
-  await server.connect(transport)
-  const res = await transport.handleRequest(req)
+  let res: Response
+  try {
+    const server = buildServer()
+    const transport = new WebStandardStreamableHTTPServerTransport({
+      sessionIdGenerator: undefined,
+      enableJsonResponse: true,
+    })
+    await server.connect(transport)
+    res = await transport.handleRequest(req)
+  } catch {
+    // Keep CORS headers on failures, so browser clients see the error itself.
+    res = Response.json(
+      { jsonrpc: '2.0', id: null, error: { code: -32603, message: 'Internal server error' } },
+      { status: 500 },
+    )
+  }
 
   const headers = new Headers(res.headers)
   for (const [k, v] of Object.entries(CORS_HEADERS)) headers.set(k, v)

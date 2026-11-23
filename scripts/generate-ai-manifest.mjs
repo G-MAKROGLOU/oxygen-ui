@@ -50,7 +50,7 @@ function cleanMdx(content) {
   for (const line of lines) {
     const t = line.trim()
 
-    if (t.startsWith('```')) { inCodeFence = !inCodeFence; out.push(line); continue }
+    if (!inJsxComment && t.startsWith('```')) { inCodeFence = !inCodeFence; out.push(line); continue }
     if (inCodeFence) { out.push(line); continue }
 
     // Multi-line JSX comment block: {/* ... (start)

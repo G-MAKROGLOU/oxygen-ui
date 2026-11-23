@@ -7,7 +7,7 @@ export default defineConfig({
         environment: 'jsdom',
         globals: true,
         setupFiles: ['./src/tests/setup.ts'],
-        include: ['src/**/*.{test,spec}.{ts,tsx}'],
+        include: ['src/**/*.{test,spec}.{ts,tsx}', 'netlify/*.test.ts'],
         exclude: ['node_modules', 'dist', 'src/**/*.stories.tsx'],
         coverage: {
             provider: 'v8',
