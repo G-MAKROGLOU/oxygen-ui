@@ -1,5 +1,6 @@
-// OxygenUI MCP server, stateless Netlify Function (Streamable HTTP, POST /mcp)
-// Implements the Model Context Protocol JSON-RPC 2.0 subset required for tool-based docs lookup.
+// OxygenUI MCP server, stateless Netlify Function (Streamable HTTP, /mcp)
+// Built on the official MCP TypeScript SDK (@modelcontextprotocol/server):
+// a fresh McpServer + WebStandardStreamableHTTPServerTransport per request.
 // Manifest is generated at build time by: node scripts/generate-ai-manifest.mjs
 //
 // Registered tools:
@@ -7,6 +8,10 @@
 //   get_component    , full MDX docs for a single component by slug
 //   find_component   , keyword search across names, categories, descriptions
 //   get_token        , lookup CSS custom properties by name or prefix
+//   get_pattern, get_form_binding, compare_components, get_app_bootstrap
+
+import { McpServer, WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/server'
+import { z } from 'zod'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore, generated JS module, no type declarations
@@ -14,155 +19,7 @@ import MANIFEST from '../_data/ai-manifest.js'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type ManifestComponent = (typeof MANIFEST)['components'][number]
-
-interface JsonRpcRequest {
-  jsonrpc: '2.0'
-  id?: string | number | null
-  method: string
-  params?: Record<string, unknown>
-}
-
-interface JsonRpcResponse {
-  jsonrpc: '2.0'
-  id: string | number | null
-  result?: unknown
-  error?: { code: number; message: string }
-}
-
 type TextContent = { type: 'text'; text: string }
-
-// ─── Tool registry ────────────────────────────────────────────────────────────
-
-const TOOLS = [
-  {
-    name: 'list_components',
-    description:
-      'List every component, hook, and utility in the OxygenUI (@geomak/ui) design system. ' +
-      'Returns each entry\'s slug (for use with get_component), display name, category, and description.',
-    inputSchema: { type: 'object', properties: {}, required: [] as string[] },
-  },
-  {
-    name: 'get_component',
-    description:
-      'Fetch the full documentation for a specific OxygenUI component, hook, or utility, ' +
-      'including its props API, usage examples, and recipes. Pass the slug from list_components or find_component.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        slug: {
-          type: 'string',
-          description: 'Component slug, e.g. "accordion", "data-grid", "use-excel", "table", "wizard".',
-        },
-      },
-      required: ['slug'],
-    },
-  },
-  {
-    name: 'find_component',
-    description:
-      'Search OxygenUI for a component by name, functionality, or keyword. ' +
-      'Use this before writing any UI code to discover what the design system already provides.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        query: {
-          type: 'string',
-          description: 'Free-text query, e.g. "date picker", "virtualized table", "pdf viewer", "form validation".',
-        },
-      },
-      required: ['query'],
-    },
-  },
-  {
-    name: 'get_token',
-    description:
-      'Look up OxygenUI design tokens, CSS custom properties for color, radius, shadow, motion, ' +
-      'typography, z-index, and density. Returns matching variable names grouped by category.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        token: {
-          type: 'string',
-          description: 'Token name or category prefix to search, e.g. "--color-accent", "radius", "motion", "shadow", "color".',
-        },
-      },
-      required: ['token'],
-    },
-  },
-  {
-    name: 'get_pattern',
-    description:
-      'Get a full wired recipe for a common page-level UI pattern, which components to use, ' +
-      'what state to declare, how they wire together, and a complete runnable code example. ' +
-      'Patterns: crud-list, dashboard, settings-tabs, multi-step-form, detail-page, app-bootstrap.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        pattern: {
-          type: 'string',
-          description: 'Pattern name: "crud-list", "dashboard", "settings-tabs", "multi-step-form", "detail-page", "app-bootstrap".',
-        },
-        entity: {
-          type: 'string',
-          description: 'Optional entity/domain name (e.g. "Vessel", "Order", "User") to personalise variable names in the example.',
-        },
-      },
-      required: ['pattern'],
-    },
-  },
-  {
-    name: 'get_form_binding',
-    description:
-      'Given an OxygenUI input component name, returns the correct useForm binder method, ' +
-      'the value type stored, and a paste-ready code snippet. ' +
-      'Use this before adding any input to a Form to avoid silent binding bugs.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        input: {
-          type: 'string',
-          description: 'Input component name, e.g. "Dropdown", "Switch", "DatePicker", "TagsInput", "Slider".',
-        },
-      },
-      required: ['input'],
-    },
-  },
-  {
-    name: 'compare_components',
-    description:
-      'Returns a structured "when to use which" decision guide for two or more similar OxygenUI components. ' +
-      'Useful for choosing between Modal/Drawer/PopConfirm, Table/DataGrid/VirtualList, Tabs/SegmentedControl, etc.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        components: {
-          type: 'array',
-          items: { type: 'string' },
-          description: 'Two or more component slugs to compare, e.g. ["modal", "drawer"], ["table", "data-grid", "virtual-list"].',
-        },
-      },
-      required: ['components'],
-    },
-  },
-  {
-    name: 'get_app_bootstrap',
-    description:
-      'Returns the recommended full app bootstrap code for a new project using @geomak/ui: ' +
-      'provider nesting order, ThemeProvider with dark-mode toggle, NotificationProvider, ' +
-      'optional React Query and React Router wiring, and SecureLayout route guard pattern.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        router: { type: 'boolean', description: 'Include React Router + SecureLayout shell.' },
-        reactQuery: { type: 'boolean', description: 'Include QueryClientProvider.' },
-        customTheme: { type: 'boolean', description: 'Include brand token override pattern.' },
-        appName: { type: 'string', description: 'App name used for variable naming in output.' },
-      },
-      required: [],
-    },
-  },
-] as const
 
 // ─── Tool handlers ────────────────────────────────────────────────────────────
 
@@ -1036,69 +893,99 @@ function getAppBootstrap(opts: {
   return [{ type: 'text', text: fn(opts.appName || 'MyApp') }]
 }
 
-// ─── JSON-RPC dispatch ────────────────────────────────────────────────────────
+// ─── MCP server ───────────────────────────────────────────────────────────────
 
-function ok(id: string | number | null, result: unknown): JsonRpcResponse {
-  return { jsonrpc: '2.0', id, result }
-}
+const toolResult = (content: TextContent[]) => ({ content })
 
-function rpcError(id: string | number | null, code: number, message: string): JsonRpcResponse {
-  return { jsonrpc: '2.0', id, error: { code, message } }
-}
+function buildServer(): McpServer {
+  const server = new McpServer({ name: 'oxygen-ui', version: '1.0.0' })
 
-function toolOk(id: string | number | null, content: TextContent[]): JsonRpcResponse {
-  return ok(id, { content })
-}
+  server.registerTool('list_components', {
+    description:
+      'List every component, hook, and utility in the OxygenUI (@geomak/ui) design system. ' +
+      'Returns each entry\'s slug (for use with get_component), display name, category, and description.',
+    inputSchema: z.object({}),
+  }, async () => toolResult(listComponents()))
 
-async function dispatch(req: JsonRpcRequest): Promise<JsonRpcResponse | null> {
-  // Notifications (no id) expect no response
-  if (!('id' in req) || req.method.startsWith('notifications/')) return null
+  server.registerTool('get_component', {
+    description:
+      'Fetch the full documentation for a specific OxygenUI component, hook, or utility, ' +
+      'including its props API, usage examples, and recipes. Pass the slug from list_components or find_component.',
+    inputSchema: z.object({
+      slug: z.string().describe('Component slug, e.g. "accordion", "data-grid", "use-excel", "table", "wizard".'),
+    }),
+  }, async ({ slug }) => toolResult(getComponent(slug)))
 
-  const id = req.id ?? null
+  server.registerTool('find_component', {
+    description:
+      'Search OxygenUI for a component by name, functionality, or keyword. ' +
+      'Use this before writing any UI code to discover what the design system already provides.',
+    inputSchema: z.object({
+      query: z.string().describe('Free-text query, e.g. "date picker", "virtualized table", "pdf viewer", "form validation".'),
+    }),
+  }, async ({ query }) => toolResult(findComponent(query)))
 
-  switch (req.method) {
-    case 'initialize':
-      return ok(id, {
-        protocolVersion: '2024-11-05',
-        capabilities: { tools: {} },
-        serverInfo: { name: 'oxygen-ui', version: '1.0.0' },
-      })
+  server.registerTool('get_token', {
+    description:
+      'Look up OxygenUI design tokens, CSS custom properties for color, radius, shadow, motion, ' +
+      'typography, z-index, and density. Returns matching variable names grouped by category.',
+    inputSchema: z.object({
+      token: z.string().describe('Token name or category prefix to search, e.g. "--color-accent", "radius", "motion", "shadow", "color".'),
+    }),
+  }, async ({ token }) => toolResult(getToken(token)))
 
-    case 'ping':
-      return ok(id, {})
+  server.registerTool('get_pattern', {
+    description:
+      'Get a full wired recipe for a common page-level UI pattern, which components to use, ' +
+      'what state to declare, how they wire together, and a complete runnable code example. ' +
+      'Patterns: crud-list, dashboard, settings-tabs, multi-step-form, detail-page, app-bootstrap.',
+    inputSchema: z.object({
+      pattern: z.string().describe('Pattern name: "crud-list", "dashboard", "settings-tabs", "multi-step-form", "detail-page", "app-bootstrap".'),
+      entity: z.string().optional().describe('Optional entity/domain name (e.g. "Vessel", "Order", "User") to personalise variable names in the example.'),
+    }),
+  }, async ({ pattern, entity }) => toolResult(getPattern(pattern, entity ?? '')))
 
-    case 'tools/list':
-      return ok(id, { tools: TOOLS })
+  server.registerTool('get_form_binding', {
+    description:
+      'Given an OxygenUI input component name, returns the correct useForm binder method, ' +
+      'the value type stored, and a paste-ready code snippet. ' +
+      'Use this before adding any input to a Form to avoid silent binding bugs.',
+    inputSchema: z.object({
+      input: z.string().describe('Input component name, e.g. "Dropdown", "Switch", "DatePicker", "TagsInput", "Slider".'),
+    }),
+  }, async ({ input }) => toolResult(getFormBinding(input)))
 
-    case 'tools/call': {
-      const p = req.params as { name?: string; arguments?: Record<string, string> } | undefined
-      if (!p?.name) return rpcError(id, -32602, 'Missing params.name')
-      const args = p.arguments ?? {}
+  server.registerTool('compare_components', {
+    description:
+      'Returns a structured "when to use which" decision guide for two or more similar OxygenUI components. ' +
+      'Useful for choosing between Modal/Drawer/PopConfirm, Table/DataGrid/VirtualList, Tabs/SegmentedControl, etc.',
+    inputSchema: z.object({
+      components: z.array(z.string()).describe('Two or more component slugs to compare, e.g. ["modal", "drawer"], ["table", "data-grid", "virtual-list"].'),
+    }),
+  }, async ({ components }) => toolResult(compareComponents(components)))
 
-      switch (p.name) {
-        case 'list_components':    return toolOk(id, listComponents())
-        case 'get_component':      return toolOk(id, getComponent(args.slug ?? ''))
-        case 'find_component':     return toolOk(id, findComponent(args.query ?? ''))
-        case 'get_token':          return toolOk(id, getToken(args.token ?? ''))
-        case 'get_pattern':        return toolOk(id, getPattern(args.pattern ?? '', args.entity ?? ''))
-        case 'get_form_binding':   return toolOk(id, getFormBinding(args.input ?? ''))
-        case 'compare_components': return toolOk(id, compareComponents((p.arguments as { components?: string[] })?.components ?? []))
-        case 'get_app_bootstrap':  return toolOk(id, getAppBootstrap({ router: !!args.router, reactQuery: !!args.reactQuery, customTheme: !!args.customTheme, appName: args.appName }))
-        default:                   return rpcError(id, -32601, `Unknown tool: "${p.name}"`)
-      }
-    }
+  server.registerTool('get_app_bootstrap', {
+    description:
+      'Returns the recommended full app bootstrap code for a new project using @geomak/ui: ' +
+      'provider nesting order, ThemeProvider with dark-mode toggle, NotificationProvider, ' +
+      'optional React Query and React Router wiring, and SecureLayout route guard pattern.',
+    inputSchema: z.object({
+      router: z.boolean().optional().describe('Include React Router + SecureLayout shell.'),
+      reactQuery: z.boolean().optional().describe('Include QueryClientProvider.'),
+      customTheme: z.boolean().optional().describe('Include brand token override pattern.'),
+      appName: z.string().optional().describe('App name used for variable naming in output.'),
+    }),
+  }, async (opts) => toolResult(getAppBootstrap(opts)))
 
-    default:
-      return rpcError(id, -32601, `Method not found: "${req.method}"`)
-  }
+  return server
 }
 
 // ─── HTTP handler ─────────────────────────────────────────────────────────────
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Mcp-Session-Id',
+  'Access-Control-Allow-Methods': 'POST, GET, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Accept, Mcp-Session-Id, Mcp-Protocol-Version',
 }
 
 export default async function handler(req: Request): Promise<Response> {
@@ -1106,29 +993,18 @@ export default async function handler(req: Request): Promise<Response> {
     return new Response(null, { status: 204, headers: CORS_HEADERS })
   }
 
-  if (req.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 })
-  }
-
-  let body: JsonRpcRequest
-  try {
-    body = (await req.json()) as JsonRpcRequest
-  } catch {
-    return Response.json(
-      rpcError(null, -32700, 'Parse error: invalid JSON'),
-      { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } },
-    )
-  }
-
-  const result = await dispatch(body)
-
-  if (result === null) {
-    return new Response(null, { status: 202, headers: CORS_HEADERS })
-  }
-
-  return Response.json(result, {
-    headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+  // Stateless mode: one single-use server + transport pair per request.
+  const server = buildServer()
+  const transport = new WebStandardStreamableHTTPServerTransport({
+    sessionIdGenerator: undefined,
+    enableJsonResponse: true,
   })
+  await server.connect(transport)
+  const res = await transport.handleRequest(req)
+
+  const headers = new Headers(res.headers)
+  for (const [k, v] of Object.entries(CORS_HEADERS)) headers.set(k, v)
+  return new Response(res.body, { status: res.status, statusText: res.statusText, headers })
 }
 
 export const config = { path: '/mcp' }

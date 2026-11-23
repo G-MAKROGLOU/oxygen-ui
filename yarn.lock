@@ -655,6 +655,21 @@
   dependencies:
     "@types/mdx" "^2.0.0"
 
+"@modelcontextprotocol/core@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/core/-/core-2.4.0.tgz#c7f1a505452c3a0ad666d9a6e78a5804d8d8d0d9"
+  integrity sha512-z8QBKqdfXLPzkLQuG4xp8hrVEMm1PZ1IgxMN2sMbJiFiAKOWXnAzogXn2W4aqIBlP1ea6U5yiqVquvUNM1Cj6Q==
+  dependencies:
+    zod "^4.2.0"
+
+"@modelcontextprotocol/server@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/server/-/server-2.4.0.tgz#282a61ccbdc531361f03525a33e33283534d6fc7"
+  integrity sha512-rgR9yxSaAJ+bcsi/XroT/S2AfPiIWloXAnrdfYSCms9ivVju0ishu/wW0J21Ho6+ZOR1r7RyeRbjiRuF87ix5Q==
+  dependencies:
+    "@modelcontextprotocol/core" "2.4.0"
+    zod "^4.2.0"
+
 "@mswjs/interceptors@^0.41.3":
   version "0.41.9"
   resolved "https://registry.yarnpkg.com/@mswjs/interceptors/-/interceptors-0.41.9.tgz#9d90bbd60d1ddc30dbcbb827a9bb2e470493530d"
@@ -9365,6 +9380,11 @@ yoctocolors@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/yoctocolors/-/yoctocolors-2.1.2.tgz#d795f54d173494e7d8db93150cec0ed7f678c83a"
   integrity sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==
+
+zod@^4.2.0, zod@^4.6.7:
+  version "4.6.7"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-4.6.7.tgz#e806cf64a7f4e37635ce9f2f52c04c3766f75e5b"
+  integrity sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==
 
 zwitch@^2.0.0:
   version "2.0.4"
