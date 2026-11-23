@@ -35,6 +35,8 @@ function extractMeta(content) {
  * - import lines
  * - <Meta … /> tag
  * - export const style objects (th, td, td0, tbl and named variants)
+ * Lines inside fenced code blocks are kept verbatim: their imports are
+ * part of the documented example, not MDX boilerplate.
  */
 function cleanMdx(content) {
   // Normalise BOM and line endings
@@ -43,9 +45,13 @@ function cleanMdx(content) {
   const lines = normalised.split('\n')
   const out = []
   let inJsxComment = false
+  let inCodeFence = false
 
   for (const line of lines) {
     const t = line.trim()
+
+    if (t.startsWith('```')) { inCodeFence = !inCodeFence; out.push(line); continue }
+    if (inCodeFence) { out.push(line); continue }
 
     // Multi-line JSX comment block: {/* ... (start)
     if (t.startsWith('{/*') && !t.endsWith('*/}')) { inJsxComment = true; continue }
